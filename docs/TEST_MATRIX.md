@@ -54,6 +54,8 @@ These are harness tests, not Zernio Provider Behavior tests.
 
 ## P1-T02 — Zernio Profile Provisioning
 
+### Offline / harness-system regression tests
+
 Automated offline suite: `tests/provider-spike/p1-t02.test.ts`
 
 | ID | Coverage | Result |
@@ -83,4 +85,17 @@ Targeted result: 18 passed, 0 failed; 33 unrelated tests skipped by the name fil
 
 Full result: 2 test files, 51 tests passed, 0 failed, 0 skipped.
 
-Live Provider Behavior cases `P1-T02-PROFILE-A` and `P1-T02-PROFILE-B`: `BLOCKED — NOT EXECUTED`; the authorized local runtime does not currently receive `ZERNIO_API_KEY`. This is not evidence of Zernio Profile capability failure.
+### Real Zernio Provider Behavior evidence
+
+Provider Behavior evidence is intentionally separated from the offline harness/system regression results above.
+
+| Test ID | Provider behavior | Result | Evidence |
+|---|---|---|---|
+| P1-T02-AUTH-PREFLIGHT | Team credential read-only verification using `GET /v1/users` | PASS | final run `026b271e-8153-4069-b664-0d850f21f40e`, HTTP 200, request ID `c704ae83-713d-4b3d-9aa5-2f36f2fbc670` |
+| P1-T02-PROFILE-A | Exact-name Profile A exists and read-back resolves provider ID | PASS | run `ac860138-ae6e-4f8b-83d6-34198500f032`, Profile ID `6ac5a45a8e4ca44f355033ae`, HTTP 200/200 final reconciliation |
+| P1-T02-PROFILE-B | Exact-name Profile B exists and read-back resolves provider ID | PASS | run `d3cf6996-9365-46ba-9690-d81b6b5834eb`, Profile ID `6ac5a45b243a942b74bdbaa0`, HTTP 200/200 final reconciliation |
+| P1-T02-DISTINCT-IDS | Profile A ID differs from Profile B ID | PASS | `6ac5a45a8e4ca44f355033ae` != `6ac5a45b243a942b74bdbaa0` |
+
+Initial provisioning also observed one intended `POST /v1/profiles` per Profile, each returning HTTP 201 between exact-name preflight and read-back GETs. No timeout, 409, 429, 5xx, UNKNOWN outcome, or automatic retry occurred during live execution.
+
+Profiles capability observed status: `OBSERVED_PASS`; Team Leader review is required before canonical `SPIKE_PASS` finalization.
