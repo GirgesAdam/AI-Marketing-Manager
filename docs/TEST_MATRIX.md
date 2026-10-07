@@ -147,7 +147,7 @@ Expected and actual email values are intentionally absent from evidence and docu
 
 ## P1-T03 — Zernio Scoped API Key Isolation
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`
+Status: `ACCEPTED`
 
 ### Deterministic offline / harness-system regressions
 
@@ -220,12 +220,12 @@ Raw scoped-key values and key previews are intentionally absent from tests, evid
 
 Scoped Keys capability observed status: `OBSERVED_PASS`.
 
-Recommendation pending Team Leader review: `Scoped Keys capability recommendation: SPIKE_PASS`.
-Canonical Scoped Keys remains `SPIKE_PENDING` until Team Leader acceptance; Profiles remains `SPIKE_PASS`.
+Team Leader verdict: `ACCEPTED`. Scoped Keys capability recommendation was accepted as `SPIKE_PASS`.
+Canonical capability state: Profiles = `SPIKE_PASS`; Scoped Keys = `SPIKE_PASS`; Publishing = `SPIKE_PENDING`.
 
 ## P1-T03-F01 — Malformed Scoped-Key Create Cleanup Recovery
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`
+Status: `ACCEPTED`
 
 Automated deterministic suite: `tests/provider-spike/p1-t03-f01.test.ts`
 
@@ -262,4 +262,4 @@ Full result: `5` test files, `106 passed / 0 failed / 0 skipped`.
 `npm run build`: PASS.
 `git diff --check`: PASS.
 
-These are deterministic failure-recovery tests only. P1-T03-F01 intentionally performed zero real Zernio calls and created zero live scoped keys. Historical P1-T03 Provider Behavior evidence was preserved without repeating the live isolation run. Scoped Keys remains `SPIKE_PENDING` pending Team Leader acceptance.
+These are deterministic failure-recovery tests only. P1-T03-F01 intentionally performed zero real Zernio calls and created zero live scoped keys. Historical P1-T03 Provider Behavior evidence was preserved without repeating the live isolation run. Team Leader accepted P1-T03-F01; Scoped Keys is now `SPIKE_PASS`, while Publishing remains `SPIKE_PENDING`.

@@ -90,47 +90,47 @@ Final accepted evidence:
 - `npm run build`: PASS
 - P1-T03 implementation started: NO
 
-## Current Task
+## P1-T03 Result
 `P1-T03 — Verify Scoped API Key Isolation`
 
-**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
+**Status: DONE / ACCEPTED**
 
-Completion evidence:
-- Trusted control-plane identity verification: PASS; expected identity match = true.
-- Temporary scoped Key A created with `scope=profiles`, Profile A only, `permission=read`, bounded 1-day expiry.
-- Temporary scoped Key B created with `scope=profiles`, Profile B only, `permission=read`, bounded 1-day expiry.
-- Key A visible Profile list contained exactly Profile A; Profile B/unrelated Profiles were not visible.
-- Key A own exact-name lookup matched Profile A ID `6ac5a45a8e4ca44f355033ae`; cross-Profile B lookup returned zero Profiles.
-- Key B visible Profile list contained exactly Profile B; Profile A/unrelated Profiles were not visible.
-- Key B own exact-name lookup matched Profile B ID `6ac5a45b243a942b74bdbaa0`; cross-Profile A lookup returned zero Profiles.
+Accepted implementation HEAD: `dab0d967950e4f2f251a7b8573408288476db776`
+
+Accepted fix: `P1-T03-F01 — Guarantee Cleanup After Malformed Scoped-Key Create Response`
+
+Final accepted evidence:
+- Trusted control-plane identity verification: PASS.
+- Scoped Key A created with Profile A-only read scope.
+- Scoped Key B created with Profile B-only read scope.
+- Key A saw Profile A only.
+- Key A exposed Profile B: NO.
+- Key A exposed unrelated Profiles: NO.
+- Key B saw Profile B only.
+- Key B exposed Profile A: NO.
+- Key B exposed unrelated Profiles: NO.
 - Cross-Profile leakage observed: NO.
-- Both temporary scoped keys were revoked and both post-revoke credential checks returned HTTP 401.
-- Live Provider Behavior execution used 13 calls, within the 16-call hard ceiling.
-- Targeted P1-T03 deterministic regressions: 27 passed / 0 failed (22 required cases + 5 additional safety cases).
-- Full regression suite: 89 passed / 0 failed / 0 skipped.
+- Both temporary real scoped keys revoked.
+- Both post-revoke authentication checks returned HTTP 401.
+- Historical real P1-T03 execution: 13 calls / hard ceiling 16.
+- P1-T03-F01 real Zernio calls: 0.
+- P1-T03-F01 focused regressions: 17 passed / 0 failed.
+- Parent P1-T03 regressions: 27 passed / 0 failed.
+- Full regression suite: 106 passed / 0 failed / 0 skipped.
 - `npm run typecheck`: PASS.
 - `npm run build`: PASS.
 - `git diff --check`: PASS.
-- No social connection, publishing, Ads, media, OpenAI, fal.ai, or ad-spend action occurred.
-- Profiles remains `SPIKE_PASS`; Scoped Keys remains `SPIKE_PENDING` pending Team Leader acceptance.
-- No next Provider task has started.
+- No next Provider task started.
+- Profiles: `SPIKE_PASS`.
+- Scoped Keys: `SPIKE_PASS`.
+- Publishing: `SPIKE_PENDING`.
 
-P1-T03-F01 recovery hardening evidence:
-- Malformed HTTP 201 responses missing the apiKey object or provider key ID now enter exact synthetic-name control-plane reconciliation before returning BLOCKED.
-- One exact reconciliation match requires a valid provider key ID and confirmed DELETE; zero matches, missing reconciled ID, or failed DELETE produce SCOPED_KEY_CLEANUP_UNCONFIRMED.
-- Multiple exact matches produce AMBIGUOUS_SCOPED_KEY_STATE with no arbitrary DELETE.
-- Malformed responses with a trusted returned provider key ID are revoked directly; this includes missing raw key, scope/profile/permission mismatch, and missing/invalid expiry.
-- No malformed successful create path retries POST.
-- Focused P1-T03-F01 deterministic regressions: 17 passed / 0 failed (10 required cases + 7 additional cleanup/semantic safety cases).
-- Existing P1-T03 deterministic regressions remain green: 27 passed / 0 failed.
-- Full regression suite: 106 passed / 0 failed / 0 skipped.
-- npm run typecheck: PASS.
-- npm run build: PASS.
-- git diff --check: PASS.
-- Real Zernio calls during P1-T03-F01: 0.
-- New live scoped keys created during P1-T03-F01: 0.
-- Historical P1-T03 live Provider Behavior evidence remains valid and was not repeated.
-- Scoped Keys remains SPIKE_PENDING pending Team Leader acceptance.
+## Current Task
+`P1-T04 — Verify Zernio Publishing Behavior`
+
+**Status: NOT_STARTED — READY FOR TEAM LEADER TASK CONTRACT / SENIOR ASSIGNMENT**
+
+P1-T04 implementation started: NO.
 
 ## Phase 1 Rules
 - Work one Task at a time.
@@ -146,4 +146,4 @@ The previous single-Vertical estimate is obsolete. The 56–74 week figure remai
 Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test usage; do not invent a fixed forecast before measurements exist.
 
 ## Immediate Next Action
-Team Leader re-reviews P1-T03-F01 failure-recovery hardening together with the preserved P1-T03 Provider Behavior evidence. Senior Engineer does not mark P1-T03 DONE / ACCEPTED, does not change Scoped Keys from `SPIKE_PENDING`, and does not start another Provider task until explicit Team Leader verdict and assignment.
+Wait for Team Leader verification and an explicit P1-T04 Task Contract / Senior assignment. Do not start P1-T04 implementation, connect accounts, publish, upload media, create Ads, or perform any live provider action before that authorization.

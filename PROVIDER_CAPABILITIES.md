@@ -446,7 +446,7 @@ NOT_APPLICABLE
 | Capability | Commercial V1 | Verification | Requirements | Our Responsibility | Zernio Responsibility |
 |---|---|---|---|---|---|
 | Profiles | Yes | SPIKE_PASS | Zernio Team | Brand mapping | Provider grouping |
-| Scoped Keys | Yes | SPIKE_PENDING | API key permissions | Secret management | Scope enforcement |
+| Scoped Keys | Yes | SPIKE_PASS | API key permissions | Secret management | Scope enforcement |
 | FB Connect | Yes | SPIKE_PENDING | Supported Page | Tenant validation | Connection |
 | IG Connect | Yes | SPIKE_PENDING | Supported professional account | Tenant validation | Connection |
 | Publishing | Yes | SPIKE_PENDING | Connected account | Schedule/policies | Execution |

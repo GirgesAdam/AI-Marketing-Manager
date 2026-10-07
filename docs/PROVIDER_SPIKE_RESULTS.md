@@ -195,7 +195,7 @@ The original P1-T02 Profile observations are therefore now bound to the intended
 
 ## P1-T03 — Zernio Scoped API Key Isolation Provider Behavior
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`
+Status: `ACCEPTED`
 
 Provider environment: authorized internal Zernio test team. The accepted trusted control-plane identity binding was reused before any API-key mutation. The independently supplied expected identity value and the provider-returned identity are intentionally absent from this evidence. Temporary scoped-key raw values remained in process memory only and were never written to disk, `.env`, logs, stdout/stderr, evidence, documentation, or git.
 
@@ -293,13 +293,13 @@ No social connection, social publishing, Ads, media generation/upload, OpenAI, f
 
 Scoped Keys capability observed status: `OBSERVED_PASS`.
 
-Recommendation pending Team Leader review: `Scoped Keys capability recommendation: SPIKE_PASS`.
+Team Leader verdict: `ACCEPTED`. Scoped Keys capability recommendation was accepted as `SPIKE_PASS`.
 
-Canonical `PROVIDER_CAPABILITIES.md` remains unchanged: Profiles = `SPIKE_PASS`; Scoped Keys = `SPIKE_PENDING` until Team Leader acceptance.
+Canonical capability state: Profiles = `SPIKE_PASS`; Scoped Keys = `SPIKE_PASS`; Publishing = `SPIKE_PENDING`.
 
 ## P1-T03-F01 — Malformed Scoped-Key Create Cleanup Hardening
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`
+Status: `ACCEPTED`
 
 This post-review fix addresses only deterministic failure recovery after a successful `POST /v1/api-keys` response is malformed. The historical P1-T03 live Provider Behavior evidence above remains valid and was not repeated.
 
@@ -331,4 +331,4 @@ P1-T03-F01 real Provider activity:
 
 Historical P1-T03 observations remain unchanged: Key A isolation observed PASS, Key B isolation observed PASS, cross-Profile leakage `NO`, both real temporary keys revoked, both post-revoke auth checks HTTP 401, and the historical live call count remains 13.
 
-Canonical capability state is intentionally unchanged: Profiles = `SPIKE_PASS`; Scoped Keys = `SPIKE_PENDING` pending Team Leader acceptance.
+Team Leader accepted P1-T03-F01 together with P1-T03. Canonical capability state: Profiles = `SPIKE_PASS`; Scoped Keys = `SPIKE_PASS`; Publishing = `SPIKE_PENDING`.
