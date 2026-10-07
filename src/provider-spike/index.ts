@@ -6,3 +6,6 @@ export type { P1T02F01ProfileOutcome, P1T02F01ProfileRun, P1T02F01RunResult, P1T
 export { createP1T03IsolationCase, createP1T03KeyCreateCase, createP1T03RevokeCase, createP1T03RevokedAuthCase, P1_T03_KEY_A, P1_T03_KEY_B, P1_T03_LIVE_REQUEST_CEILING, runP1T03 } from './p1-t03-zernio.js';
 export type { P1T03CleanupOutcome, P1T03IsolationOutcome, P1T03KeyMetadata, P1T03ProbeRecord, P1T03RunOptions, P1T03RunResult } from './p1-t03-zernio.js';
 export type { ExecutionMode, LiveSafetyConfig, LiveTokenLimits, ProviderSpikeEvidence, ProviderSpikeExecutionContext, ProviderSpikeRunOptions, ProviderSpikeRunResult, ProviderSpikeTestCase, ProviderTransport, ProviderTransportRequest, ProviderTransportResponse, SanitizedValue, SpikeResult } from './types.js';
+
+export { P1_T04_ACCOUNT_ID, P1_T04_CLEANUP_REQUEST_ALLOWANCE, P1_T04_NORMAL_REQUEST_CEILING, P1_T04_PAGE_ID, P1_T04_PAGE_NAME, P1_T04_PROFILE_ID, runP1T04 } from './p1-t04-zernio.js';
+export type { P1T04KeyCleanup, P1T04KeyMetadata, P1T04PostEvidence, P1T04RunOptions, P1T04RunResult, P1T04StepEvidence, P1T04TargetEvidence } from './p1-t04-zernio.js';
