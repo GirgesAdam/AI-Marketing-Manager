@@ -31,7 +31,22 @@ Automated harness suite: `tests/provider-spike/harness.test.ts`
 | T23 | Machine-readable evidence sanitization | PASS |
 | T24 | `npm run typecheck` | PASS (exit 0) |
 | T25 | `npm run build` | PASS (exit 0) |
-| T26 | Full `npm test` suite | PASS — 1 file, 26 tests, 0 failed, 0 skipped |
+| T26 | Full `npm test` suite | PASS — 1 file, 33 tests, 0 failed, 0 skipped |
+
+## P1-T01-F01 — Runtime Safety Hardening
+
+| ID | Coverage | Result |
+|---|---|---|
+| F01-T01 | Invalid runtime mode returns BLOCKED / INVALID_TEST_CONFIGURATION before prerequisite or transport | PASS |
+| F01-T02 | NaN development cost ceiling rejected before transport | PASS |
+| F01-T03 | NaN estimated cost rejected before transport | PASS |
+| F01-T04 | +Infinity development cost ceiling rejected before transport | PASS |
+| F01-T05 | +Infinity estimated cost rejected before transport | PASS |
+| F01-T06 | -Infinity cost values rejected before transport | PASS |
+| F01-T07 | Valid finite cost configuration permits configured mock live transport | PASS |
+
+Targeted regression command: `npm test -- -t "P1-T01-F01 runtime safety regressions"`.
+Targeted result: 7 passed, 26 skipped, 0 failed.
 
 Additional deterministic cases in the same suite cover invalid harness configuration, malformed provider response, and development cost-safety rejection before live transport.
 

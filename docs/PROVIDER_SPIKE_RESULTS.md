@@ -23,3 +23,11 @@ Harness validation covered:
 - basic development cost-safety rejection before live transport execution.
 
 This section is harness evidence only. Mock behavior must not be interpreted as provider behavior.
+
+## P1-T01-F01 — Harness Runtime Safety Hardening
+
+Follow-up harness validation fixed two fail-closed defects: runtime execution mode is now explicitly restricted to `offline` or `live` before prerequisites/transport, and cost-bearing live runs require finite non-negative development cost ceiling and estimate values.
+
+Regression coverage confirms invalid modes and `NaN` / `Infinity` / `-Infinity` cost values are blocked before transport, while valid finite cost configuration still permits the injected mock live transport when all safeguards pass.
+
+This remains harness validation only. No Zernio/provider behavior was tested, no real provider request was executed, and no provider capability is marked `SPIKE_PASS`.
