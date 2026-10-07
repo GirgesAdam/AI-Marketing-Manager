@@ -128,7 +128,7 @@ Final accepted evidence:
 ## Current Task
 `P1-T04 — Verify Zernio Publishing Behavior`
 
-**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+**Status: REJECTED — FIX REQUIRED**
 
 Completion evidence:
 - Approved base: `d87a5103a3f2b67f87abb3c0965e15d949c0307b`.
@@ -151,7 +151,8 @@ Completion evidence:
 - `npm run build`: PASS.
 - `git diff --check`: PASS.
 - No Ads, ad spend, OpenAI, fal.ai, media generation/upload, new account connection, reconnect, comments/DMs, or webhooks.
-- Publishing observed recommendation: `SPIKE_PASS`, pending Team Leader acceptance.
+- P1-T04 real Provider Behavior: `OBSERVED_PASS`.
+- P1-T04 overall Team Leader verdict: `REJECTED — FIX REQUIRED`.
 - Canonical Publishing remains `SPIKE_PENDING`.
 - Known limitation: Core publishing lifecycle verified on Facebook text-only only. Instagram/media/platform-specific publishing remains separately unverified.
 - P1-T05 implementation started: NO.
@@ -170,4 +171,4 @@ The previous single-Vertical estimate is obsolete. The 56–74 week figure remai
 Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test usage; do not invent a fixed forecast before measurements exist.
 
 ## Immediate Next Action
-Team Leader reviews P1-T04 implementation, deterministic regressions, one bounded real Provider Behavior run, exact-target evidence, draft/scheduled/public cleanup, temporary-key cleanup, and capability recommendation. Senior Engineer does not mark P1-T04 DONE / ACCEPTED, does not change Publishing from `SPIKE_PENDING`, and does not start P1-T05 without explicit Team Leader verdict and assignment.
+Await an explicit P1-T04 fix contract from the Team Leader. Senior Engineer keeps the accepted real Provider Behavior evidence as `OBSERVED_PASS`, does not infer or implement an unspecified fix, does not change Publishing from `SPIKE_PENDING`, and does not start P1-T05.
