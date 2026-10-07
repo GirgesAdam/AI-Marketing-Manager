@@ -128,7 +128,7 @@ Final accepted evidence:
 ## Current Task
 `P1-T04 — Verify Zernio Publishing Behavior`
 
-**Status: REJECTED — FIX REQUIRED**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
 
 Completion evidence:
 - Approved base: `d87a5103a3f2b67f87abb3c0965e15d949c0307b`.
@@ -152,7 +152,22 @@ Completion evidence:
 - `git diff --check`: PASS.
 - No Ads, ad spend, OpenAI, fal.ai, media generation/upload, new account connection, reconnect, comments/DMs, or webhooks.
 - P1-T04 real Provider Behavior: `OBSERVED_PASS`.
-- P1-T04 overall Team Leader verdict: `REJECTED — FIX REQUIRED`.
+- Historical Team Leader verdict before F01: `REJECTED — FIX REQUIRED`.
+- P1-T04-F01 — Harden Exact Page Target Attestation and Failure Cleanup: IMPLEMENTED.
+- Team Leader review gaps addressed deterministically: incomplete exact-Page attestation and incomplete emergency draft/scheduled cleanup verification.
+- Correct account alone can no longer prove the Facebook Page; explicit Page ID is required for draft/scheduled create/read-back.
+- Immediate published posts may use only strict deterministic `PAGEID_POSTID` attestation from `platformPostId` or an exact Facebook public URL path when explicit Page ID is absent; wrong Page is Critical and unparseable/missing evidence is BLOCKED.
+- Emergency draft/scheduled cleanup now requires DELETE followed by GET read-back; DELETE 200/204 alone is insufficient.
+- Cleanup uncertainty takes precedence as `DRAFT_TEST_POST_CLEANUP_UNCONFIRMED` or `SCHEDULED_TEST_POST_CLEANUP_UNCONFIRMED`.
+- Cleanup DELETE + GET still run via the safety allowance after normal request ceiling exhaustion.
+- P1-T04-F01 focused regressions: 15 passed / 0 failed (F01-T01 through F01-T13 + 2 additional safety cases); F01-T14 full-suite gate validated separately by `npm test`.
+- Existing P1-T04 targeted regressions: 44 passed / 0 failed.
+- Full regression suite after F01: 165 passed / 0 failed / 0 skipped.
+- `npm run typecheck`: PASS.
+- `npm run build`: PASS.
+- `git diff --check`: PASS.
+- P1-T04-F01 real Zernio calls: 0; public posts created: 0; scheduled posts created: 0; temporary scoped keys created live: 0.
+- Historical P1-T04 Provider Behavior evidence preserved: YES; historical live post re-published: NO.
 - Canonical Publishing remains `SPIKE_PENDING`.
 - Known limitation: Core publishing lifecycle verified on Facebook text-only only. Instagram/media/platform-specific publishing remains separately unverified.
 - P1-T05 implementation started: NO.
@@ -171,4 +186,4 @@ The previous single-Vertical estimate is obsolete. The 56–74 week figure remai
 Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test usage; do not invent a fixed forecast before measurements exist.
 
 ## Immediate Next Action
-Await an explicit P1-T04 fix contract from the Team Leader. Senior Engineer keeps the accepted real Provider Behavior evidence as `OBSERVED_PASS`, does not infer or implement an unspecified fix, does not change Publishing from `SPIKE_PENDING`, and does not start P1-T05.
+Team Leader re-reviews P1-T04 together with P1-T04-F01 exact-Page attestation and verified emergency cleanup hardening. Senior Engineer does not mark P1-T04 DONE / ACCEPTED, does not change Publishing from `SPIKE_PENDING`, and does not start P1-T05 without explicit Team Leader verdict and assignment.

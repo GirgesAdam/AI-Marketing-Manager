@@ -448,3 +448,41 @@ Publishing capability recommendation: `SPIKE_PASS`.
 Known limitation: Core publishing lifecycle verified on Facebook text-only only. Instagram/media/platform-specific publishing remains separately unverified.
 
 Canonical Publishing remains `SPIKE_PENDING` pending Team Leader acceptance. Profiles and Scoped Keys remain `SPIKE_PASS`.
+## P1-T04-F01 — Exact Page Target Attestation and Emergency Cleanup Hardening
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`
+
+Team Leader review preserved the historical P1-T04 real Provider Behavior as `OBSERVED_PASS` and identified two harness safety gaps only: incomplete exact Facebook Page attestation and incomplete emergency draft/scheduled cleanup verification. The historical live publishing run, Provider Request IDs, post IDs, target IDs, cleanup evidence, and 20-call execution above remain unchanged. No live publishing was repeated for this fix.
+
+Deterministic target hardening:
+- every draft/scheduled create and read-back now requires both the frozen Zernio account ID and explicit frozen Facebook Page ID;
+- correct account with missing Page evidence is `BLOCKED / PUBLISHING_PAGE_TARGET_UNCONFIRMED`;
+- any explicit different Page is `FAIL / CRITICAL_WRONG_PUBLISHING_TARGET`;
+- immediate posts may use alternate Page attestation only after provider state is published and only when explicit Page ID is absent;
+- accepted alternate formats are strict numeric `PAGEID_POSTID` from `platformPostId` or a strict `https://facebook.com/PAGEID_POSTID` / `https://www.facebook.com/PAGEID_POSTID` path with no query/hash;
+- missing, malformed, ambiguous, or wrong alternate evidence never falls back to substring matching or request-body assumptions.
+
+Deterministic emergency-cleanup hardening:
+- emergency draft/scheduled cleanup always performs `DELETE /v1/posts/{postId}` followed by `GET /v1/posts/{postId}`;
+- cleanup is confirmed only by HTTP 404 or explicit `cancelled` / `deleted` provider state;
+- DELETE 200/204 alone is not confirmation;
+- a still-active draft/scheduled artifact yields `DRAFT_TEST_POST_CLEANUP_UNCONFIRMED` or `SCHEDULED_TEST_POST_CLEANUP_UNCONFIRMED`, taking precedence over the original failure;
+- cleanup DELETE/GET, scoped-key revoke, and post-revoke verification remain allowed through the existing cleanup allowance after normal request ceiling exhaustion; the cleanup allowance does not create, schedule, or publish.
+
+Validation evidence:
+- focused P1-T04-F01 suite: `15 passed / 0 failed` (F01-T01 through F01-T13 + two additional safety cases); F01-T14 full-suite gate is validated separately by `npm test`;
+- existing P1-T04 targeted suite: `44 passed / 0 failed`;
+- full suite: `165 passed / 0 failed / 0 skipped`;
+- `npm run typecheck`: PASS;
+- `npm run build`: PASS;
+- `git diff --check`: PASS.
+
+P1-T04-F01 real Provider activity:
+- real Zernio calls: `0`;
+- public posts created: `0`;
+- scheduled posts created: `0`;
+- temporary scoped keys created live: `0`;
+- historical P1-T04 Provider Behavior preserved: `YES`;
+- historical live post re-published: `NO`.
+
+Canonical Publishing capability remains `SPIKE_PENDING` pending Team Leader re-review. P1-T05 remains `NOT_STARTED`.

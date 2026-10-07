@@ -359,3 +359,42 @@ Publishing capability observed status: `OBSERVED_PASS`.
 Publishing capability recommendation: `SPIKE_PASS`.
 Known limitation: Core publishing lifecycle verified on Facebook text-only only. Instagram/media/platform-specific publishing remains separately unverified.
 Canonical Publishing remains `SPIKE_PENDING` pending Team Leader acceptance.
+## P1-T04-F01 — Exact Page Target Attestation and Emergency Cleanup Regressions
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`
+
+Automated deterministic suite: `tests/provider-spike/p1-t04-f01.test.ts`
+
+| ID | Deterministic coverage | Result |
+|---|---|---|
+| F01-T01 | Correct account + explicit wrong Page is Critical; cleanup executes | PASS |
+| F01-T02 | Wrong Page appearing only on read-back is Critical | PASS |
+| F01-T03 | Correct account + missing Page evidence is BLOCKED, never PASS | PASS |
+| F01-T04 | Published immediate post can attest expected Page from strict platformPostId | PASS |
+| F01-T05 | Wrong Page prefix in platformPostId is Critical | PASS |
+| F01-T06 | Wrong Page prefix in strict Facebook public URL is Critical | PASS |
+| F01-T07 | Draft missing Page attestation blocks scheduled/immediate stages | PASS |
+| F01-T08 | Scheduled missing Page attestation blocks immediate stage | PASS |
+| F01-T09 | Emergency draft DELETE 200 + still-active GET is cleanup-unconfirmed | PASS |
+| F01-T10 | Emergency scheduled DELETE 200 + still-scheduled GET is cleanup-unconfirmed | PASS |
+| F01-T11 | Emergency cleanup confirms DELETE + terminal GET/404 | PASS |
+| F01-T12 | Cleanup DELETE + GET still execute after normal ceiling exhaustion | PASS |
+| F01-T13 | Strengthened target/cleanup semantics preserve existing happy path | PASS |
+| F01-T14 | Full historical suite remains green; validated by required full `npm test` | PASS |
+| Extra | Deterministic fix result/evidence does not expose configured secrets | PASS |
+| Extra | Alternate Page fallback is rejected while immediate provider state is still publishing | PASS |
+
+Focused command: `npm test -- -t "P1-T04-F01 exact Page attestation and emergency cleanup regressions"`.
+Focused result: `15 passed / 0 failed` (F01-T01 through F01-T13 plus two additional safety cases); unrelated tests skipped only by name filter. F01-T14 is the separate full-suite gate below.
+
+Parent command: `npm test -- -t "P1-T04 Zernio publishing offline regressions"`.
+Parent result: `44 passed / 0 failed`.
+
+Full command: `npm test`.
+Full result: `7` test files, `165 passed / 0 failed / 0 skipped`.
+
+`npm run typecheck`: PASS.
+`npm run build`: PASS.
+`git diff --check`: PASS.
+
+These are deterministic harness safety regressions only. P1-T04-F01 performed zero real Zernio calls and did not create or re-publish any live post, schedule, or scoped key. Historical P1-T04 real Provider Behavior evidence remains separate and preserved. Publishing remains `SPIKE_PENDING`.
