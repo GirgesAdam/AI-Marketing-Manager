@@ -637,3 +637,50 @@ Third live run: `NO` and not authorized.
 Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 
 Canonical webhook-related capability statuses remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
+
+
+## P1-T05-F02 — VPS HTTPS Receiver Verification
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+
+### Deterministic VPS receiver hardening
+- Starting HEAD: `dd1ea010a275ec998017822e87572b44be92d79f`.
+- Implementation checkpoint: `7b8e5738191854fb67443607188e53ff389920ed`.
+- F02 live path uses only the existing project VPS topology; no Railway, Cloudflare Quick Tunnel, request-bin, ngrok, or other temporary hosting-provider dependency was introduced.
+- The accepted P1-T05 receiver semantics remain authoritative for HMAC, JSON-after-signature, canonical event ID checks, retry dedupe/state, Profile attribution, request ceilings, failure diagnostics, and cleanup.
+- VPS additions are limited to exact path/port configuration and a readiness handshake. The receiver generates no production persistence or queueing subsystem.
+- Readiness PASS requires trusted HTTPS, no redirect, exact HTTP 401, exact receiver marker, then a confirmation request observed by the same receiver process before the Zernio callback is allowed.
+- Focused F02 suite: `12 passed / 0 failed`.
+- F01 suite: `13 passed / 0 failed`.
+- Parent P1-T05 suite: `46 passed / 0 failed`.
+- Full suite: `236 passed / 0 failed / 0 skipped` across 10 test files.
+- typecheck/build/diff-check: PASS.
+
+### VPS precondition / Provider Behavior
+Historical live run #1 and P1-T05-F01 live rerun #2 remain preserved above unchanged. P1-T05-F02 had separate authorization for exactly one live Zernio Provider run, but only after VPS readiness PASS.
+
+Observed F02 infrastructure precondition:
+- project VPS candidate was identified from local authorized SSH state/history without exposing credentials;
+- a current control/SSH session could not be established from the development environment;
+- expected SSH/HTTP/HTTPS reachability was unavailable during the bounded checks;
+- therefore a temporary dedicated reverse-proxy route and Node receiver could not be safely installed or verified;
+- trusted TLS + exact receiver path + HTTP 401 readiness was not proven;
+- F02 result: `BLOCKED — CONTROLLED_VPS_WEBHOOK_RECEIVER_NOT_AVAILABLE`;
+- F02 Zernio API calls: `0`;
+- F02 live Zernio Provider runs: `0`;
+- webhook create/read-back: NOT RUN;
+- webhook.test: NOT RUN;
+- publishing key: NOT CREATED;
+- scheduled retry trigger: NOT CREATED;
+- real delivery attempts 1/2: NOT RUN;
+- delivery logs attempts 1/2: NOT RUN;
+- provider cleanup: N/A because no provider artifact existed;
+- VPS route/process/runtime-secret cleanup: N/A because no temporary VPS configuration was installed.
+
+Cost/safety:
+- incremental VPS cost observed: `0`;
+- public publication: `0`; Ads/ad spend: `0`; media: `0`; OpenAI: `0`; fal.ai: `0`; comments/DMs: `0`; unexpected paid action: NO.
+
+Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
+
+Canonical webhook-related capabilities remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.

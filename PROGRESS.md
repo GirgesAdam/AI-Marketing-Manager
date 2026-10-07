@@ -241,7 +241,34 @@ P1-T05-F01 implementation checkpoint: `d658f701bf3f2f4400251994324b7a3358442b61`
 - Scheduled retry trigger / publishing key / real webhook delivery attempts / provider attempt logs: NOT RUN.
 - Public publication / media / Ads / ad spend / OpenAI / fal.ai / comments / DMs / analytics ingestion: 0.
 - Local copied `.env`, temporary cloudflared binary, receiver/tunnel process state: cleaned; cloudflared process count after cleanup = 0.
-- No third live run is authorized or performed.
+- No third live run was authorized or performed under P1-T05-F01. P1-T05-F02 later received a separate Team Leader authorization and is documented below.
+
+### P1-T05-F02 VPS receiver implementation / validation
+- Team Leader explicitly authorized P1-T05-F02 from starting HEAD `dd1ea010a275ec998017822e87572b44be92d79f` and prohibited Railway, Cloudflare Quick Tunnel, other temporary hosting providers, capability promotion, and P1-T06.
+- Minimal VPS-only receiver support was added without a production webhook subsystem: exact dedicated path, fixed localhost listen port behind the intended VPS HTTPS reverse proxy, in-memory fresh webhook secret generation, and no webhook body persistence beyond existing sanitized evidence.
+- External readiness requires HTTPS, no redirect, exact HTTP 401, a receiver-specific marker, and a second confirmation hit observed by the same receiver process before the provider callback can execute.
+- Readiness 404, 502/503, redirects, TLS/network errors, and wrong-handler 401 responses fail closed before provider execution.
+- F02 focused regressions: `12 passed / 0 failed`.
+- P1-T05-F01 regressions after F02: `13 passed / 0 failed`.
+- Existing parent P1-T05 regressions after F02: `46 passed / 0 failed`.
+- Full suite after F02: `236 passed / 0 failed / 0 skipped` across 10 test files.
+- `npm run typecheck`: PASS.
+- `npm run build`: PASS.
+- `git diff --check`: PASS.
+- F02 implementation checkpoint: `7b8e5738191854fb67443607188e53ff389920ed`.
+
+### P1-T05-F02 VPS precondition result — zero-call STOP
+- The locally recorded Oracle/project VPS candidate and its historical SSH user/key were checked read-only from the authorized development machine.
+- A current operator/control session could not be established; the VPS candidate was not reachable on the expected SSH/HTTP/HTTPS ports from this execution environment.
+- Therefore no safe temporary Caddy/reverse-proxy route could be installed or verified, no VPS receiver process could be started, and trusted TLS/exact-path HTTP 401 readiness could not be proven.
+- Required precondition result: `BLOCKED — CONTROLLED_VPS_WEBHOOK_RECEIVER_NOT_AVAILABLE`.
+- F02 Zernio API calls: 0.
+- F02 live Zernio Provider runs: 0; the contract permits the one live Provider run only after VPS readiness PASS, so no live invocation was attempted.
+- Temporary webhook / publishing key / scheduled post: NOT CREATED.
+- webhook.test / real retry attempts / provider delivery logs: NOT RUN.
+- No VPS route/process/config or runtime webhook secret was installed, so provider/VPS cleanup was N/A.
+- Incremental VPS infrastructure cost observed for F02: 0.
+- Ads/ad spend/media/OpenAI/fal.ai/comments/DMs/public publication/unexpected paid action: 0.
 
 Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 
@@ -264,4 +291,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader re-reviews P1-T05-F01 deterministic diagnostics, preserved historical live run #1, and the single authorized live rerun #2 readiness blocker. Senior Engineer does not perform a third live run, does not mark P1-T05 DONE / ACCEPTED, does not change canonical webhook capability statuses, and does not start P1-T06.
+Team Leader re-reviews P1-T05-F02 VPS-only receiver implementation, deterministic evidence, the preserved historical live run #1 and F01 rerun #2, and the F02 zero-call VPS precondition blocker. Senior Engineer does not attempt the F02 live Zernio run without a verified safe VPS HTTPS endpoint, does not mark P1-T05 DONE / ACCEPTED, does not change canonical webhook capability statuses, and does not start P1-T06.

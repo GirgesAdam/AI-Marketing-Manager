@@ -547,3 +547,59 @@ The failure-path runner does not persist the ephemeral exact URL or individual n
 Provider Behavior result for rerun #2: **BLOCKED before first Zernio API call**.
 Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 Canonical webhook-related capabilities remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
+
+
+## P1-T05-F02 — VPS HTTPS Receiver Readiness
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+
+### Deterministic tests
+
+| ID | Coverage | Result |
+|---|---|---|
+| F02-T01 | VPS readiness confirmation must pass before provider callback executes | PASS |
+| F02-T02 | Exact receiver HTTP 401 + receiver marker + confirmation allows provider execution | PASS |
+| F02-T03 | HTTP 404 readiness blocks with zero provider callback | PASS |
+| F02-T04 | HTTP 502/503 readiness blocks with zero provider callback | PASS |
+| F02-T05 | Redirected readiness cannot count as exact endpoint PASS | PASS |
+| F02-T06 | TLS/network readiness failure blocks with zero provider callback | PASS |
+| F02-T07 | HTTP 401 from wrong handler cannot PASS | PASS |
+| F02-T08 | F02 live source has no Railway/Quick-Tunnel/temporary-hosting dependency | PASS |
+| F02-T09 | webhook.test remains maximum one POST | PASS |
+| F02-T10 | Existing P1-T05-F01 diagnostics remain green | PASS |
+| F02-T11 | Existing parent P1-T05 suite remains green | PASS |
+| F02-T12 | Full historical suite gate remains unfiltered npm test | PASS |
+
+Focused F02 command: `npm test -- -t "P1-T05-F02 VPS HTTPS receiver regressions"`.
+Focused F02 result: `12 passed / 0 failed`.
+
+Focused F01 command: `npm test -- -t "P1-T05-F01 webhook.test failure diagnostics regressions"`.
+Focused F01 result: `13 passed / 0 failed`.
+
+Parent P1-T05 command: `npm test -- -t "P1-T05 Zernio webhook delivery contract offline regressions"`.
+Parent P1-T05 result: `46 passed / 0 failed`.
+
+Full command: `npm test`.
+Full result: `10` test files, `236 passed / 0 failed / 0 skipped`.
+
+`npm run typecheck`: PASS.
+`npm run build`: PASS.
+`git diff --check`: PASS.
+
+### Real Provider Behavior / VPS precondition
+
+| Test | Actual observed behavior | Result | Safe evidence |
+|---|---|---|---|
+| Project VPS control path | Current operator session could not be established from authorized development environment | BLOCKED | local project VPS SSH state/history identified, bounded connectivity unavailable |
+| Dedicated VPS HTTPS route | Could not be safely installed without VPS control path | NOT RUN | no VPS mutation performed |
+| Trusted TLS + exact path readiness | Could not be proven | NOT RUN | no endpoint prepared |
+| Zernio calls before readiness | Provider callback never invoked | PASS | 0 Zernio calls |
+| F02 live Provider run | Contract requires readiness PASS first; precondition failed | NOT RUN | 0 F02 live Zernio runs |
+| Temporary webhook/key/post | None created | NOT RUN | 0 provider mutations |
+| webhook.test / retry attempts / logs | Not reached | NOT RUN | 0 inbound deliveries |
+| Cleanup | No F02 provider/VPS temporary artifacts existed | N/A | nothing to clean |
+
+F02 Provider Behavior result: **BLOCKED before the live Provider run** — `CONTROLLED_VPS_WEBHOOK_RECEIVER_NOT_AVAILABLE`.
+
+Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
+Canonical webhook-related capabilities remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
