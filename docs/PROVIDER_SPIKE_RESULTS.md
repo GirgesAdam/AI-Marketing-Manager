@@ -192,3 +192,107 @@ P1-T02-F01 accepted live execution was strictly read-only:
 - scoped API-key operations: `0`
 
 The original P1-T02 Profile observations are therefore now bound to the intended operator-approved Zernio identity by independent trusted configuration plus read-only identity and recorded-ID verification. Team Leader accepted P1-T02 and P1-T02-F01. Canonical Profiles capability is `SPIKE_PASS`; Scoped Keys remains `SPIKE_PENDING` for P1-T03.
+
+## P1-T03 — Zernio Scoped API Key Isolation Provider Behavior
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`
+
+Provider environment: authorized internal Zernio test team. The accepted trusted control-plane identity binding was reused before any API-key mutation. The independently supplied expected identity value and the provider-returned identity are intentionally absent from this evidence. Temporary scoped-key raw values remained in process memory only and were never written to disk, `.env`, logs, stdout/stderr, evidence, documentation, or git.
+
+### Control-plane identity preflight
+- test purpose: trusted target verification before scoped-key mutation
+- run_id: `96a5cf55-0d97-43aa-b004-359c414fddac`
+- timestamp: `2026-10-07T12:19:53.604Z`
+- result: `PASS`
+- HTTP status: `200`
+- Provider Request ID: `b2f0b7b6-60cf-443a-9551-1a10fbf40914`
+- latency: `510 ms`
+- expected_identity_match: `true`
+
+### Temporary scoped Key A creation
+- provider key ID: `6ac638e8cc8ba8b85bdd473d`
+- synthetic name: `aimm-p1-t03-profile-a-readonly-088cff7a-ed52-43de-97cb-72b561f6f13d`
+- scope: `profiles`
+- permitted Profile ID: `6ac5a45a8e4ca44f355033ae`
+- permission: `read`
+- expiry: `2026-10-08T12:19:52.485Z`
+- HTTP status: `201`
+- Provider Request ID: `35d8e086-8423-4c4d-a027-97936f067d12`
+- latency: `164 ms`
+- raw key / keyPreview persisted: `NO`
+
+### Temporary scoped Key B creation
+- provider key ID: `6ac638e8cc8ba8b85bdd473f`
+- synthetic name: `aimm-p1-t03-profile-b-readonly-088cff7a-ed52-43de-97cb-72b561f6f13d`
+- scope: `profiles`
+- permitted Profile ID: `6ac5a45b243a942b74bdbaa0`
+- permission: `read`
+- expiry: `2026-10-08T12:19:52.761Z`
+- HTTP status: `201`
+- Provider Request ID: `e1bb0dd9-a063-4cd8-94fb-dbc8b18f4659`
+- latency: `276 ms`
+- raw key / keyPreview persisted: `NO`
+
+The two provider key IDs were distinct.
+
+### Key A isolation probes
+
+| Probe | HTTP | Provider Request ID | Visible count | Own A visible | Foreign B visible | Result |
+|---|---:|---|---:|---|---|---|
+| `GET /v1/profiles` | 200 | `ffdc6ae3-2194-42fa-9c80-be3f1a58fa9c` | 1 | YES | NO | PASS |
+| exact A lookup | 200 | `b8456174-66c4-45cf-b22f-aa32fd9615c2` | 1 | YES | NO | PASS — recorded A ID matched |
+| exact B cross-lookup | 200 | `eaa69e95-ecf3-49e1-a7a4-25f9f9c7489a` | 0 | N/A | NO | PASS — isolated |
+
+Key A exposed no Profile outside its explicit Profile A scope.
+
+### Key B isolation probes
+
+| Probe | HTTP | Provider Request ID | Visible count | Own B visible | Foreign A visible | Result |
+|---|---:|---|---:|---|---|---|
+| `GET /v1/profiles` | 200 | `604095ff-6437-4cf5-9b6d-90c2f02bb86a` | 1 | YES | NO | PASS |
+| exact B lookup | 200 | `a435d299-5005-4059-99a5-b9609aca826f` | 1 | YES | NO | PASS — recorded B ID matched |
+| exact A cross-lookup | 200 | `bcee4a5e-fdae-4d82-ae6e-4918eff46f3b` | 0 | N/A | NO | PASS — isolated |
+
+Key B exposed no Profile outside its explicit Profile B scope.
+
+Cross-Profile leakage observed: `NO`.
+
+### Temporary-key cleanup
+
+Key A:
+- revoke result: `PASS`
+- DELETE status: `200`
+- revoke Provider Request ID: `4c4e2cde-9834-4ad5-97a2-6186f1d03012`
+- post-revoke credential valid: `NO`
+- post-revoke `GET /v1/auth/verify`: `401`
+- verification Provider Request ID: `83c41b2e-5cc6-426e-8da2-d32e54981e64`
+- cleanup confirmed: `YES`
+
+Key B:
+- revoke result: `PASS`
+- DELETE status: `200`
+- revoke Provider Request ID: `f2878126-9180-426e-93ec-9dc3185bfbd8`
+- post-revoke credential valid: `NO`
+- post-revoke `GET /v1/auth/verify`: `401`
+- verification Provider Request ID: `1a120253-0214-4bae-8cae-1b02495b4fb7`
+- cleanup confirmed: `YES`
+
+### Exact live operation count
+- control-plane `GET /v1/auth/verify`: `1`
+- `POST /v1/api-keys`: `2`
+- scoped-key `GET /v1/profiles` requests: `6`
+- `DELETE /v1/api-keys/{keyId}`: `2`
+- post-revoke `GET /v1/auth/verify`: `2`
+- total: `13`
+- hard ceiling: `16`
+- polling: `NO`
+- automatic retry: `NO`
+- UNKNOWN-create reconciliation used: `NO`
+
+No social connection, social publishing, Ads, media generation/upload, OpenAI, fal.ai, or ad-spend action occurred. No chargeable provider action was observed; scoped-key provisioning/revocation is treated as `$0` task cost.
+
+Scoped Keys capability observed status: `OBSERVED_PASS`.
+
+Recommendation pending Team Leader review: `Scoped Keys capability recommendation: SPIKE_PASS`.
+
+Canonical `PROVIDER_CAPABILITIES.md` remains unchanged: Profiles = `SPIKE_PASS`; Scoped Keys = `SPIKE_PENDING` until Team Leader acceptance.

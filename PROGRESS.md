@@ -93,7 +93,27 @@ Final accepted evidence:
 ## Current Task
 `P1-T03 — Verify Scoped API Key Isolation`
 
-**Status: NOT_STARTED — READY FOR TEAM LEADER TASK CONTRACT / SENIOR ASSIGNMENT**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+
+Completion evidence:
+- Trusted control-plane identity verification: PASS; expected identity match = true.
+- Temporary scoped Key A created with `scope=profiles`, Profile A only, `permission=read`, bounded 1-day expiry.
+- Temporary scoped Key B created with `scope=profiles`, Profile B only, `permission=read`, bounded 1-day expiry.
+- Key A visible Profile list contained exactly Profile A; Profile B/unrelated Profiles were not visible.
+- Key A own exact-name lookup matched Profile A ID `6ac5a45a8e4ca44f355033ae`; cross-Profile B lookup returned zero Profiles.
+- Key B visible Profile list contained exactly Profile B; Profile A/unrelated Profiles were not visible.
+- Key B own exact-name lookup matched Profile B ID `6ac5a45b243a942b74bdbaa0`; cross-Profile A lookup returned zero Profiles.
+- Cross-Profile leakage observed: NO.
+- Both temporary scoped keys were revoked and both post-revoke credential checks returned HTTP 401.
+- Live Provider Behavior execution used 13 calls, within the 16-call hard ceiling.
+- Targeted P1-T03 deterministic regressions: 27 passed / 0 failed (22 required cases + 5 additional safety cases).
+- Full regression suite: 89 passed / 0 failed / 0 skipped.
+- `npm run typecheck`: PASS.
+- `npm run build`: PASS.
+- `git diff --check`: PASS.
+- No social connection, publishing, Ads, media, OpenAI, fal.ai, or ad-spend action occurred.
+- Profiles remains `SPIKE_PASS`; Scoped Keys remains `SPIKE_PENDING` pending Team Leader acceptance.
+- No next Provider task has started.
 
 ## Phase 1 Rules
 - Work one Task at a time.
@@ -109,4 +129,4 @@ The previous single-Vertical estimate is obsolete. The 56–74 week figure remai
 Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test usage; do not invent a fixed forecast before measurements exist.
 
 ## Immediate Next Action
-Team Leader issues the exact `P1-T03` Task Contract. Senior Engineer does not start P1-T03 until that explicit assignment is received.
+Team Leader reviews P1-T03 implementation, deterministic regressions, bounded live Provider Behavior evidence, temporary-key cleanup, and capability recommendation. Senior Engineer does not mark P1-T03 DONE / ACCEPTED, does not change Scoped Keys from `SPIKE_PENDING`, and does not start another Provider task until explicit Team Leader verdict and assignment.
