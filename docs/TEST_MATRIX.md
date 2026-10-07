@@ -54,6 +54,8 @@ These are harness tests, not Zernio Provider Behavior tests.
 
 ## P1-T02 — Zernio Profile Provisioning
 
+Status: `ACCEPTED`
+
 ### Offline / harness-system regression tests
 
 Automated offline suite: `tests/provider-spike/p1-t02.test.ts`
@@ -98,9 +100,11 @@ Provider Behavior evidence is intentionally separated from the offline harness/s
 
 Initial provisioning also observed one intended `POST /v1/profiles` per Profile, each returning HTTP 201 between exact-name preflight and read-back GETs. No timeout, 409, 429, 5xx, UNKNOWN outcome, or automatic retry occurred during live execution.
 
-Profiles capability observed status: `OBSERVED_PASS`; Team Leader review is required before canonical `SPIKE_PASS` finalization.
+Profiles capability final accepted status: `SPIKE_PASS`. Scoped Keys remains `SPIKE_PENDING`.
 
 ## P1-T02-F01 — Trusted Zernio Expected Identity Binding
+
+Status: `ACCEPTED`
 
 ### Deterministic offline regressions
 
@@ -139,4 +143,4 @@ Provider Behavior evidence is separate from deterministic mock regression eviden
 | P1-T02-F01 Profile B | Exact-name read returns recorded Profile B ID | PASS | run `6352b4bd-7b41-41ef-a20e-ea7af7f4b489`, HTTP 200, ID `6ac5a45b243a942b74bdbaa0`, request ID `0ce2d3e2-1de7-4cf6-aea5-865bf02dfed6` |
 | P1-T02-F01 mutations | F01 live execution issues no Profile write requests | PASS | POST=0, PUT/PATCH=0, DELETE=0, scoped-key operations=0 |
 
-Expected and actual email values are intentionally absent from evidence and documentation. P1-T02 remains awaiting Team Leader re-review; canonical Profiles capability remains `SPIKE_PENDING`.
+Expected and actual email values are intentionally absent from evidence and documentation. P1-T02 and P1-T02-F01 are accepted; canonical Profiles capability is `SPIKE_PASS`.

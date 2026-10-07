@@ -65,36 +65,35 @@ Final validation evidence:
 - Paid Provider/API cost: NO
 - Provider capabilities marked `SPIKE_PASS`: NONE
 
-## Current Task
+## P1-T02 Result
 `P1-T02 — Create Zernio Profile A + Profile B`
 
-**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
+**Status: DONE / ACCEPTED**
 
-Completion evidence:
-- Authorized-team read-only preflight: PASS.
-- Profile A exists with exact name `aimm-p1-t02-profile-a`, provider ID `6ac5a45a8e4ca44f355033ae`.
-- Profile B exists with exact name `aimm-p1-t02-profile-b`, provider ID `6ac5a45b243a942b74bdbaa0`.
-- Profile IDs are distinct.
-- Both Profiles were read back successfully and retained for P1-T03.
-- Initial create flow returned HTTP `200 → 201 → 200` for each Profile.
-- No timeout, 409, 429, 5xx, UNKNOWN write outcome, or automatic retry occurred.
-- Targeted P1-T02 offline regressions: 18 passed / 0 failed.
-- Full suite: 51 passed / 0 failed / 0 skipped.
-- `npm run typecheck`: PASS.
-- `npm run build`: PASS.
-- Profiles capability observed status: `OBSERVED_PASS`.
-- Canonical Profiles capability remains unchanged pending Team Leader acceptance; recommended next status after review: `SPIKE_PASS`.
-- No social account, scoped API key, Ads/media/publishing/webhook/analytics/community action occurred.
-- P1-T03 has not started.
-- P1-T02-F01 trusted target-identity binding: IMPLEMENTED.
-- Trusted expected Zernio identity was supplied independently by the operator through ignored runtime configuration; the identity value is not persisted in repository evidence.
-- `GET /v1/auth/verify` identity verification: PASS; expected identity match = `true`.
-- Read-only Profile A re-verification: PASS; observed ID matches `6ac5a45a8e4ca44f355033ae`.
-- Read-only Profile B re-verification: PASS; observed ID matches `6ac5a45b243a942b74bdbaa0`.
-- P1-T02-F01 live mutations: Profile POST `0`, PUT/PATCH `0`, DELETE `0`, scoped API-key operations `0`.
-- P1-T02-F01 targeted regressions: 11 passed / 0 failed.
-- Full suite after P1-T02-F01: 62 passed / 0 failed / 0 skipped.
-- Profiles remains `SPIKE_PENDING` pending Team Leader re-review and acceptance.
+Accepted implementation HEAD: `1d782052bb29e4d2529b03d59b58120850884968`
+
+Accepted fix: `P1-T02-F01 — Bind Zernio Live Execution to Trusted Expected Identity`
+
+Final accepted evidence:
+- Trusted independently supplied Zernio identity verification: PASS
+- `GET /v1/auth/verify` identity match: PASS
+- Profile A exact-name verification: PASS
+- Profile A ID: `6ac5a45a8e4ca44f355033ae`
+- Profile B exact-name verification: PASS
+- Profile B ID: `6ac5a45b243a942b74bdbaa0`
+- Profile A ID != Profile B ID
+- Initial Profile creation behavior: HTTP 201 for each Profile
+- P1-T02-F01 live mutations: 0
+- Targeted P1-T02-F01 regressions: 11 passed / 0 failed
+- Full regression suite: 62 passed / 0 failed / 0 skipped
+- `npm run typecheck`: PASS
+- `npm run build`: PASS
+- P1-T03 implementation started: NO
+
+## Current Task
+`P1-T03 — Verify Scoped API Key Isolation`
+
+**Status: NOT_STARTED — READY FOR TEAM LEADER TASK CONTRACT / SENIOR ASSIGNMENT**
 
 ## Phase 1 Rules
 - Work one Task at a time.
@@ -110,4 +109,4 @@ The previous single-Vertical estimate is obsolete. The 56–74 week figure remai
 Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test usage; do not invent a fixed forecast before measurements exist.
 
 ## Immediate Next Action
-Team Leader re-reviews P1-T02 together with P1-T02-F01 trusted target-identity binding, read-only provider verification, tests, and docs. Senior Engineer does not mark P1-T02 DONE / ACCEPTED and does not start P1-T03 until explicit Team Leader verdict and assignment.
+Team Leader issues the exact `P1-T03` Task Contract. Senior Engineer does not start P1-T03 until that explicit assignment is received.

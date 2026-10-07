@@ -34,7 +34,7 @@ This remains harness validation only. No Zernio/provider behavior was tested, no
 
 ## P1-T02 — Zernio Profiles Provider Behavior
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`
+Status: `DONE / ACCEPTED`
 
 Provider environment: authorized internal Zernio test team. The team-level credential was sourced from the local ignored `.env` secret file and was never printed, logged, committed, placed in evidence, or passed as a plain CLI argument.
 
@@ -134,11 +134,11 @@ No social account, Ads account, publishing, media, webhook, analytics, community
 
 Profiles capability observed status: `OBSERVED_PASS`.
 
-Recommendation pending Team Leader review: `Profiles → SPIKE_PASS`. This document does not independently change the canonical `PROVIDER_CAPABILITIES.md` status.
+Team Leader verdict: `ACCEPTED`. Canonical Profiles capability is finalized as `SPIKE_PASS`; Scoped Keys remains `SPIKE_PENDING`.
 
 ## P1-T02-F01 — Trusted Zernio Target Identity Binding
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`
+Status: `ACCEPTED`
 
 This fix closes the P1-T02 authorization-target verification gap without discarding the historical Profile creation observations above. A separately operator-supplied trusted expected identity is loaded only from ignored runtime configuration. The value itself is not logged, committed, written to evidence, documented, or returned by the runner.
 
@@ -182,7 +182,7 @@ Neither the expected nor provider-returned email is persisted in this document.
 
 Profile A ID and Profile B ID remain distinct.
 
-P1-T02-F01 live execution was strictly read-only:
+P1-T02-F01 accepted live execution was strictly read-only:
 - `GET /v1/auth/verify`: `1`
 - exact-name `GET /v1/profiles` for Profile A: `1`
 - exact-name `GET /v1/profiles` for Profile B: `1`
@@ -191,4 +191,4 @@ P1-T02-F01 live execution was strictly read-only:
 - Profile `DELETE`: `0`
 - scoped API-key operations: `0`
 
-The original P1-T02 Profile observations are therefore now bound to the intended operator-approved Zernio identity by independent trusted configuration plus read-only identity and recorded-ID verification. Profiles remains `SPIKE_PENDING` until Team Leader re-review and acceptance; this document does not modify canonical `PROVIDER_CAPABILITIES.md`.
+The original P1-T02 Profile observations are therefore now bound to the intended operator-approved Zernio identity by independent trusted configuration plus read-only identity and recorded-ID verification. Team Leader accepted P1-T02 and P1-T02-F01. Canonical Profiles capability is `SPIKE_PASS`; Scoped Keys remains `SPIKE_PENDING` for P1-T03.
