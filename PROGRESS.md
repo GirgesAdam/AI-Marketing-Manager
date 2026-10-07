@@ -68,7 +68,13 @@ Final validation evidence:
 ## Current Task
 `P1-T02 — Create Zernio Profile A + Profile B`
 
-**Status: NOT_STARTED — READY FOR TEAM LEADER TASK CONTRACT / SENIOR ASSIGNMENT**
+**Status: IN_PROGRESS — BLOCKED ON LIVE CREDENTIAL INJECTION**
+
+Current blocker:
+- P1-T02 offline implementation/tests are complete and green.
+- GitHub repository/environment secret `ZERNIO_API_KEY` is not injected into the authorized local development runtime.
+- No live Zernio preflight or Profile mutation has executed.
+- Profiles capability remains `SPIKE_PENDING`.
 
 ## Phase 1 Rules
 - Work one Task at a time.
@@ -84,4 +90,4 @@ The previous single-Vertical estimate is obsolete. The 56–74 week figure remai
 Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test usage; do not invent a fixed forecast before measurements exist.
 
 ## Immediate Next Action
-Team Leader verifies the finalized `P1-T01` acceptance record and issues the exact `P1-T02` Task Contract. Senior Engineer does not start `P1-T02` until that explicit assignment is received.
+Make `ZERNIO_API_KEY` available to the authorized local execution environment without exposing its value in chat/logs. Then resume P1-T02 with the read-only authorized-team preflight before any Profile mutation. Do not start P1-T03.

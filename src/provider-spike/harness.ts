@@ -8,6 +8,7 @@ const DEFAULT_SAFE_HEADERS=['content-type','retry-after','x-request-id','x-corre
 class BlockedError extends Error{constructor(readonly category:string,message:string){super(message);this.name='BlockedError';}}
 class TimeoutError extends BlockedError{constructor(ms:number){super('TIMEOUT',`Transport timed out after ${ms}ms.`);}}
 class RequestLimitError extends BlockedError{constructor(n:number){super('REQUEST_LIMIT_EXCEEDED',`Request limit of ${n} reached before transport execution.`);}}
+export function blockProviderSpike(category:string,message:string):never{throw new BlockedError(category,message);}
 function pos(v:number|undefined){return v!==undefined&&Number.isInteger(v)&&v>0;}
 function nonNegativeFinite(v:unknown):v is number{return typeof v==='number'&&Number.isFinite(v)&&v>=0;}
 function statusCategory(s:number|string|undefined){if(typeof s!=='number')return null;if(s===429)return 'HTTP_429';if(s>=400&&s<500)return 'HTTP_4XX';if(s>=500&&s<600)return 'HTTP_5XX';return null;}

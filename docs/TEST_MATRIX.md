@@ -51,3 +51,36 @@ Targeted result: 7 passed, 26 skipped, 0 failed.
 Additional deterministic cases in the same suite cover invalid harness configuration, malformed provider response, and development cost-safety rejection before live transport.
 
 These are harness tests, not Zernio Provider Behavior tests.
+
+## P1-T02 — Zernio Profile Provisioning
+
+Automated offline suite: `tests/provider-spike/p1-t02.test.ts`
+
+| ID | Coverage | Result |
+|---|---|---|
+| T02-01 | Default/non-live execution makes zero external requests | PASS |
+| T02-02 | Missing credential blocks before live transport | PASS |
+| T02-03 | Failed authorized-team preflight prevents Profile creation | PASS |
+| T02-04 | Exact-name preflight finds existing Profile and does not POST | PASS |
+| T02-05 | Absent Profile triggers exactly one idempotent create POST | PASS |
+| T02-06 | Successful create is followed by read-back verification | PASS |
+| T02-07 | Profile A and Profile B must resolve to distinct IDs | PASS |
+| T02-08 | Natural 409 reconciles by exact name without renamed duplicate | PASS |
+| T02-09 | Timed-out create is not blindly retried and reconciles by GET | PASS |
+| T02-10 | Unresolved ambiguous create becomes BLOCKED / UNKNOWN | PASS |
+| T02-11 | 429 remains observable and is not automatically retried | PASS |
+| T02-12 | 401/403 remain BLOCKED setup/provider evidence, not capability FAIL | PASS |
+| T02-13 | API-key sentinel does not leak into output/errors/evidence | PASS |
+| T02-14 | Provider Request ID capture | PASS |
+| T02-15 | Unsafe response headers excluded | PASS |
+| Extra | Duplicate exact-name state blocks before mutation | PASS |
+| Extra | Missing provider Profile ID blocks as malformed evidence | PASS |
+| Extra | Same A/B provider ID fails distinctness guard | PASS |
+| T02-16 | Existing P1-T01/F01 suite remains green | PASS — full suite 51/51 |
+
+Targeted command: `npm test -- -t "P1-T02 Zernio profile provisioning offline regressions"`.
+Targeted result: 18 passed, 0 failed; 33 unrelated tests skipped by the name filter.
+
+Full result: 2 test files, 51 tests passed, 0 failed, 0 skipped.
+
+Live Provider Behavior cases `P1-T02-PROFILE-A` and `P1-T02-PROFILE-B`: `BLOCKED — NOT EXECUTED`; the authorized local runtime does not currently receive `ZERNIO_API_KEY`. This is not evidence of Zernio Profile capability failure.
