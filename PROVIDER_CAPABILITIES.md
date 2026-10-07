@@ -449,7 +449,7 @@ NOT_APPLICABLE
 | Scoped Keys | Yes | SPIKE_PASS | API key permissions | Secret management | Scope enforcement |
 | FB Connect | Yes | SPIKE_PENDING | Supported Page | Tenant validation | Connection |
 | IG Connect | Yes | SPIKE_PENDING | Supported professional account | Tenant validation | Connection |
-| Publishing | Yes | SPIKE_PENDING | Connected account | Schedule/policies | Execution |
+| Publishing | Yes | SPIKE_PASS | Connected account | Schedule/policies | Execution |
 | Historical Analytics | Yes | SPIKE_PENDING | Analytics support | Baseline | Collection |
 | Analytics Delta | Yes | SPIKE_PENDING | Analytics support | Durable synchronization | Delta feed |
 | Best Times | Yes | SPIKE_PENDING | Sufficient data | Decision signal | Calculation |

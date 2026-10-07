@@ -123,54 +123,87 @@ Final accepted evidence:
 - No next Provider task started.
 - Profiles: `SPIKE_PASS`.
 - Scoped Keys: `SPIKE_PASS`.
-- Publishing: `SPIKE_PENDING`.
+- Publishing: `SPIKE_PASS`.
 
 ## Current Task
+
 `P1-T04 — Verify Zernio Publishing Behavior`
 
-**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
+**Status: DONE / ACCEPTED**
 
-Completion evidence:
-- Approved base: `d87a5103a3f2b67f87abb3c0965e15d949c0307b`.
-- Branch: `p1-t04-zernio-publishing`.
-- Frozen target verified: Profile A `6ac5a45a8e4ca44f355033ae`, Zernio Facebook account `6ac64f8740364f4695dd3077`, Facebook Page `1387424501114639` (`Clothing Brand`).
+Accepted implementation HEAD: `b780a5cbb87293b28a62427b351d455443cc6382`
+
+Accepted fix: `P1-T04-F01 — Harden Exact Page Target Attestation and Failure Cleanup`
+
+Final accepted evidence:
+
+### Real Provider Behavior evidence
+- Real Provider Behavior publishing run: PASS / ACCEPTED.
+- Historical task base: `d87a5103a3f2b67f87abb3c0965e15d949c0307b`; branch: `p1-t04-zernio-publishing`.
 - Trusted control-plane identity verification: PASS; expected identity match = true.
+- Frozen target verified: Profile A `6ac5a45a8e4ca44f355033ae`, Zernio Facebook account `6ac64f8740364f4695dd3077`, Facebook Page `1387424501114639` (`Clothing Brand`).
 - Temporary publishing key: Profile-A-only, `scope=profiles`, `permission=read-write`, bounded 1-day expiry; raw key not persisted/exposed.
 - Account/Page/health preflight: PASS; platform `facebook`, selected expected Page matched, account status `healthy`, `canPost=true`.
-- Draft create/read/idempotency replay: PASS; same logical Zernio post ID, duplicate = NO; draft cleanup/read-back: PASS.
-- Scheduled create/read: PASS; requested `Africa/Cairo` schedule `2026-10-10T17:39:51`, provider returned `2026-10-10T14:39:51.000Z`; scheduled cleanup/read-back: PASS.
-- Exactly one immediate public Facebook text-only test post created: PASS; published-state read-back: PASS.
-- Public test post cleanup/unpublish + read-back: PASS.
-- Wrong publishing target observed: NO.
+- Account health / `canPost`: PASS.
+- Draft lifecycle: PASS.
+- Historical draft create/read/idempotency replay: PASS; same logical Zernio post ID; draft cleanup/read-back: PASS.
+- Same-key / same-body idempotency: PASS.
 - Duplicate confirmed publish observed: NO.
-- Temporary publishing key revoked: PASS; post-revoke auth returned HTTP 401 and credential valid = NO.
-- One bounded live P1-T04 run only; exact provider call count: 20 normal / 0 cleanup allowance / 20 total, within normal ceiling 22.
-- Targeted P1-T04 regressions: 44 passed / 0 failed.
-- Full regression suite: 150 passed / 0 failed / 0 skipped.
-- `npm run typecheck`: PASS.
-- `npm run build`: PASS.
-- `git diff --check`: PASS.
-- No Ads, ad spend, OpenAI, fal.ai, media generation/upload, new account connection, reconnect, comments/DMs, or webhooks.
-- P1-T04 real Provider Behavior: `OBSERVED_PASS`.
-- Historical Team Leader verdict before F01: `REJECTED — FIX REQUIRED`.
-- P1-T04-F01 — Harden Exact Page Target Attestation and Failure Cleanup: IMPLEMENTED.
-- Team Leader review gaps addressed deterministically: incomplete exact-Page attestation and incomplete emergency draft/scheduled cleanup verification.
+- Scheduled lifecycle: PASS.
+- Historical scheduled create/read: PASS; requested `Africa/Cairo` schedule `2026-10-10T17:39:51`, provider returned `2026-10-10T14:39:51.000Z`; scheduled cleanup/read-back: PASS.
+- `Africa/Cairo` schedule normalization: PASS.
+- One immediate Facebook text-only test publication: PASS.
+- Published-state read-back for the immediate post: PASS.
+- Wrong publishing target observed: NO.
+- Public publication cleanup: PASS.
+- Historical public test cleanup/unpublish + read-back: PASS.
+- Temporary publishing key revoke: PASS.
+- Post-revoke authentication: HTTP 401.
+- Historical live execution: 20 calls / ceiling 22.
+- Exact historical live call accounting: 20 normal / 0 cleanup allowance / 20 total.
+- Historical P1-T04 real Provider Behavior classification: `OBSERVED_PASS`.
+- Historical run performed no Ads, ad spend, OpenAI, fal.ai, media generation/upload, new account connection, reconnect, comments/DMs, or webhooks.
+- Historical live Provider Behavior evidence and Provider Request IDs remain preserved in `docs/PROVIDER_SPIKE_RESULTS.md`; no historical evidence was regenerated during finalization.
+- Known limitation: Core publishing lifecycle verified on Facebook text-only only. Instagram/media/platform-specific publishing remains separately unverified.
+
+### Deterministic regression / failure-recovery evidence
+- Historical Team Leader verdict before F01: REJECTED — FIX REQUIRED.
+- P1-T04-F01: ACCEPTED.
+- Review gaps addressed deterministically: incomplete exact-Page attestation and incomplete emergency draft/scheduled cleanup verification.
 - Correct account alone can no longer prove the Facebook Page; explicit Page ID is required for draft/scheduled create/read-back.
 - Immediate published posts may use only strict deterministic `PAGEID_POSTID` attestation from `platformPostId` or an exact Facebook public URL path when explicit Page ID is absent; wrong Page is Critical and unparseable/missing evidence is BLOCKED.
-- Emergency draft/scheduled cleanup now requires DELETE followed by GET read-back; DELETE 200/204 alone is insufficient.
+- Emergency draft/scheduled cleanup requires DELETE followed by GET read-back; DELETE 200/204 alone is insufficient.
 - Cleanup uncertainty takes precedence as `DRAFT_TEST_POST_CLEANUP_UNCONFIRMED` or `SCHEDULED_TEST_POST_CLEANUP_UNCONFIRMED`.
 - Cleanup DELETE + GET still run via the safety allowance after normal request ceiling exhaustion.
-- P1-T04-F01 focused regressions: 15 passed / 0 failed (F01-T01 through F01-T13 + 2 additional safety cases); F01-T14 full-suite gate validated separately by `npm test`.
-- Existing P1-T04 targeted regressions: 44 passed / 0 failed.
-- Full regression suite after F01: 165 passed / 0 failed / 0 skipped.
+- P1-T04-F01 real provider calls: 0.
+- Exact Page attestation hardening: ACCEPTED.
+- Emergency draft/scheduled DELETE + GET cleanup verification: ACCEPTED.
+- P1-T04-F01 focused regressions: 15 / 15.
+- Parent P1-T04 regressions: 44 / 44.
+- Historical pre-F01 full regression suite: 150 passed / 0 failed / 0 skipped.
+- Full suite: 165 / 165.
 - `npm run typecheck`: PASS.
 - `npm run build`: PASS.
 - `git diff --check`: PASS.
-- P1-T04-F01 real Zernio calls: 0; public posts created: 0; scheduled posts created: 0; temporary scoped keys created live: 0.
 - Historical P1-T04 Provider Behavior evidence preserved: YES; historical live post re-published: NO.
-- Canonical Publishing remains `SPIKE_PENDING`.
-- Known limitation: Core publishing lifecycle verified on Facebook text-only only. Instagram/media/platform-specific publishing remains separately unverified.
+- No live provider calls, publishing actions, scheduling actions, API-key operations, account connection/reconnection, or webhook actions were performed during P1-T04-F01 or acceptance finalization.
+
+Final review wording:
+- P1-T04: DONE / ACCEPTED.
+- P1-T04-F01: ACCEPTED.
+- Profiles: `SPIKE_PASS`.
+- Scoped Keys: `SPIKE_PASS`.
+- Publishing: `SPIKE_PASS`.
+
+## Next Task
+
+`P1-T05 — Verify Zernio Webhook Delivery Contract`
+
+**Status: NOT_STARTED — READY FOR TEAM LEADER TASK CONTRACT / SENIOR ASSIGNMENT**
+
 - P1-T05 implementation started: NO.
+- All webhook-related capabilities remain `SPIKE_PENDING`.
+- Do not start P1-T05 without explicit Team Leader Task Contract and Senior assignment.
 
 ## Phase 1 Rules
 - Work one Task at a time.
@@ -186,4 +219,5 @@ The previous single-Vertical estimate is obsolete. The 56–74 week figure remai
 Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test usage; do not invent a fixed forecast before measurements exist.
 
 ## Immediate Next Action
-Team Leader re-reviews P1-T04 together with P1-T04-F01 exact-Page attestation and verified emergency cleanup hardening. Senior Engineer does not mark P1-T04 DONE / ACCEPTED, does not change Publishing from `SPIKE_PENDING`, and does not start P1-T05 without explicit Team Leader verdict and assignment.
+
+Wait for Team Leader Source-of-Truth verification and explicit P1-T05 Task Contract / Senior assignment. Do not begin P1-T05 before that authorization.
