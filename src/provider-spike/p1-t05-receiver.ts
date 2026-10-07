@@ -44,3 +44,8 @@ export async function probeP1T05ReceiverHttps(url:string,options:{attempts?:numb
  for(let i=0;i<attempts;i++){try{const response=await fetcher(url,{method:'POST',headers:{'content-type':'application/json'},body:'{}'});if(response.status===401)return true;}catch{}if(i+1<attempts)await sleep(1000);}
  return false;
 }
+
+export async function runAfterP1T05ReceiverReadiness<T>(url:string,onReady:()=>Promise<T>,options:{attempts?:number;sleep?:(ms:number)=>Promise<void>;fetcher?:typeof fetch}={}):Promise<{ready:boolean;value:T|null}>{
+ if(!await probeP1T05ReceiverHttps(url,options))return {ready:false,value:null};
+ return {ready:true,value:await onReady()};
+}

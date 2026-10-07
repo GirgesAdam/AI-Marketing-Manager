@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { loadEnvFile } from 'node:process';
 import { spawn, type ChildProcess } from 'node:child_process';
 import { P1_T04_ACCOUNT_ID, P1_T04_PROFILE_ID } from './p1-t04-zernio.js';
-import { probeP1T05ReceiverHttps, startP1T05Receiver } from './p1-t05-receiver.js';
+import { runAfterP1T05ReceiverReadiness, startP1T05Receiver } from './p1-t05-receiver.js';
 import { runP1T05 } from './p1-t05-zernio.js';
 
 const live=process.argv.includes('--live');
@@ -31,10 +31,11 @@ if(!live){console.log(JSON.stringify(safeBase,null,2));process.exitCode=2;}else{
   let t:Awaited<ReturnType<typeof tunnel>>|null=null;
   try{
    t=await tunnel(binary,`http://127.0.0.1:${receiver.port}`);
-   if(!await probeP1T05ReceiverHttps(t.url)){
+   const gated=await runAfterP1T05ReceiverReadiness(t.url,()=>runP1T05({live:true,env:process.env,providerEnvironment:'authorized-internal-zernio-test-team',receiver,receiverUrl:t!.url,webhookSecret:secret,runTag}));
+   if(!gated.ready||!gated.value){
     console.log(JSON.stringify({...safeBase,errorCategory:'CONTROLLED_WEBHOOK_TEST_RECEIVER_NOT_AVAILABLE'},null,2));process.exitCode=2;
    }else{
-    const result=await runP1T05({live:true,env:process.env,providerEnvironment:'authorized-internal-zernio-test-team',receiver,receiverUrl:t.url,webhookSecret:secret,runTag});
+    const result=gated.value;
     const safe={...result,preflight:result.preflight?{runId:result.preflight.evidence.run_id,timestamp:result.preflight.evidence.timestamp,result:result.preflight.evidence.result,status:result.preflight.evidence.provider_status,requestId:result.preflight.evidence.provider_request_id,latencyMs:result.preflight.evidence.latency_ms}:null,receiver:{type:'local-node-http+cloudflare-quick-tunnel',controlledByProject:true,publicHttpsUrl:t.url,genericThirdPartyRequestBinUsed:false,stoppedAfterCleanup:true}};
     console.log(JSON.stringify(safe,null,2));process.exitCode=result.result==='PASS'?0:result.result==='FAIL'?1:2;
    }

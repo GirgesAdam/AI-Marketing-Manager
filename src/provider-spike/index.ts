@@ -11,6 +11,6 @@ export { P1_T04_ACCOUNT_ID, P1_T04_CLEANUP_REQUEST_ALLOWANCE, P1_T04_NORMAL_REQU
 export type { P1T04KeyCleanup, P1T04KeyMetadata, P1T04PostEvidence, P1T04RunOptions, P1T04RunResult, P1T04StepEvidence, P1T04TargetEvidence } from './p1-t04-zernio.js';
 
 export { P1_T05_CLEANUP_REQUEST_ALLOWANCE, P1_T05_NORMAL_REQUEST_CEILING, runP1T05 } from './p1-t05-zernio.js';
-export { probeP1T05ReceiverHttps, startP1T05Receiver, verifyP1T05Delivery } from './p1-t05-receiver.js';
-export type { P1T05RunOptions, P1T05RunResult, P1T05WebhookEvidence, P1T05TriggerEvidence, P1T05KeyEvidence, P1T05LogsEvidence } from './p1-t05-zernio.js';
+export { probeP1T05ReceiverHttps, runAfterP1T05ReceiverReadiness, startP1T05Receiver, verifyP1T05Delivery } from './p1-t05-receiver.js';
+export type { P1T05RunOptions, P1T05RunResult, P1T05WebhookEvidence, P1T05TriggerEvidence, P1T05KeyEvidence, P1T05LogsEvidence, P1T05TestFailureAttemptEvidence, P1T05TestFailureDiagnostics } from './p1-t05-zernio.js';
 export type { P1T05DeliveryEvidence, P1T05ReceiverController, P1T05ReceiverSnapshot, P1T05VerifyOptions, P1T05VerifyResult } from './p1-t05-receiver.js';
