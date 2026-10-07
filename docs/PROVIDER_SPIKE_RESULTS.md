@@ -296,3 +296,39 @@ Scoped Keys capability observed status: `OBSERVED_PASS`.
 Recommendation pending Team Leader review: `Scoped Keys capability recommendation: SPIKE_PASS`.
 
 Canonical `PROVIDER_CAPABILITIES.md` remains unchanged: Profiles = `SPIKE_PASS`; Scoped Keys = `SPIKE_PENDING` until Team Leader acceptance.
+
+## P1-T03-F01 — Malformed Scoped-Key Create Cleanup Hardening
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`
+
+This post-review fix addresses only deterministic failure recovery after a successful `POST /v1/api-keys` response is malformed. The historical P1-T03 live Provider Behavior evidence above remains valid and was not repeated.
+
+The hardened create path now treats HTTP 201 as a potentially committed credential even when the response cannot safely identify that credential. If the returned provider key ID is trustworthy, malformed scope semantics are cleaned up directly with `DELETE /v1/api-keys/{keyId}`. If the provider key ID is unavailable, the control-plane credential performs one bounded `GET /v1/api-keys`, filters in code by the exact unique synthetic P1-T03 key name, and revokes only a single exact match.
+
+Fail-closed outcomes:
+- zero exact matches → `SCOPED_KEY_CLEANUP_UNCONFIRMED`;
+- one exact match with valid ID + confirmed DELETE → `MALFORMED_PROVIDER_RESPONSE` after cleanup;
+- one exact match missing provider ID → `SCOPED_KEY_CLEANUP_UNCONFIRMED`;
+- multiple exact matches → `AMBIGUOUS_SCOPED_KEY_STATE`, with no arbitrary DELETE;
+- failed DELETE → `SCOPED_KEY_CLEANUP_UNCONFIRMED`;
+- malformed successful create never retries POST.
+
+Known-ID malformed responses are revoked directly for missing raw key, scope mismatch, Profile-scope mismatch, permission mismatch, missing expiry, or invalid/unparseable expiry. Raw scoped keys and `keyPreview` values remain absent from returned results, harness evidence, errors, stdout-equivalent serialization, documentation, and git.
+
+Deterministic validation:
+- focused P1-T03-F01 suite: `17 passed / 0 failed` (10 required regressions + 7 additional cleanup/semantic safety cases);
+- existing P1-T03 suite: `27 passed / 0 failed`;
+- full suite: `106 passed / 0 failed / 0 skipped`;
+- `npm run typecheck`: PASS;
+- `npm run build`: PASS;
+- `git diff --check`: PASS.
+
+P1-T03-F01 real Provider activity:
+- real Zernio calls: `0`;
+- live scoped keys created: `0`;
+- live scoped keys revoked: `0`;
+- repeated live isolation run: `NO`.
+
+Historical P1-T03 observations remain unchanged: Key A isolation observed PASS, Key B isolation observed PASS, cross-Profile leakage `NO`, both real temporary keys revoked, both post-revoke auth checks HTTP 401, and the historical live call count remains 13.
+
+Canonical capability state is intentionally unchanged: Profiles = `SPIKE_PASS`; Scoped Keys = `SPIKE_PENDING` pending Team Leader acceptance.

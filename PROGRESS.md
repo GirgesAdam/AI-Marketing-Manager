@@ -93,7 +93,7 @@ Final accepted evidence:
 ## Current Task
 `P1-T03 — Verify Scoped API Key Isolation`
 
-**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
 
 Completion evidence:
 - Trusted control-plane identity verification: PASS; expected identity match = true.
@@ -115,6 +115,23 @@ Completion evidence:
 - Profiles remains `SPIKE_PASS`; Scoped Keys remains `SPIKE_PENDING` pending Team Leader acceptance.
 - No next Provider task has started.
 
+P1-T03-F01 recovery hardening evidence:
+- Malformed HTTP 201 responses missing the apiKey object or provider key ID now enter exact synthetic-name control-plane reconciliation before returning BLOCKED.
+- One exact reconciliation match requires a valid provider key ID and confirmed DELETE; zero matches, missing reconciled ID, or failed DELETE produce SCOPED_KEY_CLEANUP_UNCONFIRMED.
+- Multiple exact matches produce AMBIGUOUS_SCOPED_KEY_STATE with no arbitrary DELETE.
+- Malformed responses with a trusted returned provider key ID are revoked directly; this includes missing raw key, scope/profile/permission mismatch, and missing/invalid expiry.
+- No malformed successful create path retries POST.
+- Focused P1-T03-F01 deterministic regressions: 17 passed / 0 failed (10 required cases + 7 additional cleanup/semantic safety cases).
+- Existing P1-T03 deterministic regressions remain green: 27 passed / 0 failed.
+- Full regression suite: 106 passed / 0 failed / 0 skipped.
+- npm run typecheck: PASS.
+- npm run build: PASS.
+- git diff --check: PASS.
+- Real Zernio calls during P1-T03-F01: 0.
+- New live scoped keys created during P1-T03-F01: 0.
+- Historical P1-T03 live Provider Behavior evidence remains valid and was not repeated.
+- Scoped Keys remains SPIKE_PENDING pending Team Leader acceptance.
+
 ## Phase 1 Rules
 - Work one Task at a time.
 - Provider Behavior Tests remain separate from System Integration Tests.
@@ -129,4 +146,4 @@ The previous single-Vertical estimate is obsolete. The 56–74 week figure remai
 Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test usage; do not invent a fixed forecast before measurements exist.
 
 ## Immediate Next Action
-Team Leader reviews P1-T03 implementation, deterministic regressions, bounded live Provider Behavior evidence, temporary-key cleanup, and capability recommendation. Senior Engineer does not mark P1-T03 DONE / ACCEPTED, does not change Scoped Keys from `SPIKE_PENDING`, and does not start another Provider task until explicit Team Leader verdict and assignment.
+Team Leader re-reviews P1-T03-F01 failure-recovery hardening together with the preserved P1-T03 Provider Behavior evidence. Senior Engineer does not mark P1-T03 DONE / ACCEPTED, does not change Scoped Keys from `SPIKE_PENDING`, and does not start another Provider task until explicit Team Leader verdict and assignment.

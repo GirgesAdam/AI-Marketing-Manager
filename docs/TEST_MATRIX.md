@@ -222,3 +222,44 @@ Scoped Keys capability observed status: `OBSERVED_PASS`.
 
 Recommendation pending Team Leader review: `Scoped Keys capability recommendation: SPIKE_PASS`.
 Canonical Scoped Keys remains `SPIKE_PENDING` until Team Leader acceptance; Profiles remains `SPIKE_PASS`.
+
+## P1-T03-F01 — Malformed Scoped-Key Create Cleanup Recovery
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`
+
+Automated deterministic suite: `tests/provider-spike/p1-t03-f01.test.ts`
+
+| ID | Coverage | Result |
+|---|---|---|
+| F01-T01 | HTTP 201 missing `apiKey`: exact-name reconciliation, single exact match revoke, final malformed classification | PASS |
+| F01-T02 | HTTP 201 missing provider key ID: exact-name reconciliation + revoke; raw key remains secret | PASS |
+| F01-T03 | Missing raw key with trusted returned provider ID: direct revoke, no unnecessary list GET | PASS |
+| F01-T04 | Malformed 201 + zero exact-name matches → `SCOPED_KEY_CLEANUP_UNCONFIRMED`; no POST retry | PASS |
+| F01-T05 | Malformed 201 + multiple exact-name matches → ambiguous BLOCKED; no arbitrary DELETE | PASS |
+| F01-T06 | Reconciled exact match missing provider ID → cleanup unconfirmed | PASS |
+| F01-T07 | Reconciled exact-match DELETE failure → cleanup unconfirmed takes precedence | PASS |
+| F01-T08 | Raw scoped-key and `keyPreview` sentinels absent from result/evidence/errors/serialization | PASS |
+| F01-T09 | Every malformed-success path issues exactly one create POST | PASS |
+| F01-T10 | Well-formed create path remains compatible; existing P1-T03 suite verified separately | PASS |
+| Extra | Malformed reconciliation list body becomes `SCOPED_KEY_CLEANUP_UNCONFIRMED` | PASS |
+| Extra | Failed reconciliation list request becomes `SCOPED_KEY_CLEANUP_UNCONFIRMED` | PASS |
+| Extra | Known-ID scope mismatch is directly revoked | PASS |
+| Extra | Known-ID Profile-scope mismatch is directly revoked | PASS |
+| Extra | Known-ID permission mismatch is directly revoked | PASS |
+| Extra | Known-ID missing expiry is directly revoked | PASS |
+| Extra | Known-ID invalid/unparseable expiry is directly revoked | PASS |
+
+Focused command: `npm test -- -t "P1-T03-F01 malformed scoped-key cleanup regressions"`.
+Focused result: `17 passed / 0 failed`; unrelated tests skipped only by the name filter.
+
+Parent P1-T03 command: `npm test -- -t "P1-T03 scoped API key isolation offline regressions"`.
+Parent result: `27 passed / 0 failed`; all T03-01 through T03-22 plus five prior safety regressions remain green.
+
+Full command: `npm test`.
+Full result: `5` test files, `106 passed / 0 failed / 0 skipped`.
+
+`npm run typecheck`: PASS.
+`npm run build`: PASS.
+`git diff --check`: PASS.
+
+These are deterministic failure-recovery tests only. P1-T03-F01 intentionally performed zero real Zernio calls and created zero live scoped keys. Historical P1-T03 Provider Behavior evidence was preserved without repeating the live isolation run. Scoped Keys remains `SPIKE_PENDING` pending Team Leader acceptance.
