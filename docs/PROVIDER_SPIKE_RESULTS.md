@@ -581,3 +581,59 @@ The harness now gates live provider execution on a bounded probe of the exact sa
 Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 
 No canonical webhook-related capability is promoted by P1-T05 implementation; Analytics Webhook remains `SPIKE_PENDING`.
+
+## P1-T05-F01 — webhook.test Failure Diagnostics and Second Authorized Live Rerun
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+
+The historical P1-T05 live run above is preserved unchanged. P1-T05-F01 does not reinterpret its blocked `webhook.test` as PASS.
+
+### Deterministic diagnostic hardening
+- On `webhook.test` provider failure, the harness performs one and only one `GET /v1/webhooks/logs` before temporary-webhook cleanup.
+- Query scope: exact temporary `webhookId`, `event=webhook.test`, `limit=5`; unrelated returned logs are ignored.
+- No blind second `POST /v1/webhooks/test` is performed.
+- Endpoint non-2xx evidence is preserved only as sanitized status/attempt metadata and classified precisely.
+- Connection/timeout evidence or no matching delivery-log entry => `BLOCKED / WEBHOOK_TEST_DELIVERY_PATH_UNRESOLVED`.
+- Unavailable log API => `BLOCKED / WEBHOOK_TEST_FAILURE_DIAGNOSTICS_UNAVAILABLE`.
+- Exact-live-URL readiness must return receiver HTTP 401 before the provider callback can execute; failed readiness means zero Zernio calls.
+- F01 focused suite: `13 passed / 0 failed`.
+- Existing P1-T05 focused suite: `46 passed / 0 failed`.
+- Full suite: `224 passed / 0 failed / 0 skipped` across 9 files.
+- typecheck/build/diff-check: PASS.
+
+### Second and only authorized live rerun
+Command: `npm run p1-t05 -- --live`.
+
+Observed result:
+- result: `BLOCKED`;
+- error category: `CONTROLLED_WEBHOOK_TEST_RECEIVER_NOT_AVAILABLE`;
+- controlled receiver: local project Node receiver + temporary Cloudflare Quick Tunnel;
+- exact final HTTPS URL readiness: FAIL;
+- required readiness response: HTTP 401;
+- observed successful readiness HTTP 401: NO;
+- individual non-401 readiness responses and ephemeral URL were not emitted/persisted by the safe failure path and are therefore not reconstructed;
+- Zernio API calls before readiness PASS: 0;
+- trusted identity call: NOT RUN;
+- webhook creation: NOT RUN;
+- webhook.test: NOT RUN;
+- webhook-test failure log diagnostics: N/A for this rerun because no provider webhook/test call occurred;
+- temporary publishing key: NOT CREATED;
+- scheduled synthetic post: NOT CREATED;
+- inbound webhook deliveries: 0;
+- automatic retry attempts: NOT RUN;
+- provider delivery logs attempts 1/2: NOT RUN;
+- public publication: NO;
+- Ads/ad spend/media/OpenAI/fal.ai/comments/DMs/analytics ingestion: 0.
+
+Cleanup after rerun #2:
+- copied local `.env`: removed;
+- temporary cloudflared binary: removed;
+- cloudflared processes: 0;
+- provider webhook/key/post cleanup: N/A because none were created.
+
+Live rerun count for P1-T05-F01: exactly `1`.
+Third live run: `NO` and not authorized.
+
+Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
+
+Canonical webhook-related capability statuses remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.

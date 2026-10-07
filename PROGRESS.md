@@ -199,54 +199,53 @@ Final review wording:
 
 `P1-T05 — Verify Zernio Webhook Delivery Contract`
 
-**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
 
 Implementation branch: `p1-t05-zernio-webhook-contract`.
-Approved base: `4ac9bc2aeda3f0563e49ffd3886bd3ac99a9081f`.
+P1-T05-F01 starting/reviewed HEAD: `e87447bf2c58e85d01bbc41841980ba1549fdbf6`.
+P1-T05-F01 implementation checkpoint: `d658f701bf3f2f4400251994324b7a3358442b61`.
 
-### Deterministic implementation / validation evidence
-- Minimal controlled receiver implemented only for the Provider Spike; no production webhook subsystem, durable dedupe, database tables, Redis, BullMQ, or production tenant routing added.
-- Raw-body HMAC-SHA256 verification is performed before JSON parsing; signature length/hex are validated before `timingSafeEqual`.
-- T05-01 through T05-38: PASS.
-- Additional safety regressions include webhook.test one-shot distinction, retry absence, unstable event ID, incomplete logs, publishing-key ambiguous/malformed create cleanup, and exact live receiver HTTPS readiness probes.
-- Final focused P1-T05 regressions: `46 passed / 0 failed`.
-- Final full regression suite: `211 passed / 0 failed / 0 skipped`.
+### P1-T05-F01 deterministic fix / validation
+- Team Leader verdict on parent P1-T05: REJECTED — FIX REQUIRED; historical first live run remains preserved separately and is not reinterpreted as PASS.
+- webhook.test failure path now performs exactly one bounded read-only `GET /v1/webhooks/logs` before webhook deletion.
+- Failure-log query is narrowed by temporary `webhookId`, `event=webhook.test`, and `limit=5`; returned logs are filtered again to the exact temporary webhook/event before sanitized evidence is retained.
+- Diagnostic evidence may retain only safe status/request IDs, matching attempt count, attemptNumber, delivery status, endpoint response status, delivery timestamp, and sanitized provider error category/message.
+- No second `POST /v1/webhooks/test` occurs in one logical run.
+- Exact-live-URL readiness structurally gates the provider callback: failure to obtain receiver HTTP 401 prevents all Zernio API calls.
+- Focused P1-T05-F01 regressions: `13 passed / 0 failed`.
+- Existing P1-T05 regressions: `46 passed / 0 failed`.
+- Full suite after F01: `224 passed / 0 failed / 0 skipped` across 9 test files.
 - `npm run typecheck`: PASS.
 - `npm run build`: PASS.
 - `git diff --check`: PASS.
-- Post-blocker hardening requires the exact public HTTPS URL for the live receiver to reach the project-controlled receiver and return the expected unsigned-request HTTP 401 before any provider call is allowed.
 
-### Real Provider Behavior evidence — one bounded live run
-- Exactly one authorized bounded live P1-T05 run was attempted; no live rerun was performed after the blocker.
-- Trusted control-plane identity verification: PASS; identity match = true.
-- Identity preflight run ID: `4246fa47-05a9-4749-be46-263d900ed416`; HTTP 200; Provider Request ID `c9b21a9c-b437-41bc-93f7-769192033d1b`; latency 619 ms.
-- Controlled receiver type: local Node HTTP receiver exposed temporarily through a Cloudflare Quick Tunnel; generic third-party request-bin service used: NO.
-- Temporary webhook creation: PASS; provider webhook ID `6ac68919c5da8c7698cc9e83`.
-- Synthetic webhook name: `aimm-p1-t05-webhook-9afc94a25d3f4c40a192d08a`.
-- Webhook scope: Profile A `6ac5a45a8e4ca44f355033ae` only; event subscription: `post.scheduled` only; active state observed: true.
-- Webhook create HTTP 200, request `b6c52985-4a06-4610-98f4-739ba0958d2b`.
-- Webhook exact read-back: PASS, request `e71cfe67-bc65-4dbe-b268-ababbca3bbc0`.
-- `POST /v1/webhooks/test`: BLOCKED by provider 5xx classification; the project-controlled receiver observed zero inbound `webhook.test` deliveries.
-- Live signature/HMAC correctness: NOT VERIFIED because no inbound test delivery reached the receiver.
-- Live body/header event-ID equality: NOT VERIFIED.
-- Real `post.scheduled` retry trigger: NOT CREATED because execution stopped at `webhook.test`.
-- Temporary publishing key: NOT CREATED.
-- Automatic retry / stable event identity / duplicate delivery / delivery-log attempt 1+2 behavior: NOT VERIFIED LIVE.
-- Foreign Profile delivery observed: no inbound webhook event was observed; therefore no positive live isolation conclusion is claimed.
-- Temporary webhook cleanup: PASS; DELETE HTTP 200 request `ba0732b9-8f17-4d86-9d3c-204bc7bb8d45`; cleanup read-back HTTP 200 request `db1757db-cf8f-439f-8c73-999e16a2724c`; synthetic webhook absent after cleanup.
-- Temporary receiver/tunnel shutdown: PASS; local execution `.env` copy and temporary cloudflared binary removed; no cloudflared process left running.
-- Exact live Zernio API-call count: 6 = 4 normal + 2 cleanup; inbound webhook delivery count: 0.
-- Public publication: 0. Scheduled posts created: 0. Temporary publishing keys created: 0. Ads/ad spend/OpenAI/fal.ai/media/comments/DMs/analytics ingestion: 0.
+### Historical P1-T05 live run #1 — preserved evidence
+- Trusted control-plane identity: PASS.
+- Temporary webhook create/read-back: PASS; webhook ID `6ac68919c5da8c7698cc9e83`; Profile A only; event `post.scheduled` only.
+- `POST /v1/webhooks/test`: BLOCKED by provider 5xx; controlled receiver observed 0 inbound deliveries.
+- No scheduled trigger or temporary publishing key was created.
+- Webhook cleanup and receiver/tunnel cleanup: PASS.
+- Historical call count: 6 total = 4 normal + 2 cleanup.
+- Historical first-run details and request IDs remain in `docs/PROVIDER_SPIKE_RESULTS.md`.
 
-### Blocker / diagnosis
-- Provider documentation states a webhook-test 500 means the endpoint did not return a successful 2xx response; in this run the receiver recorded no inbound request at all.
-- A separate pre-live smoke test had proven the controlled receiver/tunnel pattern could receive an external request and return HTTP 401, but that smoke used a different ephemeral tunnel URL.
-- Engineering diagnosis: the exact live quick-tunnel URL may not yet have been routable when the provider test was sent. This is a likely harness-readiness explanation, not a proven Zernio behavior fact.
-- The harness was hardened after the run to probe the exact same live HTTPS URL before any provider API call. No second live run was performed because the Task Contract authorized exactly one bounded live run.
+### P1-T05-F01 live rerun #2 — only authorized rerun
+- Exactly one additional `npm run p1-t05 -- --live` invocation was performed after all deterministic gates passed.
+- Result: `BLOCKED — CONTROLLED_WEBHOOK_TEST_RECEIVER_NOT_AVAILABLE`.
+- The project-controlled local Node receiver + temporary Cloudflare Quick Tunnel started, but the exact final HTTPS URL did not produce the required unsigned-request HTTP 401 within the bounded readiness probe.
+- The failure-path runner did not persist/emit the ephemeral URL or individual non-401 probe statuses, so those values are not invented in documentation.
+- Zernio calls before readiness PASS: 0.
+- Trusted identity preflight in rerun #2: NOT RUN because readiness did not pass.
+- Temporary webhook in rerun #2: NOT CREATED.
+- `webhook.test` in rerun #2: NOT CALLED.
+- Failure diagnostic webhook-log query in rerun #2: N/A because no webhook/provider test existed; the diagnostic flow remains deterministically verified for a provider test failure after readiness.
+- Scheduled retry trigger / publishing key / real webhook delivery attempts / provider attempt logs: NOT RUN.
+- Public publication / media / Ads / ad spend / OpenAI / fal.ai / comments / DMs / analytics ingestion: 0.
+- Local copied `.env`, temporary cloudflared binary, receiver/tunnel process state: cleaned; cloudflared process count after cleanup = 0.
+- No third live run is authorized or performed.
 
 Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 
-Canonical webhook-related capability statuses remain unchanged at `SPIKE_PENDING`; in particular Analytics Webhook remains `SPIKE_PENDING`.
+Canonical webhook-related capability statuses remain unchanged at `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
 
 P1-T06 implementation started: NO.
 
@@ -265,4 +264,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader reviews P1-T05 implementation, deterministic evidence, the single blocked live Provider Behavior run, cleanup evidence, and post-blocker receiver-readiness hardening. Senior Engineer does not mark P1-T05 DONE / ACCEPTED, does not change webhook capability statuses, does not rerun live verification without explicit authorization, and does not start P1-T06.
+Team Leader re-reviews P1-T05-F01 deterministic diagnostics, preserved historical live run #1, and the single authorized live rerun #2 readiness blocker. Senior Engineer does not perform a third live run, does not mark P1-T05 DONE / ACCEPTED, does not change canonical webhook capability statuses, and does not start P1-T06.

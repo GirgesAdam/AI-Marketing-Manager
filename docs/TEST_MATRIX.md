@@ -488,3 +488,62 @@ Real Provider Behavior result: **BLOCKED** at `webhook.test`; the Provider Behav
 Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 
 Canonical webhook-related capabilities remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
+
+## P1-T05-F01 — webhook.test Failure Diagnostics and Exact-URL Readiness
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+
+### Focused deterministic regressions
+
+| ID | Coverage | Result |
+|---|---|---|
+| F01-T01 | webhook.test provider failure queries logs before webhook deletion/read-back | PASS |
+| F01-T02 | webhook.test failure never performs a second test POST | PASS |
+| F01-T03 | Failure log query is scoped to temporary webhook/test event and ignores unrelated logs | PASS |
+| F01-T04 | Endpoint non-2xx delivery log evidence retained as sanitized diagnostics | PASS |
+| F01-T05 | Connection/timeout evidence => WEBHOOK_TEST_DELIVERY_PATH_UNRESOLVED | PASS |
+| F01-T06 | No matching delivery-log entry => WEBHOOK_TEST_DELIVERY_PATH_UNRESOLVED | PASS |
+| F01-T07 | Failure-log API unavailable => WEBHOOK_TEST_FAILURE_DIAGNOSTICS_UNAVAILABLE | PASS |
+| F01-T08 | Webhook cleanup + read-back still run after diagnostic collection | PASS |
+| F01-T09 | Webhook secret/control key/expected identity absent from diagnostic result/evidence/errors | PASS |
+| F01-T10 | Exact final HTTPS readiness passes before provider callback executes | PASS |
+| F01-T11 | Failed exact-URL readiness invokes zero provider callbacks | PASS |
+| F01-T12 | Existing accepted P1-T05 regression inventory remains 46 tests | PASS |
+| F01-T13 | Full-suite gate remains unfiltered npm test | PASS |
+
+Focused command: `npm test -- -t "P1-T05-F01 webhook.test failure diagnostics regressions"`.
+Focused result: `13 passed / 0 failed`.
+
+Existing P1-T05 command: `npm test -- -t "P1-T05 Zernio webhook delivery contract offline regressions"`.
+Existing P1-T05 result: `46 passed / 0 failed`.
+
+Full command: `npm test`.
+Full result: `9` test files, `224 passed / 0 failed / 0 skipped`.
+
+`npm run typecheck`: PASS.
+`npm run build`: PASS.
+`git diff --check`: PASS.
+
+These are deterministic harness/failure-path results and are separate from live Provider Behavior evidence.
+
+### P1-T05-F01 authorized live rerun #2
+
+| Test | Actual observed behavior | Result | Safe evidence |
+|---|---|---|---|
+| Exact final HTTPS readiness | Required receiver HTTP 401 was not obtained within bounded gate | BLOCKED | `CONTROLLED_WEBHOOK_TEST_RECEIVER_NOT_AVAILABLE` |
+| Provider calls before readiness | Provider callback was never invoked | PASS | 0 Zernio calls |
+| Trusted identity | Not reached after readiness failure | NOT RUN | 0 calls |
+| Temporary webhook | Not created | NOT RUN | 0 mutations |
+| webhook.test | Not called | NOT RUN | diagnostic failure-log flow not applicable to this rerun |
+| Scheduled retry trigger | Not created | NOT RUN | no key/post created |
+| Real delivery attempt 1/2 | No event generated | NOT RUN | 0 inbound deliveries |
+| Provider attempt logs 1/2 | No event/test call existed | NOT RUN | no log claim |
+| Provider cleanup | No provider resources created | N/A | none required |
+| Receiver/tunnel cleanup | Local execution artifacts removed; zero cloudflared processes remain | PASS | local cleanup confirmed |
+| F01 rerun bound | Exactly one additional live invocation performed; no third run | PASS | one `--live` rerun only |
+
+The failure-path runner does not persist the ephemeral exact URL or individual non-401 readiness statuses when readiness fails. Those values are therefore unavailable and are not invented.
+
+Provider Behavior result for rerun #2: **BLOCKED before first Zernio API call**.
+Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
+Canonical webhook-related capabilities remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
