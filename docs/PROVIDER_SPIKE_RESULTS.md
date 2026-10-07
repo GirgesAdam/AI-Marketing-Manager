@@ -332,3 +332,119 @@ P1-T03-F01 real Provider activity:
 Historical P1-T03 observations remain unchanged: Key A isolation observed PASS, Key B isolation observed PASS, cross-Profile leakage `NO`, both real temporary keys revoked, both post-revoke auth checks HTTP 401, and the historical live call count remains 13.
 
 Team Leader accepted P1-T03-F01 together with P1-T03. Canonical capability state: Profiles = `SPIKE_PASS`; Scoped Keys = `SPIKE_PASS`; Publishing = `SPIKE_PENDING`.
+
+## P1-T04 — Zernio Facebook Text-Only Core Publishing Provider Behavior
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`
+
+Provider environment: authorized internal Zernio test team. This task verifies only Facebook text-only core publishing behavior. It does not certify Instagram publishing, media publishing, Reels, Stories, carousel, cross-platform fanout, multi-account publishing, media upload/expiry, OAuth lifecycle, webhooks, or production retry/reconciliation behavior.
+
+### Frozen target
+- Profile A ID: `6ac5a45a8e4ca44f355033ae`
+- Zernio Facebook account ID: `6ac64f8740364f4695dd3077`
+- Facebook Page ID: `1387424501114639`
+- Page name: `Clothing Brand`
+- platform: `facebook`
+- operator public-test authorization: `YES`
+
+### Control-plane identity preflight
+- result: `PASS`
+- run_id: `d7aec8fa-dbfe-4480-b42f-47ec378edcbb`
+- timestamp: `2026-10-07T14:39:51.473Z`
+- HTTP status: `200`
+- Provider Request ID: `3c9a9146-69dd-4bb3-b2eb-a4bb86e46551`
+- latency: `721 ms`
+- expected_identity_match: `true`
+
+Expected and actual identity values are intentionally absent from evidence.
+
+### Temporary publishing key
+- provider key ID: `6ac659b6cf071cd03e7e0d69`
+- synthetic name: `aimm-p1-t04-publishing-c98c963a-2ed6-4519-836d-7e85297ef59a`
+- scope: `profiles`
+- permitted Profile ID: `6ac5a45a8e4ca44f355033ae`
+- permission: `read-write`
+- expiresAt: `2026-10-08T14:39:50.470Z`
+- create HTTP: `201`
+- Provider Request ID: `bbb3e152-6eec-4a67-9899-cf96ffbe8fb7`
+- raw key exposed/persisted: `NO`
+
+### Exact target and readiness
+- account ID: `6ac64f8740364f4695dd3077`
+- platform: `facebook`
+- Profile ID: `6ac5a45a8e4ca44f355033ae`
+- Page ID: `1387424501114639`
+- Page name: `Clothing Brand`
+- selected/available Page match: `PASS`
+- account health: `healthy`
+- canPost: `true`
+- account-list Request ID: `3d851e3f-262f-432d-a4ca-98d24f8d3649`
+- Page-target Request ID: `f0ce2164-727d-4d0e-87fa-c032bc58372f`
+- health Request ID: `5c56ace3-b5b8-4326-a60f-8a048a34eb5e`
+
+### Draft behavior
+- Zernio post ID: `6ac659b8401610c088daa8ab`
+- create: HTTP `201`, request `d3fca111-1d65-4cb5-b467-fd57ec4c3da4`
+- read-back: HTTP `200`, request `eff0c870-3412-4bfc-a2de-93870abe84f1`
+- exact same body + same Idempotency-Key replay: HTTP `200`, request `77d4fa1e-026c-4f24-be8e-0152e3a81171`
+- same logical/Zernio post ID: `YES`
+- duplicate post: `NO`
+- cleanup DELETE: HTTP `200`, request `27178f2f-361e-45a9-829f-9954476db8ce`
+- cleanup read-back: HTTP `404`, request `ee78ed9e-77e6-401d-a5eb-8c96638ffbab`
+- cleanup confirmed: `YES`
+
+### Scheduled behavior
+- Zernio post ID: `6ac659b932a50814b268fc05`
+- requested schedule: `2026-10-10T17:39:51` in `Africa/Cairo`
+- provider returned schedule: `2026-10-10T14:39:51.000Z`
+- normalized schedule match: `PASS`
+- create: HTTP `201`, request `9e233469-ff95-47da-a299-4913e79b8384`
+- read-back: HTTP `200`, request `8ccfb627-f83d-4382-be42-8650852d55f8`
+- cleanup DELETE: HTTP `200`, request `38cdacd4-e9fb-4b90-925f-90fe0e670ead`
+- cleanup read-back: HTTP `404`, request `40c56c66-a356-49f9-ab5d-e9f2b575b3da`
+- cancellation/cleanup confirmed: `YES`
+
+### One immediate public Facebook text post
+- immediate create count: `1`
+- Zernio post ID: `6ac659ba401610c088daa8b2`
+- create: HTTP `201`, request `f5e1ab58-c438-475a-b16e-6ad6241359e2`
+- published read-back: HTTP `200`, request `e12b0ec4-fc33-4627-b17b-5c8c21c51f99`
+- Facebook/platform post ID: `1387424501114639_122100171927502015`
+- public URL: `https://www.facebook.com/1387424501114639_122100171927502015`
+- publishedAt: `2026-10-07T14:39:58.143Z`
+- exact account/Page target validation: `PASS`
+- wrong publishing target observed: `NO`
+- duplicate confirmed publish observed: `NO`
+
+### Public cleanup
+- unpublish/remove: HTTP `200`, request `da04f7de-54b8-478e-b554-52ecab9cb03c`
+- cleanup read-back: HTTP `200`, request `bb70fe87-e811-43df-b5de-b984e551d358`
+- provider state no longer active/published: `PASS`
+- cleanup confirmed: `YES`
+
+### Temporary key cleanup
+- revoke: HTTP `200`, request `22837d9f-0579-42fa-8205-3a9a0511743f`
+- post-revoke auth: HTTP `401`, request `db58dd21-f461-4a1f-a14d-6eca807cd949`
+- revoked key valid: `NO`
+- cleanup confirmed: `YES`
+
+### Exact live operation count and cost safety
+- normal provider calls: `20`
+- cleanup-allowance calls: `0`
+- total provider calls: `20`
+- normal hard ceiling: `22`
+- one bounded live run only: `YES`
+- Ads/ad spend: `0`
+- OpenAI: `0`
+- fal.ai: `0`
+- media generation/upload: `0`
+- new account connection/reconnect: `0`
+- unexpected paid action: `NO`
+
+Observed Provider Behavior: `OBSERVED_PASS`.
+
+Publishing capability recommendation: `SPIKE_PASS`.
+
+Known limitation: Core publishing lifecycle verified on Facebook text-only only. Instagram/media/platform-specific publishing remains separately unverified.
+
+Canonical Publishing remains `SPIKE_PENDING` pending Team Leader acceptance. Profiles and Scoped Keys remain `SPIKE_PASS`.

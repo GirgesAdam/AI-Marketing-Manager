@@ -263,3 +263,99 @@ Full result: `5` test files, `106 passed / 0 failed / 0 skipped`.
 `git diff --check`: PASS.
 
 These are deterministic failure-recovery tests only. P1-T03-F01 intentionally performed zero real Zernio calls and created zero live scoped keys. Historical P1-T03 Provider Behavior evidence was preserved without repeating the live isolation run. Team Leader accepted P1-T03-F01; Scoped Keys is now `SPIKE_PASS`, while Publishing remains `SPIKE_PENDING`.
+
+## P1-T04 — Zernio Publishing Behavior
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`
+
+### Deterministic harness/regression tests
+
+Automated suite: `tests/provider-spike/p1-t04.test.ts`
+
+| ID | Coverage | Result |
+|---|---|---|
+| T04-01 | Default execution offline; zero provider calls | PASS |
+| T04-02 | Missing control-plane credential blocks before mutation | PASS |
+| T04-03 | Missing expected identity blocks before mutation | PASS |
+| T04-04 | Identity mismatch blocks before mutation | PASS |
+| T04-05 | Missing frozen expected account blocks | PASS |
+| T04-06 | Missing frozen expected Page blocks | PASS |
+| T04-07 | Public-test authorization not true blocks | PASS |
+| T04-08 | Temporary key is Profile-A-only read-write with bounded expiry | PASS |
+| T04-09 | Temporary key secret never leaks | PASS |
+| T04-10 | Account response _id normalized | PASS |
+| T04-11 | profileId object normalized | PASS |
+| T04-12 | Exact frozen account required | PASS |
+| T04-13 | Exact Profile A required | PASS |
+| T04-14 | Wrong Profile/account blocks as Critical before post create | PASS |
+| T04-15 | Exact frozen Page required | PASS |
+| T04-16 | No first/default Page fallback | PASS |
+| T04-17 | Draft create validates provider post ID/state | PASS |
+| T04-18 | Draft read-back validates exact target/content | PASS |
+| T04-19 | Same body + same Idempotency-Key returns same logical post | PASS |
+| T04-20 | Duplicate logical post classified Critical | PASS |
+| T04-21 | Idempotency conflict/different-body failure is fail-closed | PASS |
+| T04-22 | Draft cleanup confirmed | PASS |
+| T04-23 | Scheduled create is >=48h in future | PASS |
+| T04-24 | Schedule uses Africa/Cairo semantics | PASS |
+| T04-25 | Scheduled read-back normalized schedule matches | PASS |
+| T04-26 | Scheduled cleanup required before public test | PASS |
+| T04-27 | Immediate public create happens at most once | PASS |
+| T04-28 | Published response requires platform-level published state | PASS |
+| T04-29 | Wrong target classified Critical | PASS |
+| T04-30 | Published read-back matches exact post | PASS |
+| T04-31 | Public cleanup executes | PASS |
+| T04-32 | Public cleanup read-back required | PASS |
+| T04-33 | Cleanup failure prevents PASS | PASS |
+| T04-34 | Timeout/network/5xx preserve same logical Idempotency-Key | PASS |
+| T04-35 | 429 has no automatic retry | PASS |
+| T04-36 | Normal request ceiling enforced | PASS |
+| T04-37 | Safety cleanup allowed after normal ceiling | PASS |
+| T04-38 | Temporary publishing key revoked | PASS |
+| T04-39 | Revoked key authentication fails | PASS |
+| T04-40 | Existing P1-T01/P1-T02/P1-T03 regressions remain green | PASS |
+| Extra | Uncertain 5xx create uses the same Idempotency-Key | PASS |
+| Extra | Unhealthy account blocks before post mutation | PASS |
+| Extra | Selected Page mismatch blocks with no fallback | PASS |
+| Extra | Publishing-key cleanup failure prevents PASS | PASS |
+
+Targeted command: `npm test -- -t "P1-T04 Zernio publishing offline regressions"`.
+Targeted result: `44 passed / 0 failed`; unrelated tests skipped only by the name filter.
+
+Full command: `npm test`.
+Full result: `6` test files, `150 passed / 0 failed / 0 skipped`.
+
+`npm run typecheck`: PASS.
+`npm run build`: PASS.
+`git diff --check`: PASS.
+
+These are deterministic harness/failure-path tests and do not by themselves prove Zernio publishing behavior.
+
+### Real Zernio Provider Behavior evidence
+
+Provider Behavior evidence is intentionally separate from deterministic test results.
+
+| Test | Provider behavior | Result | Safe evidence |
+|---|---|---|---|
+| P1-T04 identity | Trusted expected identity matched before mutation | PASS | run `d7aec8fa-dbfe-4480-b42f-47ec378edcbb`, HTTP 200, request `3c9a9146-69dd-4bb3-b2eb-a4bb86e46551` |
+| Publishing key | Profile-A-only read-write key with 1-day expiry | PASS | key ID `6ac659b6cf071cd03e7e0d69`, HTTP 201, request `bbb3e152-6eec-4a67-9899-cf96ffbe8fb7` |
+| Account target | Exact frozen Facebook account under Profile A | PASS | request `3d851e3f-262f-432d-a4ca-98d24f8d3649` |
+| Page target | Exact Page `1387424501114639` selected/available | PASS | request `f0ce2164-727d-4d0e-87fa-c032bc58372f` |
+| Account health | Healthy and canPost=true | PASS | request `5c56ace3-b5b8-4326-a60f-8a048a34eb5e` |
+| Draft create/read/replay | Same logical post; duplicate NO | PASS | post `6ac659b8401610c088daa8ab`; requests `d3fca111-1d65-4cb5-b467-fd57ec4c3da4`, `eff0c870-3412-4bfc-a2de-93870abe84f1`, `77d4fa1e-026c-4f24-be8e-0152e3a81171` |
+| Draft cleanup | Delete confirmed; read-back 404 | PASS | requests `27178f2f-361e-45a9-829f-9954476db8ce`, `ee78ed9e-77e6-401d-a5eb-8c96638ffbab` |
+| Scheduled create/read | Cairo schedule normalized correctly | PASS | post `6ac659b932a50814b268fc05`; requests `9e233469-ff95-47da-a299-4913e79b8384`, `8ccfb627-f83d-4382-be42-8650852d55f8` |
+| Scheduled cleanup | Delete confirmed; read-back 404 | PASS | requests `38cdacd4-e9fb-4b90-925f-90fe0e670ead`, `40c56c66-a356-49f9-ab5d-e9f2b575b3da` |
+| Immediate public publish | Exactly one public Facebook text-only publication | PASS | post `6ac659ba401610c088daa8b2`, Facebook ID `1387424501114639_122100171927502015`, requests `f5e1ab58-c438-475a-b16e-6ad6241359e2`, `e12b0ec4-fc33-4627-b17b-5c8c21c51f99` |
+| Public cleanup | Unpublish + read-back confirmed no longer published | PASS | requests `da04f7de-54b8-478e-b554-52ecab9cb03c`, `bb70fe87-e811-43df-b5de-b984e551d358` |
+| Key cleanup | Key revoked; post-revoke auth HTTP 401 | PASS | requests `22837d9f-0579-42fa-8205-3a9a0511743f`, `db58dd21-f461-4a1f-a14d-6eca807cd949` |
+| Request bound | One live run stayed within normal ceiling | PASS | 20 total calls <= 22 normal ceiling; cleanup allowance used 0 |
+
+Wrong publishing target observed: `NO`.
+Duplicate confirmed publish observed: `NO`.
+Raw control/scoped key values and identity values are absent from tests/evidence/docs.
+
+Publishing capability observed status: `OBSERVED_PASS`.
+Publishing capability recommendation: `SPIKE_PASS`.
+Known limitation: Core publishing lifecycle verified on Facebook text-only only. Instagram/media/platform-specific publishing remains separately unverified.
+Canonical Publishing remains `SPIKE_PENDING` pending Team Leader acceptance.

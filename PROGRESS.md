@@ -128,9 +128,33 @@ Final accepted evidence:
 ## Current Task
 `P1-T04 — Verify Zernio Publishing Behavior`
 
-**Status: NOT_STARTED — READY FOR TEAM LEADER TASK CONTRACT / SENIOR ASSIGNMENT**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
 
-P1-T04 implementation started: NO.
+Completion evidence:
+- Approved base: `d87a5103a3f2b67f87abb3c0965e15d949c0307b`.
+- Branch: `p1-t04-zernio-publishing`.
+- Frozen target verified: Profile A `6ac5a45a8e4ca44f355033ae`, Zernio Facebook account `6ac64f8740364f4695dd3077`, Facebook Page `1387424501114639` (`Clothing Brand`).
+- Trusted control-plane identity verification: PASS; expected identity match = true.
+- Temporary publishing key: Profile-A-only, `scope=profiles`, `permission=read-write`, bounded 1-day expiry; raw key not persisted/exposed.
+- Account/Page/health preflight: PASS; platform `facebook`, selected expected Page matched, account status `healthy`, `canPost=true`.
+- Draft create/read/idempotency replay: PASS; same logical Zernio post ID, duplicate = NO; draft cleanup/read-back: PASS.
+- Scheduled create/read: PASS; requested `Africa/Cairo` schedule `2026-10-10T17:39:51`, provider returned `2026-10-10T14:39:51.000Z`; scheduled cleanup/read-back: PASS.
+- Exactly one immediate public Facebook text-only test post created: PASS; published-state read-back: PASS.
+- Public test post cleanup/unpublish + read-back: PASS.
+- Wrong publishing target observed: NO.
+- Duplicate confirmed publish observed: NO.
+- Temporary publishing key revoked: PASS; post-revoke auth returned HTTP 401 and credential valid = NO.
+- One bounded live P1-T04 run only; exact provider call count: 20 normal / 0 cleanup allowance / 20 total, within normal ceiling 22.
+- Targeted P1-T04 regressions: 44 passed / 0 failed.
+- Full regression suite: 150 passed / 0 failed / 0 skipped.
+- `npm run typecheck`: PASS.
+- `npm run build`: PASS.
+- `git diff --check`: PASS.
+- No Ads, ad spend, OpenAI, fal.ai, media generation/upload, new account connection, reconnect, comments/DMs, or webhooks.
+- Publishing observed recommendation: `SPIKE_PASS`, pending Team Leader acceptance.
+- Canonical Publishing remains `SPIKE_PENDING`.
+- Known limitation: Core publishing lifecycle verified on Facebook text-only only. Instagram/media/platform-specific publishing remains separately unverified.
+- P1-T05 implementation started: NO.
 
 ## Phase 1 Rules
 - Work one Task at a time.
@@ -146,4 +170,4 @@ The previous single-Vertical estimate is obsolete. The 56–74 week figure remai
 Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test usage; do not invent a fixed forecast before measurements exist.
 
 ## Immediate Next Action
-Wait for Team Leader verification and an explicit P1-T04 Task Contract / Senior assignment. Do not start P1-T04 implementation, connect accounts, publish, upload media, create Ads, or perform any live provider action before that authorization.
+Team Leader reviews P1-T04 implementation, deterministic regressions, one bounded real Provider Behavior run, exact-target evidence, draft/scheduled/public cleanup, temporary-key cleanup, and capability recommendation. Senior Engineer does not mark P1-T04 DONE / ACCEPTED, does not change Publishing from `SPIKE_PENDING`, and does not start P1-T05 without explicit Team Leader verdict and assignment.
