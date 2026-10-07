@@ -398,3 +398,93 @@ Full result: `7` test files, `165 passed / 0 failed / 0 skipped`.
 `git diff --check`: PASS.
 
 These are deterministic harness safety regressions only. P1-T04-F01 performed zero real Zernio calls and did not create or re-publish any live post, schedule, or scoped key. Historical P1-T04 real Provider Behavior evidence remains separate and preserved. Publishing remains `SPIKE_PENDING`.
+
+## P1-T05 — Generic Webhook Delivery Contract
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+
+### Deterministic receiver / harness tests
+
+| ID | Coverage | Result |
+|---|---|---|
+| T05-01 | Default execution offline; zero provider calls | PASS |
+| T05-02 | Missing control credential blocks before mutation | PASS |
+| T05-03 | Missing trusted expected identity blocks | PASS |
+| T05-04 | Identity mismatch blocks before webhook creation | PASS |
+| T05-05 | Missing controlled HTTPS receiver blocks creation | PASS |
+| T05-06 | Webhook body contains only Profile A | PASS |
+| T05-07 | Webhook body subscribes only to post.scheduled | PASS |
+| T05-08 | Webhook secret absent from output/evidence/errors | PASS |
+| T05-09 | Unknown webhook create never blindly retried | PASS |
+| T05-10 | Unknown create reconciles exact unique synthetic name | PASS |
+| T05-11 | Duplicate exact-name webhook state blocks ambiguity | PASS |
+| T05-12 | Broader Profile scope is Critical | PASS |
+| T05-13 | Valid raw-body HMAC-SHA256 passes | PASS |
+| T05-14 | Missing signature rejects | PASS |
+| T05-15 | Wrong signature rejects | PASS |
+| T05-16 | Wrong secret rejects | PASS |
+| T05-17 | Modified raw body rejects | PASS |
+| T05-18 | Malformed signature rejects safely | PASS |
+| T05-19 | JSON parse occurs only after signature acceptance | PASS |
+| T05-20 | payload.id must equal X-Zernio-Event-Id | PASS |
+| T05-21 | X-Zernio-Event must equal parsed event | PASS |
+| T05-22 | Duplicate canonical event ID => unique logical count 1 | PASS |
+| T05-23 | Retry keeps canonical event ID | PASS |
+| T05-24 | Foreign Profile payload becomes Critical | PASS |
+| T05-25 | Missing Profile attribution blocks safe routing | PASS |
+| T05-26 | First matching real delivery returns 500 exactly once | PASS |
+| T05-27 | Second same-event delivery returns 204 | PASS |
+| T05-28 | No third intentional failure | PASS |
+| T05-29 | Logs parser handles attemptNumber 1/2 | PASS |
+| T05-30 | Deterministic receiver ack under 5 seconds | PASS |
+| T05-31 | Scheduled trigger uses exact Profile/account/Page | PASS |
+| T05-32 | Scheduled post cleanup requires DELETE + read-back | PASS |
+| T05-33 | Temporary publishing key revoke + invalid after revoke | PASS |
+| T05-34 | Webhook cleanup verified | PASS |
+| T05-35 | Normal ceiling blocks non-cleanup excess | PASS |
+| T05-36 | Cleanup works after normal ceiling exhaustion | PASS |
+| T05-37 | Cleanup allowance cannot create webhook/post/key | PASS |
+| T05-38 | Existing P1-T01 through P1-T04 suites remain compatible | PASS |
+| Extra | webhook.test one-shot delivery count enforcement | PASS |
+| Extra | retry absence yields bounded blocker | PASS |
+| Extra | event ID change across retry fails | PASS |
+| Extra | incomplete delivery logs block certification | PASS |
+| Extra | ambiguous publishing-key create reconciles/revokes without retry | PASS |
+| Extra | malformed publishing-key create missing ID reconciles/revokes | PASS |
+| Extra | exact public HTTPS receiver readiness probe waits for receiver HTTP 401 | PASS |
+| Extra | exact public HTTPS receiver readiness probe fails closed when unreachable | PASS |
+
+Focused command: `npm test -- -t "P1-T05 Zernio webhook delivery contract offline regressions"`.
+Final focused result: `46 passed / 0 failed`; unrelated tests skipped only by the name filter.
+
+Full command: `npm test`.
+Final full result: `8` test files, `211 passed / 0 failed / 0 skipped`.
+
+`npm run typecheck`: PASS.
+`npm run build`: PASS.
+`git diff --check`: PASS.
+
+These deterministic tests prove receiver/harness behavior only. They do not substitute for real Provider Behavior evidence.
+
+### Real Zernio Provider Behavior tests
+
+| Test | Actual observed behavior | Result | Safe evidence |
+|---|---|---|---|
+| Trusted identity | Independently trusted identity matched before mutation | PASS | run `4246fa47-05a9-4749-be46-263d900ed416`, HTTP 200, request `c9b21a9c-b437-41bc-93f7-769192033d1b` |
+| Webhook create | One active Profile-A-only webhook subscribed only to post.scheduled | PASS | webhook `6ac68919c5da8c7698cc9e83`, request `b6c52985-4a06-4610-98f4-739ba0958d2b` |
+| Webhook read-back | Exact webhook/provider ID/name/URL/event/Profile scope observed | PASS | request `e71cfe67-bc65-4dbe-b268-ababbca3bbc0` |
+| webhook.test | Provider returned 5xx; receiver observed zero inbound deliveries | BLOCKED | no live signature/event-ID evidence obtained |
+| Raw-body HMAC | No inbound test event reached receiver | NOT VERIFIED | deterministic verification PASS only |
+| Header/body event ID | No inbound test event reached receiver | NOT VERIFIED | deterministic verification PASS only |
+| Real post.scheduled trigger | Not attempted after webhook.test blocker | NOT RUN | zero scheduled posts created |
+| Automatic retry / stable event ID | No real trigger created | NOT VERIFIED | no attempt 1/2 evidence |
+| Delivery logs attempt 1/2 | No real retry event created | NOT VERIFIED | no certification claim |
+| Webhook cleanup | Delete + read-back confirmed synthetic webhook absent | PASS | requests `ba0732b9-8f17-4d86-9d3c-204bc7bb8d45`, `db1757db-cf8f-439f-8c73-999e16a2724c` |
+| Receiver cleanup | Tunnel/receiver stopped and temporary local execution artifacts removed | PASS | no cloudflared process / temp binary / copied .env remains |
+| Request bound | Single live run stopped safely | PASS | 4 normal + 2 cleanup = 6 Zernio calls; 0 inbound deliveries |
+
+Real Provider Behavior result: **BLOCKED** at `webhook.test`; the Provider Behavior PASS criteria for signature/retry/event identity/logs are not satisfied.
+
+Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
+
+Canonical webhook-related capabilities remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
