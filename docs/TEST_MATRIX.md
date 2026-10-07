@@ -99,3 +99,44 @@ Provider Behavior evidence is intentionally separated from the offline harness/s
 Initial provisioning also observed one intended `POST /v1/profiles` per Profile, each returning HTTP 201 between exact-name preflight and read-back GETs. No timeout, 409, 429, 5xx, UNKNOWN outcome, or automatic retry occurred during live execution.
 
 Profiles capability observed status: `OBSERVED_PASS`; Team Leader review is required before canonical `SPIKE_PASS` finalization.
+
+## P1-T02-F01 — Trusted Zernio Expected Identity Binding
+
+### Deterministic offline regressions
+
+Automated suite: `tests/provider-spike/p1-t02-f01.test.ts`
+
+| ID | Coverage | Result |
+|---|---|---|
+| F01-T01 | Missing `ZERNIO_EXPECTED_USER_EMAIL` fails closed before transport | PASS |
+| F01-T02 | Authenticated email mismatch returns BLOCKED / `PROVIDER_TARGET_IDENTITY_MISMATCH` with zero mutations | PASS |
+| F01-T03 | Case-insensitive/trim-normalized authenticated email match passes identity preflight | PASS |
+| F01-T04 | HTTP 200 from a different authenticated identity is not authorization | PASS |
+| F01-T05 | Missing/malformed provider email is BLOCKED / malformed provider response | PASS |
+| F01-T06 | Actual and expected email values do not appear in normal result/evidence output | PASS |
+| F01-T07 | API key and expected-email secret values are redacted from errors/evidence | PASS |
+| F01-T08 | Verified identity allows read-only Profile A recorded-ID verification | PASS |
+| F01-T09 | Verified identity allows read-only Profile B recorded-ID verification and distinct-ID check | PASS |
+| F01-T10 | Profile ID mismatch fails closed and performs zero mutations | PASS |
+| F01-T11 | Mutation-capable P1-T02 path cannot proceed after identity mismatch | PASS |
+
+Targeted command: `npm test -- -t "P1-T02-F01 trusted Zernio expected identity regressions"`.
+Targeted result: `11 passed / 0 failed`; unrelated tests skipped only by the name filter.
+
+Full regression result after the fix: `3` test files, `62 passed / 0 failed / 0 skipped`.
+`npm run typecheck`: PASS.
+`npm run build`: PASS.
+`git diff --check`: PASS.
+
+### Read-only live Provider Behavior verification
+
+Provider Behavior evidence is separate from deterministic mock regression evidence.
+
+| Test | Provider behavior | Result | Safe evidence |
+|---|---|---|---|
+| P1-T02-F01 identity | `GET /v1/auth/verify` authenticated identity matches independently supplied expected identity | PASS | run `ea446326-5d53-4576-8e0c-1f99cea552c4`, HTTP 200, request ID `bd9eb306-2679-4c1a-a318-61f87b5cc940`, `expected_identity_match=true` |
+| P1-T02-F01 Profile A | Exact-name read returns recorded Profile A ID | PASS | run `f995edce-dadb-4ea3-aaaa-709d1a85390e`, HTTP 200, ID `6ac5a45a8e4ca44f355033ae`, request ID `e4feea4e-90e3-4863-9f8c-c21cd4fb8c3e` |
+| P1-T02-F01 Profile B | Exact-name read returns recorded Profile B ID | PASS | run `6352b4bd-7b41-41ef-a20e-ea7af7f4b489`, HTTP 200, ID `6ac5a45b243a942b74bdbaa0`, request ID `0ce2d3e2-1de7-4cf6-aea5-865bf02dfed6` |
+| P1-T02-F01 mutations | F01 live execution issues no Profile write requests | PASS | POST=0, PUT/PATCH=0, DELETE=0, scoped-key operations=0 |
+
+Expected and actual email values are intentionally absent from evidence and documentation. P1-T02 remains awaiting Team Leader re-review; canonical Profiles capability remains `SPIKE_PENDING`.

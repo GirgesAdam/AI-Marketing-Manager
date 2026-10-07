@@ -135,3 +135,60 @@ No social account, Ads account, publishing, media, webhook, analytics, community
 Profiles capability observed status: `OBSERVED_PASS`.
 
 Recommendation pending Team Leader review: `Profiles → SPIKE_PASS`. This document does not independently change the canonical `PROVIDER_CAPABILITIES.md` status.
+
+## P1-T02-F01 — Trusted Zernio Target Identity Binding
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`
+
+This fix closes the P1-T02 authorization-target verification gap without discarding the historical Profile creation observations above. A separately operator-supplied trusted expected identity is loaded only from ignored runtime configuration. The value itself is not logged, committed, written to evidence, documented, or returned by the runner.
+
+The live identity check uses `GET /v1/auth/verify`. HTTP authentication alone is insufficient: the authenticated provider email must be present, valid, and match the independently supplied expected identity after trimming and case-normalization. Evidence records only `expected_identity_match`.
+
+### Trusted identity verification
+- run_id: `ea446326-5d53-4576-8e0c-1f99cea552c4`
+- timestamp: `2026-10-07T11:24:21.141Z`
+- result: `PASS`
+- HTTP status: `200`
+- Provider Request ID: `bd9eb306-2679-4c1a-a318-61f87b5cc940`
+- latency: `437 ms`
+- request count: `1`
+- expected_identity_match: `true`
+
+Neither the expected nor provider-returned email is persisted in this document.
+
+### Profile A read-only re-verification
+- run_id: `f995edce-dadb-4ea3-aaaa-709d1a85390e`
+- timestamp: `2026-10-07T11:24:21.283Z`
+- exact Profile name: `aimm-p1-t02-profile-a`
+- expected recorded Profile ID: `6ac5a45a8e4ca44f355033ae`
+- observed Profile ID: `6ac5a45a8e4ca44f355033ae`
+- ID match: `YES`
+- HTTP status: `200`
+- Provider Request ID: `e4feea4e-90e3-4863-9f8c-c21cd4fb8c3e`
+- latency: `141 ms`
+- result: `PASS`
+
+### Profile B read-only re-verification
+- run_id: `6352b4bd-7b41-41ef-a20e-ea7af7f4b489`
+- timestamp: `2026-10-07T11:24:21.498Z`
+- exact Profile name: `aimm-p1-t02-profile-b`
+- expected recorded Profile ID: `6ac5a45b243a942b74bdbaa0`
+- observed Profile ID: `6ac5a45b243a942b74bdbaa0`
+- ID match: `YES`
+- HTTP status: `200`
+- Provider Request ID: `0ce2d3e2-1de7-4cf6-aea5-865bf02dfed6`
+- latency: `215 ms`
+- result: `PASS`
+
+Profile A ID and Profile B ID remain distinct.
+
+P1-T02-F01 live execution was strictly read-only:
+- `GET /v1/auth/verify`: `1`
+- exact-name `GET /v1/profiles` for Profile A: `1`
+- exact-name `GET /v1/profiles` for Profile B: `1`
+- Profile `POST`: `0`
+- Profile `PUT/PATCH`: `0`
+- Profile `DELETE`: `0`
+- scoped API-key operations: `0`
+
+The original P1-T02 Profile observations are therefore now bound to the intended operator-approved Zernio identity by independent trusted configuration plus read-only identity and recorded-ID verification. Profiles remains `SPIKE_PENDING` until Team Leader re-review and acceptance; this document does not modify canonical `PROVIDER_CAPABILITIES.md`.

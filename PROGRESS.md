@@ -68,7 +68,7 @@ Final validation evidence:
 ## Current Task
 `P1-T02 — Create Zernio Profile A + Profile B`
 
-**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
 
 Completion evidence:
 - Authorized-team read-only preflight: PASS.
@@ -86,6 +86,15 @@ Completion evidence:
 - Canonical Profiles capability remains unchanged pending Team Leader acceptance; recommended next status after review: `SPIKE_PASS`.
 - No social account, scoped API key, Ads/media/publishing/webhook/analytics/community action occurred.
 - P1-T03 has not started.
+- P1-T02-F01 trusted target-identity binding: IMPLEMENTED.
+- Trusted expected Zernio identity was supplied independently by the operator through ignored runtime configuration; the identity value is not persisted in repository evidence.
+- `GET /v1/auth/verify` identity verification: PASS; expected identity match = `true`.
+- Read-only Profile A re-verification: PASS; observed ID matches `6ac5a45a8e4ca44f355033ae`.
+- Read-only Profile B re-verification: PASS; observed ID matches `6ac5a45b243a942b74bdbaa0`.
+- P1-T02-F01 live mutations: Profile POST `0`, PUT/PATCH `0`, DELETE `0`, scoped API-key operations `0`.
+- P1-T02-F01 targeted regressions: 11 passed / 0 failed.
+- Full suite after P1-T02-F01: 62 passed / 0 failed / 0 skipped.
+- Profiles remains `SPIKE_PENDING` pending Team Leader re-review and acceptance.
 
 ## Phase 1 Rules
 - Work one Task at a time.
@@ -101,4 +110,4 @@ The previous single-Vertical estimate is obsolete. The 56–74 week figure remai
 Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test usage; do not invent a fixed forecast before measurements exist.
 
 ## Immediate Next Action
-Team Leader reviews P1-T02 implementation, live Provider Behavior evidence, tests, and docs. Senior Engineer does not mark P1-T02 DONE / ACCEPTED and does not start P1-T03 until explicit Team Leader verdict and assignment.
+Team Leader re-reviews P1-T02 together with P1-T02-F01 trusted target-identity binding, read-only provider verification, tests, and docs. Senior Engineer does not mark P1-T02 DONE / ACCEPTED and does not start P1-T03 until explicit Team Leader verdict and assignment.
