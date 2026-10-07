@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "build": "tsc -p tsconfig.build.json",
     "p1-t02": "npm run build --silent && node dist/provider-spike/p1-t02-runner.js",
-    "p1-t02-f01": "npm run build --silent && node dist/provider-spike/p1-t02-f01-runner.js"
+    "p1-t02-f01": "npm run build --silent && node dist/provider-spike/p1-t02-f01-runner.js",
+    "p1-t03": "npm run build --silent && node dist/provider-spike/p1-t03-runner.js"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
