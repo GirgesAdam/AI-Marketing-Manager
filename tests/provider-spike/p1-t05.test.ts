@@ -1,6 +1,6 @@
 import { createHmac } from 'node:crypto';
 import { describe, expect, it, vi } from 'vitest';
-import { P1_T04_ACCOUNT_ID, P1_T04_PAGE_ID, P1_T04_PROFILE_ID, runP1T05, verifyP1T05Delivery, type P1T05DeliveryEvidence, type P1T05ReceiverController, type ProviderTransport, type ProviderTransportRequest, type ProviderTransportResponse } from '../../src/provider-spike/index.js';
+import { P1_T04_ACCOUNT_ID, P1_T04_PAGE_ID, P1_T04_PROFILE_ID, probeP1T05ReceiverHttps, runP1T05, verifyP1T05Delivery, type P1T05DeliveryEvidence, type P1T05ReceiverController, type ProviderTransport, type ProviderTransportRequest, type ProviderTransportResponse } from '../../src/provider-spike/index.js';
 const CONTROL='P1T05_CONTROL_SENTINEL',SCOPED='P1T05_SCOPED_SENTINEL',SECRET='P1T05_WEBHOOK_SECRET_SENTINEL_32_BYTES',EMAIL='trusted@example.invalid',URL='https://receiver.example.invalid/zernio',NOW=new Date('2026-10-07T17:00:00Z'),RUN='offline-test';
 const env={ZERNIO_API_KEY:CONTROL,ZERNIO_EXPECTED_USER_EMAIL:EMAIL};
 function rsp(status:number,body:unknown={},id='req'):ProviderTransportResponse{return{status,headers:{'x-request-id':id},body};}
@@ -50,6 +50,8 @@ describe('P1-T05 Zernio webhook delivery contract offline regressions',()=>{
  it('T05-36 safety cleanup still works after normal ceiling exhaustion',async()=>{const {result,s}=await run({},P1_T05_DEFAULT_RECEIVER,{normalRequestCeiling:4});expect(result.cleanupRequestCount).toBeGreaterThan(0);expect(s.webhook).toBe(false);});
  it('T05-37 cleanup allowance cannot create webhook/post/key',async()=>{const {s}=await run({},P1_T05_DEFAULT_RECEIVER,{normalRequestCeiling:4});const cleanup=[...s.controlRequests,...s.scopedRequests].filter(x=>(x.safeMetadata as any)?.phase==='cleanup');expect(cleanup.some(x=>x.method==='POST'&&['/v1/webhooks/settings','/v1/posts','/v1/api-keys'].includes(x.url??''))).toBe(false);});
  it('T05-38 existing P1-T01 through P1-T04 suites remain compatible',async()=>{const {result}=await run();expect(result.result).toBe('PASS');expect(result.liveRequestCount).toBeLessThanOrEqual(30);});
+ it('extra live receiver readiness probe requires the same HTTPS URL to reach receiver before provider calls',async()=>{const fetcher=vi.fn().mockResolvedValueOnce(new Response('',{status:530})).mockResolvedValueOnce(new Response('',{status:401}));expect(await probeP1T05ReceiverHttps(URL,{attempts:2,sleep:async()=>{},fetcher})).toBe(true);expect(fetcher).toHaveBeenCalledTimes(2);});
+ it('extra live receiver readiness probe fails closed when HTTPS endpoint never reaches receiver',async()=>{const fetcher=vi.fn().mockResolvedValue(new Response('',{status:502}));expect(await probeP1T05ReceiverHttps(URL,{attempts:2,sleep:async()=>{},fetcher})).toBe(false);});
  it('extra webhook.test remains one-shot evidence only',async()=>{const {result}=await run({},receiver({testCount:2}));expect(result.errorCategory).toBe('WEBHOOK_TEST_DELIVERY_COUNT_UNEXPECTED');});
  it('extra retry absence blocks within bounded observation contract',async()=>{const {result}=await run({},receiver({retryMissing:true}));expect(result.errorCategory).toBe('WEBHOOK_RETRY_NOT_OBSERVED');});
  it('extra event ID change across retry fails',async()=>{const {result}=await run({},receiver({changedId:true}));expect(result.errorCategory).toBe('WEBHOOK_EVENT_ID_NOT_STABLE');});

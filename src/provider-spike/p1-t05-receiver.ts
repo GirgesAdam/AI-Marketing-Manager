@@ -38,3 +38,9 @@ export async function startP1T05Receiver(options:{secret:string;expectedProfileI
  const wait=async(predicate:()=>boolean,timeoutMs:number)=>{if(predicate())return true;return new Promise<boolean>(resolve=>{const timer=setTimeout(()=>{waiters.delete(done);resolve(false);},timeoutMs);const done=()=>{if(predicate()){clearTimeout(timer);waiters.delete(done);resolve(true);}else waiters.add(done);};waiters.add(done);});};
  return {port:address.port,localUrl:`http://127.0.0.1:${address.port}/zernio`,snapshot,waitForTest:async ms=>{await wait(()=>snapshot().testDeliveries>=1,ms);return snapshot().deliveries.find(x=>x.event==='webhook.test')??null;},waitForReal:async(count,ms)=>{await wait(()=>snapshot().realDeliveries>=count,ms);return snapshot().deliveries.filter(x=>x.event==='post.scheduled'&&x.signatureValid);},close:()=>new Promise<void>(resolve=>server.close(()=>resolve()))};
 }
+
+export async function probeP1T05ReceiverHttps(url:string,options:{attempts?:number;sleep?:(ms:number)=>Promise<void>;fetcher?:typeof fetch}={}):Promise<boolean>{
+ const attempts=options.attempts??15,sleep=options.sleep??(ms=>new Promise(r=>setTimeout(r,ms))),fetcher=options.fetcher??fetch;
+ for(let i=0;i<attempts;i++){try{const response=await fetcher(url,{method:'POST',headers:{'content-type':'application/json'},body:'{}'});if(response.status===401)return true;}catch{}if(i+1<attempts)await sleep(1000);}
+ return false;
+}
