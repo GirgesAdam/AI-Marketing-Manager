@@ -781,7 +781,7 @@ Canonical capability states remain:
 Non-empty live record/value shapes and explicit target-attribution fields on non-empty signals remain `UNVERIFIED`; minimum sample/data thresholds remain `UNVERIFIED`; formulas / weighting / confidence methods / detailed calculation semantics remain `PROVIDER_OPAQUE / UNVERIFIED`; natural HTTP 429 remains `NOT OBSERVED`. P1-T06 unresolved behaviors remain unchanged: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination not observed live; historical metric-record field shapes not observed because the valid baseline was empty; natural HTTP 429 not observed.
 ## P1-T08 - analytics.synced Webhook Behavior
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+Status: `IMPLEMENTED — PROVIDER LIVE VERIFICATION UNRESOLVED / AWAITING TEAM LEADER AUTHORIZATION`.
 
 Automated deterministic suite: `tests/provider-spike/p1-t08.test.ts`.
 
@@ -865,6 +865,11 @@ Analytics Webhook canonical state remains `SPIKE_PENDING`.
 Other pending Analytics capabilities and all P1-T06/P1-T07 unresolved behavior remain unchanged.
 ## P1-T08-F02 — Public HTTPS Readiness
 
+Status: `DONE / ACCEPTED`.
+Accepted evidence HEAD: `5856591832093ea62a1dbf703cede7cad34e1bfb`.
+Infrastructure Readiness: `PROVEN`.
+This section records infrastructure/readiness evidence only; it does not establish Provider Behavior.
+
 | Gate | Result | Safe evidence |
 |---|---|---|
 | Public DNS | PASS | A `82.29.177.121`, TTL `14400`; no effective AAAA/CNAME |
@@ -886,4 +891,6 @@ Other pending Analytics capabilities and all P1-T06/P1-T07 unresolved behavior r
 | Provider live run | PASS / unconsumed | no Provider execution in F02 |
 
 P1-T08-F02 recommendation: **INFRASTRUCTURE READINESS PROVEN**.
+P1-T08-F02 canonical state: **DONE / ACCEPTED**.
 Analytics Webhook canonical state remains `SPIKE_PENDING`.
+Parent P1-T08 remains unresolved because no live `analytics.synced` Provider delivery has yet been verified. Provider live run remains **UNCONSUMED**.

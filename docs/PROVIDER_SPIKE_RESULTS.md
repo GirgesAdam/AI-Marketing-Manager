@@ -970,7 +970,7 @@ P1-T06 limitations remain unchanged and are not silently closed by P1-T07:
 Canonical state after Team Leader acceptance: Historical Analytics `SPIKE_PENDING`; Analytics Delta `SPIKE_PENDING`; Best Times `SPIKE_PENDING`; Performance Decay `SPIKE_PENDING`; Frequency Analysis `SPIKE_PENDING`; Analytics Webhook `SPIKE_PENDING`.
 ## P1-T08 - Zernio analytics.synced Webhook Provider Behavior
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+Status: `IMPLEMENTED — PROVIDER LIVE VERIFICATION UNRESOLVED / AWAITING TEAM LEADER AUTHORIZATION`.
 
 Starting HEAD: `d2e12882b96d04395b92c944735ebf8bc860b211`. Branch: `p1-t08-zernio-analytics-webhook`.
 
@@ -1072,7 +1072,10 @@ Known project limitation remains unchanged: `Zernio /v1/webhooks/logs delivery-a
 Historical Analytics, Analytics Delta, Best Times, Performance Decay, and Frequency Analysis all remain `SPIKE_PENDING`. P1-T06/P1-T07 unresolved behavior is unchanged.
 ## P1-T08-F02 — Public HTTPS Readiness Diagnosis
 
-Status: `INFRASTRUCTURE READINESS PROVEN — AWAITING TEAM LEADER AUTHORIZATION`.
+Status: `DONE / ACCEPTED`.
+Accepted evidence HEAD: `5856591832093ea62a1dbf703cede7cad34e1bfb`.
+Team Leader verdict: `ACCEPTED`.
+Infrastructure Readiness: `PROVEN`.
 
 This section is infrastructure/readiness evidence only, not Provider Behavior. No Zernio request was made.
 
@@ -1081,7 +1084,7 @@ This section is infrastructure/readiness evidence only, not Provider Behavior. N
 - TCP/443 PASS.
 - Initial trusted TLS FAIL exposed certificate `clinic.restartorg.com`, issuer Let's Encrypt R12, validity ending `2026-06-12`, with hostname mismatch and time invalidity. Insecure diagnostic HTTP returned `301` to `https://clinic.restartorg.com/`.
 - Nginx inspection proved no enabled `marketlyai.restartorg.com` vhost. Precise root cause: `NGINX_HTTPS_VHOST_MISCONFIGURED`.
-- Permanent existing-hostname repair established an enabled marketlyai vhost and trusted certificate. Post-repair certificate: CN/SAN `marketlyai.restartorg.com`, issuer Let's Encrypt `YR2`, valid `2026-10-13` to `2027-01-11`; trusted client authorization PASS; base HTTPS `404`, no redirect.
+- Permanent existing-hostname repair established an enabled marketlyai vhost and trusted certificate. Post-repair certificate: CN/SAN `marketlyai.restartorg.com`, issuer Let's Encrypt `YR2`, valid `2026-10-13` to `2027-01-11`; trusted client authorization PASS; base HTTPS `404`, no redirect. `marketlyai.restartorg.com` now has its correct enabled HTTPS vhost and trusted certificate.
 - Existing P1-T08 receiver reused unchanged on `127.0.0.1:18086` at `/p1-t08-f02/analytics-synced`; local readiness and confirmation each returned `401` with the expected marker.
 - Accepted reverse tunnel proved VPS loopback -> same receiver; same-process counters reached `2/2` with `0` deliveries.
 - One narrow temporary Nginx exact-match route was added only for `/p1-t08-f02/analytics-synced`; `nginx -t` PASS before reload.
@@ -1091,4 +1094,5 @@ This section is infrastructure/readiness evidence only, not Provider Behavior. N
 - Provider calls: `0 normal / 0 cleanup / 0 total`; `/v1/auth/verify`: 0; webhook mutations: 0; analytics polling: 0; Provider live run: **UNCONSUMED**.
 
 P1-T08-F02 recommendation: **INFRASTRUCTURE READINESS PROVEN**.
-Canonical Analytics Webhook remains **`SPIKE_PENDING`** and parent P1-T08 remains unresolved pending Team Leader authorization.
+P1-T08-F02 canonical state: **DONE / ACCEPTED**.
+Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains unresolved because no live `analytics.synced` Provider delivery has yet been verified. Provider live run remains **UNCONSUMED**. This acceptance is infrastructure evidence only and does not establish Provider Behavior.

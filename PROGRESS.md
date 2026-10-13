@@ -364,9 +364,9 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 ## Current Task
 
-`P1-T08-F02 — Diagnose and Prove Public HTTPS Readiness`
+`P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
-**Status: INFRASTRUCTURE READINESS PROVEN — AWAITING TEAM LEADER AUTHORIZATION**
+**Status: IMPLEMENTED — PROVIDER LIVE VERIFICATION UNRESOLVED / AWAITING TEAM LEADER AUTHORIZATION**
 
 Starting HEAD: `d2e12882b96d04395b92c944735ebf8bc860b211`.
 Implementation branch: `p1-t08-zernio-analytics-webhook`.
@@ -422,12 +422,18 @@ Implementation branch: `p1-t08-zernio-analytics-webhook`.
 - Current F01 blocker/outcome is `VPS_READINESS_TLS_OR_NETWORK_FAILURE`; the historical `CONTROLLED_VPS_WEBHOOK_RECEIVER_NOT_AVAILABLE` evidence above is intentionally preserved as the earlier attempt history.
 
 ### P1-T08-F02 infrastructure/readiness diagnosis
+**Status: DONE / ACCEPTED**
+
+Accepted evidence HEAD: `5856591832093ea62a1dbf703cede7cad34e1bfb`.
+Team Leader verdict: **ACCEPTED**.
+Infrastructure Readiness: **PROVEN**.
+
 - Approved starting HEAD: `18abad50cf3ddc9fa1afdae431818dd8ff9bcf41`; branch unchanged: `p1-t08-zernio-analytics-webhook`.
 - F02 authorized infrastructure/readiness work only. Zernio calls, `/v1/auth/verify`, webhook mutations, analytics polling, and Provider live-run consumption were all prohibited and remained `0`.
 - Public DNS: PASS from the Senior Windows environment and Google Public DNS `8.8.8.8`. A record `marketlyai.restartorg.com -> 82.29.177.121`, TTL `14400`; no effective AAAA or CNAME observed.
 - TCP/443: PASS to `82.29.177.121:443` (observed safe latency ~`174 ms`; later recheck ~`125 ms`).
 - Precise root cause proven before repair: `NGINX_HTTPS_VHOST_MISCONFIGURED`. No enabled `marketlyai.restartorg.com` HTTPS vhost existed, so SNI fell through to `clinic.restartorg.com`; the served clinic certificate was both hostname-mismatched and expired, and insecure diagnostic HTTP returned `301` to `https://clinic.restartorg.com/`.
-- Smallest approved permanent repair: create/enable the existing-hostname Nginx vhost and obtain/attach a trusted certificate for `marketlyai.restartorg.com`. Post-repair public trusted TLS PASS: CN/SAN `marketlyai.restartorg.com`, issuer Let's Encrypt `YR2`, valid `2026-10-13` through `2027-01-11`; base HTTPS returned expected `404` without redirect.
+- Smallest approved permanent repair: create/enable the existing-hostname Nginx vhost and obtain/attach a trusted certificate for `marketlyai.restartorg.com`. Post-repair public trusted TLS PASS: CN/SAN `marketlyai.restartorg.com`, issuer Let's Encrypt `YR2`, valid `2026-10-13` through `2027-01-11`; base HTTPS returned expected `404` without redirect. `marketlyai.restartorg.com` now has its correct enabled HTTPS vhost and trusted certificate.
 - Local receiver gate: PASS on `127.0.0.1:18086`, exact path `/p1-t08-f02/analytics-synced`, unsigned readiness `401`, marker match, same-process confirmation.
 - Reverse tunnel gate: PASS. VPS loopback requests reached the same receiver; snapshot advanced to `readinessHits=2 / confirmedHits=2 / deliveries=0`.
 - Temporary narrow Nginx route gate: PASS after `nginx -t`; exact-match route proxied only `/p1-t08-f02/analytics-synced` to `127.0.0.1:18086`.
@@ -437,9 +443,10 @@ Implementation branch: `p1-t08-zernio-analytics-webhook`.
 - Provider safety: Zernio normal/cleanup/total calls `0 / 0 / 0`; `/v1/auth/verify` 0; webhook mutations 0; Provider live run remains **UNCONSUMED**.
 
 P1-T08-F02 recommendation: **INFRASTRUCTURE READINESS PROVEN**.
-Parent P1-T08 remains unresolved and Analytics Webhook remains `SPIKE_PENDING`.
+P1-T08-F02 canonical state: **DONE / ACCEPTED**.
+Parent P1-T08 remains unresolved because no live `analytics.synced` Provider delivery has yet been verified. Analytics Webhook remains `SPIKE_PENDING`. Provider live run remains **UNCONSUMED**.
 
-P1-T08 recommendation: **Analytics Webhook recommendation: REMAIN PENDING - FIX/BLOCKER REQUIRED**.
+P1-T08 recommendation: **Analytics Webhook recommendation: REMAIN PENDING - LIVE PROVIDER DELIVERY NOT YET VERIFIED**.
 
 Canonical capability remains:
 - Analytics Webhook = `SPIKE_PENDING`.
@@ -469,4 +476,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader reviews P1-T08-F02 infrastructure-readiness evidence. Senior Engineer does not call Zernio, does not consume the still-unconsumed Provider live run, does not create a webhook, does not change Analytics capability status, and does not start another Task without explicit Team Leader authorization.
+Execution focus is restored to unresolved parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`. Senior Engineer does not call Zernio, does not call `/v1/auth/verify`, does not consume the still-unconsumed Provider live run, does not create a webhook or recreate receiver/tunnel/route infrastructure, does not start observation, does not change Analytics capability status, and does not start another Task without explicit Team Leader authorization. Next Task remains **NOT_STARTED**.
