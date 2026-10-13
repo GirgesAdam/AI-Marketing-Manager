@@ -570,13 +570,13 @@ Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
 | F02-T11 | Existing parent P1-T05 suite remains green | PASS |
 | F02-T12 | Full historical suite gate remains unfiltered npm test | PASS |
 
-Focused F02 command: `npm test -- -t "P1-T05-F02 VPS HTTPS receiver regressions"`.
+Focused F02 command: `npm test -- tests/provider-spike/p1-t05-f02.test.ts`.
 Focused F02 result: `12 passed / 0 failed`.
 
-Focused F01 command: `npm test -- -t "P1-T05-F01 webhook.test failure diagnostics regressions"`.
+Focused F01 command: `npm test -- tests/provider-spike/p1-t05-f01.test.ts`.
 Focused F01 result: `13 passed / 0 failed`.
 
-Parent P1-T05 command: `npm test -- -t "P1-T05 Zernio webhook delivery contract offline regressions"`.
+Parent P1-T05 command: `npm test -- tests/provider-spike/p1-t05.test.ts`.
 Parent P1-T05 result: `46 passed / 0 failed`.
 
 Full command: `npm test`.
@@ -586,20 +586,23 @@ Full result: `10` test files, `236 passed / 0 failed / 0 skipped`.
 `npm run build`: PASS.
 `git diff --check`: PASS.
 
-### Real Provider Behavior / VPS precondition
+### Real Provider Behavior / VPS readiness + authorized invocation
 
 | Test | Actual observed behavior | Result | Safe evidence |
 |---|---|---|---|
-| Project VPS control path | Current operator session could not be established from authorized development environment | BLOCKED | local project VPS SSH state/history identified, bounded connectivity unavailable |
-| Dedicated VPS HTTPS route | Could not be safely installed without VPS control path | NOT RUN | no VPS mutation performed |
-| Trusted TLS + exact path readiness | Could not be proven | NOT RUN | no endpoint prepared |
-| Zernio calls before readiness | Provider callback never invoked | PASS | 0 Zernio calls |
-| F02 live Provider run | Contract requires readiness PASS first; precondition failed | NOT RUN | 0 F02 live Zernio runs |
+| Project VPS control path | Dedicated AI Marketing Manager VPS and hostname were prepared without using other-project infrastructure | PASS | `marketlyai.restartorg.com` → `82.29.177.121`; dedicated Nginx route |
+| Trusted TLS + exact path readiness | Exact HTTPS path reached the controlled receiver with trusted TLS, HTTP 401, marker match, same-process confirmation, and no redirect | PASS | latency `1249 ms`; timestamp `2026-10-12T18:22:19.109Z` |
+| F02 live invocation bound | Exactly one separately authorized F02 live invocation was started after readiness PASS | PASS | no second F02 invocation performed |
+| Provider credential gate | Current F02 working clone lacked the two required Zernio env variable names, so execution failed closed before provider transport | BLOCKED | `MISSING_LIVE_CREDENTIAL`; secret values not read/exposed |
+| Zernio request count | Provider transport was never reached | PASS | `0 normal / 0 cleanup / 0 total` Zernio calls |
+| Trusted identity preflight | Not reached because the credential gate blocked before request 1 | NOT RUN | 0 provider requests |
 | Temporary webhook/key/post | None created | NOT RUN | 0 provider mutations |
-| webhook.test / retry attempts / logs | Not reached | NOT RUN | 0 inbound deliveries |
-| Cleanup | No F02 provider/VPS temporary artifacts existed | N/A | nothing to clean |
+| webhook.test / retry attempts / logs | Not reached | NOT RUN | 0 inbound provider deliveries |
+| Cleanup | Receiver/tunnel stopped; temporary route cleanup completed; dedicated port 18085 confirmed clear | PASS | provider cleanup N/A because no provider artifact existed |
 
-F02 Provider Behavior result: **BLOCKED before the live Provider run** — `CONTROLLED_VPS_WEBHOOK_RECEIVER_NOT_AVAILABLE`.
+F02 Provider Behavior result: **BLOCKED after VPS readiness PASS but before the first Zernio API call** — `MISSING_LIVE_CREDENTIAL`.
+
+The earlier Oracle/TIA VPS-candidate note is superseded and invalid as project evidence. No other-project infrastructure or credential is part of this F02 result.
 
 Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 Canonical webhook-related capabilities remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.

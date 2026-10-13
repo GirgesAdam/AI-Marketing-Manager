@@ -256,19 +256,25 @@ P1-T05-F01 implementation checkpoint: `d658f701bf3f2f4400251994324b7a3358442b61`
 - `npm run build`: PASS.
 - `git diff --check`: PASS.
 - F02 implementation checkpoint: `7b8e5738191854fb67443607188e53ff389920ed`.
+- F02 Nginx receiver evidence-label correction checkpoint: `fb71179edf51a1830472b88bd505520d585934e0`.
 
-### P1-T05-F02 VPS precondition result — zero-call STOP
-- The locally recorded Oracle/project VPS candidate and its historical SSH user/key were checked read-only from the authorized development machine.
-- A current operator/control session could not be established; the VPS candidate was not reachable on the expected SSH/HTTP/HTTPS ports from this execution environment.
-- Therefore no safe temporary Caddy/reverse-proxy route could be installed or verified, no VPS receiver process could be started, and trusted TLS/exact-path HTTP 401 readiness could not be proven.
-- Required precondition result: `BLOCKED — CONTROLLED_VPS_WEBHOOK_RECEIVER_NOT_AVAILABLE`.
-- F02 Zernio API calls: 0.
-- F02 live Zernio Provider runs: 0; the contract permits the one live Provider run only after VPS readiness PASS, so no live invocation was attempted.
+### P1-T05-F02 VPS readiness + authorized live invocation result — zero-call BLOCK
+- Earlier Oracle/TIA candidate notes are superseded and invalid as project evidence; no infrastructure or credential from another project is part of the accepted F02 execution path.
+- Controlled project VPS endpoint: `marketlyai.restartorg.com` resolving to project VPS `82.29.177.121`, with dedicated Nginx routing and project-controlled TLS for the F02 path.
+- Exact public readiness: PASS — trusted HTTPS/TLS, exact path, HTTP `401`, receiver marker match, same-process confirmation, no redirect.
+- Readiness evidence timestamp: `2026-10-12T18:22:19.109Z`; observed readiness latency: `1249 ms`.
+- Exactly one separately authorized F02 `--live` invocation was performed after deterministic gates and readiness PASS.
+- Live result: `BLOCKED — MISSING_LIVE_CREDENTIAL` before the first Zernio request.
+- Safe credential diagnosis: the current F02 working clone `.env` exists but does not define `ZERNIO_API_KEY` or `ZERNIO_EXPECTED_USER_EMAIL`; the original accepted workspace contains those variable names. Secret values were not read, copied, printed, logged, or documented.
+- F02 Zernio API calls: `0 normal / 0 cleanup / 0 total`.
+- Trusted identity preflight: NOT RUN because provider transport was blocked before request 1.
 - Temporary webhook / publishing key / scheduled post: NOT CREATED.
-- webhook.test / real retry attempts / provider delivery logs: NOT RUN.
-- No VPS route/process/config or runtime webhook secret was installed, so provider/VPS cleanup was N/A.
-- Incremental VPS infrastructure cost observed for F02: 0.
-- Ads/ad spend/media/OpenAI/fal.ai/comments/DMs/public publication/unexpected paid action: 0.
+- `webhook.test` / real retry attempts / provider delivery logs: NOT RUN.
+- Provider cleanup: N/A because no provider artifact existed.
+- Temporary receiver stopped and SSH reverse tunnel stopped; operator completed temporary route cleanup and confirmed dedicated port `18085` clear.
+- Incremental VPS infrastructure cost observed for F02: `0`.
+- Ads/ad spend/media/OpenAI/fal.ai/comments/DMs/public publication/unexpected paid action: `0`.
+- No further F02 live rerun is authorized under the current contract; Team Leader authorization is required before any retry.
 
 Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 
@@ -291,4 +297,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader re-reviews P1-T05-F02 VPS-only receiver implementation, deterministic evidence, the preserved historical live run #1 and F01 rerun #2, and the F02 zero-call VPS precondition blocker. Senior Engineer does not attempt the F02 live Zernio run without a verified safe VPS HTTPS endpoint, does not mark P1-T05 DONE / ACCEPTED, does not change canonical webhook capability statuses, and does not start P1-T06.
+Team Leader re-reviews P1-T05-F02 deterministic evidence, the proven project-VPS HTTPS readiness PASS, and the single authorized F02 live invocation that failed closed with `MISSING_LIVE_CREDENTIAL` before any Zernio request. Team Leader decides whether to accept the zero-call blocker state or explicitly authorize a targeted rerun after credential injection is corrected. Senior Engineer does not rerun F02 without authorization, does not mark P1-T05 DONE / ACCEPTED, does not change canonical webhook capability statuses, and does not start P1-T06.

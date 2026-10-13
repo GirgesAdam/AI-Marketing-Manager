@@ -646,6 +646,7 @@ Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
 ### Deterministic VPS receiver hardening
 - Starting HEAD: `dd1ea010a275ec998017822e87572b44be92d79f`.
 - Implementation checkpoint: `7b8e5738191854fb67443607188e53ff389920ed`.
+- Nginx receiver evidence-label correction checkpoint: `fb71179edf51a1830472b88bd505520d585934e0`.
 - F02 live path uses only the existing project VPS topology; no Railway, Cloudflare Quick Tunnel, request-bin, ngrok, or other temporary hosting-provider dependency was introduced.
 - The accepted P1-T05 receiver semantics remain authoritative for HMAC, JSON-after-signature, canonical event ID checks, retry dedupe/state, Profile attribution, request ceilings, failure diagnostics, and cleanup.
 - VPS additions are limited to exact path/port configuration and a readiness handshake. The receiver generates no production persistence or queueing subsystem.
@@ -656,30 +657,59 @@ Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
 - Full suite: `236 passed / 0 failed / 0 skipped` across 10 test files.
 - typecheck/build/diff-check: PASS.
 
-### VPS precondition / Provider Behavior
-Historical live run #1 and P1-T05-F01 live rerun #2 remain preserved above unchanged. P1-T05-F02 had separate authorization for exactly one live Zernio Provider run, but only after VPS readiness PASS.
+### VPS readiness / authorized F02 live invocation
+Historical live run #1 and P1-T05-F01 live rerun #2 remain preserved above unchanged. P1-T05-F02 received separate authorization for exactly one live invocation after project-VPS readiness PASS.
 
-Observed F02 infrastructure precondition:
-- project VPS candidate was identified from local authorized SSH state/history without exposing credentials;
-- a current control/SSH session could not be established from the development environment;
-- expected SSH/HTTP/HTTPS reachability was unavailable during the bounded checks;
-- therefore a temporary dedicated reverse-proxy route and Node receiver could not be safely installed or verified;
-- trusted TLS + exact receiver path + HTTP 401 readiness was not proven;
-- F02 result: `BLOCKED — CONTROLLED_VPS_WEBHOOK_RECEIVER_NOT_AVAILABLE`;
-- F02 Zernio API calls: `0`;
-- F02 live Zernio Provider runs: `0`;
+The earlier Oracle/TIA VPS-candidate note is superseded and invalid as project evidence. No other-project infrastructure, credential, SSH key, hostname, or service is part of the F02 execution path.
+
+Observed controlled VPS readiness:
+- dedicated project hostname: `marketlyai.restartorg.com`;
+- project VPS address: `82.29.177.121`;
+- reverse proxy: dedicated Nginx server block/path for F02;
+- exact HTTPS endpoint reached the same controlled Node receiver through the SSH reverse tunnel;
+- TLS success: YES;
+- exact readiness response: HTTP `401`;
+- receiver marker match: YES;
+- same-process confirmation: YES;
+- redirect observed: NO;
+- readiness latency: `1249 ms`;
+- readiness timestamp: `2026-10-12T18:22:19.109Z`;
+- readiness result: PASS.
+
+Authorized F02 live invocation:
+- invocation count: exactly `1`;
+- provider-stage result: `BLOCKED — MISSING_LIVE_CREDENTIAL`;
+- failure occurred before the first Zernio request;
+- safe diagnosis: the current F02 working clone `.env` exists but does not define `ZERNIO_API_KEY` or `ZERNIO_EXPECTED_USER_EMAIL`; the original accepted workspace contains those variable names;
+- secret values were not read, copied, emitted, logged, committed, or documented;
+- trusted identity preflight: NOT RUN;
 - webhook create/read-back: NOT RUN;
-- webhook.test: NOT RUN;
+- `webhook.test`: NOT RUN;
 - publishing key: NOT CREATED;
 - scheduled retry trigger: NOT CREATED;
 - real delivery attempts 1/2: NOT RUN;
 - delivery logs attempts 1/2: NOT RUN;
-- provider cleanup: N/A because no provider artifact existed;
-- VPS route/process/runtime-secret cleanup: N/A because no temporary VPS configuration was installed.
+- normal Zernio calls: `0`;
+- cleanup-allowance Zernio calls: `0`;
+- total Zernio calls: `0`.
+
+Cleanup:
+- Node receiver stopped after the blocked invocation;
+- SSH reverse tunnel stopped;
+- operator completed temporary F02 route cleanup and confirmed dedicated port `18085` clear;
+- provider cleanup: N/A because no provider artifact was created.
 
 Cost/safety:
 - incremental VPS cost observed: `0`;
-- public publication: `0`; Ads/ad spend: `0`; media: `0`; OpenAI: `0`; fal.ai: `0`; comments/DMs: `0`; unexpected paid action: NO.
+- public publication: `0`;
+- Ads/ad spend: `0`;
+- media: `0`;
+- OpenAI: `0`;
+- fal.ai: `0`;
+- comments/DMs: `0`;
+- unexpected paid action: NO.
+
+No second F02 live invocation is authorized under the current Task Contract. Any retry requires explicit Team Leader authorization after correcting the credential-injection gap.
 
 Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 
