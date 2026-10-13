@@ -642,7 +642,9 @@ P1-T06: **`NOT_STARTED`**.
 
 ## P1-T06 — Analytics Bootstrap & Cursor
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Status: `DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
+
+Accepted implementation HEAD: `513e9505de115d5a39f30964d2d5aca7594ef708`.
 
 ### Deterministic regressions
 
@@ -693,4 +695,14 @@ Focused result: `20 / 20 PASS`. Affected provider-spike suites: `194 / 194 PASS`
 | Request bounds | PASS | 8 normal / 2 cleanup / 10 total |
 | Public/social mutation | PASS | 0 posts/media/Ads/comments/DMs |
 
-Analytics Bootstrap & Cursor recommendation: **SPIKE_PASS**. Canonical Historical Analytics and Analytics Delta remain `SPIKE_PENDING` pending Team Leader review. Analytics Webhook remains `SPIKE_PENDING`.
+Team Leader verdict: **ACCEPTED WITH NON-BLOCKING NOTES**.
+
+Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
+Historical Analytics: **`SPIKE_PENDING`**.
+Analytics Delta: **`SPIKE_PENDING`**.
+Best Times: **`SPIKE_PENDING`**.
+Performance Decay: **`SPIKE_PENDING`**.
+Frequency Analysis: **`SPIKE_PENDING`**.
+Analytics Webhook: **`SPIKE_PENDING`**.
+
+Non-blocking unresolved Provider behaviors remain: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination not observed live; historical metric-record field shapes not observed because the valid baseline was empty; natural HTTP 429 not observed. No unresolved item is converted into a Provider fact.

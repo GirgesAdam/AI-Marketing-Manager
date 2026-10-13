@@ -767,7 +767,9 @@ Do not infer analytics-event support from the generic `post.scheduled` webhook t
 
 ## P1-T06 — Zernio Analytics Bootstrap & Cursor Provider Behavior
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Status: `DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
+
+Accepted implementation HEAD: `513e9505de115d5a39f30964d2d5aca7594ef708`.
 
 Starting HEAD: `e75591272aa8e58dfd4be7619d3364c3c874ef73`. Branch: `p1-t06-zernio-analytics-bootstrap`. This is a bounded Provider Behavior spike only; no production analytics subsystem was built.
 
@@ -810,12 +812,21 @@ Cleanup / bounds:
 - key revoke HTTP 200 request `a89b48f4-1b8f-40c9-8688-cc57a03b7d65`; post-revoke auth HTTP 401 request `444e6502-409b-449a-9a61-579d782bcb9d`; revoked key valid: NO; cleanup confirmed;
 - 8 normal / 2 cleanup / 10 total Provider calls; public publication 0; Ads/ad spend 0; media 0; OpenAI 0; fal.ai 0; comments/DMs 0.
 
-Observed unresolved items:
-- expired cursor behavior remains unverified;
-- changes-during-import behavior with a non-empty natural delta was not observed in this bounded run;
-- baseline metric field shapes for actual records were not observed because the valid analytics dataset was empty;
-- no HTTP 429 was naturally observed.
+Observed unresolved Provider behaviors — preserved as non-blocking limitations, not Provider facts:
+- `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`;
+- `CHANGES_DURING_IMPORT_NOT_OBSERVED`;
+- non-empty Analytics Delta pagination was not observed live;
+- actual historical analytics metric-record field shapes were not observed because the valid baseline was empty;
+- natural HTTP 429 was not observed.
 
-Analytics Bootstrap & Cursor recommendation: **SPIKE_PASS**.
+Team Leader verdict: **ACCEPTED WITH NON-BLOCKING NOTES**.
 
-Canonical Historical Analytics and Analytics Delta remain `SPIKE_PENDING` until Team Leader review. Best Times, Performance Decay, Frequency Analysis, and Analytics Webhook remain `SPIKE_PENDING`.
+Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
+Historical Analytics: **`SPIKE_PENDING`**.
+Analytics Delta: **`SPIKE_PENDING`**.
+Best Times: **`SPIKE_PENDING`**.
+Performance Decay: **`SPIKE_PENDING`**.
+Frequency Analysis: **`SPIKE_PENDING`**.
+Analytics Webhook: **`SPIKE_PENDING`**.
+
+Historical Analytics / Analytics Delta require later Provider evidence sufficient to close their remaining live-behavior gaps before Phase 1 exit.

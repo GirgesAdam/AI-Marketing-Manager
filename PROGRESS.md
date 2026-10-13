@@ -310,12 +310,13 @@ Do not infer analytics-event support from the generic `post.scheduled` webhook t
 
 P1-T06 implementation started historically: NO at P1-T05 acceptance.
 
-## Current Task
+## P1-T06 Result
 
 `P1-T06 — Verify Zernio Analytics Bootstrap & Cursor Behavior`
 
-**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+**Status: DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
+Accepted implementation HEAD: `513e9505de115d5a39f30964d2d5aca7594ef708`.
 Starting HEAD: `e75591272aa8e58dfd4be7619d3364c3c874ef73`.
 Implementation branch: `p1-t06-zernio-analytics-bootstrap`.
 
@@ -344,9 +345,28 @@ Implementation branch: `p1-t06-zernio-analytics-bootstrap`.
 - Temporary key cleanup: revoke HTTP 200; post-revoke auth HTTP 401; cleanup confirmed.
 - Provider calls: `8 normal / 2 cleanup / 10 total`, within `20 + 4` bounds.
 - Public publication / scheduled or draft post / media / Ads / ad spend / comments / DMs / OpenAI / fal.ai: 0.
-- Historical Analytics and Analytics Delta remain canonical `SPIKE_PENDING` until Team Leader review. Best Times, Performance Decay, Frequency Analysis, and Analytics Webhook remain `SPIKE_PENDING`.
+- Accepted canonical capability: Analytics Bootstrap & Cursor Contract = `SPIKE_PASS`.
+- Historical Analytics = `SPIKE_PENDING`.
+- Analytics Delta = `SPIKE_PENDING`.
+- Best Times = `SPIKE_PENDING`.
+- Performance Decay = `SPIKE_PENDING`.
+- Frequency Analysis = `SPIKE_PENDING`.
+- Analytics Webhook = `SPIKE_PENDING`.
+- Unresolved Provider behavior preserved exactly: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`.
+- Unresolved Provider behavior preserved exactly: `CHANGES_DURING_IMPORT_NOT_OBSERVED`.
+- Non-empty Analytics Delta pagination was not observed live.
+- Actual historical analytics metric-record field shapes were not observed because the valid baseline was empty.
+- Natural HTTP 429 was not observed.
+- These limitations are non-blocking for P1-T06 acceptance and are not promoted into Provider facts.
 
-P1-T06 recommendation: **Analytics Bootstrap & Cursor recommendation: SPIKE_PASS**.
+P1-T06 Team Leader verdict: **ACCEPTED WITH NON-BLOCKING NOTES**.
+Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
+
+## Current Task
+
+**Status: NOT_STARTED**
+
+No approved next-task identifier exists in the current Source of Truth; none is invented here.
 
 ## Phase 1 Rules
 - Work one Task at a time.
@@ -363,4 +383,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader reviews P1-T06 implementation, deterministic evidence, and the single authorized live Provider run. Senior Engineer does not rerun P1-T06, does not promote canonical Analytics capability statuses, and does not start P1-T07 or any Best Time / Decay / Frequency / Analytics Webhook work without Team Leader direction.
+Team Leader verifies this documentation-only P1-T06 acceptance finalization. Next Task remains `NOT_STARTED` with no identifier invented. Senior Engineer does not rerun P1-T06, perform Provider mutations, promote Historical Analytics or Analytics Delta, or begin Best Time / Decay / Frequency / Analytics Webhook work without a new explicit Task Contract.
