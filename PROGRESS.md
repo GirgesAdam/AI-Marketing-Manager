@@ -364,9 +364,9 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 ## Current Task
 
-`P1-T08 - Verify Zernio analytics.synced Webhook Behavior`
+`P1-T08-F02 — Diagnose and Prove Public HTTPS Readiness`
 
-**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
+**Status: INFRASTRUCTURE READINESS PROVEN — AWAITING TEAM LEADER AUTHORIZATION**
 
 Starting HEAD: `d2e12882b96d04395b92c944735ebf8bc860b211`.
 Implementation branch: `p1-t08-zernio-analytics-webhook`.
@@ -421,6 +421,24 @@ Implementation branch: `p1-t08-zernio-analytics-webhook`.
 - VPS cleanup required interactive human `sudo`; the human operator subsequently confirmed the temporary Nginx route / reverse-tunnel rollback completed. No private-key, passphrase, sudo password, Zernio credential, expected identity, or webhook secret was exposed.
 - Current F01 blocker/outcome is `VPS_READINESS_TLS_OR_NETWORK_FAILURE`; the historical `CONTROLLED_VPS_WEBHOOK_RECEIVER_NOT_AVAILABLE` evidence above is intentionally preserved as the earlier attempt history.
 
+### P1-T08-F02 infrastructure/readiness diagnosis
+- Approved starting HEAD: `18abad50cf3ddc9fa1afdae431818dd8ff9bcf41`; branch unchanged: `p1-t08-zernio-analytics-webhook`.
+- F02 authorized infrastructure/readiness work only. Zernio calls, `/v1/auth/verify`, webhook mutations, analytics polling, and Provider live-run consumption were all prohibited and remained `0`.
+- Public DNS: PASS from the Senior Windows environment and Google Public DNS `8.8.8.8`. A record `marketlyai.restartorg.com -> 82.29.177.121`, TTL `14400`; no effective AAAA or CNAME observed.
+- TCP/443: PASS to `82.29.177.121:443` (observed safe latency ~`174 ms`; later recheck ~`125 ms`).
+- Precise root cause proven before repair: `NGINX_HTTPS_VHOST_MISCONFIGURED`. No enabled `marketlyai.restartorg.com` HTTPS vhost existed, so SNI fell through to `clinic.restartorg.com`; the served clinic certificate was both hostname-mismatched and expired, and insecure diagnostic HTTP returned `301` to `https://clinic.restartorg.com/`.
+- Smallest approved permanent repair: create/enable the existing-hostname Nginx vhost and obtain/attach a trusted certificate for `marketlyai.restartorg.com`. Post-repair public trusted TLS PASS: CN/SAN `marketlyai.restartorg.com`, issuer Let's Encrypt `YR2`, valid `2026-10-13` through `2027-01-11`; base HTTPS returned expected `404` without redirect.
+- Local receiver gate: PASS on `127.0.0.1:18086`, exact path `/p1-t08-f02/analytics-synced`, unsigned readiness `401`, marker match, same-process confirmation.
+- Reverse tunnel gate: PASS. VPS loopback requests reached the same receiver; snapshot advanced to `readinessHits=2 / confirmedHits=2 / deliveries=0`.
+- Temporary narrow Nginx route gate: PASS after `nginx -t`; exact-match route proxied only `/p1-t08-f02/analytics-synced` to `127.0.0.1:18086`.
+- VPS-local HTTPS isolation: PASS with trusted TLS, exact path, `401`, marker match, same-process confirmation; snapshot advanced to `3 / 3 / 0`.
+- External exact readiness from Senior environment: PASS at `https://marketlyai.restartorg.com/p1-t08-f02/analytics-synced`; trusted TLS=true, HTTP `401`, marker match=true, same-process confirmation=true, redirected=false, latency `1145 ms`, timestamp `2026-10-13T17:28:34.486Z`; final snapshot `4 / 4 / 0`.
+- Cleanup: human operator confirmed temporary F02 route removal and reverse-tunnel stop; permanent DNS/TLS/vhost repair remained in place per contract. Senior then terminated the local F02 receiver child; `PORT_18086_CLEAR` and `NO_F02_NODE_PROCESS` were verified.
+- Provider safety: Zernio normal/cleanup/total calls `0 / 0 / 0`; `/v1/auth/verify` 0; webhook mutations 0; Provider live run remains **UNCONSUMED**.
+
+P1-T08-F02 recommendation: **INFRASTRUCTURE READINESS PROVEN**.
+Parent P1-T08 remains unresolved and Analytics Webhook remains `SPIKE_PENDING`.
+
 P1-T08 recommendation: **Analytics Webhook recommendation: REMAIN PENDING - FIX/BLOCKER REQUIRED**.
 
 Canonical capability remains:
@@ -451,4 +469,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader reviews the P1-T08-F01 readiness-failure evidence and cleanup. Senior Engineer does not retry readiness, does not consume the still-unconsumed authorized Provider live run, does not create a Zernio webhook, does not change Analytics capability status, and does not start another Task without a new Team Leader instruction.
+Team Leader reviews P1-T08-F02 infrastructure-readiness evidence. Senior Engineer does not call Zernio, does not consume the still-unconsumed Provider live run, does not create a webhook, does not change Analytics capability status, and does not start another Task without explicit Team Leader authorization.

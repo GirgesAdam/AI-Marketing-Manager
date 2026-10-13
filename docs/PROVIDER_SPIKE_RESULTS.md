@@ -1070,3 +1070,25 @@ Canonical Analytics Webhook remains **`SPIKE_PENDING`** pending Team Leader re-r
 Known project limitation remains unchanged: `Zernio /v1/webhooks/logs delivery-attempt correlation/timing remains UNVERIFIED`. P1-T08 does not reopen that investigation.
 
 Historical Analytics, Analytics Delta, Best Times, Performance Decay, and Frequency Analysis all remain `SPIKE_PENDING`. P1-T06/P1-T07 unresolved behavior is unchanged.
+## P1-T08-F02 — Public HTTPS Readiness Diagnosis
+
+Status: `INFRASTRUCTURE READINESS PROVEN — AWAITING TEAM LEADER AUTHORIZATION`.
+
+This section is infrastructure/readiness evidence only, not Provider Behavior. No Zernio request was made.
+
+- Starting HEAD: `18abad50cf3ddc9fa1afdae431818dd8ff9bcf41`; branch `p1-t08-zernio-analytics-webhook`.
+- DNS PASS: A `82.29.177.121`, TTL `14400`, no effective AAAA/CNAME from local and Google Public DNS views.
+- TCP/443 PASS.
+- Initial trusted TLS FAIL exposed certificate `clinic.restartorg.com`, issuer Let's Encrypt R12, validity ending `2026-06-12`, with hostname mismatch and time invalidity. Insecure diagnostic HTTP returned `301` to `https://clinic.restartorg.com/`.
+- Nginx inspection proved no enabled `marketlyai.restartorg.com` vhost. Precise root cause: `NGINX_HTTPS_VHOST_MISCONFIGURED`.
+- Permanent existing-hostname repair established an enabled marketlyai vhost and trusted certificate. Post-repair certificate: CN/SAN `marketlyai.restartorg.com`, issuer Let's Encrypt `YR2`, valid `2026-10-13` to `2027-01-11`; trusted client authorization PASS; base HTTPS `404`, no redirect.
+- Existing P1-T08 receiver reused unchanged on `127.0.0.1:18086` at `/p1-t08-f02/analytics-synced`; local readiness and confirmation each returned `401` with the expected marker.
+- Accepted reverse tunnel proved VPS loopback -> same receiver; same-process counters reached `2/2` with `0` deliveries.
+- One narrow temporary Nginx exact-match route was added only for `/p1-t08-f02/analytics-synced`; `nginx -t` PASS before reload.
+- VPS-local trusted HTTPS isolation PASS; same-process counters reached `3/3`, deliveries `0`.
+- External exact readiness PASS from Senior environment: trusted TLS PASS, HTTP `401`, receiver marker match, same-process confirmation, no redirect, latency `1145 ms`, timestamp `2026-10-13T17:28:34.486Z`; final counters `4/4`, deliveries `0`.
+- Cleanup: human operator confirmed temporary F02 route removal and reverse-tunnel stop; permanent valid DNS/TLS/vhost repair intentionally remained. Senior verified receiver termination, local port `18086` clear, and no F02 Node process remaining.
+- Provider calls: `0 normal / 0 cleanup / 0 total`; `/v1/auth/verify`: 0; webhook mutations: 0; analytics polling: 0; Provider live run: **UNCONSUMED**.
+
+P1-T08-F02 recommendation: **INFRASTRUCTURE READINESS PROVEN**.
+Canonical Analytics Webhook remains **`SPIKE_PENDING`** and parent P1-T08 remains unresolved pending Team Leader authorization.

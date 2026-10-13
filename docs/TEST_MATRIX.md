@@ -863,3 +863,27 @@ Final deterministic gates before the live infrastructure blocker:
 Analytics Webhook recommendation: **REMAIN PENDING - FIX/BLOCKER REQUIRED**.
 Analytics Webhook canonical state remains `SPIKE_PENDING`.
 Other pending Analytics capabilities and all P1-T06/P1-T07 unresolved behavior remain unchanged.
+## P1-T08-F02 — Public HTTPS Readiness
+
+| Gate | Result | Safe evidence |
+|---|---|---|
+| Public DNS | PASS | A `82.29.177.121`, TTL `14400`; no effective AAAA/CNAME |
+| TCP 443 | PASS | `82.29.177.121:443` reachable |
+| Initial TLS diagnosis | FAIL / DIAGNOSED | clinic cert served; hostname mismatch + expired |
+| Precise root cause | PASS / PROVEN | `NGINX_HTTPS_VHOST_MISCONFIGURED` |
+| Permanent marketlyai vhost repair | PASS | enabled existing-hostname vhost; base HTTPS `404` |
+| Trusted TLS after repair | PASS | CN/SAN marketlyai; Let's Encrypt YR2; valid 2026-10-13 to 2027-01-11 |
+| Local receiver | PASS | `127.0.0.1:18086`; exact path; `401`; marker + confirmation |
+| Reverse tunnel | PASS | VPS loopback reached same receiver; counters `2/2/0` |
+| Temporary exact Nginx route | PASS | exact F02 path only; `nginx -t` PASS |
+| VPS-local HTTPS isolation | PASS | trusted TLS; `401`; marker + confirmation; counters `3/3/0` |
+| External exact readiness | PASS | TLS=true; HTTP `401`; marker=true; confirmation=true; redirect=false; `1145 ms` |
+| Final same-process state | PASS | counters `4/4`; deliveries `0` |
+| Temporary route cleanup | PASS / human-confirmed | F02 route removed; permanent vhost/TLS retained |
+| Reverse tunnel cleanup | PASS / human-confirmed | tunnel stopped |
+| Local receiver cleanup | PASS | `PORT_18086_CLEAR`; `NO_F02_NODE_PROCESS` |
+| Zernio calls | PASS / zero | `0 normal / 0 cleanup / 0 total` |
+| Provider live run | PASS / unconsumed | no Provider execution in F02 |
+
+P1-T08-F02 recommendation: **INFRASTRUCTURE READINESS PROVEN**.
+Analytics Webhook canonical state remains `SPIKE_PENDING`.
