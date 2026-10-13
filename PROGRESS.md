@@ -199,7 +199,11 @@ Final review wording:
 
 `P1-T05 — Verify Zernio Webhook Delivery Contract`
 
-**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
+**Status: DONE / ACCEPTED**
+
+Team Leader verdict: `ACCEPTED WITH NON-BLOCKING NOTES`.
+Accepted F03 evidence/review HEAD: `23a09352b977853178cccb432893f542d6c3d2e3`.
+Last code-bearing implementation checkpoint: `fb71179edf51a1830472b88bd505520d585934e0`.
 
 Implementation branch: `p1-t05-zernio-webhook-contract`.
 P1-T05-F01 starting/reviewed HEAD: `e87447bf2c58e85d01bbc41841980ba1549fdbf6`.
@@ -293,12 +297,18 @@ P1-T05-F01 implementation checkpoint: `d658f701bf3f2f4400251994324b7a3358442b61`
 - No provider-log cause is promoted from assumption to fact. No extra provider query or live rerun was performed.
 - Request accounting: `11 normal / 6 cleanup / 17 total`, within the `24 normal + 6 cleanup` contract.
 - Provider cleanup confirmed for scheduled post, publishing key, and webhook.
-- P1-T05 remains `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`; webhook capabilities remain `SPIKE_PENDING`; P1-T06 remains NOT_STARTED.
-Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
+- Observed F03 harness result remains `BLOCKED — WEBHOOK_LOGS_INCOMPLETE`; this evidence is preserved and is not rewritten as successful provider-log verification.
+- Team Leader classified that incomplete log evidence as a non-blocking provider-observability limitation because the required generic webhook delivery/retry behaviors were independently proven by direct controlled-receiver evidence.
+- Known limitation: `Zernio /v1/webhooks/logs delivery-attempt correlation/timing remains unverified; F03's single bounded query returned insufficient evidence. Direct receiver evidence independently proved delivery and retry behavior.`
+- Do not record eventual consistency, broken provider logs, a specific propagation delay, or logs as verified.
 
-Canonical webhook-related capability statuses remain unchanged at `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
+Generic Webhook Delivery Contract: **`SPIKE_PASS`**.
 
-P1-T06 implementation started: NO.
+Analytics Webhook: **`SPIKE_PENDING`**.
+
+Do not infer analytics-event support from the generic `post.scheduled` webhook test.
+
+P1-T06 implementation started: NO (`NOT_STARTED`).
 
 ## Phase 1 Rules
 - Work one Task at a time.
@@ -315,4 +325,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader reviews the single authorized P1-T05-F03 live result. The controlled receiver observed the signed test delivery and the real automatic retry contract (HTTP 500 then duplicate HTTP 204 with the same event ID), but the run ended `BLOCKED — WEBHOOK_LOGS_INCOMPLETE` because the bounded provider-log validation step did not PASS. Senior Engineer does not rerun F03, does not change the log-observation strategy, does not mark P1-T05 DONE / ACCEPTED, does not change canonical webhook capability statuses, and does not start P1-T06 without Team Leader direction.
+Team Leader verifies this documentation-only P1-T05 acceptance finalization. P1-T06 remains `NOT_STARTED`; Senior Engineer does not begin P1-T06 without an explicit Task Contract / assignment.

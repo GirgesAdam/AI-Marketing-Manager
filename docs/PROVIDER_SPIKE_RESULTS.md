@@ -716,7 +716,11 @@ Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUI
 Canonical webhook-related capabilities remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
 ## P1-T05-F03 — Final Zernio Webhook Live Verification
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+Status: `DONE / ACCEPTED`.
+
+Team Leader verdict: `ACCEPTED WITH NON-BLOCKING NOTES`.
+Accepted F03 evidence/review HEAD: `23a09352b977853178cccb432893f542d6c3d2e3`.
+Last code-bearing implementation checkpoint: `fb71179edf51a1830472b88bd505520d585934e0`.
 
 Exactly one authorized F03 live invocation was performed using the existing project VPS receiver architecture. Credentials were injected from the original ignored local `.env` into process memory only.
 
@@ -746,6 +750,17 @@ The safe result does not expose enough underlying log-query evidence to determin
 - public publication: 0;
 - Ads/ad spend/media/OpenAI/fal.ai/comments/DMs: 0.
 
-F03 Provider Behavior result: **BLOCKED — WEBHOOK_LOGS_INCOMPLETE**.
+Observed F03 harness result: **BLOCKED — WEBHOOK_LOGS_INCOMPLETE**.
 
-Canonical webhook-related capabilities remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
+That result is preserved as observed evidence and does not certify `/v1/webhooks/logs`. Team Leader classified the insufficient delivery-log correlation as a **non-blocking provider-observability limitation** because direct controlled-receiver evidence independently proved the required Generic Webhook Delivery Contract behaviors: signature verification, canonical/stable event ID, duplicate delivery handling, automatic retry behavior, event payload handling, acknowledgement timing, and the tested `post.scheduled` event category.
+
+Known limitation: `Zernio /v1/webhooks/logs delivery-attempt correlation/timing remains unverified; F03's single bounded query returned insufficient evidence. Direct receiver evidence independently proved delivery and retry behavior.`
+
+No claim is made that provider logs are eventually consistent, broken, delayed by a specific duration, or verified.
+
+P1-T05 Team Leader verdict: **ACCEPTED WITH NON-BLOCKING NOTES**.
+P1-T05 canonical status: **DONE / ACCEPTED**.
+Earlier `SPIKE_PENDING` recommendations in historical P1-T05/F01/F02 sections are preserved as point-in-time evidence and are superseded by this final acceptance.
+Generic Webhook Delivery Contract: **`SPIKE_PASS`**.
+Analytics Webhook: **`SPIKE_PENDING`**.
+Do not infer analytics-event support from the generic `post.scheduled` webhook test.

@@ -608,7 +608,10 @@ Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUI
 Canonical webhook-related capabilities remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
 ## P1-T05-F03 — Final Authorized Live Verification
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+Status: `DONE / ACCEPTED`.
+
+Team Leader verdict: `ACCEPTED WITH NON-BLOCKING NOTES`.
+Accepted F03 evidence/review HEAD: `23a09352b977853178cccb432893f542d6c3d2e3`.
 
 Deterministic gates before live execution: F02 `12/12`, F01 `13/13`, parent P1-T05 `46/46`, full suite `236/236`, typecheck PASS, build PASS, diff-check PASS.
 
@@ -627,4 +630,12 @@ Deterministic gates before live execution: F02 `12/12`, F01 `13/13`, parent P1-T
 | Request bounds | PASS | 11 normal / 6 cleanup / 17 total |
 | F03 invocation bound | PASS | exactly one live invocation; no rerun |
 
-F03 Provider Behavior result: **BLOCKED — WEBHOOK_LOGS_INCOMPLETE**. Delivery/retry behavior was observed, but provider-log correlation remains uncertified. Canonical webhook capabilities remain `SPIKE_PENDING`; P1-T06 remains NOT_STARTED.
+Observed F03 harness result: **BLOCKED — WEBHOOK_LOGS_INCOMPLETE**. Delivery/retry behavior was observed directly and accepted; provider-log correlation/timing remains unverified and is a non-blocking provider-observability limitation.
+
+Known limitation: `Zernio /v1/webhooks/logs delivery-attempt correlation/timing remains unverified; F03's single bounded query returned insufficient evidence. Direct receiver evidence independently proved delivery and retry behavior.`
+
+P1-T05 canonical status: **DONE / ACCEPTED**.
+Earlier `SPIKE_PENDING` recommendations in historical P1-T05/F01/F02 sections are preserved as point-in-time evidence and are superseded by this final acceptance.
+Generic Webhook Delivery Contract: **`SPIKE_PASS`**.
+Analytics Webhook: **`SPIKE_PENDING`**.
+P1-T06: **`NOT_STARTED`**.
