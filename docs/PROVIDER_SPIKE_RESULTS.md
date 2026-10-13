@@ -714,3 +714,38 @@ No second F02 live invocation is authorized under the current Task Contract. Any
 Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 
 Canonical webhook-related capabilities remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
+## P1-T05-F03 — Final Zernio Webhook Live Verification
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+
+Exactly one authorized F03 live invocation was performed using the existing project VPS receiver architecture. Credentials were injected from the original ignored local `.env` into process memory only.
+
+### Live Provider Behavior
+- identity preflight: PASS; run `d7b58414-24f0-4582-a991-5ba8bd4388c4`; HTTP 200; request `2da21db4-b38d-483d-b173-c4782bc8c8a4`;
+- webhook `6acda866ce92dc3eec124667`: Profile A only, `post.scheduled`, create/read-back PASS;
+- `webhook.test`: signature valid, canonical IDs matched, receiver HTTP 204, event `c6354814-7742-44f9-b7db-a4d43e0cb522`;
+- scheduled post `6acda8697c472b7066436771`: create/read PASS, public publication NO, cleanup GET 404;
+- temporary publishing key `6acda8676e670278f93d9841`: revoke PASS, post-revoke auth HTTP 401;
+- real attempt 1: event `a6e9cbae-5bfb-42b3-9b0f-1c9aeb67d178`, valid signature/Profile attribution, receiver HTTP 500;
+- retry: same event ID, payload ID and body hash about 10.959 s later; duplicate=true; receiver HTTP 204;
+- logical unique real events: 1;
+- foreign Profile delivery observed: NO.
+
+### Remaining blocker
+After retry observation the harness performs one bounded provider-log validation after a fixed 500 ms wait. The safe final output contained `logs=null` and ended `BLOCKED — WEBHOOK_LOGS_INCOMPLETE`.
+
+The safe result does not expose enough underlying log-query evidence to determine whether the cause was missing attempt rows, eventual consistency, or another provider/log response condition. None of those explanations is recorded as provider fact, and no extra provider call or F03 rerun was performed.
+
+### Cleanup / bounds
+- post cleanup confirmed;
+- scoped-key cleanup confirmed;
+- webhook cleanup confirmed;
+- normal calls: 11 / 24;
+- cleanup calls: 6 / 6;
+- total calls: 17;
+- public publication: 0;
+- Ads/ad spend/media/OpenAI/fal.ai/comments/DMs: 0.
+
+F03 Provider Behavior result: **BLOCKED — WEBHOOK_LOGS_INCOMPLETE**.
+
+Canonical webhook-related capabilities remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.

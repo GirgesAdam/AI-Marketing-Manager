@@ -606,3 +606,25 @@ The earlier Oracle/TIA VPS-candidate note is superseded and invalid as project e
 
 Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 Canonical webhook-related capabilities remain `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
+## P1-T05-F03 — Final Authorized Live Verification
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+
+Deterministic gates before live execution: F02 `12/12`, F01 `13/13`, parent P1-T05 `46/46`, full suite `236/236`, typecheck PASS, build PASS, diff-check PASS.
+
+| Test | Result | Evidence |
+|---|---|---|
+| Controlled HTTPS receiver readiness | PASS | gated provider stage reached same project receiver |
+| Trusted identity | PASS | HTTP 200; run `d7b58414-24f0-4582-a991-5ba8bd4388c4` |
+| Profile-A webhook scope/read-back | PASS | webhook `6acda866ce92dc3eec124667` |
+| `webhook.test` signed delivery | PASS | HTTP 204; event `c6354814-7742-44f9-b7db-a4d43e0cb522` |
+| Real attempt 1 | PASS | same F03 event; intentional HTTP 500 |
+| Automatic retry | PASS | same event ID/body about 10.959 s later; duplicate HTTP 204 |
+| Cross-Profile observation | PASS | no foreign Profile delivery |
+| Provider delivery-log validation | BLOCKED | `WEBHOOK_LOGS_INCOMPLETE`; `logs=null` |
+| Scheduled trigger remained non-public | PASS | create/read scheduled; no publication |
+| Post/key/webhook cleanup | PASS | all temporary provider artifacts confirmed cleaned |
+| Request bounds | PASS | 11 normal / 6 cleanup / 17 total |
+| F03 invocation bound | PASS | exactly one live invocation; no rerun |
+
+F03 Provider Behavior result: **BLOCKED — WEBHOOK_LOGS_INCOMPLETE**. Delivery/retry behavior was observed, but provider-log correlation remains uncertified. Canonical webhook capabilities remain `SPIKE_PENDING`; P1-T06 remains NOT_STARTED.

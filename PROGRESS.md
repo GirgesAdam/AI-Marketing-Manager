@@ -276,6 +276,24 @@ P1-T05-F01 implementation checkpoint: `d658f701bf3f2f4400251994324b7a3358442b61`
 - Ads/ad spend/media/OpenAI/fal.ai/comments/DMs/public publication/unexpected paid action: `0`.
 - No further F02 live rerun is authorized under the current contract; Team Leader authorization is required before any retry.
 
+
+### P1-T05-F03 final authorized live verification
+- Exactly one authorized F03 live invocation was performed; no rerun is authorized or performed.
+- Existing project VPS HTTPS/Nginx/SSH-reverse-tunnel receiver architecture was reused; no transport redesign occurred.
+- Zernio credentials were injected from the original ignored `.env` into process memory only; values were not printed, copied into the working clone, committed, or documented.
+- Trusted identity preflight: PASS; expected identity match = true; HTTP 200; run `d7b58414-24f0-4582-a991-5ba8bd4388c4`; request `2da21db4-b38d-483d-b173-c4782bc8c8a4`.
+- Temporary Profile-A webhook create/read-back: PASS; webhook `6acda866ce92dc3eec124667`; event `post.scheduled`; Profile A only.
+- `webhook.test`: PASS at the controlled receiver; HMAC signature valid; header/body event ID match; receiver HTTP 204; event ID `c6354814-7742-44f9-b7db-a4d43e0cb522`.
+- Temporary Profile-A read-write publishing key was created, revoked, and rejected with HTTP 401 after revoke; cleanup confirmed.
+- Synthetic scheduled post `6acda8697c472b7066436771` remained scheduled; no public publication occurred; cleanup GET returned HTTP 404.
+- First real `post.scheduled` delivery used event ID `a6e9cbae-5bfb-42b3-9b0f-1c9aeb67d178`; signature/Profile attribution PASS; receiver intentionally returned HTTP 500.
+- Automatic retry arrived about `10.959 s` later with the same event ID and raw-body SHA-256; duplicate=true; receiver returned HTTP 204.
+- Stable event ID across retry: YES; logical unique real event count: 1; foreign Profile delivery observed: NO.
+- Provider-log validation did not PASS. The harness performs one `GET /v1/webhooks/logs` after a fixed 500 ms wait; safe final evidence exposed `logs=null` and `BLOCKED — WEBHOOK_LOGS_INCOMPLETE`, without enough detail to prove whether the cause was missing rows, eventual consistency, or another provider/log-shape condition.
+- No provider-log cause is promoted from assumption to fact. No extra provider query or live rerun was performed.
+- Request accounting: `11 normal / 6 cleanup / 17 total`, within the `24 normal + 6 cleanup` contract.
+- Provider cleanup confirmed for scheduled post, publishing key, and webhook.
+- P1-T05 remains `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`; webhook capabilities remain `SPIKE_PENDING`; P1-T06 remains NOT_STARTED.
 Webhook delivery contract recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 
 Canonical webhook-related capability statuses remain unchanged at `SPIKE_PENDING`; Analytics Webhook remains `SPIKE_PENDING`.
@@ -297,4 +315,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader re-reviews P1-T05-F02 deterministic evidence, the proven project-VPS HTTPS readiness PASS, and the single authorized F02 live invocation that failed closed with `MISSING_LIVE_CREDENTIAL` before any Zernio request. Team Leader decides whether to accept the zero-call blocker state or explicitly authorize a targeted rerun after credential injection is corrected. Senior Engineer does not rerun F02 without authorization, does not mark P1-T05 DONE / ACCEPTED, does not change canonical webhook capability statuses, and does not start P1-T06.
+Team Leader reviews the single authorized P1-T05-F03 live result. The controlled receiver observed the signed test delivery and the real automatic retry contract (HTTP 500 then duplicate HTTP 204 with the same event ID), but the run ended `BLOCKED — WEBHOOK_LOGS_INCOMPLETE` because the bounded provider-log validation step did not PASS. Senior Engineer does not rerun F03, does not change the log-observation strategy, does not mark P1-T05 DONE / ACCEPTED, does not change canonical webhook capability statuses, and does not start P1-T06 without Team Leader direction.
