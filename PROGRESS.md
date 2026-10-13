@@ -195,7 +195,7 @@ Final review wording:
 - Scoped Keys: `SPIKE_PASS`.
 - Publishing: `SPIKE_PASS`.
 
-## Current Task
+## P1-T05 Result
 
 `P1-T05 — Verify Zernio Webhook Delivery Contract`
 
@@ -308,7 +308,45 @@ Analytics Webhook: **`SPIKE_PENDING`**.
 
 Do not infer analytics-event support from the generic `post.scheduled` webhook test.
 
-P1-T06 implementation started: NO (`NOT_STARTED`).
+P1-T06 implementation started historically: NO at P1-T05 acceptance.
+
+## Current Task
+
+`P1-T06 — Verify Zernio Analytics Bootstrap & Cursor Behavior`
+
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+
+Starting HEAD: `e75591272aa8e58dfd4be7619d3364c3c874ef73`.
+Implementation branch: `p1-t06-zernio-analytics-bootstrap`.
+
+### P1-T06 implementation / deterministic validation
+- Provider Behavior spike only; no production Analytics subsystem, database schema, worker, queue, dashboard, report, outbox, or production adapter was built.
+- Required order is enforced: initial opaque cursor capture -> bounded historical baseline -> delta consumption from the exact pre-baseline cursor.
+- Temporary Provider mutation is limited to one Profile-A-only read-only scoped key using accepted P1-T03 creation/revocation behavior.
+- Focused P1-T06 regressions: `20 / 20 PASS`.
+- Affected provider-spike suites: `194 / 194 PASS` across 8 files.
+- Full regression suite: `256 / 256 PASS` across 11 files.
+- `npm run typecheck`: PASS.
+- `npm run build`: PASS.
+- `git diff --check`: PASS.
+
+### P1-T06 single authorized live Provider run
+- Exactly one authorized live run was performed; no second run was performed or authorized.
+- Trusted identity preflight: PASS; HTTP 200; run `5c079041-8da4-4d28-8998-5f7c0ef30d18`; request `e1a6e31f-7227-4228-8821-cadc221f4c52`.
+- Temporary key: Profile A `6ac5a45a8e4ca44f355033ae` only, permission `read`, bounded expiry; raw secret not emitted or persisted.
+- Exact account preflight: PASS for Facebook account `6ac64f8740364f4695dd3077`; foreign Profile/account observed: NO.
+- Initial delta cursor capture happened before baseline: HTTP 200; data count 0; `nextCursor` present; `hasMore=false`; only safe cursor fingerprint `3c6554c117d389a3` retained.
+- Baseline window: `2026-07-16` through `2026-10-13`; page 1 and page 2 explicitly read with small page size; both HTTP 200; total records 0; provider pagination reported total 0 / pages 1; `hasAnalyticsAccess=true`; valid empty analytics dataset, not unavailable analytics.
+- Delta resumed from the exact pre-baseline cursor: HTTP 200; one page; 0 items; `hasMore=false`; returned cursor fingerprint unchanged; no natural change occurred during baseline import, recorded as `CHANGES_DURING_IMPORT_NOT_OBSERVED`.
+- Invalid cursor negative test: exactly one request; HTTP 400; safe code `invalid_field_value`; no `nextCursor`; no retry.
+- Expired cursor: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; no fake cursor, waiting, or TTL inference was used.
+- Natural analytics rate-limit headers observed: limit `6` for analytics/delta requests and limit `60` for account preflight; no HTTP 429 occurred.
+- Temporary key cleanup: revoke HTTP 200; post-revoke auth HTTP 401; cleanup confirmed.
+- Provider calls: `8 normal / 2 cleanup / 10 total`, within `20 + 4` bounds.
+- Public publication / scheduled or draft post / media / Ads / ad spend / comments / DMs / OpenAI / fal.ai: 0.
+- Historical Analytics and Analytics Delta remain canonical `SPIKE_PENDING` until Team Leader review. Best Times, Performance Decay, Frequency Analysis, and Analytics Webhook remain `SPIKE_PENDING`.
+
+P1-T06 recommendation: **Analytics Bootstrap & Cursor recommendation: SPIKE_PASS**.
 
 ## Phase 1 Rules
 - Work one Task at a time.
@@ -325,4 +363,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader verifies this documentation-only P1-T05 acceptance finalization. P1-T06 remains `NOT_STARTED`; Senior Engineer does not begin P1-T06 without an explicit Task Contract / assignment.
+Team Leader reviews P1-T06 implementation, deterministic evidence, and the single authorized live Provider run. Senior Engineer does not rerun P1-T06, does not promote canonical Analytics capability statuses, and does not start P1-T07 or any Best Time / Decay / Frequency / Analytics Webhook work without Team Leader direction.

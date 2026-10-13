@@ -639,3 +639,58 @@ Earlier `SPIKE_PENDING` recommendations in historical P1-T05/F01/F02 sections ar
 Generic Webhook Delivery Contract: **`SPIKE_PASS`**.
 Analytics Webhook: **`SPIKE_PENDING`**.
 P1-T06: **`NOT_STARTED`**.
+
+## P1-T06 — Analytics Bootstrap & Cursor
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+
+### Deterministic regressions
+
+| ID | Coverage | Result |
+|---|---|---|
+| T06-01 | Default execution is offline | PASS |
+| T06-02 | Missing control credential blocks before mutation | PASS |
+| T06-03 | Trusted identity mismatch blocks key creation | PASS |
+| T06-04 | Temporary key is Profile-A-only read-only | PASS |
+| T06-05 | Temporary key secret never leaks | PASS |
+| T06-06 | Exact expected account is required | PASS |
+| T06-07 | Initial delta capture occurs before baseline | PASS |
+| T06-08 | Baseline uses exact Profile/account/platform/source filters | PASS |
+| T06-09 | Baseline pagination is bounded to 4 pages | PASS |
+| T06-10 | Foreign account/Profile result is Critical | PASS |
+| T06-11 | Delta consumes original pre-baseline cursor | PASS |
+| T06-12 | hasMore advances only with provider nextCursor | PASS |
+| T06-13 | Delta pagination is bounded to 5 pages | PASS |
+| T06-14 | Cursor remains opaque; safe fingerprint only | PASS |
+| T06-15 | Invalid cursor classified with exactly one request/no retry | PASS |
+| T06-16 | Invalid cursor not mislabeled expired | PASS |
+| T06-17 | Empty analytics distinguished from unavailable analytics | PASS |
+| T06-18 | Natural 429 evidence observable with no auto retry | PASS |
+| T06-19 | N+1 request blocked pre-transport; cleanup allowance preserved | PASS |
+| T06-20 | Key revoke + rejected post-revoke auth required | PASS |
+
+Focused result: `20 / 20 PASS`. Affected provider-spike suites: `194 / 194 PASS`. Full suite: `256 / 256 PASS`. Typecheck/build/diff-check: PASS.
+
+### Live Provider Behavior
+
+| Test | Result | Safe evidence |
+|---|---|---|
+| Trusted identity | PASS | HTTP 200; run `5c079041-8da4-4d28-8998-5f7c0ef30d18`; request `e1a6e31f-7227-4228-8821-cadc221f4c52` |
+| Profile-A read-only scoped key | PASS | Profile A only; permission read; bounded expiry |
+| Exact Facebook account target | PASS | account `6ac64f8740364f4695dd3077`; foreign target NO |
+| Initial cursor before baseline | PASS | HTTP 200; data 0; nextCursor present; hasMore false |
+| Baseline page 1 | PASS | HTTP 200; records 0; total 0/pages 1 |
+| Baseline page 2 explicit probe | PASS | HTTP 200; records 0 |
+| Empty vs unavailable | PASS | valid empty baseline with `hasAnalyticsAccess=true` |
+| Delta from original cursor | PASS | HTTP 200; original cursor used; items 0; hasMore false |
+| Changes during import | NOT OBSERVED | `CHANGES_DURING_IMPORT_NOT_OBSERVED` |
+| Invalid cursor | PASS | exactly one HTTP 400; `invalid_field_value`; no retry |
+| Expired cursor | UNVERIFIED | `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED` |
+| Cross-Profile/account leakage | PASS | none observed |
+| Natural rate headers | PASS | account limit 60; analytics limit 6 |
+| Natural HTTP 429 | NOT OBSERVED | no forced rate-limit test |
+| Key cleanup | PASS | revoke 200; post-revoke auth 401 |
+| Request bounds | PASS | 8 normal / 2 cleanup / 10 total |
+| Public/social mutation | PASS | 0 posts/media/Ads/comments/DMs |
+
+Analytics Bootstrap & Cursor recommendation: **SPIKE_PASS**. Canonical Historical Analytics and Analytics Delta remain `SPIKE_PENDING` pending Team Leader review. Analytics Webhook remains `SPIKE_PENDING`.

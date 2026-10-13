@@ -764,3 +764,58 @@ Earlier `SPIKE_PENDING` recommendations in historical P1-T05/F01/F02 sections ar
 Generic Webhook Delivery Contract: **`SPIKE_PASS`**.
 Analytics Webhook: **`SPIKE_PENDING`**.
 Do not infer analytics-event support from the generic `post.scheduled` webhook test.
+
+## P1-T06 — Zernio Analytics Bootstrap & Cursor Provider Behavior
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+
+Starting HEAD: `e75591272aa8e58dfd4be7619d3364c3c874ef73`. Branch: `p1-t06-zernio-analytics-bootstrap`. This is a bounded Provider Behavior spike only; no production analytics subsystem was built.
+
+### Deterministic validation
+- focused P1-T06: `20 passed / 0 failed`;
+- affected P1-T03/P1-T04/P1-T05/P1-T06 suites: `194 passed / 0 failed` across 8 files;
+- full suite: `256 passed / 0 failed / 0 skipped` across 11 files;
+- typecheck/build/diff-check: PASS.
+
+### Single authorized live run
+Identity:
+- HTTP 200; expected trusted identity matched; run `5c079041-8da4-4d28-8998-5f7c0ef30d18`; request `e1a6e31f-7227-4228-8821-cadc221f4c52`; latency 480 ms.
+
+Temporary scoped runtime key:
+- provider key ID `6ace176b8030c7c0e9ee7628`; synthetic name `aimm-p1-t06-analytics-0199cb92-a5bc-4308-bfd7-95d7bec65eb4`; scope `profiles`; Profile A only; permission `read`; bounded expiry `2026-10-14T11:35:07.884Z`; raw key secret absent from evidence/docs.
+
+Analytics target:
+- Profile A `6ac5a45a8e4ca44f355033ae`; Facebook account `6ac64f8740364f4695dd3077`; platform `facebook`; exact target validated; foreign Profile/account observed: NO; account-list response did not expose a boolean analytics-access flag.
+
+Initial cursor capture — performed before baseline:
+- HTTP 200; request `92d83152-c30c-4580-8b7a-6ee7750e7e6a`; initial data count 0; `nextCursor` present; `hasMore=false`; full cursor not persisted in evidence; safe SHA-256 prefix fingerprint `3c6554c117d389a3`.
+
+Historical baseline:
+- exact filters: Profile A + expected account + facebook + source=all; window `2026-07-16` to `2026-10-13`; small page size; page 1 and page 2 both explicitly probed;
+- page 1 HTTP 200 request `5c6f3066-f756-4c8f-8845-862338fac225`; page 2 HTTP 200 request `85a5366c-62dd-43cc-9fcc-0be0ce35bcb4`;
+- records 0; provider pagination total 0 / pages 1; response fields observed: accounts, hasAnalyticsAccess, overview, pagination, posts; `hasAnalyticsAccess=true`; valid empty dataset; metric fields/status/lastUpdated unavailable because no records existed.
+
+Delta from original pre-baseline cursor:
+- original captured cursor used: YES; one page HTTP 200 request `5277a874-a448-4ea1-91da-80f3974a29b6`; 0 delta items; `hasMore=false`; `nextCursor` present; safe fingerprint remained `3c6554c117d389a3`; no cursor advancement was needed because `hasMore=false`;
+- changes during baseline import: `CHANGES_DURING_IMPORT_NOT_OBSERVED`; no mutation/polling was used to manufacture a change.
+
+Negative cursor behavior:
+- one synthetic invalid-cursor request only; HTTP 400; request `b8ea0fbd-ac4d-42ca-b316-4e731a71e7cc`; safe code `invalid_field_value`; no nextCursor; no automatic retry;
+- expired cursor: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`. No expired-cursor fact or TTL is inferred from invalid-cursor behavior.
+
+Rate-limit observations:
+- normal account preflight exposed limit 60; analytics requests exposed limit 6 with remaining/reset headers; HTTP 429 naturally observed: NO; automatic retry: NO.
+
+Cleanup / bounds:
+- key revoke HTTP 200 request `a89b48f4-1b8f-40c9-8688-cc57a03b7d65`; post-revoke auth HTTP 401 request `444e6502-409b-449a-9a61-579d782bcb9d`; revoked key valid: NO; cleanup confirmed;
+- 8 normal / 2 cleanup / 10 total Provider calls; public publication 0; Ads/ad spend 0; media 0; OpenAI 0; fal.ai 0; comments/DMs 0.
+
+Observed unresolved items:
+- expired cursor behavior remains unverified;
+- changes-during-import behavior with a non-empty natural delta was not observed in this bounded run;
+- baseline metric field shapes for actual records were not observed because the valid analytics dataset was empty;
+- no HTTP 429 was naturally observed.
+
+Analytics Bootstrap & Cursor recommendation: **SPIKE_PASS**.
+
+Canonical Historical Analytics and Analytics Delta remain `SPIKE_PENDING` until Team Leader review. Best Times, Performance Decay, Frequency Analysis, and Analytics Webhook remain `SPIKE_PENDING`.
