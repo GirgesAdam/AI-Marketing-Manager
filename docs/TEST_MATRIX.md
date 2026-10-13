@@ -706,3 +706,72 @@ Frequency Analysis: **`SPIKE_PENDING`**.
 Analytics Webhook: **`SPIKE_PENDING`**.
 
 Non-blocking unresolved Provider behaviors remain: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination not observed live; historical metric-record field shapes not observed because the valid baseline was empty; natural HTTP 429 not observed. No unresolved item is converted into a Provider fact.
+
+## P1-T07 - Derived Analytics Signals
+
+Status: `IMPLEMENTED - AWAITING TEAM LEADER REVIEW`.
+
+Automated deterministic suite: `tests/provider-spike/p1-t07.test.ts`.
+
+| ID | Coverage | Result |
+|---|---|---|
+| T07-01 | Default execution is offline | PASS |
+| T07-02 | Missing credential blocks before mutation | PASS |
+| T07-03 | Trusted identity mismatch blocks temporary-key creation | PASS |
+| T07-04 | Temporary key is Profile-A-only and read-only | PASS |
+| T07-05 | Control/scoped key and trusted identity secrets never appear in result/evidence | PASS |
+| T07-06 | Exact expected account/platform is required | PASS |
+| T07-07 | Foreign Profile/account is Critical | PASS |
+| T07-08 | Undocumented/missing Best Times capability is not guessed | PASS |
+| T07-09 | Best Times insufficient-data behavior is distinct from unsupported | PASS |
+| T07-10 | Best Times non-empty target attribution is validated | PASS |
+| T07-11 | Performance Decay insufficient-data behavior is preserved | PASS |
+| T07-12 | Performance Decay formulas are not invented | PASS |
+| T07-13 | Frequency Analysis insufficient-data behavior is preserved | PASS |
+| T07-14 | Frequency signal is not converted into a causal/optimal claim | PASS |
+| T07-15 | Entitlement unavailable is distinct from empty data | PASS |
+| T07-16 | Naturally observed 429 is captured with no automatic retry | PASS |
+| T07-17 | Normal request ceiling blocks N+1 before transport | PASS |
+| T07-18 | Temporary key revoke + post-revoke rejection is required | PASS |
+| Extra | Exact documented Profile/account/platform/source filters used for all three signals | PASS |
+| Extra | Explicit foreign account in non-empty signal becomes Critical | PASS |
+| Extra | Malformed derived-signal response blocks without invented semantics | PASS |
+| Extra | Cleanup uncertainty overrides an otherwise valid run | PASS |
+
+Pre-live validation results:
+- focused command: `npm test -- tests/provider-spike/p1-t07.test.ts` -> `22 passed / 0 failed`;
+- affected command: `npm test -- tests/provider-spike/harness.test.ts tests/provider-spike/p1-t02.test.ts tests/provider-spike/p1-t02-f01.test.ts tests/provider-spike/p1-t03.test.ts tests/provider-spike/p1-t03-f01.test.ts tests/provider-spike/p1-t04.test.ts tests/provider-spike/p1-t06.test.ts tests/provider-spike/p1-t07.test.ts` -> `192 passed / 0 failed` across 8 files;
+- full command: `npm test` -> `278 passed / 0 failed / 0 skipped` across 12 files;
+- `npm run typecheck`: PASS;
+- `npm run build`: PASS;
+- `git diff --check`: PASS.
+
+### Live Provider Behavior
+
+| Test | Result | Safe evidence |
+|---|---|---|
+| Trusted identity | PASS | HTTP 200; run `1f26a94e-88e9-466f-a163-68732dc771f5`; request `a56dad53-3511-4914-89a3-4bb2fe6eca2a` |
+| Profile-A read-only scoped key | PASS | Profile A only; `permission=read`; one-day bounded expiry; secret not exposed |
+| Exact target preflight | PASS | Profile `6ac5a45a8e4ca44f355033ae`; account `6ac64f8740364f4695dd3077`; facebook; foreign target NO |
+| Best Times documented endpoint | PASS | `GET /v1/analytics/best-time` identified before live; exact filters used |
+| Best Times live read | INSUFFICIENT DATA | HTTP 200; request `eb60dff1-3848-4cb8-b563-205a750f661d`; `slots=[]` |
+| Performance Decay documented endpoint | PASS | `GET /v1/analytics/content-decay` identified before live; exact filters used |
+| Performance Decay live read | INSUFFICIENT DATA | HTTP 200; request `e69b12ec-c5ea-49d7-a7cf-37c5513f6148`; `buckets=[]` |
+| Frequency Analysis documented endpoint | PASS | `GET /v1/analytics/posting-frequency` identified before live; exact filters used |
+| Frequency Analysis live read | INSUFFICIENT DATA | HTTP 200; request `d8567070-2cc7-4065-8f7d-e0e8e7059357`; `frequency=[]` |
+| Cross-Profile/account leakage | PASS | none observed |
+| Natural rate headers | PASS | account limit 60; derived Analytics limit 6 |
+| Natural HTTP 429 | NOT OBSERVED | no forced 429; no automatic retry |
+| Key cleanup | PASS | revoke 200; post-revoke auth 401 |
+| Request bounds | PASS | 6 normal / 2 cleanup / 8 total <= 16 + 4 |
+| Social/public mutation | PASS | 0 posts/media/Ads/comments/DMs/webhooks |
+| Live invocation bound | PASS | exactly one P1-T07 live run; no rerun |
+
+P1-T07 engineering recommendation: **ACCEPT**.
+
+Capability recommendations pending Team Leader review:
+- Best Times: `SPIKE_PENDING` - insufficient non-empty live evidence;
+- Performance Decay: `SPIKE_PENDING` - insufficient non-empty live evidence;
+- Frequency Analysis: `SPIKE_PENDING` - insufficient non-empty live evidence.
+
+Historical Analytics and Analytics Delta remain `SPIKE_PENDING`. Analytics Webhook remains `SPIKE_PENDING`. P1-T06 unresolved behaviors remain unchanged: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination not observed live; historical metric-record field shapes not observed because the valid baseline was empty; natural HTTP 429 not observed.

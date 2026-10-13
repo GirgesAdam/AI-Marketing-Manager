@@ -364,10 +364,57 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 ## Current Task
 
-**Status: NOT_STARTED**
+`P1-T07 - Verify Zernio Derived Analytics Signals Behavior`
 
-No approved next-task identifier exists in the current Source of Truth; none is invented here.
+**Status: IMPLEMENTED - AWAITING TEAM LEADER REVIEW**
 
+Starting HEAD: `84ddc7c3817eb93cecb18a91362e874e2ace0514`.
+Implementation branch: `p1-t07-zernio-analytics-signals`.
+
+### P1-T07 Provider contract discovery
+- Current Zernio documentation identifies `GET /v1/analytics/best-time` for Best Times, `GET /v1/analytics/content-decay` for Performance Decay, and `GET /v1/analytics/posting-frequency` for Frequency Analysis.
+- All three documented reads support the bounded filters used by the spike: Profile A + exact account + `facebook` + `source=all`.
+- Documentation evidence is recorded as `DOC_CONFIRMED`; it is not treated as live Provider evidence by itself.
+
+### P1-T07 deterministic validation before live
+- Focused P1-T07 regressions: `22 / 22 PASS`.
+- Affected Provider-spike suites: `192 / 192 PASS` across 8 files.
+- Full regression suite: `278 / 278 PASS` across 12 files.
+- `npm run typecheck`: PASS.
+- `npm run build`: PASS.
+- `git diff --check`: PASS.
+
+### P1-T07 single authorized live Provider run
+- Exactly one authorized P1-T07 live run was performed; no rerun is authorized or performed.
+- Trusted identity preflight: PASS; HTTP 200; run `1f26a94e-88e9-466f-a163-68732dc771f5`; request `a56dad53-3511-4914-89a3-4bb2fe6eca2a`.
+- Temporary runtime key: Profile A `6ac5a45a8e4ca44f355033ae` only; permission `read`; bounded one-day expiry; raw secret not emitted or persisted.
+- Exact target: Facebook account `6ac64f8740364f4695dd3077`, platform `facebook`; target validation PASS; foreign Profile/account observed: NO.
+- Best Times: HTTP 200 request `eb60dff1-3848-4cb8-b563-205a750f661d`; top-level `slots`; 0 records; `SUCCESS_INSUFFICIENT_DATA`; documented UTC day/hour representation; recommendation remains pending for insufficient non-empty live evidence.
+- Performance Decay: HTTP 200 request `e69b12ec-c5ea-49d7-a7cf-37c5513f6148`; top-level `buckets`; 0 records; `SUCCESS_INSUFFICIENT_DATA`; Provider calculation semantics remain `PROVIDER_OPAQUE`; recommendation remains pending.
+- Frequency Analysis: HTTP 200 request `d8567070-2cc7-4065-8f7d-e0e8e7059357`; top-level `frequency`; 0 records; `SUCCESS_INSUFFICIENT_DATA`; Provider calculation semantics remain `PROVIDER_OPAQUE`; recommendation remains pending.
+- Natural rate-limit headers: account preflight limit `60`; each derived Analytics endpoint limit `6`; natural HTTP 429 observed: NO; automatic retry: NO.
+- Temporary key cleanup: revoke HTTP 200 request `524319d5-f0ff-414e-90d0-02b4939ea199`; post-revoke auth HTTP 401 request `ef746e7b-9d07-4b8d-91fb-215e23d554e1`; cleanup confirmed.
+- Provider calls: `6 normal / 2 cleanup / 8 total`, within `16 + 4` bounds.
+- Social mutations / posts / media / Ads / ad spend / comments / DMs / webhooks / OpenAI / fal.ai: 0.
+
+P1-T07 engineering recommendation: **ACCEPT**.
+
+Capability recommendations pending Team Leader review:
+- Best Times = `SPIKE_PENDING` - `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
+- Performance Decay = `SPIKE_PENDING` - `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
+- Frequency Analysis = `SPIKE_PENDING` - `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
+
+Canonical states are not promoted by the Senior Engineer. Historical Analytics = `SPIKE_PENDING`; Analytics Delta = `SPIKE_PENDING`; Analytics Webhook = `SPIKE_PENDING`.
+
+P1-T07 unresolved observations:
+- all three derived endpoints returned valid HTTP 200 responses but empty arrays, so non-empty live record/value shapes were not observed;
+- non-empty signal target-attribution fields were not observed live;
+- minimum data/sample thresholds, formulas, weighting/confidence algorithms, and exact calculation semantics remain Provider-opaque/unverified;
+- natural HTTP 429 was not observed.
+
+P1-T06 unresolved Provider behaviors remain unchanged: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination was not observed live; actual historical analytics metric-record field shapes were not observed because the valid baseline was empty; natural HTTP 429 was not observed.
+
+Next Task: **NOT_STARTED**. No next-task identifier is invented before Team Leader acceptance/direction.
 ## Phase 1 Rules
 - Work one Task at a time.
 - Provider Behavior Tests remain separate from System Integration Tests.
@@ -383,4 +430,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader verifies this documentation-only P1-T06 acceptance finalization. Next Task remains `NOT_STARTED` with no identifier invented. Senior Engineer does not rerun P1-T06, perform Provider mutations, promote Historical Analytics or Analytics Delta, or begin Best Time / Decay / Frequency / Analytics Webhook work without a new explicit Task Contract.
+Team Leader reviews P1-T07 implementation, deterministic evidence, documentation-derived Provider contracts, and the single authorized live Provider run. Senior Engineer does not rerun P1-T07, does not promote Best Times / Performance Decay / Frequency Analysis, does not test `analytics.synced`, and does not start any next Task without a new explicit Task Contract.

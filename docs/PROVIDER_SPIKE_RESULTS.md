@@ -830,3 +830,138 @@ Frequency Analysis: **`SPIKE_PENDING`**.
 Analytics Webhook: **`SPIKE_PENDING`**.
 
 Historical Analytics / Analytics Delta require later Provider evidence sufficient to close their remaining live-behavior gaps before Phase 1 exit.
+
+## P1-T07 - Zernio Derived Analytics Signals Provider Behavior
+
+Status: `IMPLEMENTED - AWAITING TEAM LEADER REVIEW`.
+
+Starting HEAD: `84ddc7c3817eb93cecb18a91362e874e2ace0514`. Branch: `p1-t07-zernio-analytics-signals`. This is a bounded Provider Behavior spike only; no production Analytics subsystem, durable state, worker, queue, dashboard, report, strategy engine, or recommendation engine was built.
+
+### Provider contract discovery - DOC_CONFIRMED
+
+Current Zernio documentation available on `2026-10-13` identified these read-only Analytics contracts before live execution:
+- Best Times: `GET /v1/analytics/best-time`; filters `platform`, `profileId`, `accountId`, `source`; documented output container `slots`; documented day/hour semantics are UTC.
+- Performance Decay: `GET /v1/analytics/content-decay`; same target filters; documented output container `buckets`.
+- Frequency Analysis: `GET /v1/analytics/posting-frequency`; same target filters; documented output container `frequency`.
+
+Documentation establishes only `DOC_CONFIRMED`. It does not establish live Provider behavior, data availability, entitlement, calculation formula, sample threshold, or target isolation by itself.
+
+### Deterministic validation before the authorized live run
+- focused P1-T07 suite: `22 passed / 0 failed`;
+- affected Provider-spike suites: `192 passed / 0 failed` across 8 files;
+- full suite: `278 passed / 0 failed / 0 skipped` across 12 files;
+- `npm run typecheck`: PASS;
+- `npm run build`: PASS;
+- `git diff --check`: PASS.
+
+### Single authorized live Provider run - LIVE_PROVIDER_OBSERVED
+
+Exactly one P1-T07 live invocation was performed. No second live invocation is authorized or performed.
+
+Identity:
+- HTTP 200; trusted expected identity matched;
+- run `1f26a94e-88e9-466f-a163-68732dc771f5`;
+- request `a56dad53-3511-4914-89a3-4bb2fe6eca2a`;
+- timestamp `2026-10-13T13:50:20.696Z`.
+
+Temporary scoped runtime key:
+- provider key ID `6ace371c57e8c83e860ba276`;
+- synthetic name `aimm-p1-t07-analytics-signals-f41cd6ec-44ef-4f92-b446-c8cc`;
+- scope `profiles`;
+- permitted Profile A `6ac5a45a8e4ca44f355033ae` only;
+- permission `read`;
+- expiry `2026-10-14T13:50:20.925Z`;
+- create HTTP 201 / request `2dab6ac9-f18b-4d99-8902-8ee9fb0d439b`;
+- raw scoped-key secret exposed/persisted: NO.
+
+Exact analytics target preflight:
+- Profile A `6ac5a45a8e4ca44f355033ae`;
+- Facebook account `6ac64f8740364f4695dd3077`;
+- platform `facebook`;
+- HTTP 200 / request `3003b6fc-b93d-4733-b8b2-84b9169ff22a`;
+- exact target validation: PASS;
+- foreign Profile/account observed: NO;
+- the account response did not expose a boolean `hasAnalyticsAccess` value in this run; no availability conclusion is inferred from that missing field.
+
+Best Times:
+- request: `GET /v1/analytics/best-time` with exact Profile A/account/facebook/source=all filters;
+- HTTP 200 / request `eb60dff1-3848-4cb8-b563-205a750f661d`;
+- live top-level field: `slots`;
+- live records: 0;
+- data state: `SUCCESS_INSUFFICIENT_DATA`;
+- target attribution: `NOT_APPLICABLE_EMPTY`; there was no non-empty row from which to observe explicit target-attribution fields;
+- documented UTC day/hour semantics are retained as documentation metadata, not inferred from live rows;
+- capability recommendation: `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
+
+Performance Decay:
+- request: `GET /v1/analytics/content-decay` with exact Profile A/account/facebook/source=all filters;
+- HTTP 200 / request `e69b12ec-c5ea-49d7-a7cf-37c5513f6148`;
+- live top-level field: `buckets`;
+- live records: 0;
+- data state: `SUCCESS_INSUFFICIENT_DATA`;
+- target attribution: `NOT_APPLICABLE_EMPTY`;
+- Provider calculation formula/half-life/weighting is not inferred; semantics remain `PROVIDER_OPAQUE`;
+- capability recommendation: `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
+
+Frequency Analysis:
+- request: `GET /v1/analytics/posting-frequency` with exact Profile A/account/facebook/source=all filters;
+- HTTP 200 / request `d8567070-2cc7-4065-8f7d-e0e8e7059357`;
+- live top-level field: `frequency`;
+- live records: 0;
+- data state: `SUCCESS_INSUFFICIENT_DATA`;
+- target attribution: `NOT_APPLICABLE_EMPTY`;
+- no causal or guaranteed-optimal-frequency claim is made; calculation semantics remain `PROVIDER_OPAQUE`;
+- capability recommendation: `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
+
+Rate-limit observations:
+- exact account preflight exposed limit `60`, remaining `57`;
+- Best Times exposed limit `6`, remaining `5`;
+- Performance Decay exposed limit `6`, remaining `4`;
+- Frequency Analysis exposed limit `6`, remaining `3`;
+- natural HTTP 429 observed: NO;
+- `Retry-After` observed in this live run: NO;
+- automatic Provider retry: NO.
+
+Cleanup / request bounds:
+- key revoke HTTP 200 / request `524319d5-f0ff-414e-90d0-02b4939ea199`;
+- post-revoke auth HTTP 401 / request `ef746e7b-9d07-4b8d-91fb-215e23d554e1`;
+- revoked credential valid: NO;
+- cleanup confirmed: YES;
+- normal calls: `6 / 16`;
+- cleanup calls: `2 / 4`;
+- total calls: `8`;
+- social/public mutations: 0;
+- posts: 0;
+- media: 0;
+- Ads/ad spend: 0;
+- comments/DMs: 0;
+- webhook operations: 0;
+- OpenAI: 0;
+- fal.ai: 0.
+
+### Recommendation and unresolved Provider behavior
+
+P1-T07 engineering recommendation: **ACCEPT**. The engineering Task correctly discovered and safely probed all three independent documented contracts, distinguished valid empty data from capability absence, preserved target/cost/cleanup controls, and stayed within the authorized live-run and request bounds.
+
+Senior Engineer capability recommendations, pending Team Leader decision:
+- Best Times: `SPIKE_PENDING` - `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`;
+- Performance Decay: `SPIKE_PENDING` - `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`;
+- Frequency Analysis: `SPIKE_PENDING` - `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
+
+No canonical capability is promoted by this implementation.
+
+P1-T07 unresolved observations:
+- all three endpoints returned valid HTTP 200 responses but empty result arrays, so actual non-empty live record/value field shapes remain unobserved;
+- explicit non-empty signal target-attribution fields remain unobserved live;
+- minimum sample/data thresholds remain unknown;
+- Provider formulas, weighting, confidence methods, engagement definitions, and detailed calculation algorithms remain opaque/unverified unless explicitly documented later;
+- natural HTTP 429 was not observed.
+
+P1-T06 limitations remain unchanged and are not silently closed by P1-T07:
+- `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`;
+- `CHANGES_DURING_IMPORT_NOT_OBSERVED`;
+- non-empty Analytics Delta pagination was not observed live;
+- actual historical analytics metric-record field shapes were not observed because the valid baseline was empty;
+- natural HTTP 429 was not observed.
+
+Canonical state pending Team Leader review remains: Historical Analytics `SPIKE_PENDING`; Analytics Delta `SPIKE_PENDING`; Best Times `SPIKE_PENDING`; Performance Decay `SPIKE_PENDING`; Frequency Analysis `SPIKE_PENDING`; Analytics Webhook `SPIKE_PENDING`.
