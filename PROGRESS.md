@@ -366,7 +366,7 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`
 
-**Status: IMPLEMENTED - BLOCKED BEFORE LIVE / AWAITING TEAM LEADER REVIEW**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
 
 Starting HEAD: `d2e12882b96d04395b92c944735ebf8bc860b211`.
 Implementation branch: `p1-t08-zernio-analytics-webhook`.
@@ -409,6 +409,18 @@ Implementation branch: `p1-t08-zernio-analytics-webhook`.
 - Local receiver on port 18086 after blocker: NOT LISTENING.
 - VPS route/tunnel changes made by P1-T08: 0.
 
+### P1-T08-F01 resumed readiness attempt
+- Team Leader authorized continuation of the same F01 after independent human-operator SSH preflight succeeded with the existing authorized project credential; no new credential or topology was introduced.
+- Human-assisted infrastructure setup established the controlled local receiver on port `18086`, the accepted SSH reverse-tunnel topology, and one temporary P1-T08 Nginx route before Provider execution.
+- Before any Zernio request, deterministic validation was rerun at implementation HEAD `a5d675da4c947f49e8ad85d4bdf92f896973fb90`: focused P1-T08 `24 / 24 PASS`; affected Provider-spike suites `199 / 199 PASS` across 9 files; full suite `302 / 302 PASS` across 13 files; typecheck PASS; build PASS; `git diff --check` PASS.
+- Exact readiness target: `https://marketlyai.restartorg.com/p1-t08-f01/analytics-synced`.
+- Exact HTTPS readiness result: **FAIL** before Provider execution. Safe evidence: error category `VPS_READINESS_TLS_OR_NETWORK_FAILURE`; readiness latency `378 ms`; TLS success `false`; HTTP status not reached; unsigned 401 not reached; receiver marker not confirmed; same-process confirmation not reached; redirect not observed because the HTTP layer was not reached.
+- The readiness failure caused an immediate STOP with `0 normal / 0 cleanup / 0 total` Zernio calls. The single authorized F01 Provider live run therefore remains **UNCONSUMED**.
+- Temporary Zernio webhook: NOT CREATED. Passive `analytics.synced` observation: NOT STARTED.
+- Local cleanup was independently verified by the Senior execution context: receiver stopped, local port `18086` clear, no P1-T08 Node process remained.
+- VPS cleanup required interactive human `sudo`; the human operator subsequently confirmed the temporary Nginx route / reverse-tunnel rollback completed. No private-key, passphrase, sudo password, Zernio credential, expected identity, or webhook secret was exposed.
+- Current F01 blocker/outcome is `VPS_READINESS_TLS_OR_NETWORK_FAILURE`; the historical `CONTROLLED_VPS_WEBHOOK_RECEIVER_NOT_AVAILABLE` evidence above is intentionally preserved as the earlier attempt history.
+
 P1-T08 recommendation: **Analytics Webhook recommendation: REMAIN PENDING - FIX/BLOCKER REQUIRED**.
 
 Canonical capability remains:
@@ -439,4 +451,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader reviews the P1-T08 implementation and the pre-live infrastructure blocker. Senior Engineer does not consume the authorized P1-T08 live run, does not create a Zernio webhook, does not change Analytics capability status, and does not start another Task unless the Team Leader resolves/authorizes the VPS access dependency.
+Team Leader reviews the P1-T08-F01 readiness-failure evidence and cleanup. Senior Engineer does not retry readiness, does not consume the still-unconsumed authorized Provider live run, does not create a Zernio webhook, does not change Analytics capability status, and does not start another Task without a new Team Leader instruction.

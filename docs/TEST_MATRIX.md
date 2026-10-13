@@ -781,7 +781,7 @@ Canonical capability states remain:
 Non-empty live record/value shapes and explicit target-attribution fields on non-empty signals remain `UNVERIFIED`; minimum sample/data thresholds remain `UNVERIFIED`; formulas / weighting / confidence methods / detailed calculation semantics remain `PROVIDER_OPAQUE / UNVERIFIED`; natural HTTP 429 remains `NOT OBSERVED`. P1-T06 unresolved behaviors remain unchanged: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination not observed live; historical metric-record field shapes not observed because the valid baseline was empty; natural HTTP 429 not observed.
 ## P1-T08 - analytics.synced Webhook Behavior
 
-Status: `IMPLEMENTED - BLOCKED BEFORE LIVE / AWAITING TEAM LEADER REVIEW`.
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
 
 Automated deterministic suite: `tests/provider-spike/p1-t08.test.ts`.
 
@@ -820,7 +820,7 @@ Final deterministic gates before the live infrastructure blocker:
 - `npm run build` -> PASS;
 - `git diff --check` -> PASS.
 
-### Live Provider Behavior gate
+### Historical initial Live Provider Behavior gate
 | Test | Result | Safe evidence |
 |---|---|---|
 | Project VPS TCP/22 reachability | PASS | `82.29.177.121:22` reachable |
@@ -833,6 +833,31 @@ Final deterministic gates before the live infrastructure blocker:
 | Zernio API calls | PASS / zero side effects | `0 normal / 0 cleanup / 0 total` |
 | Temporary webhook | NOT CREATED | 0 webhook mutations |
 | analytics.synced passive observation | NOT RUN | no webhook existed |
+| Public/social/Ads/media/community/native-automation mutation | PASS / zero | 0 |
+
+### P1-T08-F01 resumed readiness gate
+| Test | Result | Safe evidence |
+|---|---|---|
+| Human project SSH preflight | PASS | existing authorized credential; BatchMode + IdentitiesOnly; harmless marker returned; no secret exposure |
+| Human-assisted local receiver | PASS | controlled receiver active on port `18086` before readiness |
+| Human-assisted reverse tunnel | PASS | accepted P1-T05 topology active before readiness |
+| Temporary P1-T08 Nginx route | PASS / temporary | one narrow route active before readiness |
+| Pre-Provider focused P1-T08 suite | PASS | `24 / 24` |
+| Pre-Provider affected suites | PASS | `199 / 199` across 9 files |
+| Pre-Provider full suite | PASS | `302 / 302` across 13 files |
+| Typecheck / build / diff-check | PASS | all green |
+| Exact HTTPS target | INFO | `https://marketlyai.restartorg.com/p1-t08-f01/analytics-synced` |
+| Trusted TLS / network readiness | FAIL | `VPS_READINESS_TLS_OR_NETWORK_FAILURE`; TLS success false |
+| Readiness latency | INFO | `378 ms` |
+| Unsigned exact-path HTTP 401 | NOT REACHED | no HTTP status returned |
+| Receiver marker / same-process confirmation | NOT CONFIRMED | readiness stopped at TLS/network failure |
+| Redirect | NOT OBSERVED | HTTP layer not reached |
+| P1-T08 F01 Provider invocation | NOT RUN | first Zernio request never occurred; single live run remains unconsumed |
+| Zernio API calls | PASS / zero side effects | `0 normal / 0 cleanup / 0 total` |
+| Temporary webhook | NOT CREATED | 0 webhook mutations |
+| analytics.synced passive observation | NOT RUN | observation window not started |
+| Local receiver cleanup | PASS | receiver stopped; local port `18086` clear; no P1-T08 Node process |
+| VPS route/tunnel cleanup | PASS / human-confirmed | human operator confirmed rollback after interactive sudo path |
 | Public/social/Ads/media/community/native-automation mutation | PASS / zero | 0 |
 
 Analytics Webhook recommendation: **REMAIN PENDING - FIX/BLOCKER REQUIRED**.
