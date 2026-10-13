@@ -364,61 +364,64 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 ## Current Task
 
-`P1-T07 - Verify Zernio Derived Analytics Signals Behavior`
+`P1-T08 - Verify Zernio analytics.synced Webhook Behavior`
 
-**Status: DONE / ACCEPTED WITH NON-BLOCKING NOTES**
+**Status: IMPLEMENTED - BLOCKED BEFORE LIVE / AWAITING TEAM LEADER REVIEW**
 
-Starting HEAD: `84ddc7c3817eb93cecb18a91362e874e2ace0514`.
-Accepted implementation HEAD: `a2ed6f4e37f1919784a00cce1449a5889f8bf5d8`.
-Implementation branch: `p1-t07-zernio-analytics-signals`.
+Starting HEAD: `d2e12882b96d04395b92c944735ebf8bc860b211`.
+Implementation branch: `p1-t08-zernio-analytics-webhook`.
 
-### P1-T07 Provider contract discovery
-- Current Zernio documentation identifies `GET /v1/analytics/best-time` for Best Times, `GET /v1/analytics/content-decay` for Performance Decay, and `GET /v1/analytics/posting-frequency` for Frequency Analysis.
-- All three documented reads support the bounded filters used by the spike: Profile A + exact account + `facebook` + `source=all`.
-- Documentation evidence is recorded as `DOC_CONFIRMED`; it is not treated as live Provider evidence by itself.
+### P1-T08 Provider contract discovery - DOC_CONFIRMED
+- Current Zernio Analytics Webhooks documentation identifies `analytics.synced` as the Analytics sync event.
+- Current request-body schema requires top-level `id`, `event`, `account`, `sync`, and `timestamp`; optional top-level fields include `profiles` and `test`.
+- Documented account attribution fields are `accountId`, `profileId`, `platform`, and `username`.
+- Documented sync metadata fields are `syncedAt` and `postsUpdated`.
+- Current schema text describes the event as poll-driven, roughly hourly per connected account, after a successful analytics sync cycle; this wording is documentation guidance, not a Provider SLA.
+- Current request-body schema describes `analytics.synced` as a trigger rather than metrics transport and says metrics/cursor are not expected in that event. Current introductory prose on the same page contains conflicting cursor wording, so this is recorded as documentation drift and live Provider observation remains authoritative.
+- Documentation recommends a dedicated Analytics webhook subscription because of event volume/shared failure-count concerns.
+- Documentation evidence is `DOC_CONFIRMED` only; no live Provider payload fact is claimed by P1-T08 yet.
 
-### P1-T07 deterministic validation before live
-- Focused P1-T07 regressions: `22 / 22 PASS`.
-- Affected Provider-spike suites: `192 / 192 PASS` across 8 files.
-- Full regression suite: `278 / 278 PASS` across 12 files.
+### P1-T08 deterministic implementation / validation
+- Provider Behavior spike only; no production Analytics webhook subsystem, database table, durable inbox/outbox, queue, worker, reconciliation engine, dashboard, or report was built.
+- Focused P1-T08 regressions: `24 / 24 PASS` (all required T08-01 through T08-20 plus four contract-drift/recommendation cases).
+- Affected Provider-spike suites: `199 / 199 PASS` across 9 files.
+- Full regression suite: `302 / 302 PASS` across 13 files.
 - `npm run typecheck`: PASS.
 - `npm run build`: PASS.
 - `git diff --check`: PASS.
+- Final implementation enforces exact Profile-A-only / `analytics.synced`-only webhook scope, raw-body HMAC before JSON parse, canonical event identity checks, exact target attribution, in-memory dedupe, HTTP 204 acknowledgement, no Provider polling during passive observation, request ceilings, and DELETE -> absent-read-back cleanup.
+- `/v1/webhooks/logs` is not used as a PASS requirement; the existing P1-T05 provider-log limitation remains unchanged.
 
-### P1-T07 single authorized live Provider run
-- Exactly one authorized P1-T07 live run was performed; no rerun is authorized or performed.
-- Trusted identity preflight: PASS; HTTP 200; run `1f26a94e-88e9-466f-a163-68732dc771f5`; request `a56dad53-3511-4914-89a3-4bb2fe6eca2a`.
-- Temporary runtime key: Profile A `6ac5a45a8e4ca44f355033ae` only; permission `read`; bounded one-day expiry; raw secret not emitted or persisted.
-- Exact target: Facebook account `6ac64f8740364f4695dd3077`, platform `facebook`; target validation PASS; foreign Profile/account observed: NO.
-- Best Times: HTTP 200 request `eb60dff1-3848-4cb8-b563-205a750f661d`; top-level `slots`; 0 records; internal harness classification `SUCCESS_INSUFFICIENT_DATA` = successful Provider response with no usable signal rows in this run. No Provider minimum threshold or cause for the empty array is inferred. Documented UTC day/hour representation remains documentation metadata only.
-- Performance Decay: HTTP 200 request `e69b12ec-c5ea-49d7-a7cf-37c5513f6148`; top-level `buckets`; 0 records; internal harness classification `SUCCESS_INSUFFICIENT_DATA`; no Provider cause or minimum threshold is inferred. Provider calculation semantics remain `PROVIDER_OPAQUE / UNVERIFIED`.
-- Frequency Analysis: HTTP 200 request `d8567070-2cc7-4065-8f7d-e0e8e7059357`; top-level `frequency`; 0 records; internal harness classification `SUCCESS_INSUFFICIENT_DATA`; no Provider cause or minimum threshold is inferred. Provider calculation semantics remain `PROVIDER_OPAQUE / UNVERIFIED`.
-- Natural rate-limit headers: account preflight limit `60`; each derived Analytics endpoint limit `6`; natural HTTP 429 observed: NO; automatic retry: NO.
-- Temporary key cleanup: revoke HTTP 200 request `524319d5-f0ff-414e-90d0-02b4939ea199`; post-revoke auth HTTP 401 request `ef746e7b-9d07-4b8d-91fb-215e23d554e1`; cleanup confirmed.
-- Provider calls: `6 normal / 2 cleanup / 8 total`, within `16 + 4` bounds.
-- Social mutations / posts / media / Ads / ad spend / comments / DMs / webhooks / OpenAI / fal.ai: 0.
+### P1-T08 pre-live VPS blocker
+- Required project VPS topology remains the accepted P1-T05 approach: project hostname + Nginx + SSH reverse tunnel + controlled Node receiver; no alternate hosting provider was introduced.
+- Candidate dedicated local port `18086` was verified clear.
+- TCP/22 connectivity to project VPS `82.29.177.121` was reachable.
+- The project-specific SSH key exists locally, but the current execution context could not authenticate non-interactively with it. No private-key material, passphrase, password, expected identity, API key, or webhook secret was read or exposed.
+- An already-established human SSH session to the project VPS was observed but was not hijacked, scripted, or modified.
+- Because the temporary dedicated Nginx route and SSH reverse tunnel could not be safely established from this execution context, the exact final HTTPS readiness contract could not be satisfied.
+- P1-T08 authorized live Provider invocation: `NOT RUN`.
+- P1-T08 Zernio API calls: `0 normal / 0 cleanup / 0 total`.
+- Temporary webhook created: NO.
+- Inbound `analytics.synced` observation window: NOT STARTED.
+- Provider/social/public mutations: 0.
+- Posts / media / Ads / spend / comments / DMs / native automation / temporary publishing keys: 0.
+- OpenAI / fal.ai: 0.
+- Local receiver on port 18086 after blocker: NOT LISTENING.
+- VPS route/tunnel changes made by P1-T08: 0.
 
-P1-T07 Team Leader verdict: **ACCEPTED WITH NON-BLOCKING NOTES**.
+P1-T08 recommendation: **Analytics Webhook recommendation: REMAIN PENDING - FIX/BLOCKER REQUIRED**.
 
-Accepted implementation HEAD: `a2ed6f4e37f1919784a00cce1449a5889f8bf5d8`.
+Canonical capability remains:
+- Analytics Webhook = `SPIKE_PENDING`.
 
-Canonical capability states after acceptance remain:
+Other Analytics capabilities remain unchanged:
+- Historical Analytics = `SPIKE_PENDING`.
+- Analytics Delta = `SPIKE_PENDING`.
 - Best Times = `SPIKE_PENDING`.
 - Performance Decay = `SPIKE_PENDING`.
 - Frequency Analysis = `SPIKE_PENDING`.
-- Historical Analytics = `SPIKE_PENDING`.
-- Analytics Delta = `SPIKE_PENDING`.
-- Analytics Webhook = `SPIKE_PENDING`.
 
-P1-T07 unresolved observations:
-- non-empty live record/value shapes = `UNVERIFIED`;
-- explicit target-attribution fields on non-empty signals = `UNVERIFIED`;
-- minimum sample/data thresholds = `UNVERIFIED`;
-- formulas / weighting / confidence methods / detailed calculation semantics = `PROVIDER_OPAQUE / UNVERIFIED`;
-- natural HTTP 429 = `NOT OBSERVED`;
-- the three empty arrays do not prove any specific Provider data threshold or cause.
-
-P1-T06 unresolved Provider behaviors remain unchanged: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination was not observed live; actual historical analytics metric-record field shapes were not observed because the valid baseline was empty; natural HTTP 429 was not observed.
+P1-T06/P1-T07 unresolved Provider behavior remains unchanged: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination not observed live; historical analytics metric-record field shapes not observed live; non-empty derived signal shapes/target attribution remain unverified; natural HTTP 429 not observed.
 
 Next Task: **NOT_STARTED**. No next-task identifier is invented.
 ## Phase 1 Rules
@@ -436,4 +439,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-P1-T07 documentation is finalized as `DONE / ACCEPTED WITH NON-BLOCKING NOTES`. Current Phase remains `PHASE 1 - Provider Feasibility & Basic Cost Safety`. Next Task remains `NOT_STARTED`. Senior Engineer does not rerun P1-T07, perform additional Provider mutations, promote pending Analytics capabilities, test `analytics.synced`, or start any next Task without a new explicit Task Contract.
+Team Leader reviews the P1-T08 implementation and the pre-live infrastructure blocker. Senior Engineer does not consume the authorized P1-T08 live run, does not create a Zernio webhook, does not change Analytics capability status, and does not start another Task unless the Team Leader resolves/authorizes the VPS access dependency.

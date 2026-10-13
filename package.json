@@ -16,7 +16,8 @@
     "p1-t05-f02": "npm run build --silent && node dist/provider-spike/p1-t05-f02-runner.js",
     "p1-t05-f02-probe": "npm run build --silent && node dist/provider-spike/p1-t05-f02-probe.js",
     "p1-t06": "npm run build --silent && node dist/provider-spike/p1-t06-runner.js",
-    "p1-t07": "npm run build --silent && node dist/provider-spike/p1-t07-runner.js"
+    "p1-t07": "npm run build --silent && node dist/provider-spike/p1-t07-runner.js",
+    "p1-t08": "npm run build --silent && node dist/provider-spike/p1-t08-runner.js"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

@@ -779,3 +779,62 @@ Canonical capability states remain:
 - Analytics Webhook: `SPIKE_PENDING`.
 
 Non-empty live record/value shapes and explicit target-attribution fields on non-empty signals remain `UNVERIFIED`; minimum sample/data thresholds remain `UNVERIFIED`; formulas / weighting / confidence methods / detailed calculation semantics remain `PROVIDER_OPAQUE / UNVERIFIED`; natural HTTP 429 remains `NOT OBSERVED`. P1-T06 unresolved behaviors remain unchanged: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination not observed live; historical metric-record field shapes not observed because the valid baseline was empty; natural HTTP 429 not observed.
+## P1-T08 - analytics.synced Webhook Behavior
+
+Status: `IMPLEMENTED - BLOCKED BEFORE LIVE / AWAITING TEAM LEADER REVIEW`.
+
+Automated deterministic suite: `tests/provider-spike/p1-t08.test.ts`.
+
+| ID | Coverage | Result |
+|---|---|---|
+| T08-01 | Default execution is offline | PASS |
+| T08-02 | Missing control credential blocks before mutation | PASS |
+| T08-03 | Trusted identity mismatch blocks webhook creation | PASS |
+| T08-04 | VPS exact URL readiness gates Provider mutation | PASS |
+| T08-05 | Webhook contains Profile A only | PASS |
+| T08-06 | Webhook contains analytics.synced only | PASS |
+| T08-07 | Broader Profile scope is Critical | PASS |
+| T08-08 | Broader event scope cannot PASS | PASS |
+| T08-09 | Raw-body signature verified before JSON parse | PASS |
+| T08-10 | Missing/wrong signature rejected | PASS |
+| T08-11 | payload.id must equal X-Zernio-Event-Id | PASS |
+| T08-12 | Event header/body must equal analytics.synced | PASS |
+| T08-13 | Explicit foreign Profile/account is Critical | PASS |
+| T08-14 | Missing required target attribution blocks certification | PASS |
+| T08-15 | Naturally duplicated canonical event ID remains one logical event | PASS |
+| T08-16 | Valid Analytics event returns HTTP 204 under receiver timeout | PASS |
+| T08-17 | Request ceiling blocks N+1 before transport | PASS |
+| T08-18 | Webhook cleanup requires DELETE + absent read-back | PASS |
+| T08-19 | Webhook secret/control credentials never leak | PASS |
+| T08-20 | No Provider polling occurs during passive observation | PASS |
+| Extra | Current documentation contract stored as DOC_CONFIRMED separately from live evidence | PASS |
+| Extra | Additive metrics/cursor fields are recorded as contract drift, not silently rejected/trusted | PASS |
+| Extra | Valid live-shape fixture recommends SPIKE_PASS without canonical promotion | PASS |
+| Extra | No-event fixture is non-critical and recommends pending | PASS |
+
+Final deterministic gates before the live infrastructure blocker:
+- `npm test -- tests/provider-spike/p1-t08.test.ts` -> `24 passed / 0 failed`;
+- affected Provider-spike command covering harness, P1-T02/F01, P1-T05/F01/F02, P1-T06, P1-T07, P1-T08 -> `199 passed / 0 failed` across 9 files;
+- `npm test` -> `302 passed / 0 failed / 0 skipped` across 13 files;
+- `npm run typecheck` -> PASS;
+- `npm run build` -> PASS;
+- `git diff --check` -> PASS.
+
+### Live Provider Behavior gate
+| Test | Result | Safe evidence |
+|---|---|---|
+| Project VPS TCP/22 reachability | PASS | `82.29.177.121:22` reachable |
+| Candidate local receiver port 18086 | PASS | clear before attempted setup |
+| Non-interactive project SSH authentication in current execution context | BLOCKED | project key could not authenticate non-interactively; no secret extraction attempted |
+| Temporary dedicated Nginx route | NOT RUN | no safe SSH control path available |
+| SSH reverse tunnel | NOT RUN | no safe SSH control path available |
+| Exact final HTTPS readiness | NOT RUN | route/tunnel not established |
+| P1-T08 live Provider invocation | NOT RUN | authorization intentionally not consumed on an unprepared receiver path |
+| Zernio API calls | PASS / zero side effects | `0 normal / 0 cleanup / 0 total` |
+| Temporary webhook | NOT CREATED | 0 webhook mutations |
+| analytics.synced passive observation | NOT RUN | no webhook existed |
+| Public/social/Ads/media/community/native-automation mutation | PASS / zero | 0 |
+
+Analytics Webhook recommendation: **REMAIN PENDING - FIX/BLOCKER REQUIRED**.
+Analytics Webhook canonical state remains `SPIKE_PENDING`.
+Other pending Analytics capabilities and all P1-T06/P1-T07 unresolved behavior remain unchanged.

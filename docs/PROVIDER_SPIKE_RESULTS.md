@@ -968,3 +968,66 @@ P1-T06 limitations remain unchanged and are not silently closed by P1-T07:
 - natural HTTP 429 was not observed.
 
 Canonical state after Team Leader acceptance: Historical Analytics `SPIKE_PENDING`; Analytics Delta `SPIKE_PENDING`; Best Times `SPIKE_PENDING`; Performance Decay `SPIKE_PENDING`; Frequency Analysis `SPIKE_PENDING`; Analytics Webhook `SPIKE_PENDING`.
+## P1-T08 - Zernio analytics.synced Webhook Provider Behavior
+
+Status: `IMPLEMENTED - BLOCKED BEFORE LIVE / AWAITING TEAM LEADER REVIEW`.
+
+Starting HEAD: `d2e12882b96d04395b92c944735ebf8bc860b211`. Branch: `p1-t08-zernio-analytics-webhook`.
+
+### Provider contract discovery - DOC_CONFIRMED
+Current Zernio Analytics Webhooks documentation checked on `2026-10-13` identifies the event `analytics.synced`. The current request-body schema requires `id`, `event`, `account`, `sync`, and `timestamp`; optional top-level fields include `profiles` and `test`. Documented `account` fields include `accountId`, `profileId`, `platform`, and `username`; documented `sync` metadata includes `syncedAt` and `postsUpdated`.
+
+The current schema text describes the event as poll-driven, roughly hourly per connected account after successful analytics sync cycles, and as a trigger rather than a metrics transport: metrics and cursor are not expected in the current request-body schema. Introductory prose on the same page contains conflicting wording that mentions handing consumers a cursor. This discrepancy is preserved as documentation drift; no cursor behavior is promoted to Provider fact without live observation. The current docs recommend a dedicated Analytics webhook subscription. Documentation source: `https://docs.zernio.com/webhooks/analytics`.
+
+This is `DOC_CONFIRMED`, not `LIVE_PROVIDER_OBSERVED`.
+
+### Deterministic implementation evidence
+- minimal P1-T08 receiver verifies lower-case hex HMAC-SHA256 over exact raw bytes before JSON parsing;
+- requires `X-Zernio-Event-Id == payload.id` and header/body event consistency;
+- accepts only `analytics.synced` for Analytics processing;
+- requires explicit Profile A `6ac5a45a8e4ca44f355033ae`, account `6ac64f8740364f4695dd3077`, and platform `facebook` attribution for certification;
+- foreign Profile/account => Critical; wrong platform => Critical; insufficient attribution => BLOCKED;
+- additive metrics/cursor fields are recorded as contract drift instead of silently rejected or trusted as production authority;
+- dedupe is in-memory by canonical event ID; valid duplicate stays one logical event;
+- successful valid delivery acknowledgement is HTTP 204 and deterministic tests enforce <5 seconds;
+- passive observation performs no Provider API polling;
+- temporary webhook scope is exactly Profile A + `analytics.synced` only;
+- normal Provider ceiling 10; cleanup allowance 4;
+- cleanup requires webhook DELETE plus settings read-back proving exact temporary webhook absent;
+- `/v1/webhooks/logs` is not a PASS requirement.
+
+Validation after the final offline fix:
+- focused P1-T08: `24 passed / 0 failed`;
+- affected Provider-spike suites: `199 passed / 0 failed` across 9 files;
+- full suite: `302 passed / 0 failed / 0 skipped` across 13 files;
+- `npm run typecheck`: PASS;
+- `npm run build`: PASS;
+- `git diff --check`: PASS.
+
+### LIVE_PROVIDER_OBSERVED
+No P1-T08 live Provider observation was executed because the required exact VPS HTTPS readiness path could not be safely established from the current execution context.
+
+Pre-live infrastructure evidence:
+- project VPS: `marketlyai.restartorg.com` / `82.29.177.121`;
+- TCP/22 reachable: YES;
+- candidate dedicated local port `18086`: clear;
+- project-specific SSH key present locally: YES;
+- non-interactive SSH authentication available to this execution context: NO;
+- existing human SSH session observed: YES, intentionally untouched;
+- temporary P1-T08 Nginx route created: NO;
+- SSH reverse tunnel created: NO;
+- exact final HTTPS readiness probe PASS: NOT RUN because the dedicated route/tunnel was not established;
+- authorized P1-T08 live Provider invocation: NOT RUN;
+- Zernio calls: `0 normal / 0 cleanup / 0 total`;
+- temporary webhook: NOT CREATED;
+- inbound analytics.synced deliveries: NOT OBSERVED / observation not started;
+- Provider/public/social mutation: 0.
+
+No credential extraction or exposure was attempted. The blocker is recorded as `CONTROLLED_VPS_WEBHOOK_RECEIVER_NOT_AVAILABLE` / pre-live infrastructure authorization dependency, not as Zernio Provider behavior.
+
+Analytics Webhook recommendation: **REMAIN PENDING - FIX/BLOCKER REQUIRED**.
+Canonical Analytics Webhook remains **`SPIKE_PENDING`** pending Team Leader review and a separately authorized execution after the VPS access dependency is resolved.
+
+Known project limitation remains unchanged: `Zernio /v1/webhooks/logs delivery-attempt correlation/timing remains UNVERIFIED`. P1-T08 does not reopen that investigation.
+
+Historical Analytics, Analytics Delta, Best Times, Performance Decay, and Frequency Analysis all remain `SPIKE_PENDING`. P1-T06/P1-T07 unresolved behavior is unchanged.

@@ -17,3 +17,8 @@ export type { P1T05DeliveryEvidence, P1T05ReceiverController, P1T05ReceiverSnaps
 
 export { P1_T06_BASELINE_PAGE_LIMIT, P1_T06_CLEANUP_REQUEST_ALLOWANCE, P1_T06_DELTA_PAGE_LIMIT, P1_T06_NORMAL_REQUEST_CEILING, runP1T06 } from './p1-t06-zernio.js';
 export type { P1T06BaselineEvidence, P1T06CleanupEvidence, P1T06CursorEvidence, P1T06DeltaEvidence, P1T06InvalidCursorEvidence, P1T06RateLimitEvidence, P1T06RunOptions, P1T06RunResult, P1T06TargetEvidence } from './p1-t06-zernio.js';
+
+export { P1_T08_CLEANUP_REQUEST_ALLOWANCE, P1_T08_NORMAL_REQUEST_CEILING, P1_T08_OBSERVATION_WINDOW_MS, P1_T08_PROVIDER_CONTRACT, runP1T08 } from './p1-t08-zernio.js';
+export { probeP1T08VpsReceiverHttps, startP1T08Receiver, verifyP1T08Delivery } from './p1-t08-receiver.js';
+export type { P1T08RunOptions, P1T08RunResult, P1T08WebhookEvidence, P1T08ObservationEvidence, P1T08LiveEventEvidence } from './p1-t08-zernio.js';
+export type { P1T08DeliveryEvidence, P1T08ReceiverController, P1T08ReceiverSnapshot, P1T08VpsReadinessEvidence } from './p1-t08-receiver.js';
