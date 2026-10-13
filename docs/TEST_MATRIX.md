@@ -709,7 +709,7 @@ Non-blocking unresolved Provider behaviors remain: `EXPIRED_CURSOR_BEHAVIOR_UNVE
 
 ## P1-T07 - Derived Analytics Signals
 
-Status: `IMPLEMENTED - AWAITING TEAM LEADER REVIEW`.
+Status: `DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
 
 Automated deterministic suite: `tests/provider-spike/p1-t07.test.ts`.
 
@@ -754,11 +754,11 @@ Pre-live validation results:
 | Profile-A read-only scoped key | PASS | Profile A only; `permission=read`; one-day bounded expiry; secret not exposed |
 | Exact target preflight | PASS | Profile `6ac5a45a8e4ca44f355033ae`; account `6ac64f8740364f4695dd3077`; facebook; foreign target NO |
 | Best Times documented endpoint | PASS | `GET /v1/analytics/best-time` identified before live; exact filters used |
-| Best Times live read | INSUFFICIENT DATA | HTTP 200; request `eb60dff1-3848-4cb8-b563-205a750f661d`; `slots=[]` |
+| Best Times live read | PASS - EMPTY SIGNAL CONTAINER | HTTP 200; request `eb60dff1-3848-4cb8-b563-205a750f661d`; `slots=[]`; internal `SUCCESS_INSUFFICIENT_DATA` classification does not assert a Provider threshold/cause |
 | Performance Decay documented endpoint | PASS | `GET /v1/analytics/content-decay` identified before live; exact filters used |
-| Performance Decay live read | INSUFFICIENT DATA | HTTP 200; request `e69b12ec-c5ea-49d7-a7cf-37c5513f6148`; `buckets=[]` |
+| Performance Decay live read | PASS - EMPTY SIGNAL CONTAINER | HTTP 200; request `e69b12ec-c5ea-49d7-a7cf-37c5513f6148`; `buckets=[]`; internal `SUCCESS_INSUFFICIENT_DATA` classification does not assert a Provider threshold/cause |
 | Frequency Analysis documented endpoint | PASS | `GET /v1/analytics/posting-frequency` identified before live; exact filters used |
-| Frequency Analysis live read | INSUFFICIENT DATA | HTTP 200; request `d8567070-2cc7-4065-8f7d-e0e8e7059357`; `frequency=[]` |
+| Frequency Analysis live read | PASS - EMPTY SIGNAL CONTAINER | HTTP 200; request `d8567070-2cc7-4065-8f7d-e0e8e7059357`; `frequency=[]`; internal `SUCCESS_INSUFFICIENT_DATA` classification does not assert a Provider threshold/cause |
 | Cross-Profile/account leakage | PASS | none observed |
 | Natural rate headers | PASS | account limit 60; derived Analytics limit 6 |
 | Natural HTTP 429 | NOT OBSERVED | no forced 429; no automatic retry |
@@ -767,11 +767,15 @@ Pre-live validation results:
 | Social/public mutation | PASS | 0 posts/media/Ads/comments/DMs/webhooks |
 | Live invocation bound | PASS | exactly one P1-T07 live run; no rerun |
 
-P1-T07 engineering recommendation: **ACCEPT**.
+Team Leader verdict: **ACCEPTED WITH NON-BLOCKING NOTES**.
+Accepted implementation HEAD: `a2ed6f4e37f1919784a00cce1449a5889f8bf5d8`.
 
-Capability recommendations pending Team Leader review:
-- Best Times: `SPIKE_PENDING` - insufficient non-empty live evidence;
-- Performance Decay: `SPIKE_PENDING` - insufficient non-empty live evidence;
-- Frequency Analysis: `SPIKE_PENDING` - insufficient non-empty live evidence.
+Canonical capability states remain:
+- Best Times: `SPIKE_PENDING`;
+- Performance Decay: `SPIKE_PENDING`;
+- Frequency Analysis: `SPIKE_PENDING`;
+- Historical Analytics: `SPIKE_PENDING`;
+- Analytics Delta: `SPIKE_PENDING`;
+- Analytics Webhook: `SPIKE_PENDING`.
 
-Historical Analytics and Analytics Delta remain `SPIKE_PENDING`. Analytics Webhook remains `SPIKE_PENDING`. P1-T06 unresolved behaviors remain unchanged: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination not observed live; historical metric-record field shapes not observed because the valid baseline was empty; natural HTTP 429 not observed.
+Non-empty live record/value shapes and explicit target-attribution fields on non-empty signals remain `UNVERIFIED`; minimum sample/data thresholds remain `UNVERIFIED`; formulas / weighting / confidence methods / detailed calculation semantics remain `PROVIDER_OPAQUE / UNVERIFIED`; natural HTTP 429 remains `NOT OBSERVED`. P1-T06 unresolved behaviors remain unchanged: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination not observed live; historical metric-record field shapes not observed because the valid baseline was empty; natural HTTP 429 not observed.

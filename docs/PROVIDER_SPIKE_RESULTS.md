@@ -833,9 +833,9 @@ Historical Analytics / Analytics Delta require later Provider evidence sufficien
 
 ## P1-T07 - Zernio Derived Analytics Signals Provider Behavior
 
-Status: `IMPLEMENTED - AWAITING TEAM LEADER REVIEW`.
+Status: `DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
 
-Starting HEAD: `84ddc7c3817eb93cecb18a91362e874e2ace0514`. Branch: `p1-t07-zernio-analytics-signals`. This is a bounded Provider Behavior spike only; no production Analytics subsystem, durable state, worker, queue, dashboard, report, strategy engine, or recommendation engine was built.
+Starting HEAD: `84ddc7c3817eb93cecb18a91362e874e2ace0514`. Accepted implementation HEAD: `a2ed6f4e37f1919784a00cce1449a5889f8bf5d8`. Branch: `p1-t07-zernio-analytics-signals`. This is a bounded Provider Behavior spike only; no production Analytics subsystem, durable state, worker, queue, dashboard, report, strategy engine, or recommendation engine was built.
 
 ### Provider contract discovery - DOC_CONFIRMED
 
@@ -888,7 +888,7 @@ Best Times:
 - HTTP 200 / request `eb60dff1-3848-4cb8-b563-205a750f661d`;
 - live top-level field: `slots`;
 - live records: 0;
-- data state: `SUCCESS_INSUFFICIENT_DATA`;
+- internal harness classification: `SUCCESS_INSUFFICIENT_DATA` = successful Provider response with no usable signal rows in this run; this does not establish a Provider minimum sample threshold or explain why the array was empty;
 - target attribution: `NOT_APPLICABLE_EMPTY`; there was no non-empty row from which to observe explicit target-attribution fields;
 - documented UTC day/hour semantics are retained as documentation metadata, not inferred from live rows;
 - capability recommendation: `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
@@ -898,7 +898,7 @@ Performance Decay:
 - HTTP 200 / request `e69b12ec-c5ea-49d7-a7cf-37c5513f6148`;
 - live top-level field: `buckets`;
 - live records: 0;
-- data state: `SUCCESS_INSUFFICIENT_DATA`;
+- internal harness classification: `SUCCESS_INSUFFICIENT_DATA` = successful Provider response with no usable signal rows in this run; this does not establish a Provider minimum sample threshold or explain why the array was empty;
 - target attribution: `NOT_APPLICABLE_EMPTY`;
 - Provider calculation formula/half-life/weighting is not inferred; semantics remain `PROVIDER_OPAQUE`;
 - capability recommendation: `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
@@ -908,7 +908,7 @@ Frequency Analysis:
 - HTTP 200 / request `d8567070-2cc7-4065-8f7d-e0e8e7059357`;
 - live top-level field: `frequency`;
 - live records: 0;
-- data state: `SUCCESS_INSUFFICIENT_DATA`;
+- internal harness classification: `SUCCESS_INSUFFICIENT_DATA` = successful Provider response with no usable signal rows in this run; this does not establish a Provider minimum sample threshold or explain why the array was empty;
 - target attribution: `NOT_APPLICABLE_EMPTY`;
 - no causal or guaranteed-optimal-frequency claim is made; calculation semantics remain `PROVIDER_OPAQUE`;
 - capability recommendation: `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
@@ -941,21 +941,24 @@ Cleanup / request bounds:
 
 ### Recommendation and unresolved Provider behavior
 
-P1-T07 engineering recommendation: **ACCEPT**. The engineering Task correctly discovered and safely probed all three independent documented contracts, distinguished valid empty data from capability absence, preserved target/cost/cleanup controls, and stayed within the authorized live-run and request bounds.
+P1-T07 Team Leader verdict: **ACCEPTED WITH NON-BLOCKING NOTES**.
 
-Senior Engineer capability recommendations, pending Team Leader decision:
-- Best Times: `SPIKE_PENDING` - `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`;
-- Performance Decay: `SPIKE_PENDING` - `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`;
-- Frequency Analysis: `SPIKE_PENDING` - `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
+Accepted implementation HEAD: `a2ed6f4e37f1919784a00cce1449a5889f8bf5d8`.
 
-No canonical capability is promoted by this implementation.
+Canonical capability states remain:
+- Best Times: `SPIKE_PENDING`;
+- Performance Decay: `SPIKE_PENDING`;
+- Frequency Analysis: `SPIKE_PENDING`.
+
+No pending Analytics capability is promoted by this acceptance.
 
 P1-T07 unresolved observations:
-- all three endpoints returned valid HTTP 200 responses but empty result arrays, so actual non-empty live record/value field shapes remain unobserved;
-- explicit non-empty signal target-attribution fields remain unobserved live;
-- minimum sample/data thresholds remain unknown;
-- Provider formulas, weighting, confidence methods, engagement definitions, and detailed calculation algorithms remain opaque/unverified unless explicitly documented later;
-- natural HTTP 429 was not observed.
+- non-empty live record/value shapes = `UNVERIFIED`;
+- explicit target-attribution fields on non-empty signals = `UNVERIFIED`;
+- minimum sample/data thresholds = `UNVERIFIED`;
+- formulas / weighting / confidence methods / detailed calculation semantics = `PROVIDER_OPAQUE / UNVERIFIED`;
+- natural HTTP 429 = `NOT OBSERVED`;
+- the empty arrays do not prove a specific Provider threshold or cause.
 
 P1-T06 limitations remain unchanged and are not silently closed by P1-T07:
 - `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`;
@@ -964,4 +967,4 @@ P1-T06 limitations remain unchanged and are not silently closed by P1-T07:
 - actual historical analytics metric-record field shapes were not observed because the valid baseline was empty;
 - natural HTTP 429 was not observed.
 
-Canonical state pending Team Leader review remains: Historical Analytics `SPIKE_PENDING`; Analytics Delta `SPIKE_PENDING`; Best Times `SPIKE_PENDING`; Performance Decay `SPIKE_PENDING`; Frequency Analysis `SPIKE_PENDING`; Analytics Webhook `SPIKE_PENDING`.
+Canonical state after Team Leader acceptance: Historical Analytics `SPIKE_PENDING`; Analytics Delta `SPIKE_PENDING`; Best Times `SPIKE_PENDING`; Performance Decay `SPIKE_PENDING`; Frequency Analysis `SPIKE_PENDING`; Analytics Webhook `SPIKE_PENDING`.

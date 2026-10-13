@@ -366,9 +366,10 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 `P1-T07 - Verify Zernio Derived Analytics Signals Behavior`
 
-**Status: IMPLEMENTED - AWAITING TEAM LEADER REVIEW**
+**Status: DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
 Starting HEAD: `84ddc7c3817eb93cecb18a91362e874e2ace0514`.
+Accepted implementation HEAD: `a2ed6f4e37f1919784a00cce1449a5889f8bf5d8`.
 Implementation branch: `p1-t07-zernio-analytics-signals`.
 
 ### P1-T07 Provider contract discovery
@@ -389,32 +390,37 @@ Implementation branch: `p1-t07-zernio-analytics-signals`.
 - Trusted identity preflight: PASS; HTTP 200; run `1f26a94e-88e9-466f-a163-68732dc771f5`; request `a56dad53-3511-4914-89a3-4bb2fe6eca2a`.
 - Temporary runtime key: Profile A `6ac5a45a8e4ca44f355033ae` only; permission `read`; bounded one-day expiry; raw secret not emitted or persisted.
 - Exact target: Facebook account `6ac64f8740364f4695dd3077`, platform `facebook`; target validation PASS; foreign Profile/account observed: NO.
-- Best Times: HTTP 200 request `eb60dff1-3848-4cb8-b563-205a750f661d`; top-level `slots`; 0 records; `SUCCESS_INSUFFICIENT_DATA`; documented UTC day/hour representation; recommendation remains pending for insufficient non-empty live evidence.
-- Performance Decay: HTTP 200 request `e69b12ec-c5ea-49d7-a7cf-37c5513f6148`; top-level `buckets`; 0 records; `SUCCESS_INSUFFICIENT_DATA`; Provider calculation semantics remain `PROVIDER_OPAQUE`; recommendation remains pending.
-- Frequency Analysis: HTTP 200 request `d8567070-2cc7-4065-8f7d-e0e8e7059357`; top-level `frequency`; 0 records; `SUCCESS_INSUFFICIENT_DATA`; Provider calculation semantics remain `PROVIDER_OPAQUE`; recommendation remains pending.
+- Best Times: HTTP 200 request `eb60dff1-3848-4cb8-b563-205a750f661d`; top-level `slots`; 0 records; internal harness classification `SUCCESS_INSUFFICIENT_DATA` = successful Provider response with no usable signal rows in this run. No Provider minimum threshold or cause for the empty array is inferred. Documented UTC day/hour representation remains documentation metadata only.
+- Performance Decay: HTTP 200 request `e69b12ec-c5ea-49d7-a7cf-37c5513f6148`; top-level `buckets`; 0 records; internal harness classification `SUCCESS_INSUFFICIENT_DATA`; no Provider cause or minimum threshold is inferred. Provider calculation semantics remain `PROVIDER_OPAQUE / UNVERIFIED`.
+- Frequency Analysis: HTTP 200 request `d8567070-2cc7-4065-8f7d-e0e8e7059357`; top-level `frequency`; 0 records; internal harness classification `SUCCESS_INSUFFICIENT_DATA`; no Provider cause or minimum threshold is inferred. Provider calculation semantics remain `PROVIDER_OPAQUE / UNVERIFIED`.
 - Natural rate-limit headers: account preflight limit `60`; each derived Analytics endpoint limit `6`; natural HTTP 429 observed: NO; automatic retry: NO.
 - Temporary key cleanup: revoke HTTP 200 request `524319d5-f0ff-414e-90d0-02b4939ea199`; post-revoke auth HTTP 401 request `ef746e7b-9d07-4b8d-91fb-215e23d554e1`; cleanup confirmed.
 - Provider calls: `6 normal / 2 cleanup / 8 total`, within `16 + 4` bounds.
 - Social mutations / posts / media / Ads / ad spend / comments / DMs / webhooks / OpenAI / fal.ai: 0.
 
-P1-T07 engineering recommendation: **ACCEPT**.
+P1-T07 Team Leader verdict: **ACCEPTED WITH NON-BLOCKING NOTES**.
 
-Capability recommendations pending Team Leader review:
-- Best Times = `SPIKE_PENDING` - `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
-- Performance Decay = `SPIKE_PENDING` - `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
-- Frequency Analysis = `SPIKE_PENDING` - `REMAIN PENDING - INSUFFICIENT LIVE EVIDENCE`.
+Accepted implementation HEAD: `a2ed6f4e37f1919784a00cce1449a5889f8bf5d8`.
 
-Canonical states are not promoted by the Senior Engineer. Historical Analytics = `SPIKE_PENDING`; Analytics Delta = `SPIKE_PENDING`; Analytics Webhook = `SPIKE_PENDING`.
+Canonical capability states after acceptance remain:
+- Best Times = `SPIKE_PENDING`.
+- Performance Decay = `SPIKE_PENDING`.
+- Frequency Analysis = `SPIKE_PENDING`.
+- Historical Analytics = `SPIKE_PENDING`.
+- Analytics Delta = `SPIKE_PENDING`.
+- Analytics Webhook = `SPIKE_PENDING`.
 
 P1-T07 unresolved observations:
-- all three derived endpoints returned valid HTTP 200 responses but empty arrays, so non-empty live record/value shapes were not observed;
-- non-empty signal target-attribution fields were not observed live;
-- minimum data/sample thresholds, formulas, weighting/confidence algorithms, and exact calculation semantics remain Provider-opaque/unverified;
-- natural HTTP 429 was not observed.
+- non-empty live record/value shapes = `UNVERIFIED`;
+- explicit target-attribution fields on non-empty signals = `UNVERIFIED`;
+- minimum sample/data thresholds = `UNVERIFIED`;
+- formulas / weighting / confidence methods / detailed calculation semantics = `PROVIDER_OPAQUE / UNVERIFIED`;
+- natural HTTP 429 = `NOT OBSERVED`;
+- the three empty arrays do not prove any specific Provider data threshold or cause.
 
 P1-T06 unresolved Provider behaviors remain unchanged: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination was not observed live; actual historical analytics metric-record field shapes were not observed because the valid baseline was empty; natural HTTP 429 was not observed.
 
-Next Task: **NOT_STARTED**. No next-task identifier is invented before Team Leader acceptance/direction.
+Next Task: **NOT_STARTED**. No next-task identifier is invented.
 ## Phase 1 Rules
 - Work one Task at a time.
 - Provider Behavior Tests remain separate from System Integration Tests.
@@ -430,4 +436,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader reviews P1-T07 implementation, deterministic evidence, documentation-derived Provider contracts, and the single authorized live Provider run. Senior Engineer does not rerun P1-T07, does not promote Best Times / Performance Decay / Frequency Analysis, does not test `analytics.synced`, and does not start any next Task without a new explicit Task Contract.
+P1-T07 documentation is finalized as `DONE / ACCEPTED WITH NON-BLOCKING NOTES`. Current Phase remains `PHASE 1 - Provider Feasibility & Basic Cost Safety`. Next Task remains `NOT_STARTED`. Senior Engineer does not rerun P1-T07, perform additional Provider mutations, promote pending Analytics capabilities, test `analytics.synced`, or start any next Task without a new explicit Task Contract.
