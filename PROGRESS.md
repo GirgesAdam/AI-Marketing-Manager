@@ -364,15 +364,11 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 ## Current Task
 
-`P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
+`P1-T08-F07 — Correlate analytics.synced With Documented Stale Analytics Refresh`
 
-**Status: UNRESOLVED / NOT DONE**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
 
-P1-T08-F06-F01 is **DONE / ACCEPTED** at accepted fix HEAD `a591fdf12f199291b982e519443c7ac72a36d484`. F06 is resolved as **DONE / ACCEPTED AFTER F06-F01 CORRECTION** with only the corrected conclusions retained. Parent P1-T08 remains **UNRESOLVED / NOT DONE** and Analytics Webhook remains `SPIKE_PENDING`.
-Parent P1-T08 original implementation starting HEAD: `d2e12882b96d04395b92c944735ebf8bc860b211`.
-Accepted F04 implementation HEAD: `b55bf0713090f5a729ac1f4688f79b692347ce96`.
-F05 approved starting HEAD: `6cc948b18d0902bf3a6455e4a652ef8ef845cb33`.
-Implementation branch: `p1-t08-zernio-analytics-webhook`.
+Parent P1-T08 remains **UNRESOLVED / NOT DONE**. Analytics Webhook remains `SPIKE_PENDING`. F07 live authorization is **CONSUMED** and no second F07 run is authorized. Approved starting HEAD: `0e7799d254d2d780ba293f454775853042aa8fe9`. Branch: `p1-t08-zernio-analytics-webhook`.
 
 ### P1-T08 Provider contract discovery - DOC_CONFIRMED
 - Current Zernio Analytics Webhooks documentation identifies `analytics.synced` as the Analytics sync event.
@@ -559,6 +555,31 @@ Historical F06 live evidence is preserved; the initial rejection concerned evide
 
 P1-T08-F06 recommendation: **PROVIDER PRECONDITION UNRESOLVED — CLARIFICATION REQUIRED**.
 Parent P1-T08 remains **NOT DONE**. Canonical Analytics Webhook remains `SPIKE_PENDING`. Next Task remains **NOT_STARTED**.
+### P1-T08-F07 stale Analytics refresh correlation
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+
+- Approved starting HEAD: `0e7799d254d2d780ba293f454775853042aa8fe9`; branch `p1-t08-zernio-analytics-webhook`.
+- DOC_CONFIRMED kept separate from live evidence: Analytics responses are documented as cached for approximately 60 minutes; a GET against stale Analytics cache is documented to trigger a background refresh; `analytics.synced` is documented as an available trigger-only Analytics webhook event with no metrics/cursor; documentation does **not** prove every stale-cache refresh emits `analytics.synced`, and 60 minutes is not a webhook SLA.
+- Stale-window safety gate PASS for the consumed run: historical `overview.lastSync=2026-10-14T15:03:02.584Z`; evaluated at `2026-10-14T16:22:46.907Z`; elapsed `4784323 ms` >= required `4500000 ms` (75-minute conservative test margin).
+- Pre-live permanent infrastructure sanity PASS: DNS `marketlyai.restartorg.com -> 82.29.177.121`; TCP/443 PASS; trusted hostname TLS; base HTTPS `404`; no redirect. Exact F07 path before receiver ownership returned expected `502` with route+tunnel present and local receiver absent.
+- Pre-live deterministic validation PASS on final source: focused F07 + P1-T08 `57 / 57` across 2 files; affected Provider-spike `261 / 261` across 11 files; full suite `364 / 364` across 15 files; typecheck PASS; build PASS; `git diff --check` PASS.
+- Initial F07 runner start reached exact readiness but stopped before any Zernio request with `MISSING_LIVE_CREDENTIAL`; Provider calls `0`, so authorization remained unconsumed. Existing project credential names were then loaded from the authorized legacy project `.env` without copying or exposing secret values.
+- Consumed run readiness PASS: exact URL `https://marketlyai.restartorg.com/p1-t08-f07/analytics-synced`; HTTP `401`; trusted TLS=true; marker match=true; same-process confirmation=true; redirected=false; latency `924 ms`; timestamp `2026-10-14T16:22:45.982Z`.
+- F07 became **CONSUMED** on trusted identity preflight. Identity HTTP `200`, exact match=true, request ID `9b003962-1837-44ab-b3fa-e9236df99ef1`, latency `452 ms`, timestamp `2026-10-14T16:22:47.359Z`.
+- Temporary webhook create/read-back PASS: webhook ID `6acfac57250f5349a8d336ee`; name `aimm-p1-t08-analytics-synced-dee19891f84648a4b285d` length `50`; create HTTP `200` request `db2a4164-b792-4760-8627-fea4c7e994fc`; read-back HTTP `200` request `6fe76cf0-bccd-4f82-898e-527f52b3c088`; exact Profile A only, event `analytics.synced` only, exact F07 URL, active=true; read-back completed `2026-10-14T16:22:47.865Z`.
+- Exactly one trigger Analytics GET executed at `2026-10-14T16:22:47.865Z`: HTTP `200`, request ID `2bb1bd75-b08e-4311-b420-07220d5b329a`, exact Profile A/account/facebook/source=all/date/limit/page filters; rows=0; `hasAnalyticsAccess=true`; `overview.lastSync=2026-10-14T15:03:02.584Z`; `dataStaleness` observed but value not retained safely; `syncStatus` absent. INTERNAL trigger classification: `REFRESH_NOT_YET_CONFIRMED`.
+- Passive observation ran `2026-10-14T16:22:48.090Z` through `2026-10-14T16:52:48.100Z`, duration `1800010 ms` (bounded 30-minute correlation window, not a Provider SLA); inbound deliveries=0; logical unique events=0; no manual Provider polling occurred.
+- Exactly one follow-up Analytics GET executed by the same runner at `2026-10-14T16:52:48.100Z`: HTTP `200`, request ID `1762a144-18dc-41a6-9a3e-2482adda0ddb`; same exact filters; rows=0; `hasAnalyticsAccess=true`; `overview.lastSync` remained `2026-10-14T15:03:02.584Z`; refresh advanced=false; `dataStaleness` value not retained; `syncStatus` absent.
+- INTERNAL_CORRELATION_CLASSIFICATION: **C — `REFRESH_NOT_CONFIRMED_EVENT_NOT_OBSERVED`**. No event arrived and explicit Provider evidence did not prove a refresh occurred. This does not prove `analytics.synced` unsupported/broken, does not prove the stale GET caused or failed to cause a refresh, and does not establish webhook cadence/SLA.
+- No live `analytics.synced` payload was observed, so live delivery signature, header/body ID equality, live target attribution, payload/sync-field shape, HTTP `204` ACK, ACK latency, and natural duplicate behavior remain unverified by F07.
+- Provider cleanup PASS: webhook DELETE HTTP `200`, request `3f0cae4a-96be-4068-85a5-5accfee5163d`; exact absent read-back HTTP `200`, request `24aadf0b-fe5d-44a0-94a0-f4cd19ecc866`; cleanupConfirmed=true.
+- Provider calls: `5 normal / 2 cleanup / 7 total`; within normal max 6 and cleanup max 2; no blind retries.
+- External actions remained zero: posts, publishing, schedules, media, comments, DMs, native automation, Ads/spend, account reconnect/update, Profile mutation, API-key create/delete, sync-external, OpenAI, fal.ai.
+- Infrastructure cleanup verified: runner/receiver stopped; local and VPS `18086` clear; F07 tunnel PID stopped; exact Nginx route absent; temporary F07 backups absent; exact public F07 path `404`; trusted TLS/no redirect preserved; permanent DNS/vhost/certificate preserved.
+- Post-run deterministic validation PASS: focused F07 + P1-T08 `57 / 57` across 2 files; affected Provider-spike `261 / 261` across 11 files; full suite `364 / 364` across 15 files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+Analytics Webhook recommendation: **REMAIN PENDING — REFRESH CORRELATION INCONCLUSIVE**.
+Parent P1-T08 remains **NOT DONE**. Canonical Analytics Webhook remains `SPIKE_PENDING`. Next Task remains **NOT_STARTED**. No second F07 run is authorized.
 Canonical capability remains:
 - Analytics Webhook = `SPIKE_PENDING`.
 
@@ -587,4 +608,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader verifies the P1-T08-F06-F01 documentation finalization. P1-T08-F06-F01 is **DONE / ACCEPTED** at accepted fix HEAD `a591fdf12f199291b982e519443c7ac72a36d484`; P1-T08-F06 is **DONE / ACCEPTED AFTER F06-F01 CORRECTION**; F05 remains **DONE / ACCEPTED** with outcome `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW`; F03 and F05 live runs remain **CONSUMED**. Current execution focus is parent P1-T08, which remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`. No Provider rerun, webhook observation, test-data creation, Community/Analytics next task, or other next Task is authorized. Next Task remains **NOT_STARTED**.
+Team Leader reviews P1-T08-F07 at the final implementation/evidence HEAD. F07 is **IMPLEMENTED — AWAITING TEAM LEADER REVIEW** with consumed single-run outcome `REFRESH_NOT_CONFIRMED_EVENT_NOT_OBSERVED` and recommendation **REMAIN PENDING — REFRESH CORRELATION INCONCLUSIVE**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; no second F07 run, capability promotion, Community/Analytics follow-on, or next Task is authorized. Next Task remains **NOT_STARTED**.

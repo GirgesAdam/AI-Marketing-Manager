@@ -1085,3 +1085,44 @@ Fifth-read provenance: `B — FIFTH_READ_EXECUTED_BY_SEPARATE_BOUNDED_DIAGNOSTIC
 Current Phase remains `PHASE 1 — Provider Feasibility & Basic Cost Safety`. Current Task / execution focus is restored to parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, which remains `UNRESOLVED / NOT DONE`. Analytics Webhook remains `SPIKE_PENDING`. F03 live run remains `CONSUMED`; F05 remains `DONE / ACCEPTED`, its live run remains `CONSUMED`, and its outcome remains `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW`. Next Task remains `NOT_STARTED`.
 
 Final F06-F01 validation: focused `63 / 63 PASS` across 2 files; affected `238 / 238 PASS` across 10 files; full `341 / 341 PASS` across 14 files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+## P1-T08-F07 — Stale Analytics Refresh Correlation
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Parent P1-T08 remains NOT DONE. Analytics Webhook remains `SPIKE_PENDING`. F07 live run is CONSUMED.
+
+| Gate / Evidence | Result | Safe evidence |
+|---|---|---|
+| Approved starting HEAD | PASS | `0e7799d254d2d780ba293f454775853042aa8fe9` |
+| Stale-window timing gate | PASS | historical `15:03:02.584Z`; consumed-run elapsed `4784323 ms` >= `4500000 ms` |
+| Permanent DNS/TLS sanity | PASS | `82.29.177.121`; trusted TLS; base `404`; no redirect |
+| Focused pre-live | PASS | `57 / 57` across 2 files |
+| Affected pre-live | PASS | `261 / 261` across 11 files |
+| Full pre-live | PASS | `364 / 364` across 15 files |
+| Typecheck / build / diff-check pre-live | PASS | all PASS |
+| Initial credential attempt | SAFE / UNCONSUMED | exact readiness reached; `MISSING_LIVE_CREDENTIAL`; Zernio calls `0` |
+| Consumed-run readiness | PASS | HTTP `401`; TLS/marker/same-process PASS; no redirect; `924 ms` |
+| Trusted identity | PASS | HTTP `200`; exact match; request `9b003962-1837-44ab-b3fa-e9236df99ef1` |
+| Webhook name | PASS | length `50` |
+| Webhook create | PASS | HTTP `200`; ID `6acfac57250f5349a8d336ee`; request `db2a4164-b792-4760-8627-fea4c7e994fc` |
+| Webhook exact read-back | PASS | HTTP `200`; request `6fe76cf0-bccd-4f82-898e-527f52b3c088`; Profile A/event/URL/active exact |
+| Trigger Analytics GET | PASS | exactly one; HTTP `200`; request `2bb1bd75-b08e-4311-b420-07220d5b329a` |
+| Trigger target filters | PASS | exact Profile A/account/facebook/source/date/limit/page |
+| Trigger rows/access | OBSERVED | rows `0`; `hasAnalyticsAccess=true` |
+| Trigger `lastSync` | NOT ADVANCED | `2026-10-14T15:03:02.584Z`; classification `REFRESH_NOT_YET_CONFIRMED` |
+| Trigger safe sync metadata | SAFE | `dataStaleness` field observed/value not retained; `syncStatus` absent |
+| Passive observation | PASS / NO EVENT | `1800010 ms`; inbound `0`; unique `0`; no polling |
+| Follow-up Analytics GET | PASS | exactly one; HTTP `200`; request `1762a144-18dc-41a6-9a3e-2482adda0ddb` |
+| Follow-up `lastSync` | NOT ADVANCED | unchanged `2026-10-14T15:03:02.584Z`; refresh advanced=false |
+| Live analytics.synced delivery | NOT OBSERVED | signature/ID/target payload/ACK contract remains unverified live |
+| Correlation outcome | C | `REFRESH_NOT_CONFIRMED_EVENT_NOT_OBSERVED` |
+| Provider cleanup DELETE | PASS | HTTP `200`; request `3f0cae4a-96be-4068-85a5-5accfee5163d` |
+| Provider cleanup absent read-back | PASS | HTTP `200`; request `24aadf0b-fe5d-44a0-94a0-f4cd19ecc866`; confirmed=true |
+| Provider calls | PASS | `5 normal / 2 cleanup / 7 total`; ceilings respected |
+| External actions | PASS / zero | posts/publishing/schedules/media/community/Ads/spend/account/Profile/API-key/sync-external/OpenAI/fal.ai all 0 |
+| Infrastructure cleanup | PASS | local/VPS `18086` clear; tunnel stopped; route absent; public F07 `404`; permanent TLS/vhost preserved |
+| Post-run validation | PASS | focused `57 / 57` across 2; affected `261 / 261` across 11; full `364 / 364` across 15; typecheck/build/diff-check PASS |
+
+Required F07 regressions F07-01 through F07-21 are implemented and pass; additional fail-closed coverage verifies unexpected event delivery handling and trigger classification variants.
+
+Analytics Webhook recommendation: **REMAIN PENDING — REFRESH CORRELATION INCONCLUSIVE**.

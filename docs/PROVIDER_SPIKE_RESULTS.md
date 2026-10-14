@@ -1377,3 +1377,48 @@ Approved starting HEAD: `641305e681743460294e87accade082c7374f7d3`.
 - Final deterministic validation PASS: focused F06-F01 + parent P1-T08 `63 / 63` across 2 files; affected Provider-spike `238 / 238` across 10 files; full suite `341 / 341` across 14 files; typecheck PASS; build PASS; `git diff --check` PASS.
 - F05 remains `DONE / ACCEPTED`; F05 outcome remains `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW`; 100 minutes != Provider SLA.
 - Current Phase remains `PHASE 1 — Provider Feasibility & Basic Cost Safety`; Current Task / execution focus is restored to parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, which remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F03 and F05 live runs remain `CONSUMED`; Next Task remains `NOT_STARTED`.
+
+## P1-T08-F07 — Correlate analytics.synced With Documented Stale Analytics Refresh
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Approved starting HEAD: `0e7799d254d2d780ba293f454775853042aa8fe9`.
+Branch: `p1-t08-zernio-analytics-webhook`.
+
+### DOC_CONFIRMED
+- Analytics responses are documented as cached for approximately 60 minutes.
+- A GET against stale Analytics cache is documented to trigger a background refresh.
+- `analytics.synced` is documented as an available Analytics webhook event and as trigger-only: no metrics, no cursor; consumers use Analytics reads/delta separately.
+- Documentation does **not** prove every stale-cache-triggered refresh emits `analytics.synced`.
+- The 60-minute cache statement and F07's 30-minute observation are not Provider webhook SLAs.
+
+### LIVE_PROVIDER_OBSERVED
+Timing gate: historical `lastSync=2026-10-14T15:03:02.584Z`; consumed-run gate evaluated `2026-10-14T16:22:46.907Z`; elapsed `4784323 ms`; required `4500000 ms`; PASS.
+
+Initial credential-loading attempt reached readiness but made `0` Zernio calls and did not consume authorization. The consumed run used the same runner after loading existing authorized project credential names without copying or exposing values.
+
+Consumed-run readiness: exact F07 URL; TLS=true; HTTP `401`; marker=true; same-process=true; redirected=false; latency `924 ms`; timestamp `2026-10-14T16:22:45.982Z`.
+Identity: HTTP `200`; exact match=true; request `9b003962-1837-44ab-b3fa-e9236df99ef1`; latency `452 ms`; timestamp `2026-10-14T16:22:47.359Z`.
+
+Webhook: ID `6acfac57250f5349a8d336ee`; name `aimm-p1-t08-analytics-synced-dee19891f84648a4b285d` (length `50`); create HTTP `200`, request `db2a4164-b792-4760-8627-fea4c7e994fc`; exact read-back HTTP `200`, request `6fe76cf0-bccd-4f82-898e-527f52b3c088`; Profile A only `6ac5a45a8e4ca44f355033ae`; event exactly `analytics.synced`; exact F07 URL; active=true; read-back completed `2026-10-14T16:22:47.865Z`.
+
+Trigger Analytics GET: requested `2026-10-14T16:22:47.865Z`; HTTP `200`; request `2bb1bd75-b08e-4311-b420-07220d5b329a`; exact Profile `6ac5a45a8e4ca44f355033ae`, account `6ac64f8740364f4695dd3077`, platform `facebook`, source `all`, `fromDate=2026-07-17`, `toDate=2026-10-14`, `limit=100`, `page=1`; rows=0; `hasAnalyticsAccess=true`; top-level fields `accounts`, `hasAnalyticsAccess`, `overview`, `pagination`, `posts`; overview fields `lastSync`, `dataStaleness`; `lastSync=2026-10-14T15:03:02.584Z`; `dataStaleness` present but value `OBSERVED_NOT_RETAINED`; `syncStatus` absent; trigger classification `REFRESH_NOT_YET_CONFIRMED`.
+
+Passive observation: start `2026-10-14T16:22:48.090Z`; end `2026-10-14T16:52:48.100Z`; duration `1800010 ms`; inbound deliveries=0; logical unique events=0; no Provider polling during the window.
+
+Follow-up Analytics GET: requested `2026-10-14T16:52:48.100Z`; HTTP `200`; request `1762a144-18dc-41a6-9a3e-2482adda0ddb`; same exact filters; rows=0; `hasAnalyticsAccess=true`; `lastSync=2026-10-14T15:03:02.584Z`; `dataStaleness` value not retained; `syncStatus` absent; refresh advanced=false.
+
+No live event arrived; therefore Provider-delivery signature, header/body event-ID equality, live Profile/account/platform payload attribution, live payload/sync fields, HTTP `204` ACK, ACK latency, and natural duplicates remain unverified by F07.
+
+Provider cleanup: DELETE HTTP `200`, request `3f0cae4a-96be-4068-85a5-5accfee5163d`; absent read-back HTTP `200`, request `24aadf0b-fe5d-44a0-94a0-f4cd19ecc866`; confirmed=true.
+Provider calls: `5 normal / 2 cleanup / 7 total`; ceilings respected; no blind retries.
+External actions: all zero for posts/publishing/schedules/media/comments/DMs/native automation/Ads/spend/account/Profile mutation/API-key create-delete/sync-external/OpenAI/fal.ai.
+Infrastructure cleanup verified: local/VPS port `18086` clear; reverse tunnel stopped; exact F07 Nginx route absent; temporary F07 backups absent; exact public F07 path `404`; permanent trusted DNS/TLS/vhost preserved.
+
+### INTERNAL_CORRELATION_CLASSIFICATION
+Outcome: **C — `REFRESH_NOT_CONFIRMED_EVENT_NOT_OBSERVED`**. No event arrived and explicit Provider evidence did not prove a refresh occurred. Do not infer that `analytics.synced` is unsupported/broken, that the trigger GET definitely did or did not cause a background refresh, or any webhook cadence/SLA.
+
+Pre-live deterministic validation: focused F07 + P1-T08 `57 / 57` across 2 files; affected Provider-spike `261 / 261` across 11 files; full suite `364 / 364` across 15 files; typecheck/build/diff-check PASS.
+Post-run deterministic validation PASS: focused F07 + P1-T08 `57 / 57` across 2 files; affected Provider-spike `261 / 261` across 11 files; full suite `364 / 364` across 15 files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+Analytics Webhook recommendation: **REMAIN PENDING — REFRESH CORRELATION INCONCLUSIVE**.
+Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains **NOT DONE**. Next Task remains **NOT_STARTED**. F07 live authorization is **CONSUMED**; no second F07 run is authorized.
