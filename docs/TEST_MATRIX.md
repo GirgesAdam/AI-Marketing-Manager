@@ -933,8 +933,10 @@ Analytics Webhook recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 No rerun is authorized under F03. Parent P1-T08 remains not DONE and awaits Team Leader re-review.
 ## P1-T08-F04 — Webhook Name Length Safety
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
-Canonical Analytics Webhook remains `SPIKE_PENDING`; parent P1-T08 remains NOT DONE; F03 live run remains CONSUMED.
+Status: `DONE / ACCEPTED`.
+Accepted implementation HEAD: `b55bf0713090f5a729ac1f4688f79b692347ce96`.
+Team Leader verdict: `ACCEPTED`.
+Canonical Analytics Webhook remains `SPIKE_PENDING`; parent P1-T08 remains UNRESOLVED / NOT DONE; F03 live run remains CONSUMED.
 
 | Gate / Regression | Result | Evidence |
 |---|---|---|

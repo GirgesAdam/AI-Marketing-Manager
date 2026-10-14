@@ -1179,7 +1179,9 @@ Analytics Webhook recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 maximum state is **`IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`**. F03 live run is **CONSUMED**; no second F03 run is authorized.
 ## P1-T08-F04 — Webhook Name Length Safety
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Status: `DONE / ACCEPTED`.
+Accepted implementation HEAD: `b55bf0713090f5a729ac1f4688f79b692347ce96`.
+Team Leader verdict: `ACCEPTED`.
 Approved starting HEAD: `f34456ecb16ea67040a2a5d8948eda7d7729ae53`.
 
 This is implementation/regression evidence only. It does not establish new live Provider behavior.
