@@ -1226,7 +1226,9 @@ Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains *
 
 ## P1-T08-F05 — Complete Live analytics.synced Verification After Accepted Harness Fix
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+Status: `DONE / ACCEPTED`.
+Accepted evidence HEAD: `65b24386c73f564eb027b4830f025ec3d0d291f7`.
+Team Leader verdict: `ACCEPTED` for F05 execution/evidence quality only; parent P1-T08 remains unresolved and not accepted.
 Approved starting HEAD: `6cc948b18d0902bf3a6455e4a652ef8ef845cb33`.
 
 F05 is one new explicitly authorized live attempt. F03 remains historically **CONSUMED**. F04 remains **DONE / ACCEPTED**.
@@ -1252,13 +1254,15 @@ Live Provider evidence:
 Passive observation:
 - started `2026-10-14T10:06:30.194Z`;
 - ended `2026-10-14T11:46:30.208Z`;
-- duration `6000014 ms` within the bounded 100-minute contract;
+- duration `6000014 ms` within the bounded 100-minute **test window**; this is bounded test evidence only and is **not** a Provider SLA;
 - inbound deliveries `0`;
 - logical unique analytics events `0`;
 - valid `analytics.synced` observed=false;
 - foreign target=false; wrong platform=false; target unconfirmed=false; unexpected event=false.
 
 No live payload arrived. Therefore F05 does **not** prove Provider-delivery signature behavior, header/body event-ID equality, live Profile/account/platform attribution, payload field shapes, sync metadata, metrics/cursor presence, contract drift, duplicate behavior, HTTP 204 acknowledgement, or live ACK latency. Documentation assumptions are not promoted to live facts.
+
+The bounded no-event result does **not** establish that `analytics.synced` is unsupported or broken, does not prove Provider webhook delivery failed, and does not establish any specific delivery cadence. Webhook logs are not used to prove or disprove delivery.
 
 Provider cleanup PASS:
 - DELETE HTTP `200`, request ID `304f8f1c-6a6c-4371-a2e1-a121114b9ef9`;
@@ -1274,4 +1278,4 @@ Outcome: `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW`.
 Post-run deterministic validation after F05 evidence/docs update: focused P1-T08 `34 / 34 PASS`; affected Provider-spike suites `209 / 209 PASS` across 9 files; full suite `312 / 312 PASS` across 13 files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
 
 Analytics Webhook recommendation: **REMAIN PENDING — ANALYTICS_SYNCED_NOT_OBSERVED**.
-Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains **NOT DONE** with maximum pre-review status **`IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`**. No second F05 run is authorized.
+Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**. F05 is **DONE / ACCEPTED** at accepted evidence HEAD `65b24386c73f564eb027b4830f025ec3d0d291f7`. No additional live attempt is authorized.

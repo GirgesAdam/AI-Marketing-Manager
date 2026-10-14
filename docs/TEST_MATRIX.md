@@ -969,8 +969,9 @@ P1-T08-F04 recommendation: **ACCEPT CODE FIX**.
 
 ## P1-T08-F05 — Live analytics.synced Verification After F04 Fix
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
-Canonical Analytics Webhook remains `SPIKE_PENDING`; parent P1-T08 remains NOT DONE; F03 and F05 live runs are CONSUMED.
+Status: `DONE / ACCEPTED`.
+Accepted evidence HEAD: `65b24386c73f564eb027b4830f025ec3d0d291f7`.
+Canonical Analytics Webhook remains `SPIKE_PENDING`; parent P1-T08 remains UNRESOLVED / NOT DONE; F03 and F05 live runs are CONSUMED.
 
 | Gate / Evidence | Result | Safe evidence |
 |---|---|---|
@@ -990,9 +991,10 @@ Canonical Analytics Webhook remains `SPIKE_PENDING`; parent P1-T08 remains NOT D
 | Profile scope | PASS | Profile A only `6ac5a45a8e4ca44f355033ae` |
 | Event scope | PASS | exactly `analytics.synced` |
 | URL / active | PASS | exact F05 URL; active=true |
-| Observation window | PASS / NO EVENT | `6000014 ms`; 0 inbound; 0 logical unique; no valid event |
+| Observation window | PASS / NO EVENT | `6000014 ms`; 0 inbound; 0 logical unique; no valid event; bounded test window only, not a Provider SLA |
 | Foreign / wrong / unconfirmed / unexpected evidence | NONE OBSERVED | all false; no inbound delivery occurred |
 | Live payload/signature/target/ACK contract | UNVERIFIED | no Provider delivery arrived |
+| No-event interpretation | BOUNDED EVIDENCE ONLY | does not establish unsupported/broken, Provider delivery failure, or any specific cadence; webhook logs do not prove/disprove delivery |
 | Provider cleanup DELETE | PASS | HTTP `200`; request `304f8f1c-6a6c-4371-a2e1-a121114b9ef9` |
 | Provider cleanup absent read-back | PASS | HTTP `200`; request `ecc08660-bf87-4ffb-ab9d-8ba5f1fdc7f1`; confirmed=true |
 | Provider calls | PASS | `3 normal / 2 cleanup / 5 total` |
