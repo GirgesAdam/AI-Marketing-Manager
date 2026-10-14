@@ -366,11 +366,12 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
-**Status: UNRESOLVED / NOT DONE**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
 
-Execution focus restored to the unresolved parent after Team Leader acceptance of P1-T08-F04.
+F05 completed the single newly authorized live Provider attempt; parent remains NOT DONE pending Team Leader review because no natural `analytics.synced` delivery was observed.
 Parent P1-T08 original implementation starting HEAD: `d2e12882b96d04395b92c944735ebf8bc860b211`.
 Accepted F04 implementation HEAD: `b55bf0713090f5a729ac1f4688f79b692347ce96`.
+F05 approved starting HEAD: `6cc948b18d0902bf3a6455e4a652ef8ef845cb33`.
 Implementation branch: `p1-t08-zernio-analytics-webhook`.
 
 ### P1-T08 Provider contract discovery - DOC_CONFIRMED
@@ -489,6 +490,29 @@ P1-T08-F04 recommendation: **ACCEPT CODE FIX**.
 Canonical Analytics Webhook remains `SPIKE_PENDING`. Parent P1-T08 remains **NOT DONE**.
 P1-T08 recommendation: **Analytics Webhook recommendation: REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 
+### P1-T08-F05 live Provider verification after accepted F04 fix
+**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
+
+- Approved starting HEAD: `6cc948b18d0902bf3a6455e4a652ef8ef845cb33`; branch `p1-t08-zernio-analytics-webhook`.
+- F04 builder preflight PASS using accepted `buildP1T08WebhookName`: prefix length `29`; production-like 24-character run tag; generated name `aimm-p1-t08-analytics-synced-123456789012345678901`; final length `50`; Provider maximum `50`.
+- Permanent infrastructure sanity PASS before temporary setup: `marketlyai.restartorg.com -> 82.29.177.121`; TCP/443 PASS; trusted TLS PASS for `marketlyai.restartorg.com`; base HTTPS `404`; no redirect/clinic certificate regression.
+- Pre-Provider deterministic validation PASS: focused P1-T08 `34 / 34`; affected Provider-spike suites `209 / 209` across 9 files; full suite `312 / 312` across 13 files; typecheck PASS; build PASS; `git diff --check` PASS.
+- Temporary exact F05 route/tunnel established for `https://marketlyai.restartorg.com/p1-t08-f05/analytics-synced`; local port `18086` was clear before runner ownership.
+- Runner exact HTTPS readiness PASS before Provider calls: trusted TLS=true; HTTP `401`; receiver marker match=true; same-process confirmation=true; redirect=false; latency `962 ms`; timestamp `2026-10-14T10:06:28.224Z`.
+- First Provider request occurred during trusted identity preflight, so F05 live run is **CONSUMED**. `/v1/auth/verify` returned HTTP `200`, exact identity match=true, safe request ID `68ebfc11-4de9-43ca-bda5-20301afd260d`, latency `598 ms`, evidence timestamp `2026-10-14T10:06:29.787Z`.
+- Webhook create PASS: HTTP `200`, provider webhook ID `6acf542502eb51a090c8d14e`, safe request ID `fc6ff28e-9b65-42d1-9c36-af9bf9f3fb89`, generated name `aimm-p1-t08-analytics-synced-bb6dc95b11fe4332a3d14` (length `50`).
+- Exact read-back PASS: HTTP `200`, safe request ID `1094c013-ad9a-48d6-a2c2-053312085f2a`; Profile scope exactly `[6ac5a45a8e4ca44f355033ae]`; events exactly `[analytics.synced]`; exact F05 URL; active=true.
+- Passive observation ran from `2026-10-14T10:06:30.194Z` through `2026-10-14T11:46:30.208Z`, duration `6000014 ms` (bounded 100-minute window). No Provider polling or manufactured analytics activity occurred.
+- Observation result: inbound deliveries `0`; logical unique events `0`; valid `analytics.synced` observed=false; no foreign target, wrong platform, target-unconfirmed, or unexpected event delivery was observed.
+- Because no live event arrived, live payload shape, signature validation on a Provider delivery, header/body ID equality on a Provider delivery, live Profile/account/platform attribution, sync fields, metrics/cursor presence, contract drift, HTTP 204 acknowledgement, and live ACK latency remain unverified by F05.
+- Provider cleanup PASS: DELETE exact webhook HTTP `200`, request ID `304f8f1c-6a6c-4371-a2e1-a121114b9ef9`; cleanup read-back HTTP `200`, request ID `ecc08660-bf87-4ffb-ab9d-8ba5f1fdc7f1`; exact temporary webhook confirmed absent.
+- Provider calls: `3 normal / 2 cleanup / 5 total`; request ceilings respected. Posts/publishing/media/Ads/spend/comments/DMs/native automation/OpenAI/fal.ai = `0`.
+- Infrastructure cleanup: human operator confirmed F05 route removal and tunnel stop. Senior verification after cleanup: exact F05 path `404`, base HTTPS `404` with no redirect, local port `18086` clear; permanent marketlyai vhost/certificate/DNS repair preserved.
+- F05 bounded no-event outcome: `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW`.
+- Post-run validation PASS after F05 evidence/docs update: focused P1-T08 34 / 34; affected Provider-spike suites 209 / 209 across 9 files; full suite 312 / 312 across 13 files; typecheck PASS; build PASS; git diff --check PASS.
+
+Analytics Webhook recommendation: **REMAIN PENDING — ANALYTICS_SYNCED_NOT_OBSERVED**.
+Canonical Analytics Webhook remains `SPIKE_PENDING`. Parent P1-T08 is **IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW** and remains **NOT DONE**. F03 remains historically **CONSUMED**; F05 is **CONSUMED**; no second F05 run is authorized.
 Canonical capability remains:
 - Analytics Webhook = `SPIKE_PENDING`.
 
@@ -517,4 +541,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Execution focus is restored to the unresolved parent P1-T08 after P1-T08-F04 acceptance. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; F03 live run remains **CONSUMED**. Senior Engineer does not call Zernio, rerun live Provider verification, recreate temporary webhook infrastructure, promote Analytics Webhook, or start another Task without explicit Team Leader authorization. Next Task remains **NOT_STARTED**.
+Team Leader reviews P1-T08-F05 live evidence. Parent P1-T08 remains **IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; F03 and F05 live runs are **CONSUMED**. Senior Engineer does not rerun F05, call Zernio, recreate temporary webhook infrastructure, promote Analytics Webhook, or start another Task without explicit Team Leader authorization. Next Task remains **NOT_STARTED**.

@@ -1223,3 +1223,55 @@ F04 Provider activity: `0 normal / 0 cleanup / 0 total`; webhook mutations `0`; 
 
 P1-T08-F04 recommendation: **ACCEPT CODE FIX**.
 Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains **NOT DONE**. F03 live run remains **CONSUMED**.
+
+## P1-T08-F05 — Complete Live analytics.synced Verification After Accepted Harness Fix
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+Approved starting HEAD: `6cc948b18d0902bf3a6455e4a652ef8ef845cb33`.
+
+F05 is one new explicitly authorized live attempt. F03 remains historically **CONSUMED**. F04 remains **DONE / ACCEPTED**.
+
+Pre-Provider evidence:
+- accepted F04 builder used directly; prefix length `29`; 24-character production-like tag generated length `50`; Provider max `50`;
+- permanent infrastructure sanity PASS: DNS `82.29.177.121`, TCP/443 PASS, trusted TLS/hostname PASS, base HTTPS `404`, no redirect regression;
+- focused P1-T08 `34 / 34 PASS`;
+- affected Provider-spike suites `209 / 209 PASS` across 9 files;
+- full suite `312 / 312 PASS` across 13 files;
+- typecheck/build/diff-check PASS.
+
+Live Provider evidence:
+- exact URL: `https://marketlyai.restartorg.com/p1-t08-f05/analytics-synced`;
+- exact runner readiness PASS: TLS=true, HTTP `401`, marker=true, same-process=true, redirected=false, `962 ms`, `2026-10-14T10:06:28.224Z`;
+- F05 became **CONSUMED** on trusted identity preflight;
+- identity HTTP `200`, exact match=true, request ID `68ebfc11-4de9-43ca-bda5-20301afd260d`, `598 ms`, timestamp `2026-10-14T10:06:29.787Z`;
+- webhook create HTTP `200`, ID `6acf542502eb51a090c8d14e`, request ID `fc6ff28e-9b65-42d1-9c36-af9bf9f3fb89`;
+- generated name `aimm-p1-t08-analytics-synced-bb6dc95b11fe4332a3d14`, length `50`;
+- exact read-back HTTP `200`, request ID `1094c013-ad9a-48d6-a2c2-053312085f2a`;
+- read-back scope: Profile A only (`6ac5a45a8e4ca44f355033ae`), event `analytics.synced` only, exact F05 URL, active=true.
+
+Passive observation:
+- started `2026-10-14T10:06:30.194Z`;
+- ended `2026-10-14T11:46:30.208Z`;
+- duration `6000014 ms` within the bounded 100-minute contract;
+- inbound deliveries `0`;
+- logical unique analytics events `0`;
+- valid `analytics.synced` observed=false;
+- foreign target=false; wrong platform=false; target unconfirmed=false; unexpected event=false.
+
+No live payload arrived. Therefore F05 does **not** prove Provider-delivery signature behavior, header/body event-ID equality, live Profile/account/platform attribution, payload field shapes, sync metadata, metrics/cursor presence, contract drift, duplicate behavior, HTTP 204 acknowledgement, or live ACK latency. Documentation assumptions are not promoted to live facts.
+
+Provider cleanup PASS:
+- DELETE HTTP `200`, request ID `304f8f1c-6a6c-4371-a2e1-a121114b9ef9`;
+- absent read-back HTTP `200`, request ID `ecc08660-bf87-4ffb-ab9d-8ba5f1fdc7f1`;
+- cleanup confirmed=true.
+
+Provider request counts: `3 normal / 2 cleanup / 5 total`. No posts, publishing, media, Ads/spend, comments/DMs, native automation, OpenAI, or fal.ai actions occurred.
+
+Infrastructure cleanup completed: human operator confirmed reverse tunnel stop and exact F05 Nginx route removal; Senior post-cleanup verification observed exact F05 path `404`, base HTTPS `404` with no redirect, and local `18086` clear. Permanent vhost/certificate/DNS repair remains preserved.
+
+Outcome: `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW`.
+
+Post-run deterministic validation after F05 evidence/docs update: focused P1-T08 `34 / 34 PASS`; affected Provider-spike suites `209 / 209 PASS` across 9 files; full suite `312 / 312 PASS` across 13 files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+Analytics Webhook recommendation: **REMAIN PENDING — ANALYTICS_SYNCED_NOT_OBSERVED**.
+Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains **NOT DONE** with maximum pre-review status **`IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`**. No second F05 run is authorized.

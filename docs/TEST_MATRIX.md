@@ -966,3 +966,42 @@ Canonical Analytics Webhook remains `SPIKE_PENDING`; parent P1-T08 remains UNRES
 | Infrastructure changes | PASS / zero | no Nginx, SSH tunnel, TLS, or live receiver work |
 
 P1-T08-F04 recommendation: **ACCEPT CODE FIX**.
+
+## P1-T08-F05 — Live analytics.synced Verification After F04 Fix
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+Canonical Analytics Webhook remains `SPIKE_PENDING`; parent P1-T08 remains NOT DONE; F03 and F05 live runs are CONSUMED.
+
+| Gate / Evidence | Result | Safe evidence |
+|---|---|---|
+| Accepted starting HEAD | PASS | `6cc948b18d0902bf3a6455e4a652ef8ef845cb33` |
+| F04 builder live-shape preflight | PASS | prefix `29`; 24-char tag; generated length `50`; max `50` |
+| Permanent DNS/TCP/TLS sanity | PASS | `82.29.177.121`; TCP/443 PASS; trusted hostname TLS; base `404`; no redirect |
+| Focused pre-Provider | PASS | `34 / 34` |
+| Affected pre-Provider | PASS | `209 / 209` across 9 files |
+| Full pre-Provider | PASS | `312 / 312` across 13 files |
+| Typecheck / build / diff-check pre-Provider | PASS | all PASS |
+| Exact F05 readiness | PASS | HTTP `401`; TLS/marker/same-process PASS; no redirect; `962 ms` |
+| F05 live run | CONSUMED | first Zernio request sent during trusted identity preflight |
+| Trusted identity | PASS | HTTP `200`; exact match; request `68ebfc11-4de9-43ca-bda5-20301afd260d`; `598 ms` |
+| Webhook name | PASS | `aimm-p1-t08-analytics-synced-bb6dc95b11fe4332a3d14`, length `50` |
+| Webhook create | PASS | HTTP `200`; ID `6acf542502eb51a090c8d14e`; request `fc6ff28e-9b65-42d1-9c36-af9bf9f3fb89` |
+| Webhook exact read-back | PASS | HTTP `200`; request `1094c013-ad9a-48d6-a2c2-053312085f2a` |
+| Profile scope | PASS | Profile A only `6ac5a45a8e4ca44f355033ae` |
+| Event scope | PASS | exactly `analytics.synced` |
+| URL / active | PASS | exact F05 URL; active=true |
+| Observation window | PASS / NO EVENT | `6000014 ms`; 0 inbound; 0 logical unique; no valid event |
+| Foreign / wrong / unconfirmed / unexpected evidence | NONE OBSERVED | all false; no inbound delivery occurred |
+| Live payload/signature/target/ACK contract | UNVERIFIED | no Provider delivery arrived |
+| Provider cleanup DELETE | PASS | HTTP `200`; request `304f8f1c-6a6c-4371-a2e1-a121114b9ef9` |
+| Provider cleanup absent read-back | PASS | HTTP `200`; request `ecc08660-bf87-4ffb-ab9d-8ba5f1fdc7f1`; confirmed=true |
+| Provider calls | PASS | `3 normal / 2 cleanup / 5 total` |
+| External/social/Ads/media/community actions | PASS / zero | all `0`; OpenAI/fal.ai `0` |
+| Infrastructure cleanup | PASS | human route/tunnel cleanup + exact path `404`, base `404`, local `18086` clear |
+| F05 outcome | NON-CRITICAL / PENDING | `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW` |
+| Focused post-run | PASS | 34 / 34 |
+| Affected post-run | PASS | 209 / 209 across 9 files |
+| Full post-run | PASS | 312 / 312 across 13 files |
+| Typecheck / build / diff-check post-run | PASS | all PASS |
+
+Analytics Webhook recommendation: **REMAIN PENDING — ANALYTICS_SYNCED_NOT_OBSERVED**.
