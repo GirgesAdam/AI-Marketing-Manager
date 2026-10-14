@@ -1133,7 +1133,8 @@ Current Task / execution focus is parent `P1-T08 — Verify Zernio analytics.syn
 
 ## P1-T08-F08 — Official Provider Contract Clarification
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Status: `DONE / ACCEPTED`.
+Accepted evidence HEAD: `bb56de898472b2e904345ca5eaf4686b0bafd83e`.
 Approved starting HEAD: `60f40a1063a871a29c560517a6647ded1fb42160`.
 
 | F08 Gate / Evidence | Result | Evidence |
@@ -1158,3 +1159,5 @@ Approved starting HEAD: `60f40a1063a871a29c560517a6647ded1fb42160`.
 | Canonical capability | PRESERVED | parent NOT DONE; Analytics Webhook `SPIKE_PENDING`; Next Task NOT_STARTED |
 
 No test-suite rerun is required by the F08 contract because no source/test files changed. Required final validation is docs-only changed-file verification plus `git diff --check`.
+
+Current Task / execution focus is restored to parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, which remains `UNRESOLVED / NOT DONE`. Clarification packet remains **PREPARED / NOT SENT**; recommendation remains **DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION** and is not authorized for execution. Analytics Webhook remains `SPIKE_PENDING`; Current Phase remains `PHASE 1 — Provider Feasibility & Basic Cost Safety`; Next Task remains `NOT_STARTED`.

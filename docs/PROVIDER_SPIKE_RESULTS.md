@@ -1427,7 +1427,9 @@ Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains *
 
 ## P1-T08-F08 — Resolve analytics.synced Trigger Preconditions From Official Provider Contract
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Status: `DONE / ACCEPTED`.
+Accepted evidence HEAD: `bb56de898472b2e904345ca5eaf4686b0bafd83e`.
+Team Leader verdict: `ACCEPTED`. Recommendation is not authorized for execution; clarification packet remains `PREPARED / NOT SENT`.
 Approved starting HEAD: `60f40a1063a871a29c560517a6647ded1fb42160`.
 Branch: `p1-t08-zernio-analytics-webhook`.
 Official-source checked timestamp: `2026-10-14T22:41:00+03:00`.
@@ -1525,4 +1527,4 @@ Material trigger/precondition questions remain undocumented or ambiguous. Curren
 ### Recommendation
 **P1-T08-F08 recommendation: DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION**
 
-The packet above is prepared only; F08 did **not** send it. Canonical state remains: F07 = **DONE / ACCEPTED**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Next Task = **NOT_STARTED**.
+The packet above is **PREPARED / NOT SENT**; F08 did **not** contact the Provider. Current Task / execution focus is restored to parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, which remains **UNRESOLVED / NOT DONE**. F07 remains **DONE / ACCEPTED** with live run **CONSUMED**; Analytics Webhook remains `SPIKE_PENDING`; Current Phase remains `PHASE 1 — Provider Feasibility & Basic Cost Safety`; Next Task remains **NOT_STARTED**.

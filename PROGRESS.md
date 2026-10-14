@@ -364,11 +364,11 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 ## Current Task
 
-`P1-T08-F08 — Resolve analytics.synced Trigger Preconditions From Official Provider Contract`
+`P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
-**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+**Status: UNRESOLVED / NOT DONE**
 
-Approved starting HEAD: `60f40a1063a871a29c560517a6647ded1fb42160`; branch `p1-t08-zernio-analytics-webhook`. F08 is documentation/contract research only: Provider calls `0 normal / 0 cleanup / 0 total`; webhook operations `0`; Provider/social/public mutations `0`; external Provider communication `0`; source/test/package changes `0`. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
+P1-T08-F08 is **DONE / ACCEPTED** at accepted evidence HEAD `bb56de898472b2e904345ca5eaf4686b0bafd83e`. Final classification remains **PROVIDER_CLARIFICATION_REQUIRED**. Recommendation remains **DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION**, but Provider contact is **NOT AUTHORIZED / NOT PERFORMED**. Clarification packet remains **PREPARED / NOT SENT**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F07 remains **DONE / ACCEPTED** with live run **CONSUMED**; Next Task remains **NOT_STARTED**.
 
 ### P1-T08 Provider contract discovery - DOC_CONFIRMED
 - Current Zernio Analytics Webhooks documentation identifies `analytics.synced` as the Analytics sync event.
@@ -596,7 +596,10 @@ P1-T06/P1-T07 unresolved Provider behavior remains unchanged: `EXPIRED_CURSOR_BE
 
 Next Task: **NOT_STARTED**. No next-task identifier is invented.
 ### P1-T08-F08 official Provider contract clarification
-**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+**Status: DONE / ACCEPTED**
+
+Accepted evidence HEAD: `bb56de898472b2e904345ca5eaf4686b0bafd83e`.
+Team Leader verdict: **ACCEPTED**. Recommendation remains unexecuted; Provider contact is not authorized.
 
 - Approved starting HEAD: `60f40a1063a871a29c560517a6647ded1fb42160`; branch `p1-t08-zernio-analytics-webhook`.
 - Scope: official/current Zernio documentation review only. Provider calls `0 normal / 0 cleanup / 0 total`; mutations=0; webhook operations=0; external Provider communication=0; source/test/package changes=0.
@@ -630,4 +633,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader reviews P1-T08-F08 at the final documentation/evidence HEAD. F08 classification is **PROVIDER_CLARIFICATION_REQUIRED** and recommendation is **DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION**; clarification packet is prepared but **NOT SENT**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; no Provider execution, external contact, capability promotion, Community/Analytics follow-on, or next Task is authorized. Next Task remains **NOT_STARTED**.
+Team Leader verifies P1-T08-F08 documentation finalization. P1-T08-F08 is **DONE / ACCEPTED** at accepted evidence HEAD `bb56de898472b2e904345ca5eaf4686b0bafd83e`; final classification remains **PROVIDER_CLARIFICATION_REQUIRED**; recommendation remains **DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION** and is **NOT AUTHORIZED FOR EXECUTION**; clarification packet remains **PREPARED / NOT SENT**. Current execution focus is restored to parent P1-T08, which remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; no Provider contact, capability promotion, Community/Analytics follow-on, or next Task is authorized. Next Task remains **NOT_STARTED**.
