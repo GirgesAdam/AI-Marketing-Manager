@@ -1281,7 +1281,7 @@ Analytics Webhook recommendation: **REMAIN PENDING — ANALYTICS_SYNCED_NOT_OBSE
 Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**. F05 is **DONE / ACCEPTED** at accepted evidence HEAD `65b24386c73f564eb027b4830f025ec3d0d291f7`. No additional live attempt is authorized.
 ## P1-T08-F06 — Determine analytics.synced Trigger Eligibility & Test-Account Preconditions
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Team Leader verdict: **REJECTED — FIX REQUIRED**. Useful F06 live read evidence below is preserved; F06-F01 corrects evidence traceability, sync classification, and the over-strong recommendation.
 Approved starting HEAD: `ac620616608a0b94f56c5cb2c7974127ad074028`.
 
 ### DOC_CONFIRMED
@@ -1328,19 +1328,22 @@ Exact Analytics baseline:
 - `hasAnalyticsAccess=true`;
 - safe top-level fields: `accounts`, `hasAnalyticsAccess`, `overview`, `pagination`, `posts`.
 
-The initial safe output exposed the existence of `overview` but did not retain its nested metadata, so the single contract-permitted optional ambiguity read repeated the identical exact baseline filters once. Optional read:
+Fifth-read provenance reconciliation: **`B — FIFTH_READ_EXECUTED_BY_SEPARATE_BOUNDED_DIAGNOSTIC_COMMAND`**. Persisted local Remote Desktop Commander tool-call execution history proves that the committed F06 harness had already completed, then one separate bounded GET-only diagnostic repeated the exact page-1 Analytics filters:
+- `GET /v1/analytics?profileId=6ac5a45a8e4ca44f355033ae&accountId=6ac64f8740364f4695dd3077&platform=facebook&source=all&fromDate=2026-07-17&toDate=2026-10-14&limit=100&page=1`;
 - HTTP `200`, request ID `73b50a74-8637-49c7-b28f-51e178f71cde`;
 - rows=0; total=0; `hasAnalyticsAccess=true`;
-- overview fields: `dataStaleness`, `lastSync`, `publishedPosts`, `scheduledPosts`, `totalPosts`;
-- explicit `overview.lastSync=2026-10-14T15:03:02.584Z`;
-- `overview.dataStaleness` field was present but its nested value was intentionally not retained in safe evidence; no staleness meaning is inferred;
+- safe overview field names included `dataStaleness`, `lastSync`, `publishedPosts`, `scheduledPosts`, `totalPosts`;
+- explicit `overview.lastSync=2026-10-14T15:03:02.584Z` is preserved as **`EXPLICIT_PROVIDER_SYNC_TIMESTAMP_OBSERVED`** only;
+- `dataStaleness` was observed as a field but its nested value was not durably retained, so no staleness semantics are inferred;
 - no `syncStatus` value was observed.
+
+The committed F06 harness itself made 4 GETs on the observed empty/total=0 path. Historical F06 session traffic totals 5 GETs only because this separate bounded diagnostic followed the 4-call harness run; the fifth read is not part of the normal committed harness contract.
 
 Analytics entitlement: **`ANALYTICS_ACCESS_CONFIRMED`** from the exact baseline `hasAnalyticsAccess=true` field.
 Primary classification: **`TEST_ACCOUNT_ANALYTICS_ELIGIBLE_BUT_EMPTY`**.
-Sync Cycle State: **`CONFIRMED_RECENT`**, based only on the explicit Provider `overview.lastSync` timestamp contemporaneous with this diagnostic. This does not prove a natural/background sync trigger, `analytics.synced` emission, webhook delivery, next-sync timing, or cadence.
+Canonical Sync Cycle State: **`UNRESOLVED`**. The prior `CONFIRMED_RECENT` label is withdrawn: an explicit `lastSync` timestamp alone does not establish natural/background sync semantics, `analytics.synced` emission, webhook delivery, next-sync timing, cadence, or Provider SLA.
 
-Provider calls: `5 normal / 0 cleanup / 5 total`; every Provider call was GET; mutations `0`; retries `0`; polling loops `0`; webhook operations `0`; delta polling `0`; `webhook.test` `0`; `sync-external` `0`.
+Historical F06 session calls: `5 GETs total = 4 committed-harness GETs + 1 separate bounded diagnostic GET`; mutations `0`; retries `0`; polling loops `0`; webhook operations `0`; delta polling `0`; `webhook.test` `0`; `sync-external` `0`.
 External/public/social/media/community/Ads/spend/OpenAI/fal.ai actions: all `0`.
 
 Post-run deterministic validation after F06 live evidence/docs: focused F06 + P1-T08 `47 / 47 PASS` across 2 files; affected Provider-spike `222 / 222 PASS` across 10 files; full suite `325 / 325 PASS` across 14 files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
@@ -1348,4 +1351,25 @@ Post-run deterministic validation after F06 live evidence/docs: focused F06 + P1
 F05 evidence remains unchanged: `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW` and 100 minutes != Provider SLA.
 Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains **NOT DONE**. Next Task remains **NOT_STARTED**.
 
-P1-T08-F06 recommendation: **TEST ENVIRONMENT BLOCKER — ANALYTICS DATA/PRECONDITION REQUIRED**.
+P1-T08-F06 recommendation: **PROVIDER PRECONDITION UNRESOLVED — CLARIFICATION REQUIRED**.
+
+TEST FIXTURE LIMITATION: **THE CURRENT FROZEN ACCOUNT HAS ZERO USABLE ANALYTICS ROWS**. Empty Analytics data is not proven to be a required Provider precondition for `analytics.synced` and is not proven to be the cause of the F05 no-event outcome.
+## P1-T08-F06-F01 — Reconcile F06 Sync Evidence Traceability & Classification
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Approved starting HEAD: `641305e681743460294e87accade082c7374f7d3`.
+
+### Code / evidence correction
+- Provider calls during F06-F01: `0 normal / 0 cleanup / 0 total`; no live-mode command; mutations `0`.
+- Nested `overview` is parsed from the first Analytics response using only `lastSync`, `dataStaleness`, `syncStatus`, and `dataAsOf`.
+- Safe field provenance distinguishes `ABSENT`, `SAFE_SCALAR_RETAINED`, and `OBSERVED_NOT_RETAINED`; the full `overview` object and unrelated nested content are never serialized.
+- Normal empty-baseline harness path is deterministic at `4` GETs.
+- An optional fifth harness request exists only as bounded page-2 pagination when page 1 explicitly reports `hasMore=true` or `total > rows.length`; exact Profile/account/platform/source/date/limit filters are reused, only the page changes, and the hard ceiling remains `5`.
+- INTERNAL_DIAGNOSTIC_CLASSIFICATION: `lastSync` alone => `UNRESOLVED`; explicit positive `syncStatus` may support `CONFIRMED_BUT_TIMESTAMP_UNKNOWN`; no sync metadata => `NOT_EXPOSED`. None imply Provider cadence/SLA or webhook emission/delivery.
+- Fifth-read provenance remains classification `B`, proven by persisted local execution history: separate GET-only page-1 Analytics diagnostic, HTTP `200`, request `73b50a74-8637-49c7-b28f-51e178f71cde`.
+- `overview.lastSync=2026-10-14T15:03:02.584Z` remains `EXPLICIT_PROVIDER_SYNC_TIMESTAMP_OBSERVED` only.
+- Primary fixture classification remains `TEST_ACCOUNT_ANALYTICS_ELIGIBLE_BUT_EMPTY`; canonical Sync Cycle State is `UNRESOLVED`.
+- Corrected recommendation: **PROVIDER PRECONDITION UNRESOLVED — CLARIFICATION REQUIRED**.
+- Final deterministic validation PASS: focused F06-F01 + parent P1-T08 `63 / 63` across 2 files; affected Provider-spike `238 / 238` across 10 files; full suite `341 / 341` across 14 files; typecheck PASS; build PASS; `git diff --check` PASS.
+- F05 remains `DONE / ACCEPTED`; F05 outcome remains `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW`; 100 minutes != Provider SLA.
+- Parent P1-T08 remains NOT DONE; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains `NOT_STARTED`.

@@ -8,7 +8,7 @@ if(live&&existsSync('.env')&&(!process.env.ZERNIO_API_KEY||!process.env.ZERNIO_E
 const result=await runP1T08F06({live,env:process.env,providerEnvironment:'authorized-internal-zernio-test-team'});
 const safe={
  liveEnabled:result.liveEnabled,result:result.result,errorCategory:result.errorCategory,identityMatch:result.identityMatch,
- providerContract:result.providerContract,
+ providerContract:result.providerContract,internalSyncRule:result.internalSyncRule,
  preflight:result.preflight?{runId:result.preflight.evidence.run_id,timestamp:result.preflight.evidence.timestamp,result:result.preflight.evidence.result,status:result.preflight.evidence.provider_status,requestId:result.preflight.evidence.provider_request_id,latencyMs:result.preflight.evidence.latency_ms}:null,
  target:result.target,health:result.health,baseline:result.baseline,primaryClassification:result.primaryClassification,syncCycleState:result.syncCycleState,recommendation:result.recommendation,
  normalRequestCount:result.normalRequestCount,cleanupRequestCount:result.cleanupRequestCount,liveRequestCount:result.liveRequestCount,mutations:result.mutations,steps:result.steps

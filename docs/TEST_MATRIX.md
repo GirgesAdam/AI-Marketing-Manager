@@ -1009,7 +1009,7 @@ Canonical Analytics Webhook remains `SPIKE_PENDING`; parent P1-T08 remains UNRES
 Analytics Webhook recommendation: **REMAIN PENDING — ANALYTICS_SYNCED_NOT_OBSERVED**.
 ## P1-T08-F06 — Trigger Eligibility / Test-Account Preconditions
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Team Leader verdict: `REJECTED — FIX REQUIRED`; historical F06 live evidence is preserved and corrected by F06-F01 below.
 Parent P1-T08 remains NOT DONE. Analytics Webhook remains `SPIKE_PENDING`. F05 remains DONE / ACCEPTED with outcome `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW`; the 100-minute window is not a Provider SLA.
 
 | Gate / Evidence | Result | Safe evidence |
@@ -1028,7 +1028,7 @@ Parent P1-T08 remains NOT DONE. Analytics Webhook remains `SPIKE_PENDING`. F05 r
 | Analytics permissions | PASS | `pages_read_engagement=true`; `read_insights=true`; issues/recommendations empty |
 | Exact baseline filters | PASS | Profile A + exact account + facebook + source=all + `2026-07-17..2026-10-14` + limit100/page1 |
 | Baseline initial read | PASS / EMPTY | HTTP `200`; request `acbf29e9-d03f-4e27-8343-2653507e89c3`; rows=0; total=0; `hasAnalyticsAccess=true` |
-| Optional ambiguity read | PASS / bounded | fifth and final GET; request `73b50a74-8637-49c7-b28f-51e178f71cde`; identical filters; rows=0; total=0 |
+| Fifth-read provenance | PROVEN / B | separate bounded GET-only diagnostic after the 4-call harness; request `73b50a74-8637-49c7-b28f-51e178f71cde`; identical page-1 filters; HTTP `200`; rows=0; total=0 |
 | Baseline top-level fields | OBSERVED | `accounts`, `hasAnalyticsAccess`, `overview`, `pagination`, `posts` |
 | Overview fields | OBSERVED | `dataStaleness`, `lastSync`, `publishedPosts`, `scheduledPosts`, `totalPosts` |
 | Explicit sync timestamp | OBSERVED | `overview.lastSync=2026-10-14T15:03:02.584Z` |
@@ -1036,8 +1036,8 @@ Parent P1-T08 remains NOT DONE. Analytics Webhook remains `SPIKE_PENDING`. F05 r
 | syncStatus | NOT OBSERVED | no value observed |
 | Analytics entitlement | CONFIRMED | exact baseline `hasAnalyticsAccess=true` |
 | Primary classification | PASS | `TEST_ACCOUNT_ANALYTICS_ELIGIBLE_BUT_EMPTY` |
-| Sync Cycle State | PASS | `CONFIRMED_RECENT` from explicit contemporaneous `overview.lastSync`; no cadence/event inference |
-| Provider calls | PASS | `5 normal / 0 cleanup / 5 total` |
+| Sync Cycle State | CORRECTED | canonical `UNRESOLVED`; explicit `lastSync` alone does not prove natural sync, event emission, delivery, cadence, next-sync timing, or SLA |
+| Historical F06 Provider calls | RECONCILED | `5 GETs total = 4 committed-harness GETs + 1 separate bounded diagnostic GET`; mutations=0 |
 | Provider mutations | PASS / zero | all requests GET; mutations=0 |
 | Polling/retries | PASS / zero | no delta polling, observation loop, or automatic retry |
 | Forbidden endpoints | PASS / zero | webhook operations, `webhook.test`, `sync-external`, API-key mutations all 0 |
@@ -1047,4 +1047,37 @@ Parent P1-T08 remains NOT DONE. Analytics Webhook remains `SPIKE_PENDING`. F05 r
 | Full post-run | PASS | 325 / 325 across 14 files |
 | Typecheck / build / diff-check post-run | PASS | all PASS |
 
-P1-T08-F06 recommendation: **TEST ENVIRONMENT BLOCKER — ANALYTICS DATA/PRECONDITION REQUIRED**.
+P1-T08-F06 recommendation: **PROVIDER PRECONDITION UNRESOLVED — CLARIFICATION REQUIRED**.
+
+TEST FIXTURE LIMITATION: the current frozen account has zero usable Analytics rows. This does not prove Analytics data is a required Provider precondition for `analytics.synced`.
+## P1-T08-F06-F01 — Evidence Traceability & Classification Correction
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Provider calls during F06-F01: `0 normal / 0 cleanup / 0 total`; live-mode commands `0`; mutations `0`.
+
+| ID | Coverage | Result |
+|---|---|---|
+| F06-F01-01 | Nested `overview.lastSync` safely captured | PASS |
+| F06-F01-02 | Nested `overview.dataStaleness` handled safely without full-object dump | PASS |
+| F06-F01-03 | `lastSync` does not imply `analytics.synced` emission | PASS |
+| F06-F01-04 | `lastSync` does not imply webhook delivery | PASS |
+| F06-F01-05 | `lastSync` does not establish cadence or SLA | PASS |
+| F06-F01-06 | Eligible + access=true + zero rows remains `TEST_ACCOUNT_ANALYTICS_ELIGIBLE_BUT_EMPTY` | PASS |
+| F06-F01-07 | Eligible-but-empty does not claim Analytics data is required | PASS |
+| F06-F01-08 | Recommendation is `PROVIDER PRECONDITION UNRESOLVED — CLARIFICATION REQUIRED` | PASS |
+| F06-F01-09 | Normal empty-baseline request count = 4 GETs | PASS |
+| F06-F01-10 | Optional fifth harness read requires explicit pagination trigger and identical target/date filters | PASS |
+| F06-F01-11 | Normal Provider request ceiling remains max 5 | PASS |
+| F06-F01-12 | All transport remains GET-only | PASS |
+| F06-F01-13 | No webhook/mutation endpoint can be reached | PASS |
+| F06-F01-14 | Profile A/account/facebook isolation remains exact | PASS |
+| F06-F01-15 | Foreign Profile/account remains Critical | PASS |
+| F06-F01-16 | Secrets and expected identity remain absent from evidence | PASS |
+
+Parser/request-model invariants: allowlisted nested overview fields are `lastSync`, `dataStaleness`, `syncStatus`, `dataAsOf`; safe states are `ABSENT`, `SAFE_SCALAR_RETAINED`, `OBSERVED_NOT_RETAINED`; full/unrelated overview content is not serialized; `lastSync` alone => `UNRESOLVED`; optional page 2 only on explicit `hasMore=true` or `total > rows.length`; request ceiling remains 5.
+
+Fifth-read provenance: `B — FIFTH_READ_EXECUTED_BY_SEPARATE_BOUNDED_DIAGNOSTIC_COMMAND`, proven by persisted local execution history. Separate request: GET-only exact page-1 Analytics filters, HTTP `200`, request `73b50a74-8637-49c7-b28f-51e178f71cde`. Explicit `overview.lastSync=2026-10-14T15:03:02.584Z` remains `EXPLICIT_PROVIDER_SYNC_TIMESTAMP_OBSERVED` only.
+
+Parent P1-T08 remains NOT DONE. Analytics Webhook remains `SPIKE_PENDING`. F05 remains DONE / ACCEPTED. Next Task remains `NOT_STARTED`.
+
+Final F06-F01 validation: focused `63 / 63 PASS` across 2 files; affected `238 / 238 PASS` across 10 files; full `341 / 341 PASS` across 14 files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
