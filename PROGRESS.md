@@ -366,7 +366,7 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
-**Status: IMPLEMENTED — PROVIDER LIVE VERIFICATION UNRESOLVED / AWAITING TEAM LEADER AUTHORIZATION**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
 
 Starting HEAD: `d2e12882b96d04395b92c944735ebf8bc860b211`.
 Implementation branch: `p1-t08-zernio-analytics-webhook`.
@@ -446,7 +446,28 @@ P1-T08-F02 recommendation: **INFRASTRUCTURE READINESS PROVEN**.
 P1-T08-F02 canonical state: **DONE / ACCEPTED**.
 Parent P1-T08 remains unresolved because no live `analytics.synced` Provider delivery has yet been verified. Analytics Webhook remains `SPIKE_PENDING`. Provider live run remains **UNCONSUMED**.
 
-P1-T08 recommendation: **Analytics Webhook recommendation: REMAIN PENDING - LIVE PROVIDER DELIVERY NOT YET VERIFIED**.
+### P1-T08-F03 live Provider verification
+**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
+
+- Approved starting HEAD: `747e78d365a7cc842089c5713295a6a1944e5cad`; branch `p1-t08-zernio-analytics-webhook`.
+- Permanent infrastructure sanity PASS before temporary setup: DNS resolved `marketlyai.restartorg.com -> 82.29.177.121`; TCP/443 PASS; trusted TLS PASS for CN/SAN `marketlyai.restartorg.com`; base HTTPS `404`; no clinic redirect/certificate regression.
+- Pre-Provider deterministic validation PASS: focused P1-T08 `24 / 24`; affected Provider-spike suites `199 / 199` across 9 files; full suite `302 / 302` across 13 files; typecheck PASS; build PASS; `git diff --check` PASS.
+- Temporary F03 path: `https://marketlyai.restartorg.com/p1-t08-f03/analytics-synced`; accepted reverse tunnel active; local port `18086` was clear before runner ownership.
+- Runner exact HTTPS readiness PASS before Provider calls: trusted TLS=true; HTTP `401`; receiver marker match=true; same-process confirmation=true; redirect=false; latency `887 ms`; timestamp `2026-10-14T00:42:43.411Z`.
+- First Provider request occurred during trusted identity preflight, so the single authorized F03 live run is **CONSUMED**. `/v1/auth/verify` returned HTTP `200`, exact identity match=true, safe request ID `a4d4a31c-bb9f-469e-a330-8a8a43c038be`, latency `616 ms`, evidence timestamp `2026-10-14T00:42:44.915Z`.
+- Webhook create was attempted exactly once: `POST /v1/webhooks/settings` returned HTTP `400`, safe request ID `211cf0c8-6751-4fbb-8e86-5475770e9ca8`; no webhook ID was returned, `webhook=null`, read-back did not start, and passive observation did not start.
+- Genuine implementation defect identified without rerun: the accepted runner constructs `aimm-p1-t08-analytics-synced-` (29 characters) plus a 24-character run tag, producing a 53-character webhook name, while the current Zernio create-webhook contract limits `name` to 1-50 characters. Root cause: `HARNESS_WEBHOOK_NAME_LENGTH_EXCEEDS_PROVIDER_LIMIT`.
+- Per F03 stop rule, the defect was not fixed and no second Provider run was attempted.
+- Provider requests: `2 normal / 0 cleanup / 2 total`. Provider cleanup was not applicable because create returned `400` and no webhook was created or identified.
+- External/public/social mutations: posts 0; publishing 0; media 0; Ads/spend 0; comments/DMs 0; OpenAI 0; fal.ai 0.
+- Infrastructure cleanup: human operator confirmed temporary F03 route removal and reverse-tunnel stop. Senior verification after cleanup: base HTTPS `404`, exact F03 path `404`, local port `18086` clear, no F03 Node runner process. Permanent marketlyai DNS/TLS/vhost repair remains intact.
+- No live `analytics.synced` delivery was observed because webhook creation failed before subscription creation; signature/target/ACK payload behavior therefore remains unverified live.
+- Post-run deterministic validation PASS after F03 evidence/docs update: focused P1-T08 24 / 24; affected Provider-spike suites 199 / 199 across 9 files; full suite 302 / 302 across 13 files; typecheck PASS; build PASS; git diff --check PASS.
+
+P1-T08-F03 recommendation: **Analytics Webhook recommendation: REMAIN PENDING — FIX/BLOCKER REQUIRED**.
+Parent P1-T08 remains **IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW** and is not DONE. Canonical Analytics Webhook remains `SPIKE_PENDING`. F03 live run is **CONSUMED** and no rerun is authorized.
+
+P1-T08 recommendation: **Analytics Webhook recommendation: REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 
 Canonical capability remains:
 - Analytics Webhook = `SPIKE_PENDING`.
@@ -476,4 +497,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Execution focus is restored to unresolved parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`. Senior Engineer does not call Zernio, does not call `/v1/auth/verify`, does not consume the still-unconsumed Provider live run, does not create a webhook or recreate receiver/tunnel/route infrastructure, does not start observation, does not change Analytics capability status, and does not start another Task without explicit Team Leader authorization. Next Task remains **NOT_STARTED**.
+Team Leader reviews the P1-T08-F03 live evidence and the genuine harness defect `HARNESS_WEBHOOK_NAME_LENGTH_EXCEEDS_PROVIDER_LIMIT`. Senior Engineer does not fix or rerun F03 automatically, does not call Zernio, does not recreate temporary receiver/tunnel/route infrastructure, does not change Analytics capability status, and does not start another Task without explicit Team Leader authorization. Next Task remains **NOT_STARTED**.

@@ -781,7 +781,7 @@ Canonical capability states remain:
 Non-empty live record/value shapes and explicit target-attribution fields on non-empty signals remain `UNVERIFIED`; minimum sample/data thresholds remain `UNVERIFIED`; formulas / weighting / confidence methods / detailed calculation semantics remain `PROVIDER_OPAQUE / UNVERIFIED`; natural HTTP 429 remains `NOT OBSERVED`. P1-T06 unresolved behaviors remain unchanged: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination not observed live; historical metric-record field shapes not observed because the valid baseline was empty; natural HTTP 429 not observed.
 ## P1-T08 - analytics.synced Webhook Behavior
 
-Status: `IMPLEMENTED — PROVIDER LIVE VERIFICATION UNRESOLVED / AWAITING TEAM LEADER AUTHORIZATION`.
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
 
 Automated deterministic suite: `tests/provider-spike/p1-t08.test.ts`.
 
@@ -894,3 +894,40 @@ P1-T08-F02 recommendation: **INFRASTRUCTURE READINESS PROVEN**.
 P1-T08-F02 canonical state: **DONE / ACCEPTED**.
 Analytics Webhook canonical state remains `SPIKE_PENDING`.
 Parent P1-T08 remains unresolved because no live `analytics.synced` Provider delivery has yet been verified. Provider live run remains **UNCONSUMED**.
+## P1-T08-F03 — Live analytics.synced Provider Verification
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`.
+Canonical Analytics Webhook remains `SPIKE_PENDING`.
+
+| Gate / Evidence | Result | Safe evidence |
+|---|---|---|
+| Approved starting HEAD | PASS | `747e78d365a7cc842089c5713295a6a1944e5cad` |
+| Permanent DNS/TCP/TLS sanity | PASS | marketlyai -> `82.29.177.121`; TCP/443; trusted marketlyai cert; no clinic regression |
+| Focused P1-T08 pre-run | PASS | `24 / 24` |
+| Affected Provider-spike pre-run | PASS | `199 / 199` across 9 files |
+| Full pre-run suite | PASS | `302 / 302` across 13 files |
+| Typecheck / build / diff-check pre-run | PASS | all PASS |
+| Temporary F03 route/tunnel | PASS | exact `/p1-t08-f03/analytics-synced`; tunnel listener established |
+| Runner exact readiness | PASS | TLS=true; HTTP `401`; marker=true; same-process=true; redirect=false; `887 ms` |
+| F03 live run | CONSUMED | first Provider request sent during identity preflight |
+| Trusted identity | PASS | HTTP `200`; exact match; request `a4d4a31c-bb9f-469e-a330-8a8a43c038be`; `616 ms` |
+| Webhook create | BLOCKED | exactly one POST; HTTP `400`; request `211cf0c8-6751-4fbb-8e86-5475770e9ca8` |
+| Webhook created | NO | no webhook ID; `webhook=null` |
+| Root cause | IMPLEMENTATION DEFECT | `HARNESS_WEBHOOK_NAME_LENGTH_EXCEEDS_PROVIDER_LIMIT`: 29-char prefix + 24-char run tag = 53 > Provider max 50 |
+| Webhook read-back | NOT RUN | create failed before webhook existed |
+| Passive observation | NOT RUN | subscription was not created |
+| analytics.synced observed | NO | observation never started |
+| Provider cleanup | NOT APPLICABLE | no webhook created/identified; `0` cleanup calls |
+| Provider calls | BOUNDED | `2 normal / 0 cleanup / 2 total` |
+| Temporary route cleanup | PASS / human-confirmed | F03 route removed; permanent vhost retained |
+| Reverse tunnel cleanup | PASS / human-confirmed | tunnel stopped |
+| Local receiver/process cleanup | PASS | port `18086` clear; no F03 Node runner |
+| Post-cleanup public sanity | PASS | base HTTPS `404`; F03 exact path `404`; no redirect |
+| Public/social/Ads/media/community mutation | PASS / zero | 0 |
+| Focused P1-T08 post-run | PASS | 24 / 24 |
+| Affected Provider-spike post-run | PASS | 199 / 199 across 9 files |
+| Full post-run suite | PASS | 302 / 302 across 13 files |
+| Typecheck / build / diff-check post-run | PASS | all PASS |
+
+Analytics Webhook recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
+No rerun is authorized under F03. Parent P1-T08 remains not DONE and awaits Team Leader re-review.
