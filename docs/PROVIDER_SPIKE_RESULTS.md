@@ -1279,3 +1279,73 @@ Post-run deterministic validation after F05 evidence/docs update: focused P1-T08
 
 Analytics Webhook recommendation: **REMAIN PENDING — ANALYTICS_SYNCED_NOT_OBSERVED**.
 Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**. F05 is **DONE / ACCEPTED** at accepted evidence HEAD `65b24386c73f564eb027b4830f025ec3d0d291f7`. No additional live attempt is authorized.
+## P1-T08-F06 — Determine analytics.synced Trigger Eligibility & Test-Account Preconditions
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Approved starting HEAD: `ac620616608a0b94f56c5cb2c7974127ad074028`.
+
+### DOC_CONFIRMED
+- `analytics.synced` remains documented as an Analytics webhook trigger, not metrics transport.
+- Metrics and cursor are not expected in the trigger itself; consumers use Analytics reads separately.
+- Documentation associates generation with a successful analytics sync cycle and describes an approximate poll-driven cadence. These are documentation statements only, not a Provider SLA or fixed F06-observed cadence.
+- Existing documentation ambiguity/drift around cursor wording remains preserved; live reads remain authoritative for observed response facts.
+- F05's `6000014 ms` / 100-minute observation remains bounded test evidence only and does not establish a Provider SLA, unsupported event, broken delivery, or minimum/maximum cadence.
+
+### F06 spike-only implementation / deterministic safety
+- Existing P1-T06/P1-T07 live runners create temporary scoped API keys and therefore could not be reused directly under F06's zero-mutation rule.
+- Added minimal F06-only diagnostic files under `src/provider-spike/*` plus F06 deterministic tests under `tests/provider-spike/*`; no production Analytics subsystem, DB, Redis, BullMQ, worker, reconciliation, or architecture change.
+- Transport is GET-only and fails closed before transport on mutation methods; normal request ceiling `5`; cleanup allowance `0`.
+- Deterministic regressions F06-01 through F06-13 cover offline default, identity gating, exact target, cross-Profile/wrong-platform critical handling, health/access eligibility, empty/data-bearing classifications, sync-state non-inference, request ceiling, mutation prohibition, and secret isolation.
+- Pre-Provider validation PASS: focused F06 + P1-T08 `47 / 47` across 2 files; affected Provider-spike `222 / 222` across 10 files; full suite `325 / 325` across 14 files; typecheck PASS; build PASS; `git diff --check` PASS.
+
+### LIVE_READ_OBSERVED
+Trusted identity:
+- HTTP `200`; exact expected identity match=true;
+- request ID `5cac1cab-dfcd-4477-bb65-8a74da70ee15`;
+- latency `779 ms`; evidence timestamp `2026-10-14T15:02:58.929Z`.
+
+Frozen target ownership:
+- account read HTTP `200`, request ID `bcd599a7-e345-4e28-a85c-335eb4ac4c5d`;
+- Profile `6ac5a45a8e4ca44f355033ae`;
+- account `6ac64f8740364f4695dd3077`;
+- platform `facebook`;
+- ownership exact=true;
+- account-list `hasAnalyticsAccess` was not returned as a boolean (`null`), so entitlement was not inferred from this response.
+
+Account health:
+- HTTP `200`, request ID `5fe3cc4c-fb4a-49b6-94e5-c8f4bbd3ff93`;
+- health status `healthy`;
+- token valid=true; token state field unobserved;
+- `canFetchAnalytics=true`;
+- analytics permissions: `pages_read_engagement=true`, `read_insights=true`;
+- issue categories=[]; recommendation categories=[].
+Health/permission readiness does not prove an `analytics.synced` event occurred.
+
+Exact Analytics baseline:
+- exact filters: `profileId=6ac5a45a8e4ca44f355033ae`, `accountId=6ac64f8740364f4695dd3077`, `platform=facebook`, `source=all`, `fromDate=2026-07-17`, `toDate=2026-10-14`, `limit=100`, `page=1`;
+- initial baseline HTTP `200`, request ID `acbf29e9-d03f-4e27-8343-2653507e89c3`;
+- rows=0; usable rows=0; pagination total=0; hasMore not exposed;
+- `hasAnalyticsAccess=true`;
+- safe top-level fields: `accounts`, `hasAnalyticsAccess`, `overview`, `pagination`, `posts`.
+
+The initial safe output exposed the existence of `overview` but did not retain its nested metadata, so the single contract-permitted optional ambiguity read repeated the identical exact baseline filters once. Optional read:
+- HTTP `200`, request ID `73b50a74-8637-49c7-b28f-51e178f71cde`;
+- rows=0; total=0; `hasAnalyticsAccess=true`;
+- overview fields: `dataStaleness`, `lastSync`, `publishedPosts`, `scheduledPosts`, `totalPosts`;
+- explicit `overview.lastSync=2026-10-14T15:03:02.584Z`;
+- `overview.dataStaleness` field was present but its nested value was intentionally not retained in safe evidence; no staleness meaning is inferred;
+- no `syncStatus` value was observed.
+
+Analytics entitlement: **`ANALYTICS_ACCESS_CONFIRMED`** from the exact baseline `hasAnalyticsAccess=true` field.
+Primary classification: **`TEST_ACCOUNT_ANALYTICS_ELIGIBLE_BUT_EMPTY`**.
+Sync Cycle State: **`CONFIRMED_RECENT`**, based only on the explicit Provider `overview.lastSync` timestamp contemporaneous with this diagnostic. This does not prove a natural/background sync trigger, `analytics.synced` emission, webhook delivery, next-sync timing, or cadence.
+
+Provider calls: `5 normal / 0 cleanup / 5 total`; every Provider call was GET; mutations `0`; retries `0`; polling loops `0`; webhook operations `0`; delta polling `0`; `webhook.test` `0`; `sync-external` `0`.
+External/public/social/media/community/Ads/spend/OpenAI/fal.ai actions: all `0`.
+
+Post-run deterministic validation after F06 live evidence/docs: focused F06 + P1-T08 `47 / 47 PASS` across 2 files; affected Provider-spike `222 / 222 PASS` across 10 files; full suite `325 / 325 PASS` across 14 files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+F05 evidence remains unchanged: `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW` and 100 minutes != Provider SLA.
+Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains **NOT DONE**. Next Task remains **NOT_STARTED**.
+
+P1-T08-F06 recommendation: **TEST ENVIRONMENT BLOCKER — ANALYTICS DATA/PRECONDITION REQUIRED**.

@@ -364,11 +364,11 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 ## Current Task
 
-`P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
+`P1-T08-F06 — Determine analytics.synced Trigger Eligibility & Test-Account Preconditions`
 
-**Status: UNRESOLVED / NOT DONE**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
 
-Execution focus is restored to parent P1-T08 after Team Leader acceptance of F05 execution/evidence quality. F05 is accepted, but parent P1-T08 remains unresolved because no natural `analytics.synced` delivery was observed.
+F06 completed one bounded read-only Provider diagnostic for the frozen Profile-A Facebook account. Parent P1-T08 remains **UNRESOLVED / NOT DONE** and Analytics Webhook remains `SPIKE_PENDING`.
 Parent P1-T08 original implementation starting HEAD: `d2e12882b96d04395b92c944735ebf8bc860b211`.
 Accepted F04 implementation HEAD: `b55bf0713090f5a729ac1f4688f79b692347ce96`.
 F05 approved starting HEAD: `6cc948b18d0902bf3a6455e4a652ef8ef845cb33`.
@@ -517,6 +517,29 @@ Team Leader verdict: **ACCEPTED** (F05 execution/evidence quality only; parent P
 
 Analytics Webhook recommendation: **REMAIN PENDING — ANALYTICS_SYNCED_NOT_OBSERVED**.
 Canonical Analytics Webhook remains `SPIKE_PENDING`. Parent P1-T08 is **UNRESOLVED / NOT DONE**. F03 remains historically **CONSUMED**; F05 is **CONSUMED**; no second F05 run is authorized.
+### P1-T08-F06 trigger eligibility / test-account precondition diagnostic
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+
+- Approved starting HEAD: `ac620616608a0b94f56c5cb2c7974127ad074028`; branch `p1-t08-zernio-analytics-webhook`.
+- F06 is read-only Provider diagnostic evidence only. No webhook/Nginx/SSH/receiver work, webhook operations, API-key creation/deletion, posts, sync-external, media, community, Ads/spend, account/Profile changes, analytics refresh mutation, OpenAI, or fal.ai actions occurred.
+- Existing P1-T06/P1-T07 runners could not be reused directly because their accepted live flows create temporary scoped API keys, which F06 expressly forbids. A minimal F06-only spike implementation was added under `src/provider-spike/*` with deterministic regressions under `tests/provider-spike/*`; no production subsystem or architecture change was introduced.
+- DOC_CONFIRMED remains separate from LIVE_READ_OBSERVED: `analytics.synced` is documented as an Analytics trigger, not metrics transport; metrics/cursor are not expected in the trigger; documentation associates it with a successful analytics sync cycle and describes an approximate poll-driven cadence. Those statements are documentation guidance, not F06-observed behavior or a Provider SLA; F05's 100-minute window remains bounded test evidence only.
+- Pre-Provider deterministic validation PASS after the F06-only implementation: focused F06 + P1-T08 `47 / 47` across 2 files; affected Provider-spike suites `222 / 222` across 10 files; full suite `325 / 325` across 14 files; typecheck PASS; build PASS; `git diff --check` PASS.
+- LIVE_READ_OBSERVED trusted identity: HTTP `200`, exact expected identity match=true, request ID `5cac1cab-dfcd-4477-bb65-8a74da70ee15`, latency `779 ms`, timestamp `2026-10-14T15:02:58.929Z`.
+- LIVE_READ_OBSERVED exact ownership: HTTP `200`, request ID `bcd599a7-e345-4e28-a85c-335eb4ac4c5d`; account `6ac64f8740364f4695dd3077` belongs exactly to Profile A `6ac5a45a8e4ca44f355033ae`, platform `facebook`; account-list `hasAnalyticsAccess` field was not observed (`null`) and was not inferred.
+- LIVE_READ_OBSERVED account health: HTTP `200`, request ID `5fe3cc4c-fb4a-49b6-94e5-c8f4bbd3ff93`; status `healthy`; token valid=true; token state field unobserved; `canFetchAnalytics=true`; analytics permissions `pages_read_engagement=true` and `read_insights=true`; issue categories=[]; recommendation categories=[]. Health readiness is not evidence that `analytics.synced` was emitted.
+- LIVE_READ_OBSERVED exact analytics baseline filters: Profile A only, account `6ac64f8740364f4695dd3077`, platform `facebook`, source `all`, `fromDate=2026-07-17`, `toDate=2026-10-14`, `limit=100`, page 1. HTTP `200`, request ID `acbf29e9-d03f-4e27-8343-2653507e89c3`; rows=0; usable rows=0; total=0; hasMore not exposed; `hasAnalyticsAccess=true`.
+- Baseline top-level fields: `accounts`, `hasAnalyticsAccess`, `overview`, `pagination`, `posts`. Because `overview` was present but the first safe output did not retain its nested metadata, F06 used the one permitted optional ambiguity read with the identical exact filters. Optional read HTTP `200`, request ID `73b50a74-8637-49c7-b28f-51e178f71cde`; rows remained 0; total remained 0; `hasAnalyticsAccess=true`.
+- Optional safe overview evidence: fields `dataStaleness`, `lastSync`, `publishedPosts`, `scheduledPosts`, `totalPosts`; explicit `overview.lastSync=2026-10-14T15:03:02.584Z`. `overview.dataStaleness` was present but its nested value was not retained in safe evidence, so no staleness semantics are inferred. No `syncStatus` value was observed.
+- Analytics entitlement classification: `ANALYTICS_ACCESS_CONFIRMED` from the exact baseline response (`hasAnalyticsAccess=true`).
+- Primary classification: **`TEST_ACCOUNT_ANALYTICS_ELIGIBLE_BUT_EMPTY`**. Connection/permission/access evidence is positive, while the exact 90-day baseline contains zero usable analytics rows/data-bearing records.
+- Sync Cycle State: **`CONFIRMED_RECENT`** based only on the explicit Provider `overview.lastSync` timestamp contemporaneous with this bounded diagnostic. This does not prove a natural/background trigger cycle, does not prove webhook emission, and does not establish any cadence or SLA.
+- Provider calls: `5 normal / 0 cleanup / 5 total`; all were GET reads; mutations=0; no retries, polling loops, delta observation, `webhook.test`, or `sync-external` call occurred.
+- F05 history is unchanged: `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW`; F05 remains DONE / ACCEPTED and its 100-minute window is not a Provider SLA.
+- Post-run validation PASS after F06 live evidence/docs: focused F06 + P1-T08 47 / 47 across 2 files; affected Provider-spike 222 / 222 across 10 files; full suite 325 / 325 across 14 files; typecheck PASS; build PASS; git diff --check PASS.
+
+P1-T08-F06 recommendation: **TEST ENVIRONMENT BLOCKER — ANALYTICS DATA/PRECONDITION REQUIRED**.
+Parent P1-T08 remains **NOT DONE**. Canonical Analytics Webhook remains `SPIKE_PENDING`. No additional webhook run is authorized. Next Task remains **NOT_STARTED**.
 Canonical capability remains:
 - Analytics Webhook = `SPIKE_PENDING`.
 
@@ -545,4 +568,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Execution focus is restored to unresolved parent P1-T08 after P1-T08-F05 acceptance. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; F03 and F05 live runs are **CONSUMED**. No additional live attempt is authorized. Senior Engineer does not call Zernio, recreate temporary webhook infrastructure, promote Analytics Webhook, close parent P1-T08, or start another Task without explicit Team Leader authorization. Next Task remains **NOT_STARTED**.
+Team Leader reviews P1-T08-F06 read-only trigger-precondition evidence. F06 is **IMPLEMENTED — AWAITING TEAM LEADER REVIEW**; parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; F03 and F05 live runs remain **CONSUMED**. No additional webhook attempt or other Task is authorized. Next Task remains **NOT_STARTED**.

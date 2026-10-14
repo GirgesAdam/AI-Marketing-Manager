@@ -1007,3 +1007,44 @@ Canonical Analytics Webhook remains `SPIKE_PENDING`; parent P1-T08 remains UNRES
 | Typecheck / build / diff-check post-run | PASS | all PASS |
 
 Analytics Webhook recommendation: **REMAIN PENDING — ANALYTICS_SYNCED_NOT_OBSERVED**.
+## P1-T08-F06 — Trigger Eligibility / Test-Account Preconditions
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Parent P1-T08 remains NOT DONE. Analytics Webhook remains `SPIKE_PENDING`. F05 remains DONE / ACCEPTED with outcome `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW`; the 100-minute window is not a Provider SLA.
+
+| Gate / Evidence | Result | Safe evidence |
+|---|---|---|
+| Approved starting HEAD | PASS | `ac620616608a0b94f56c5cb2c7974127ad074028` |
+| F06 task type | PASS | read-only Provider diagnostic; no webhook infrastructure |
+| F06-01..F06-13 | PASS | deterministic safety/classification regressions |
+| Focused pre-Provider | PASS | `47 / 47` across 2 files |
+| Affected pre-Provider | PASS | `222 / 222` across 10 files |
+| Full pre-Provider | PASS | `325 / 325` across 14 files |
+| Typecheck / build / diff-check pre-Provider | PASS | all PASS |
+| Trusted identity | PASS | HTTP `200`; exact match; request `5cac1cab-dfcd-4477-bb65-8a74da70ee15` |
+| Exact ownership | PASS | Profile A `6ac5a45a8e4ca44f355033ae`; account `6ac64f8740364f4695dd3077`; `facebook`; request `bcd599a7-e345-4e28-a85c-335eb4ac4c5d` |
+| Account-list analytics entitlement | FIELD UNOBSERVED | `hasAnalyticsAccess=null`; no inference from account read |
+| Account health | PASS | HTTP `200`; `healthy`; token valid=true; `canFetchAnalytics=true`; request `5fe3cc4c-fb4a-49b6-94e5-c8f4bbd3ff93` |
+| Analytics permissions | PASS | `pages_read_engagement=true`; `read_insights=true`; issues/recommendations empty |
+| Exact baseline filters | PASS | Profile A + exact account + facebook + source=all + `2026-07-17..2026-10-14` + limit100/page1 |
+| Baseline initial read | PASS / EMPTY | HTTP `200`; request `acbf29e9-d03f-4e27-8343-2653507e89c3`; rows=0; total=0; `hasAnalyticsAccess=true` |
+| Optional ambiguity read | PASS / bounded | fifth and final GET; request `73b50a74-8637-49c7-b28f-51e178f71cde`; identical filters; rows=0; total=0 |
+| Baseline top-level fields | OBSERVED | `accounts`, `hasAnalyticsAccess`, `overview`, `pagination`, `posts` |
+| Overview fields | OBSERVED | `dataStaleness`, `lastSync`, `publishedPosts`, `scheduledPosts`, `totalPosts` |
+| Explicit sync timestamp | OBSERVED | `overview.lastSync=2026-10-14T15:03:02.584Z` |
+| dataStaleness value | NOT RETAINED / NO INFERENCE | field present; nested value not retained in safe evidence |
+| syncStatus | NOT OBSERVED | no value observed |
+| Analytics entitlement | CONFIRMED | exact baseline `hasAnalyticsAccess=true` |
+| Primary classification | PASS | `TEST_ACCOUNT_ANALYTICS_ELIGIBLE_BUT_EMPTY` |
+| Sync Cycle State | PASS | `CONFIRMED_RECENT` from explicit contemporaneous `overview.lastSync`; no cadence/event inference |
+| Provider calls | PASS | `5 normal / 0 cleanup / 5 total` |
+| Provider mutations | PASS / zero | all requests GET; mutations=0 |
+| Polling/retries | PASS / zero | no delta polling, observation loop, or automatic retry |
+| Forbidden endpoints | PASS / zero | webhook operations, `webhook.test`, `sync-external`, API-key mutations all 0 |
+| External actions | PASS / zero | posts/media/community/Ads/spend/account changes/OpenAI/fal.ai all 0 |
+| Focused post-run | PASS | 47 / 47 across 2 files |
+| Affected post-run | PASS | 222 / 222 across 10 files |
+| Full post-run | PASS | 325 / 325 across 14 files |
+| Typecheck / build / diff-check post-run | PASS | all PASS |
+
+P1-T08-F06 recommendation: **TEST ENVIRONMENT BLOCKER — ANALYTICS DATA/PRECONDITION REQUIRED**.
