@@ -1177,3 +1177,47 @@ No live payload was observed, so live signature/ID/target attribution/ACK behavi
 
 Analytics Webhook recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 maximum state is **`IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW`**. F03 live run is **CONSUMED**; no second F03 run is authorized.
+## P1-T08-F04 — Webhook Name Length Safety
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Approved starting HEAD: `f34456ecb16ea67040a2a5d8948eda7d7729ae53`.
+
+This is implementation/regression evidence only. It does not establish new live Provider behavior.
+
+Root cause from F03 remains `HARNESS_WEBHOOK_NAME_LENGTH_EXCEEDS_PROVIDER_LIMIT`: accepted prefix length `29` plus the live 24-character run tag produced `53`, while the documented Provider maximum is `50`. F03 live run remains **CONSUMED**.
+
+F04 fixes the defect at the construction boundary used by `runP1T08`:
+- one deterministic `buildP1T08WebhookName` builder/guard;
+- recognizable prefix preserved as `aimm-p1-t08-analytics-synced-`;
+- maximum name length encoded as `50`;
+- existing allowed-character sanitization preserved;
+- suffix capacity derived as `50 - 29 = 21`;
+- sanitized suffix truncated to that derived capacity;
+- final bounds guarded before create transport; invalid internal construction fails closed.
+
+Deterministic offline builder evidence:
+- exact 24-character prior live-shape tag: final name length `50`;
+- 200-character overlong synthetic tag: final name length `50`;
+- no Provider request was made to obtain these values.
+
+Safety invariants preserved:
+- Profile scope exactly Profile A only;
+- event scope exactly `analytics.synced` only;
+- exact receiver URL unchanged;
+- trusted identity gate, request ceilings, read-back validation, cleanup, signature verification, target attribution, and passive observation logic unchanged;
+- configured API key, expected identity, and webhook secret are absent from generated name/evidence.
+
+Regression evidence:
+- existing T08-06 strengthened to require correct prefix and `name.length <= 50`;
+- F04-01 through F04-10 added, including the prior 24-character live shape, overlong pre-transport capping, create-body name verification, Profile/event/URL preservation, and secret-leakage checks;
+- focused P1-T08: `34 / 34 PASS`;
+- affected Provider-spike suites: `209 / 209 PASS` across 9 files;
+- full suite: `312 / 312 PASS` across 13 files;
+- `npm run typecheck`: PASS;
+- `npm run build`: PASS;
+- `git diff --check`: PASS.
+
+F04 Provider activity: `0 normal / 0 cleanup / 0 total`; webhook mutations `0`; analytics requests `0`; live Provider run `NOT AUTHORIZED`. No receiver/tunnel/Nginx/TLS work occurred.
+
+P1-T08-F04 recommendation: **ACCEPT CODE FIX**.
+Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains **NOT DONE**. F03 live run remains **CONSUMED**.

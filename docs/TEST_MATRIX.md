@@ -931,3 +931,36 @@ Canonical Analytics Webhook remains `SPIKE_PENDING`.
 
 Analytics Webhook recommendation: **REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 No rerun is authorized under F03. Parent P1-T08 remains not DONE and awaits Team Leader re-review.
+## P1-T08-F04 — Webhook Name Length Safety
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Canonical Analytics Webhook remains `SPIKE_PENDING`; parent P1-T08 remains NOT DONE; F03 live run remains CONSUMED.
+
+| Gate / Regression | Result | Evidence |
+|---|---|---|
+| Root cause | FIXED IN CODE | `HARNESS_WEBHOOK_NAME_LENGTH_EXCEEDS_PROVIDER_LIMIT`; previous `29 + 24 = 53`, Provider max `50` |
+| Construction boundary | PASS | `runP1T08` uses one deterministic builder/guard before webhook create transport |
+| F04-01 24-char live-shape tag | PASS | generated name length `50` |
+| F04-02 previous 53-char construction | PASS | no longer `53`; now `50` |
+| F04-03 overlong tag cap | PASS | 200-char tag capped pre-transport; generated name length `50` |
+| F04-04 prefix preserved | PASS | `aimm-p1-t08-analytics-synced-` |
+| F04-05 create request name | PASS | mock create transport receives builder-produced Provider-safe name |
+| F04-06 Provider bounds | PASS | deterministic names satisfy `1 <= length <= 50` |
+| F04-07 Profile scope | PASS | exactly Profile A only |
+| F04-08 event scope | PASS | exactly `analytics.synced` only |
+| F04-09 receiver URL | PASS | exact URL unchanged |
+| F04-10 secret isolation | PASS | API credential / expected identity / webhook secret absent from name/evidence |
+| T08-06 strengthened | PASS | validates prefix + Provider max length |
+| Focused P1-T08 | PASS | `34 / 34` |
+| Affected Provider-spike | PASS | `209 / 209` across 9 files |
+| Full suite | PASS | `312 / 312` across 13 files |
+| Typecheck | PASS | `npm run typecheck` |
+| Build | PASS | `npm run build` |
+| Diff check | PASS | `git diff --check` |
+| Zernio normal calls | PASS / zero | `0` |
+| Zernio cleanup calls | PASS / zero | `0` |
+| Webhook mutations | PASS / zero | `0` |
+| Live Provider execution | NOT AUTHORIZED | no F04 live-run allowance |
+| Infrastructure changes | PASS / zero | no Nginx, SSH tunnel, TLS, or live receiver work |
+
+P1-T08-F04 recommendation: **ACCEPT CODE FIX**.

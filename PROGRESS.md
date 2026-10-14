@@ -364,11 +364,13 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 ## Current Task
 
-`P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
+`P1-T08-F04 — Fix Webhook Name Length Safety`
 
-**Status: IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
 
-Starting HEAD: `d2e12882b96d04395b92c944735ebf8bc860b211`.
+Parent Task: `P1-T08 — Verify Zernio analytics.synced Webhook Behavior` — **NOT DONE**.
+Parent P1-T08 original implementation starting HEAD: `d2e12882b96d04395b92c944735ebf8bc860b211`.
+F04 approved starting HEAD: `f34456ecb16ea67040a2a5d8948eda7d7729ae53`.
 Implementation branch: `p1-t08-zernio-analytics-webhook`.
 
 ### P1-T08 Provider contract discovery - DOC_CONFIRMED
@@ -467,6 +469,22 @@ Parent P1-T08 remains unresolved because no live `analytics.synced` Provider del
 P1-T08-F03 recommendation: **Analytics Webhook recommendation: REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 Parent P1-T08 remains **IMPLEMENTED — AWAITING TEAM LEADER RE-REVIEW** and is not DONE. Canonical Analytics Webhook remains `SPIKE_PENDING`. F03 live run is **CONSUMED** and no rerun is authorized.
 
+### P1-T08-F04 webhook-name length safety fix
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+
+- Approved starting HEAD: `f34456ecb16ea67040a2a5d8948eda7d7729ae53`; branch `p1-t08-zernio-analytics-webhook`.
+- Root cause preserved from F03: `HARNESS_WEBHOOK_NAME_LENGTH_EXCEEDS_PROVIDER_LIMIT`; previous prefix length `29` + live run-tag length `24` = `53`, exceeding Provider maximum `50`.
+- Fix implemented at the `runP1T08` name-construction boundary through one deterministic `buildP1T08WebhookName` builder/guard. It preserves the existing prefix and allowed-character sanitization, derives suffix capacity from the Provider max, caps the sanitized suffix, and fails closed before webhook create transport if construction is outside Provider bounds.
+- Constants: `P1_T08_WEBHOOK_NAME_PREFIX='aimm-p1-t08-analytics-synced-'`; `P1_T08_WEBHOOK_NAME_MAX_LENGTH=50`; allowed suffix length `21`.
+- Deterministic offline compiled-builder evidence: 24-character live-shape tag -> final name length `50`; 200-character overlong tag -> final name length `50`.
+- Safety invariants preserved: Profile A only; event exactly `analytics.synced`; receiver URL unchanged; trusted identity gate, request ceilings, read-back, cleanup, receiver signature behavior, target attribution, and passive observation behavior unchanged; credential/API key/expected identity/webhook secret absent from generated name/evidence.
+- T08-06 now validates recognizable prefix plus Provider-safe max length. Added F04-01 through F04-10 deterministic regressions, including pre-transport create-body validation.
+- Validation PASS: focused `34 / 34`; affected `209 / 209` across 9 files; full `312 / 312` across 13 files; typecheck PASS; build PASS; `git diff --check` PASS.
+- F04 Provider activity: Zernio normal calls `0`; cleanup calls `0`; webhook mutations `0`; analytics requests `0`; live run **NOT AUTHORIZED**. No Nginx/SSH/TLS/receiver work occurred.
+- F03 history is unchanged: F03 live run remains **CONSUMED** and no live `analytics.synced` delivery was proven.
+
+P1-T08-F04 recommendation: **ACCEPT CODE FIX**.
+Canonical Analytics Webhook remains `SPIKE_PENDING`. Parent P1-T08 remains **NOT DONE**.
 P1-T08 recommendation: **Analytics Webhook recommendation: REMAIN PENDING — FIX/BLOCKER REQUIRED**.
 
 Canonical capability remains:
@@ -497,4 +515,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader reviews the P1-T08-F03 live evidence and the genuine harness defect `HARNESS_WEBHOOK_NAME_LENGTH_EXCEEDS_PROVIDER_LIMIT`. Senior Engineer does not fix or rerun F03 automatically, does not call Zernio, does not recreate temporary receiver/tunnel/route infrastructure, does not change Analytics capability status, and does not start another Task without explicit Team Leader authorization. Next Task remains **NOT_STARTED**.
+Team Leader reviews P1-T08-F04 implementation/regression evidence. Senior Engineer does not call Zernio, does not rerun live Provider verification, does not recreate temporary webhook infrastructure, does not promote Analytics Webhook, and does not start another Task without explicit Team Leader authorization. F03 live run remains **CONSUMED**. Next Task remains **NOT_STARTED**.
