@@ -1088,13 +1088,14 @@ Final F06-F01 validation: focused `63 / 63 PASS` across 2 files; affected `238 /
 
 ## P1-T08-F07 — Stale Analytics Refresh Correlation
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
-Parent P1-T08 remains NOT DONE. Analytics Webhook remains `SPIKE_PENDING`. F07 live run is CONSUMED.
+Status: `DONE / ACCEPTED`.
+Accepted implementation/evidence HEAD: `699ea01911814119b7316a3acaf002ee96d08b59`.
+Parent P1-T08 remains `UNRESOLVED / NOT DONE`. Analytics Webhook remains `SPIKE_PENDING`. F07 live run remains `CONSUMED`.
 
 | Gate / Evidence | Result | Safe evidence |
 |---|---|---|
 | Approved starting HEAD | PASS | `0e7799d254d2d780ba293f454775853042aa8fe9` |
-| Stale-window timing gate | PASS | historical `15:03:02.584Z`; consumed-run elapsed `4784323 ms` >= `4500000 ms` |
+| Stale-window timing gate | PASS | historical `15:03:02.584Z`; consumed-run elapsed `4784323 ms` >= `4500000 ms`; 75-minute gate is test setup only, not Provider SLA |
 | Permanent DNS/TLS sanity | PASS | `82.29.177.121`; trusted TLS; base `404`; no redirect |
 | Focused pre-live | PASS | `57 / 57` across 2 files |
 | Affected pre-live | PASS | `261 / 261` across 11 files |
@@ -1111,7 +1112,7 @@ Parent P1-T08 remains NOT DONE. Analytics Webhook remains `SPIKE_PENDING`. F07 l
 | Trigger rows/access | OBSERVED | rows `0`; `hasAnalyticsAccess=true` |
 | Trigger `lastSync` | NOT ADVANCED | `2026-10-14T15:03:02.584Z`; classification `REFRESH_NOT_YET_CONFIRMED` |
 | Trigger safe sync metadata | SAFE | `dataStaleness` field observed/value not retained; `syncStatus` absent |
-| Passive observation | PASS / NO EVENT | `1800010 ms`; inbound `0`; unique `0`; no polling |
+| Passive observation | PASS / NO EVENT | `1800010 ms`; inbound `0`; unique `0`; no polling; 30-minute window is bounded experiment evidence only, not Provider SLA |
 | Follow-up Analytics GET | PASS | exactly one; HTTP `200`; request `1762a144-18dc-41a6-9a3e-2482adda0ddb` |
 | Follow-up `lastSync` | NOT ADVANCED | unchanged `2026-10-14T15:03:02.584Z`; refresh advanced=false |
 | Live analytics.synced delivery | NOT OBSERVED | signature/ID/target payload/ACK contract remains unverified live |
@@ -1125,4 +1126,7 @@ Parent P1-T08 remains NOT DONE. Analytics Webhook remains `SPIKE_PENDING`. F07 l
 
 Required F07 regressions F07-01 through F07-21 are implemented and pass; additional fail-closed coverage verifies unexpected event delivery handling and trigger classification variants.
 
+Accepted interpretation: no refresh was confirmed; no `analytics.synced` delivery was observed; neither Provider support nor Provider failure was established by F07. Do not promote deterministic signature/ID/target/ACK checks into live Provider facts.
+
 Analytics Webhook recommendation: **REMAIN PENDING — REFRESH CORRELATION INCONCLUSIVE**.
+Current Task / execution focus is parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, which remains `UNRESOLVED / NOT DONE`. Analytics Webhook remains `SPIKE_PENDING`. Next Task remains `NOT_STARTED`.

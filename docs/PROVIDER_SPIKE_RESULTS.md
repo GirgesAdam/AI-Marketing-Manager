@@ -1380,7 +1380,9 @@ Approved starting HEAD: `641305e681743460294e87accade082c7374f7d3`.
 
 ## P1-T08-F07 — Correlate analytics.synced With Documented Stale Analytics Refresh
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Status: `DONE / ACCEPTED`.
+Accepted implementation/evidence HEAD: `699ea01911814119b7316a3acaf002ee96d08b59`.
+Team Leader verdict: `ACCEPTED` for F07 implementation/evidence only; parent P1-T08 is not accepted or closed.
 Approved starting HEAD: `0e7799d254d2d780ba293f454775853042aa8fe9`.
 Branch: `p1-t08-zernio-analytics-webhook`.
 
@@ -1392,7 +1394,7 @@ Branch: `p1-t08-zernio-analytics-webhook`.
 - The 60-minute cache statement and F07's 30-minute observation are not Provider webhook SLAs.
 
 ### LIVE_PROVIDER_OBSERVED
-Timing gate: historical `lastSync=2026-10-14T15:03:02.584Z`; consumed-run gate evaluated `2026-10-14T16:22:46.907Z`; elapsed `4784323 ms`; required `4500000 ms`; PASS.
+Timing gate: historical `lastSync=2026-10-14T15:03:02.584Z`; consumed-run gate evaluated `2026-10-14T16:22:46.907Z`; elapsed `4784323 ms`; required `4500000 ms`; PASS. The 75-minute gate is a conservative test setup rule only and is **not** a Provider SLA.
 
 Initial credential-loading attempt reached readiness but made `0` Zernio calls and did not consume authorization. The consumed run used the same runner after loading existing authorized project credential names without copying or exposing values.
 
@@ -1403,7 +1405,7 @@ Webhook: ID `6acfac57250f5349a8d336ee`; name `aimm-p1-t08-analytics-synced-dee19
 
 Trigger Analytics GET: requested `2026-10-14T16:22:47.865Z`; HTTP `200`; request `2bb1bd75-b08e-4311-b420-07220d5b329a`; exact Profile `6ac5a45a8e4ca44f355033ae`, account `6ac64f8740364f4695dd3077`, platform `facebook`, source `all`, `fromDate=2026-07-17`, `toDate=2026-10-14`, `limit=100`, `page=1`; rows=0; `hasAnalyticsAccess=true`; top-level fields `accounts`, `hasAnalyticsAccess`, `overview`, `pagination`, `posts`; overview fields `lastSync`, `dataStaleness`; `lastSync=2026-10-14T15:03:02.584Z`; `dataStaleness` present but value `OBSERVED_NOT_RETAINED`; `syncStatus` absent; trigger classification `REFRESH_NOT_YET_CONFIRMED`.
 
-Passive observation: start `2026-10-14T16:22:48.090Z`; end `2026-10-14T16:52:48.100Z`; duration `1800010 ms`; inbound deliveries=0; logical unique events=0; no Provider polling during the window.
+Passive observation: start `2026-10-14T16:22:48.090Z`; end `2026-10-14T16:52:48.100Z`; duration `1800010 ms`; inbound deliveries=0; logical unique events=0; no Provider polling during the window. The 30-minute observation is bounded experiment evidence only and is **not** a Provider SLA.
 
 Follow-up Analytics GET: requested `2026-10-14T16:52:48.100Z`; HTTP `200`; request `1762a144-18dc-41a6-9a3e-2482adda0ddb`; same exact filters; rows=0; `hasAnalyticsAccess=true`; `lastSync=2026-10-14T15:03:02.584Z`; `dataStaleness` value not retained; `syncStatus` absent; refresh advanced=false.
 
@@ -1415,10 +1417,10 @@ External actions: all zero for posts/publishing/schedules/media/comments/DMs/nat
 Infrastructure cleanup verified: local/VPS port `18086` clear; reverse tunnel stopped; exact F07 Nginx route absent; temporary F07 backups absent; exact public F07 path `404`; permanent trusted DNS/TLS/vhost preserved.
 
 ### INTERNAL_CORRELATION_CLASSIFICATION
-Outcome: **C — `REFRESH_NOT_CONFIRMED_EVENT_NOT_OBSERVED`**. No event arrived and explicit Provider evidence did not prove a refresh occurred. Do not infer that `analytics.synced` is unsupported/broken, that the trigger GET definitely did or did not cause a background refresh, or any webhook cadence/SLA.
+Outcome: **C — `REFRESH_NOT_CONFIRMED_EVENT_NOT_OBSERVED`**. No refresh was confirmed and no `analytics.synced` delivery was observed. Do not infer that `analytics.synced` is supported or unsupported/broken, that the trigger GET definitely did or did not cause a background refresh, or any webhook cadence/SLA. Neither Provider support nor Provider failure was established by F07.
 
 Pre-live deterministic validation: focused F07 + P1-T08 `57 / 57` across 2 files; affected Provider-spike `261 / 261` across 11 files; full suite `364 / 364` across 15 files; typecheck/build/diff-check PASS.
 Post-run deterministic validation PASS: focused F07 + P1-T08 `57 / 57` across 2 files; affected Provider-spike `261 / 261` across 11 files; full suite `364 / 364` across 15 files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
 
 Analytics Webhook recommendation: **REMAIN PENDING — REFRESH CORRELATION INCONCLUSIVE**.
-Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains **NOT DONE**. Next Task remains **NOT_STARTED**. F07 live authorization is **CONSUMED**; no second F07 run is authorized.
+Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**. F07 live run remains **CONSUMED**; no second F07 run is authorized. Current Task / execution focus is restored to parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`. Next Task remains **NOT_STARTED**.
