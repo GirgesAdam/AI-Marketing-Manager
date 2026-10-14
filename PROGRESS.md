@@ -364,12 +364,25 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 ## Current Task
 
-`P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
+`P1-T08-F09-S01 - Establish Authorized MarketlyAI Provider-Communication Sender`
 
-**Status: UNRESOLVED / NOT DONE**
+**Status: BLOCKED - DNS ACCESS REQUIRED**
 
-P1-T08-F08 is **DONE / ACCEPTED** at accepted evidence HEAD `bb56de898472b2e904345ca5eaf4686b0bafd83e`. Final classification remains **PROVIDER_CLARIFICATION_REQUIRED**. Recommendation remains **DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION**, but Provider contact is **NOT AUTHORIZED / NOT PERFORMED**. Clarification packet remains **PREPARED / NOT SENT**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F07 remains **DONE / ACCEPTED** with live run **CONSUMED**; Next Task remains **NOT_STARTED**.
+P1-T08-F09 remains **BLOCKED BEFORE SEND - SENDER IDENTITY SETUP**. Provider contact is **AUTHORIZED / NOT SENT**. Clarification packet remains **PREPARED / NOT SENT**. Provider reply is **NOT APPLICABLE YET**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
 
+### P1-T08-F09-S01 MarketlyAI sender / reply readiness
+- Approved starting HEAD: `a3f9dfebb5b2c8c0e618fe176d57849c416d4cd3`; branch `p1-t08-zernio-analytics-webhook`; starting tree clean.
+- Target identity is fixed to `MarketlyAI Engineering <engineering@marketlyai.restartorg.com>`; Linka/TIA/personal/no-reply identities were not used.
+- Initial Resend inspection showed no MarketlyAI domain and no configured Resend inboxes. Existing unrelated Resend domains remain untouched.
+- A dedicated Resend domain configuration was created for `marketlyai.restartorg.com` in `eu-west-1`, safe domain ID `64833ad6-63a9-4fd7-8a00-8c1d3f4edd8d`, with sending+receiving enabled, open/click tracking disabled, and enforced TLS requested.
+- Resend read-back state is `not_started`; required DNS categories are DKIM TXT, SPF return-path MX/TXT/CNAME, and receiving MX. No DNS value was guessed or copied from another project.
+- Pre-change public DNS: nameservers `ns1.dns-parking.com` / `ns2.dns-parking.com`; `marketlyai.restartorg.com` A = `82.29.177.121`; no existing MarketlyAI MX/TXT/CNAME answer was present. Existing HTTPS remained healthy at the hostname with trusted TLS, no redirect, and expected base HTTP `404`.
+- No authorized Hostinger/DNS credential, CLI, environment binding, or project DNS configuration was available on the authorized device. Therefore no public DNS record was added, deleted, or changed.
+- Domain verification is not proven; `engineering@marketlyai.restartorg.com` is not yet proven accepted for outbound sending; direct inbound reply routing is not yet proven. No inbox was created because the required receiving-domain DNS cannot be verified without DNS access.
+- Optional internal routing test: NOT PERFORMED; outbound internal test count `0`.
+- Zernio/Provider communication: `0`; Zernio API calls: `0`; Provider API calls: `0`; support tickets: `0`.
+- Source/test/package changes: ZERO. This task is configuration + evidence only.
+- Final S01 classification: **MARKETLYAI_SENDER_BLOCKED - DNS ACCESS REQUIRED**.
 ### P1-T08 Provider contract discovery - DOC_CONFIRMED
 - Current Zernio Analytics Webhooks documentation identifies `analytics.synced` as the Analytics sync event.
 - Current request-body schema requires top-level `id`, `event`, `account`, `sync`, and `timestamp`; optional top-level fields include `profiles` and `test`.
@@ -633,4 +646,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader verifies P1-T08-F08 documentation finalization. P1-T08-F08 is **DONE / ACCEPTED** at accepted evidence HEAD `bb56de898472b2e904345ca5eaf4686b0bafd83e`; final classification remains **PROVIDER_CLARIFICATION_REQUIRED**; recommendation remains **DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION** and is **NOT AUTHORIZED FOR EXECUTION**; clarification packet remains **PREPARED / NOT SENT**. Current execution focus is restored to parent P1-T08, which remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; no Provider contact, capability promotion, Community/Analytics follow-on, or next Task is authorized. Next Task remains **NOT_STARTED**.
+S01 is blocked at **MARKETLYAI_SENDER_BLOCKED - DNS ACCESS REQUIRED** after creating the dedicated Resend domain configuration but before any public DNS change or email send. Team Leader reviews the S01 evidence. P1-T08-F09 remains **BLOCKED BEFORE SEND - SENDER IDENTITY SETUP**; Provider contact is **AUTHORIZED / NOT SENT**; clarification packet is **PREPARED / NOT SENT**; Provider reply is **NOT APPLICABLE YET**; parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**. No Zernio contact, internal routing test, capability promotion, or next task is authorized by S01.

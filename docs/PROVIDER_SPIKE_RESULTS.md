@@ -1528,3 +1528,29 @@ Material trigger/precondition questions remain undocumented or ambiguous. Curren
 **P1-T08-F08 recommendation: DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION**
 
 The packet above is **PREPARED / NOT SENT**; F08 did **not** contact the Provider. Current Task / execution focus is restored to parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, which remains **UNRESOLVED / NOT DONE**. F07 remains **DONE / ACCEPTED** with live run **CONSUMED**; Analytics Webhook remains `SPIKE_PENDING`; Current Phase remains `PHASE 1 — Provider Feasibility & Basic Cost Safety`; Next Task remains **NOT_STARTED**.
+
+
+## P1-T08-F09-S01 - Establish Authorized MarketlyAI Provider-Communication Sender
+
+Status: `BLOCKED - DNS ACCESS REQUIRED`.
+
+Approved starting HEAD: `a3f9dfebb5b2c8c0e618fe176d57849c416d4cd3`. Branch: `p1-t08-zernio-analytics-webhook`.
+
+Target sender is fixed to `MarketlyAI Engineering <engineering@marketlyai.restartorg.com>`. Linka/TIA/personal/no-reply identities were not used.
+
+Resend inspection initially showed no MarketlyAI domain and no configured inboxes. A dedicated Resend domain configuration was then created for `marketlyai.restartorg.com` in `eu-west-1`; safe domain ID: `64833ad6-63a9-4fd7-8a00-8c1d3f4edd8d`. Sending and receiving are enabled in configuration, open/click tracking are disabled, and enforced TLS was requested. Resend read-back remains `not_started`, so this is configuration evidence only, not sender-verification evidence.
+
+Actual Resend DNS requirements were obtained directly from the provider: one DKIM TXT record, SPF/return-path MX + TXT + CNAME records, and one receiving MX record. Full DKIM material is intentionally not copied into repository evidence; no DNS value was guessed or reused from another project.
+
+Public DNS was recorded before any change: authoritative nameservers are `ns1.dns-parking.com` and `ns2.dns-parking.com`; `marketlyai.restartorg.com` resolves by A record to `82.29.177.121`; no existing MarketlyAI MX/TXT/CNAME answer was present. HTTPS validation remained healthy with trusted TLS, no redirect, and expected base `404`.
+
+No authorized Hostinger/DNS credentials, DNS-management CLI, environment binding, or project configuration was available on the authorized device. Therefore no public DNS record was changed. Because DNS verification cannot be completed, `engineering@marketlyai.restartorg.com` is not yet proven accepted for outbound sending and no direct inbound mailbox/reply path is proven. No Resend inbox was created.
+
+Internal routing test: `NOT PERFORMED`; outbound internal emails `0`.
+Provider/Zernio communication: `0`; support tickets `0`; Zernio API calls `0`; Provider API calls `0`.
+Source/test/package changes: `0`.
+Secrets exposed: `NO`.
+
+Final S01 classification: **MARKETLYAI_SENDER_BLOCKED - DNS ACCESS REQUIRED**.
+
+Canonical state: P1-T08-F09 = **BLOCKED BEFORE SEND - SENDER IDENTITY SETUP**; Provider contact = **AUTHORIZED / NOT SENT**; clarification packet = **PREPARED / NOT SENT**; Provider reply = **NOT APPLICABLE YET**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Next Task = **NOT_STARTED**.

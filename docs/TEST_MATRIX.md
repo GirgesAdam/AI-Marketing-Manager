@@ -1161,3 +1161,33 @@ Approved starting HEAD: `60f40a1063a871a29c560517a6647ded1fb42160`.
 No test-suite rerun is required by the F08 contract because no source/test files changed. Required final validation is docs-only changed-file verification plus `git diff --check`.
 
 Current Task / execution focus is restored to parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, which remains `UNRESOLVED / NOT DONE`. Clarification packet remains **PREPARED / NOT SENT**; recommendation remains **DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION** and is not authorized for execution. Analytics Webhook remains `SPIKE_PENDING`; Current Phase remains `PHASE 1 — Provider Feasibility & Basic Cost Safety`; Next Task remains `NOT_STARTED`.
+
+
+## P1-T08-F09-S01 - MarketlyAI Sender / Reply Readiness
+
+Status: `BLOCKED - DNS ACCESS REQUIRED`.
+
+| Gate / Evidence | Result | Safe evidence |
+|---|---|---|
+| Approved starting HEAD / branch | PASS | `a3f9dfebb5b2c8c0e618fe176d57849c416d4cd3`; `p1-t08-zernio-analytics-webhook` |
+| Exact sender identity | PASS / fixed | `MarketlyAI Engineering <engineering@marketlyai.restartorg.com>` |
+| Unrelated sender isolation | PASS | no Linka/TIA/personal/no-reply sender used |
+| Resend MarketlyAI domain config | PASS / created | `marketlyai.restartorg.com`; safe ID `64833ad6-63a9-4fd7-8a00-8c1d3f4edd8d`; eu-west-1; sending+receiving enabled |
+| Resend domain verification | BLOCKED | read-back `not_started`; DNS records not installed |
+| DKIM / SPF requirements | PASS / exact requirements obtained | DKIM TXT; SPF return-path MX/TXT/CNAME; values sourced from Resend, not guessed |
+| Receiving requirement | PASS / exact requirement obtained | receiving MX sourced from Resend |
+| Public DNS baseline | PASS | NS `dns-parking.com`; A `82.29.177.121`; no existing MarketlyAI MX/TXT/CNAME answer |
+| Authorized DNS access | BLOCKED | no credential/CLI/environment/project DNS binding available on authorized device |
+| Public DNS mutation | PASS / zero | no records added, deleted, or changed |
+| Existing HTTPS/TLS | PASS | trusted TLS; no redirect; expected base `404`; A record preserved |
+| Sender accepted by Resend | NOT PROVEN | requires domain verification |
+| Direct inbound reply routing | NOT PROVEN | receiving domain cannot be verified without DNS access; no inbox created |
+| Internal routing test | NOT RUN | 0 outbound internal test emails |
+| Zernio/Provider contact | PASS / zero | 0 emails; 0 support tickets |
+| Provider/Zernio APIs | PASS / zero | 0 calls |
+| Secrets | PASS | none exposed or committed |
+| Source/test/package changes | PASS / zero | configuration + docs evidence only |
+| Final classification | **MARKETLYAI_SENDER_BLOCKED - DNS ACCESS REQUIRED** | exact allowed S01 classification |
+| Canonical capability state | PRESERVED | F09 blocked before send; parent NOT DONE; Analytics Webhook `SPIKE_PENDING`; Next Task NOT_STARTED |
+
+No test-suite rerun is required because no source/test/package file changed. Required repository validation is docs-only changed-file verification plus `git diff --check`.
