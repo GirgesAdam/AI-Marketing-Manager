@@ -1424,3 +1424,105 @@ Post-run deterministic validation PASS: focused F07 + P1-T08 `57 / 57` across 2 
 
 Analytics Webhook recommendation: **REMAIN PENDING — REFRESH CORRELATION INCONCLUSIVE**.
 Canonical Analytics Webhook remains **`SPIKE_PENDING`**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**. F07 live run remains **CONSUMED**; no second F07 run is authorized. Current Task / execution focus is restored to parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`. Next Task remains **NOT_STARTED**.
+
+## P1-T08-F08 — Resolve analytics.synced Trigger Preconditions From Official Provider Contract
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Approved starting HEAD: `60f40a1063a871a29c560517a6647ded1fb42160`.
+Branch: `p1-t08-zernio-analytics-webhook`.
+Official-source checked timestamp: `2026-10-14T22:41:00+03:00`.
+
+### Provider Activity
+- Provider calls: `0 normal / 0 cleanup / 0 total`.
+- Provider mutations: `0`.
+- Webhook operations: `0`.
+- Analytics reads: `0`.
+- External Provider communication: `0`.
+- Source/tests/package.json changes: `0`.
+
+### Official Sources Reviewed
+| ID | Official source | Official URL | Section / heading | Documentation date/version | Checked | Short safe quote |
+|---|---|---|---|---|---|---|
+| S1 | Zernio Changelog | https://docs.zernio.com/changelog | September 2, 2026 - Analytics Delta + `analytics.synced` | 2026-09-02 | 2026-10-14T22:41:00+03:00 | "It's a trigger (no metrics/cursor)" |
+| S2 | Webhooks - API Reference | https://docs.zernio.com/webhooks | Event categories; The test event | Not exposed | 2026-10-14T22:41:00+03:00 | "Analytics | analytics.synced" |
+| S3 | Send test webhook - API Reference | https://docs.zernio.com/webhooks/test-webhook | Send test webhook | Not exposed | 2026-10-14T22:41:00+03:00 | "event: webhook.test" |
+| S4 | Rate Limits - Guides | https://docs.zernio.com/guides/rate-limits | Analytics responses are cached | Not exposed | 2026-10-14T22:41:00+03:00 | "a request against a stale cache triggers a background refresh" |
+| S5 | Complete official docs - Tenant Analytics | https://docs.zernio.com/llms-full.txt | Tenant Analytics -> Show freshness instead of promising real-time | Snapshot date not exposed | 2026-10-14T22:41:00+03:00 | "feed your dashboard's data as of label" |
+| S6 | Get post analytics - API Reference | https://docs.zernio.com/analytics/get-analytics | Overview; sync states; response examples | Not exposed | 2026-10-14T22:41:00+03:00 | "Single post lookups may return 202 (sync pending)" |
+| S7 | Check account health - API Reference | https://docs.zernio.com/accounts/get-account-health | Response body / permissions | Not exposed | 2026-10-14T22:41:00+03:00 | "token status, permissions, recommendations" |
+| S8 | Facebook API - Platforms | https://docs.zernio.com/platforms/facebook | Before you start; OAuth scopes; Analytics | Not exposed | 2026-10-14T22:41:00+03:00 | "read_insights - Page and post analytics" |
+| S9 | Sync an external post - API Reference | https://docs.zernio.com/analytics/sync-external-posts | Behavior | Not exposed | 2026-10-14T22:41:00+03:00 | "background sync ... every ~90 minutes" |
+
+The official `llms-full.txt` snapshot contains no `analytics.synced` entry; the dated 2026-09-02 changelog and current Webhooks page provide the positive current event contract. Absence in that snapshot is not treated as a contradictory Provider claim. No deterministic source/test constant was found factually contradicted by current official documentation, so `PROVIDER_CONTRACT_CODE_CHANGE_REQUIRED` is not triggered.
+
+### Required Questions Q1-Q18
+| Q | Status | Exact conclusion | Source(s) | Claim basis / interpretation notes |
+|---|---|---|---|---|
+| Q1 | NOT_DOCUMENTED | The exact Provider-side condition that emits `analytics.synced` is not defined; only event availability/purpose is documented. | S1, S2 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES; do not infer from event name. |
+| Q2 | NOT_DOCUMENTED | No official source reviewed states that every successful Analytics sync emits `analytics.synced`. | S1, S5, S6 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES. |
+| Q3 | NOT_DOCUMENTED | Stale `GET /v1/analytics` is documented to trigger background refresh, but no source states that this refresh emits `analytics.synced`. | S1, S4, S5 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES; facts are not causally joined. |
+| Q4 | NOT_DOCUMENTED | No official source states whether `analytics.synced` can emit with zero posts/zero usable Analytics rows. | S1, S5, S6 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES. |
+| Q5 | NOT_DOCUMENTED | No generic prerequisite requiring published posts, non-empty metrics, or historical Analytics rows for the event is documented. | S1, S6, S8 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES. |
+| Q6 | DOC_AMBIGUOUS | `overview.lastSync` is documented as freshness metadata for a "data as of" label, but not as cache refresh, platform sync, DB write, or webhook-generating sync. | S5, S6 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES; partial semantics only. |
+| Q7 | NOT_DOCUMENTED | Whether `lastSync` updates synchronously or asynchronously relative to `GET /v1/analytics` is not documented. | S4, S5, S6 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES. |
+| Q8 | NOT_DOCUMENTED | No maximum/typical delay between a successful Analytics sync and `analytics.synced` delivery is documented. | S1, S2 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES; cache TTL is not event timing. |
+| Q9 | NOT_DOCUMENTED | ~60 minutes is documented as post-analytics cache freshness, not as an explicitly equivalent Provider Analytics sync cadence. | S4, S5 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES. |
+| Q10 | DOC_AMBIGUOUS | A stale Analytics GET conditionally triggers background refresh; no separate unconditional "force Analytics refresh" endpoint is documented. | S4, S5, S9 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES. |
+| Q11 | DOC_AMBIGUOUS | The stale-refresh mechanism is initiated by GET, but official docs do not define all Provider/upstream effects as read-only from the customer/public-platform perspective. | S4, S5 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES. |
+| Q12 | NOT_DOCUMENTED | Per-post `syncStatus` and sync-error surfaces exist, but no sync-job status/history API suitable for correlating `analytics.synced` is documented. | S5, S6 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES. |
+| Q13 | NOT_DOCUMENTED | No sandbox/test/synthetic mechanism that generates real-semantic `analytics.synced` is documented. | S2, S3 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES. |
+| Q14 | DOC_CONFIRMED | `POST /v1/webhooks/test` is generic transport testing; the documented event is fixed to `webhook.test` regardless of subscription events. | S2, S3 | EXPLICIT. |
+| Q15 | DOC_AMBIGUOUS | Facebook Analytics reading requires a connected Page and analytics scopes; no Facebook-specific `analytics.synced` generation eligibility rule is documented. | S8, S1 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES. |
+| Q16 | NOT_DOCUMENTED | `canFetchAnalytics=true` is on the account-health permission/readiness surface, but no background-sync guarantee is documented for that field. | S7, S5 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES. |
+| Q17 | DOC_CONFIRMED | `hasAnalyticsAccess` is explicitly Analytics add-on access/entitlement; it is not documented as a synchronization guarantee. | S5 | EXPLICIT. |
+| Q18 | DOC_AMBIGUOUS | `analytics.synced` is globally available as a webhook event category, but a universal per-platform emission guarantee is not documented. | S1, S2, S8 | INFERRED_FROM_MULTIPLE_OFFICIAL_SOURCES. |
+
+### Special lastSync Review
+**LASTSYNC_SEMANTICS_NOT_DOCUMENTED**
+
+Official docs support using `overview.lastSync`/`overview.dataStaleness` as freshness metadata for a "data as of" UI label. They do not explicitly define what operation `lastSync` timestamps, upstream source, start-vs-completion, account-wide vs query/window scope, or linkage to `analytics.synced`. No semantic meaning is inferred from the field name.
+
+### Special Empty-Data Review
+**EMPTY_ANALYTICS_SYNC_BEHAVIOR_NOT_DOCUMENTED**
+
+For `hasAnalyticsAccess=true` plus zero Analytics rows, current official docs do not state whether background Analytics sync still occurs, whether `lastSync` must advance, whether `analytics.synced` may emit, or whether an empty Analytics cache is refreshed. Empty data remains a fixture limitation, not a proven blocker.
+
+### Safe Trigger Candidates
+| Candidate | Classification | Official-contract reasoning |
+|---|---|---|
+| Stale `GET /v1/analytics` | **E — DOCUMENTATION_INSUFFICIENT** | Background refresh on stale cache is explicit; qualifying `analytics.synced` linkage is not. |
+| Explicit Analytics force/refresh endpoint | **E — DOCUMENTATION_INSUFFICIENT** | No separate unconditional Analytics refresh endpoint identified. |
+| Scheduled/background Analytics sync | **B — PROVIDER_INTERNAL_TRIGGER_NOT_CALLABLE** | Internal refresh/sync behavior is documented; no callable qualifying sync job is defined. |
+| `POST /v1/posts/sync-external` | **D — UNSAFE_OR_OUT_OF_SCOPE_FOR_CURRENT_SPIKE** | Provider POST/import action; not documented as the target-event trigger. |
+| Account reconnect | **D — UNSAFE_OR_OUT_OF_SCOPE_FOR_CURRENT_SPIKE** | Changes connection/auth state; no target-event linkage. |
+| Publish a post | **C — CUSTOMER/PUBLIC DATA MUTATION REQUIRED** | Customer-facing content mutation and no proven target-event linkage. |
+| `POST /v1/webhooks/test` | **D — UNSAFE_OR_OUT_OF_SCOPE_FOR_CURRENT_SPIKE** | Explicitly produces `webhook.test`, not target-event semantics. |
+
+No candidate was executed.
+
+### Data-Bearing Fixture Decision
+**DATA_BEARING_FIXTURE_REQUIREMENT_NOT_DOCUMENTED**
+
+No reviewed official document explicitly establishes that a data-bearing account, published posts, or non-empty Analytics rows are required to generate/test `analytics.synced`. The current zero-row fixture cannot be used to infer REQUIRED.
+
+### Provider Clarification Packet
+Required: **YES**. Status: **PREPARED / NOT SENT**.
+
+1. What exact Provider-side condition causes `analytics.synced` to be generated, and does every successful Analytics sync generate one event?
+2. Does the stale-cache background refresh triggered by `GET /v1/analytics` belong to that same event-generating sync class?
+3. For an Analytics-entitled account with zero usable Analytics rows/posts, does background Analytics sync still run and can `analytics.synced` emit?
+4. Are published posts, non-empty metrics, platform activity, or another data-bearing prerequisite required before `analytics.synced` can emit?
+5. What exactly does `overview.lastSync` timestamp (operation, scope, start/completion), and is it the same cycle associated with `analytics.synced`?
+6. Is there a safe deterministic API action that triggers a qualifying Analytics sync without publishing or mutating customer-facing platform content?
+7. Is there a sandbox/test/synthetic mechanism that produces real `analytics.synced` semantics rather than `webhook.test`?
+8. If a qualifying sync succeeds, is any typical/maximum event-delivery delay or platform-specific eligibility defined?
+
+### Final Classification
+**PROVIDER_CLARIFICATION_REQUIRED**
+
+Material trigger/precondition questions remain undocumented or ambiguous. Current official material does not provide a verified deterministic `analytics.synced` test path and does not establish a data-bearing fixture requirement.
+
+### Recommendation
+**P1-T08-F08 recommendation: DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION**
+
+The packet above is prepared only; F08 did **not** send it. Canonical state remains: F07 = **DONE / ACCEPTED**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Next Task = **NOT_STARTED**.

@@ -364,11 +364,11 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 ## Current Task
 
-`P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
+`P1-T08-F08 — Resolve analytics.synced Trigger Preconditions From Official Provider Contract`
 
-**Status: UNRESOLVED / NOT DONE**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
 
-P1-T08-F07 is **DONE / ACCEPTED** at accepted implementation/evidence HEAD `699ea01911814119b7316a3acaf002ee96d08b59`. F07 live run remains **CONSUMED**. F07 outcome remains `REFRESH_NOT_CONFIRMED_EVENT_NOT_OBSERVED`; Analytics Webhook recommendation remains **REMAIN PENDING — REFRESH CORRELATION INCONCLUSIVE**. Parent P1-T08 remains **UNRESOLVED / NOT DONE** and Analytics Webhook remains `SPIKE_PENDING`. Next Task remains **NOT_STARTED**.
+Approved starting HEAD: `60f40a1063a871a29c560517a6647ded1fb42160`; branch `p1-t08-zernio-analytics-webhook`. F08 is documentation/contract research only: Provider calls `0 normal / 0 cleanup / 0 total`; webhook operations `0`; Provider/social/public mutations `0`; external Provider communication `0`; source/test/package changes `0`. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
 
 ### P1-T08 Provider contract discovery - DOC_CONFIRMED
 - Current Zernio Analytics Webhooks documentation identifies `analytics.synced` as the Analytics sync event.
@@ -595,6 +595,26 @@ Other Analytics capabilities remain unchanged:
 P1-T06/P1-T07 unresolved Provider behavior remains unchanged: `EXPIRED_CURSOR_BEHAVIOR_UNVERIFIED`; `CHANGES_DURING_IMPORT_NOT_OBSERVED`; non-empty Analytics Delta pagination not observed live; historical analytics metric-record field shapes not observed live; non-empty derived signal shapes/target attribution remain unverified; natural HTTP 429 not observed.
 
 Next Task: **NOT_STARTED**. No next-task identifier is invented.
+### P1-T08-F08 official Provider contract clarification
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+
+- Approved starting HEAD: `60f40a1063a871a29c560517a6647ded1fb42160`; branch `p1-t08-zernio-analytics-webhook`.
+- Scope: official/current Zernio documentation review only. Provider calls `0 normal / 0 cleanup / 0 total`; mutations=0; webhook operations=0; external Provider communication=0; source/test/package changes=0.
+- Official sources reviewed at `2026-10-14T22:41:00+03:00`: Changelog; Webhooks; Send test webhook; Rate Limits; Get post analytics; Account health; Facebook platform; Sync external post; official `llms-full.txt` Tenant Analytics/OpenAPI material.
+- DOC_CONFIRMED: `analytics.synced` is an available webhook subscription event and the 2026-09-02 changelog describes it as a trigger with no metrics/cursor; consumers read Analytics Delta on receipt.
+- DOC_CONFIRMED: a stale post-analytics cache request triggers a background refresh after the documented ~60-minute cache period. The docs do not connect that refresh to `analytics.synced`.
+- DOC_CONFIRMED: `POST /v1/webhooks/test` sends fixed generic event `webhook.test`; it is transport testing, not documented synthetic `analytics.synced`.
+- DOC_CONFIRMED: `hasAnalyticsAccess` means Analytics add-on access/entitlement; no synchronization guarantee is documented.
+- Material contract gaps remain DOC_AMBIGUOUS / NOT_DOCUMENTED: exact emission condition; every-successful-sync guarantee; stale-refresh -> event linkage; zero-row behavior; data-bearing prerequisites; `overview.lastSync` operation/event relationship; sync-to-event timing; per-platform event guarantee; deterministic safe qualifying trigger; target-event sandbox/test mechanism.
+- **LASTSYNC_SEMANTICS_NOT_DOCUMENTED**: official Tenant Analytics guidance uses `overview.lastSync`/`dataStaleness` for a "data as of" label but does not define source, start/completion, scope, or linkage to `analytics.synced`.
+- **EMPTY_ANALYTICS_SYNC_BEHAVIOR_NOT_DOCUMENTED**: official docs do not state whether an entitled zero-row account still syncs, advances `lastSync`, emits `analytics.synced`, or refreshes an empty cache. Empty data is not a proven blocker.
+- Safe-trigger candidates: stale `GET /v1/analytics` = `E — DOCUMENTATION_INSUFFICIENT` for a qualifying event; scheduled/background sync = `B — PROVIDER_INTERNAL_TRIGGER_NOT_CALLABLE`; `sync-external`/reconnect/generic webhook test = `D — UNSAFE_OR_OUT_OF_SCOPE_FOR_CURRENT_SPIKE`; publishing = `C — CUSTOMER/PUBLIC DATA MUTATION REQUIRED`; no explicit unconditional Analytics force endpoint was documented. No candidate was executed.
+- Data-bearing fixture: **DATA_BEARING_FIXTURE_REQUIREMENT_NOT_DOCUMENTED**.
+- Clarification packet: **REQUIRED / PREPARED / NOT SENT**; eight factual questions prepared.
+- Final classification: **PROVIDER_CLARIFICATION_REQUIRED**.
+- P1-T08-F08 recommendation: **DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION**. Recommendation only; no contact occurred.
+- F03-F07 history preserved. F07 remains DONE / ACCEPTED; parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
+
 ## Phase 1 Rules
 - Work one Task at a time.
 - Provider Behavior Tests remain separate from System Integration Tests.
@@ -610,4 +630,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader verifies P1-T08-F07 documentation finalization. P1-T08-F07 is **DONE / ACCEPTED** at accepted implementation/evidence HEAD `699ea01911814119b7316a3acaf002ee96d08b59`; F07 live run remains **CONSUMED**; outcome remains `REFRESH_NOT_CONFIRMED_EVENT_NOT_OBSERVED`; recommendation remains **REMAIN PENDING — REFRESH CORRELATION INCONCLUSIVE**. Current execution focus is restored to parent P1-T08, which remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; no second F07 run, capability promotion, Community/Analytics follow-on, or next Task is authorized. Next Task remains **NOT_STARTED**.
+Team Leader reviews P1-T08-F08 at the final documentation/evidence HEAD. F08 classification is **PROVIDER_CLARIFICATION_REQUIRED** and recommendation is **DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION**; clarification packet is prepared but **NOT SENT**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; no Provider execution, external contact, capability promotion, Community/Analytics follow-on, or next Task is authorized. Next Task remains **NOT_STARTED**.

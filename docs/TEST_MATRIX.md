@@ -1130,3 +1130,31 @@ Accepted interpretation: no refresh was confirmed; no `analytics.synced` deliver
 
 Analytics Webhook recommendation: **REMAIN PENDING — REFRESH CORRELATION INCONCLUSIVE**.
 Current Task / execution focus is parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, which remains `UNRESOLVED / NOT DONE`. Analytics Webhook remains `SPIKE_PENDING`. Next Task remains `NOT_STARTED`.
+
+## P1-T08-F08 — Official Provider Contract Clarification
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Approved starting HEAD: `60f40a1063a871a29c560517a6647ded1fb42160`.
+
+| F08 Gate / Evidence | Result | Evidence |
+|---|---|---|
+| Provider calls | PASS / ZERO | `0 normal / 0 cleanup / 0 total` |
+| Provider mutations/webhook operations | PASS / ZERO | no Zernio execution |
+| External Provider communication | PASS / ZERO | clarification packet NOT SENT |
+| Official-source policy | PASS | only official Zernio docs/reference/changelog/OpenAPI-derived material used |
+| Q1-Q18 statuses | PASS | 18 / 18 explicitly classified |
+| Exact event emission trigger | NOT_DOCUMENTED | availability/purpose documented; emitting condition absent |
+| Stale GET -> event linkage | NOT_DOCUMENTED | background refresh explicit; target-event relationship absent |
+| `lastSync` semantics | **LASTSYNC_SEMANTICS_NOT_DOCUMENTED** | only freshness/UI usage documented |
+| Empty-data semantics | **EMPTY_ANALYTICS_SYNC_BEHAVIOR_NOT_DOCUMENTED** | zero-row sync/event behavior absent |
+| Generic webhook test | DOC_CONFIRMED | fixed `webhook.test` |
+| `hasAnalyticsAccess` | DOC_CONFIRMED | Analytics add-on access/entitlement |
+| Safe qualifying trigger | NO VERIFIED PATH | candidates classified B/C/D/E; none authorized/executed |
+| Data-bearing fixture | **DATA_BEARING_FIXTURE_REQUIREMENT_NOT_DOCUMENTED** | no explicit prerequisite |
+| Clarification packet | REQUIRED / NOT SENT | eight factual questions prepared |
+| Final classification | **PROVIDER_CLARIFICATION_REQUIRED** | material ambiguity remains |
+| Recommendation | **DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION** | recommendation only |
+| Source/test/package changes | PASS / ZERO | docs-only task |
+| Canonical capability | PRESERVED | parent NOT DONE; Analytics Webhook `SPIKE_PENDING`; Next Task NOT_STARTED |
+
+No test-suite rerun is required by the F08 contract because no source/test files changed. Required final validation is docs-only changed-file verification plus `git diff --check`.
