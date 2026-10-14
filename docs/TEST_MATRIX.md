@@ -1009,7 +1009,9 @@ Canonical Analytics Webhook remains `SPIKE_PENDING`; parent P1-T08 remains UNRES
 Analytics Webhook recommendation: **REMAIN PENDING — ANALYTICS_SYNCED_NOT_OBSERVED**.
 ## P1-T08-F06 — Trigger Eligibility / Test-Account Preconditions
 
-Team Leader verdict: `REJECTED — FIX REQUIRED`; historical F06 live evidence is preserved and corrected by F06-F01 below.
+Historical initial Team Leader review: `REJECTED — FIX REQUIRED`.
+Current resolved task state: `DONE / ACCEPTED AFTER F06-F01 CORRECTION`.
+Historical F06 live evidence is preserved; F06-F01 corrected the rejected traceability/classification issues, and only the corrected conclusions below are canonical.
 Parent P1-T08 remains NOT DONE. Analytics Webhook remains `SPIKE_PENDING`. F05 remains DONE / ACCEPTED with outcome `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW`; the 100-minute window is not a Provider SLA.
 
 | Gate / Evidence | Result | Safe evidence |
@@ -1052,7 +1054,9 @@ P1-T08-F06 recommendation: **PROVIDER PRECONDITION UNRESOLVED — CLARIFICATION 
 TEST FIXTURE LIMITATION: the current frozen account has zero usable Analytics rows. This does not prove Analytics data is a required Provider precondition for `analytics.synced`.
 ## P1-T08-F06-F01 — Evidence Traceability & Classification Correction
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Status: `DONE / ACCEPTED`.
+Accepted fix HEAD: `a591fdf12f199291b982e519443c7ac72a36d484`.
+Team Leader verdict: `ACCEPTED`.
 Provider calls during F06-F01: `0 normal / 0 cleanup / 0 total`; live-mode commands `0`; mutations `0`.
 
 | ID | Coverage | Result |
@@ -1078,6 +1082,6 @@ Parser/request-model invariants: allowlisted nested overview fields are `lastSyn
 
 Fifth-read provenance: `B — FIFTH_READ_EXECUTED_BY_SEPARATE_BOUNDED_DIAGNOSTIC_COMMAND`, proven by persisted local execution history. Separate request: GET-only exact page-1 Analytics filters, HTTP `200`, request `73b50a74-8637-49c7-b28f-51e178f71cde`. Explicit `overview.lastSync=2026-10-14T15:03:02.584Z` remains `EXPLICIT_PROVIDER_SYNC_TIMESTAMP_OBSERVED` only.
 
-Parent P1-T08 remains NOT DONE. Analytics Webhook remains `SPIKE_PENDING`. F05 remains DONE / ACCEPTED. Next Task remains `NOT_STARTED`.
+Current Phase remains `PHASE 1 — Provider Feasibility & Basic Cost Safety`. Current Task / execution focus is restored to parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, which remains `UNRESOLVED / NOT DONE`. Analytics Webhook remains `SPIKE_PENDING`. F03 live run remains `CONSUMED`; F05 remains `DONE / ACCEPTED`, its live run remains `CONSUMED`, and its outcome remains `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW`. Next Task remains `NOT_STARTED`.
 
 Final F06-F01 validation: focused `63 / 63 PASS` across 2 files; affected `238 / 238 PASS` across 10 files; full `341 / 341 PASS` across 14 files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.

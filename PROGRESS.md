@@ -364,11 +364,11 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 ## Current Task
 
-`P1-T08-F06-F01 — Reconcile F06 Sync Evidence Traceability & Classification`
+`P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
-**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+**Status: UNRESOLVED / NOT DONE**
 
-F06-F01 is a code + test + documentation correction only. It reconciles the already-completed F06 evidence without any new Provider execution. Parent P1-T08 remains **UNRESOLVED / NOT DONE** and Analytics Webhook remains `SPIKE_PENDING`.
+P1-T08-F06-F01 is **DONE / ACCEPTED** at accepted fix HEAD `a591fdf12f199291b982e519443c7ac72a36d484`. F06 is resolved as **DONE / ACCEPTED AFTER F06-F01 CORRECTION** with only the corrected conclusions retained. Parent P1-T08 remains **UNRESOLVED / NOT DONE** and Analytics Webhook remains `SPIKE_PENDING`.
 Parent P1-T08 original implementation starting HEAD: `d2e12882b96d04395b92c944735ebf8bc860b211`.
 Accepted F04 implementation HEAD: `b55bf0713090f5a729ac1f4688f79b692347ce96`.
 F05 approved starting HEAD: `6cc948b18d0902bf3a6455e4a652ef8ef845cb33`.
@@ -518,9 +518,10 @@ Team Leader verdict: **ACCEPTED** (F05 execution/evidence quality only; parent P
 Analytics Webhook recommendation: **REMAIN PENDING — ANALYTICS_SYNCED_NOT_OBSERVED**.
 Canonical Analytics Webhook remains `SPIKE_PENDING`. Parent P1-T08 is **UNRESOLVED / NOT DONE**. F03 remains historically **CONSUMED**; F05 is **CONSUMED**; no second F05 run is authorized.
 ### P1-T08-F06 trigger eligibility / test-account precondition diagnostic
-**Team Leader verdict: REJECTED — FIX REQUIRED.**
+**Historical initial Team Leader review: REJECTED — FIX REQUIRED.**
+**Current resolved task state: DONE / ACCEPTED AFTER F06-F01 CORRECTION.**
 
-Historical F06 live evidence is preserved; the rejection concerns evidence/implementation traceability plus one over-strong causal recommendation. F06-F01 below is the corrective task.
+Historical F06 live evidence is preserved; the initial rejection concerned evidence/implementation traceability plus one over-strong causal recommendation. F06-F01 corrected those issues and is now accepted. Only the corrected F06 conclusions below are canonical.
 
 - Approved starting HEAD: `ac620616608a0b94f56c5cb2c7974127ad074028`; branch `p1-t08-zernio-analytics-webhook`.
 - F06 is read-only Provider diagnostic evidence only. No webhook/Nginx/SSH/receiver work, webhook operations, API-key creation/deletion, posts, sync-external, media, community, Ads/spend, account/Profile changes, analytics refresh mutation, OpenAI, or fal.ai actions occurred.
@@ -543,8 +544,10 @@ Historical F06 live evidence is preserved; the rejection concerns evidence/imple
 - Historical post-run validation remained PASS: focused F06 + P1-T08 47 / 47 across 2 files; affected Provider-spike 222 / 222 across 10 files; full suite 325 / 325 across 14 files; typecheck/build/diff-check PASS.
 
 ### P1-T08-F06-F01 evidence traceability correction
-**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+**Status: DONE / ACCEPTED**
 
+- Accepted fix HEAD: `a591fdf12f199291b982e519443c7ac72a36d484`.
+- Team Leader verdict: **ACCEPTED**.
 - Approved starting HEAD: `641305e681743460294e87accade082c7374f7d3`.
 - F06-F01 Provider calls: **`0 normal / 0 cleanup / 0 total`**; live-mode commands=0; mutations=0.
 - Parser correction: nested `overview` is now parsed from the first Analytics response with an allowlist of `lastSync`, `dataStaleness`, `syncStatus`, and `dataAsOf`; safe field states distinguish `ABSENT`, `SAFE_SCALAR_RETAINED`, and `OBSERVED_NOT_RETAINED`; the full `overview` object is never serialized.
@@ -584,4 +587,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader reviews P1-T08-F06-F01 evidence-traceability correction. F06-F01 is **IMPLEMENTED — AWAITING TEAM LEADER REVIEW**; F05 remains **DONE / ACCEPTED**; parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`. No Provider rerun, webhook observation, test-data creation, Community/Analytics next task, or other next Task is authorized. Next Task remains **NOT_STARTED**.
+Team Leader verifies the P1-T08-F06-F01 documentation finalization. P1-T08-F06-F01 is **DONE / ACCEPTED** at accepted fix HEAD `a591fdf12f199291b982e519443c7ac72a36d484`; P1-T08-F06 is **DONE / ACCEPTED AFTER F06-F01 CORRECTION**; F05 remains **DONE / ACCEPTED** with outcome `ANALYTICS_SYNCED_NOT_OBSERVED_WITHIN_BOUNDED_WINDOW`; F03 and F05 live runs remain **CONSUMED**. Current execution focus is parent P1-T08, which remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`. No Provider rerun, webhook observation, test-data creation, Community/Analytics next task, or other next Task is authorized. Next Task remains **NOT_STARTED**.
