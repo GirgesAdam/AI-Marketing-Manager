@@ -1191,3 +1191,38 @@ Status: `BLOCKED - DNS ACCESS REQUIRED`.
 | Canonical capability state | PRESERVED | F09 blocked before send; parent NOT DONE; Analytics Webhook `SPIKE_PENDING`; Next Task NOT_STARTED |
 
 No test-suite rerun is required because no source/test/package file changed. Required repository validation is docs-only changed-file verification plus `git diff --check`.
+
+## P1-T08-F10 - Data-Bearing Experiment Harness
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+
+| Gate / Regression | Result | Evidence |
+|---|---|---|
+| Approved starting HEAD | PASS | `73cefbddcc3c7cd7eb24799f038c84c2e981023d` |
+| Provider activity during F10 | PASS / ZERO | 0 external calls; mocks/test doubles only |
+| Frozen Profile/account/Page/platform | PASS | exact Profile A + Facebook account + Page + facebook; mismatch fails closed |
+| Human text approval/hash gate | PASS | exact runtime text + SHA-256 required before publish |
+| Retention gate | PASS | explicit bounded future deadline required |
+| Webhook before publish | PASS | exact Profile-A-only / analytics.synced-only create + read-back |
+| Unknown webhook create | PASS | exact-name reconciliation; no duplicate create |
+| Publish exactly once | PASS | one idempotent POST maximum; no blind retry |
+| Ambiguous publish | PASS | bounded read-back reconciliation; duplicates Critical, no arbitrary deletion |
+| Passive observation | PASS | zero Provider polling |
+| HMAC / event ID / target / dedupe | PASS | accepted P1-T08 safety patterns preserved |
+| Follow-up Analytics | PASS | one bounded read; provider/platform post ID matching supported |
+| Classification A/B/C/D/E | PASS | deterministic and conservative |
+| Optional Delta | PASS | disabled by default; dedicated authorization; max one read |
+| Webhook cleanup | PASS | delete + absent read-back |
+| Post cleanup | PASS | retention-aware unpublish + verification |
+| Deferred retained-post cleanup | PASS | cleanup-only mode, no publish/webhook/Analytics path |
+| Normal request ceiling | PASS | target <=9; absolute 10 |
+| Cleanup / total ceilings | PASS | cleanup <=4; total <=14 |
+| Secret/result safety | PASS | credentials/tokens/approved text not serialized |
+| Data-bearing assumption | PASS | hypothesis only; requirement not proven |
+| Required F10-01..F10-34 + extras | PASS | `39 / 39 PASS` F10 tests |
+| Focused F10 + parent | PASS | `73 / 73 PASS across 2 files` |
+| Affected Provider-spike | PASS | `297 / 297 PASS across 11 files` |
+| Full suite | PASS | `403 / 403 PASS across 16 files` |
+| Typecheck / build / diff-check | PASS | all PASS |
+
+P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; clarification packet remains **PREPARED / NOT SENT**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**. Analytics Webhook remains `SPIKE_PENDING`. Next Task remains **NOT_STARTED**. No capability is promoted and no live F10 execution occurred.

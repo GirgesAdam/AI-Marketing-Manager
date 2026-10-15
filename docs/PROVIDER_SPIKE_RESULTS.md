@@ -1554,3 +1554,31 @@ Secrets exposed: `NO`.
 Final S01 classification: **MARKETLYAI_SENDER_BLOCKED - DNS ACCESS REQUIRED**.
 
 Canonical state: P1-T08-F09 = **BLOCKED BEFORE SEND - SENDER IDENTITY SETUP**; Provider contact = **AUTHORIZED / NOT SENT**; clarification packet = **PREPARED / NOT SENT**; Provider reply = **NOT APPLICABLE YET**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Next Task = **NOT_STARTED**.
+
+## P1-T08-F10 - Data-Bearing analytics.synced Experiment Harness
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+
+Starting HEAD: `73cefbddcc3c7cd7eb24799f038c84c2e981023d`. Branch: `p1-t08-zernio-analytics-webhook`.
+
+### OFFLINE IMPLEMENTATION EVIDENCE
+- F10 was implemented and tested entirely offline. External Provider calls: `0 normal / 0 cleanup / 0 total`; live webhook operations `0`; live Analytics calls `0`; posts published `0`; media calls `0`; Zernio emails/support contact `0`. Mock/test-double calls are not Provider activity.
+- Frozen target: Profile A `6ac5a45a8e4ca44f355033ae`, Facebook account `6ac64f8740364f4695dd3077`, Facebook Page `1387424501114639` / `Clothing Brand`, platform `facebook`. Target mismatch is fail-closed before future publish.
+- Future-live precheck requires explicit live opt-in, human authorization token, exact approved post text, exact SHA-256, bounded retention timestamp, receiver configuration, and frozen target controls. No post text is hard-coded as approved.
+- Baseline/follow-up Analytics are each bounded to one read; safe comparison fields include usable rows, post IDs, access, freshness fields, cursor, request ID, and timestamp. Fixture matching accepts Provider or platform post IDs; `lastSync` is not assigned causal meaning.
+- Temporary webhook must be Profile-A-only and `analytics.synced`-only with exact read-back before publish. Unknown create is reconciled by exact unique name without a second create.
+- Publish path is one text-only Facebook POST with an idempotency key. Ambiguous publish response is reconciled by bounded read-back and never blindly retried. Duplicate exact matches are Critical and are not arbitrarily cleaned as if ownership were known.
+- Passive observation performs zero Provider polling and reuses accepted raw-body HMAC-first/canonical-ID/exact-target/dedupe/ACK safety.
+- Optional Analytics Delta is disabled by default, needs dedicated runtime authorization, a real cursor, and is bounded to one read.
+- Deterministic A/B/C/D/E classifications are implemented; A is conservative and requires valid exact-target event evidence in-window plus explicit fixture visibility. This does not establish universal Provider behavior.
+- Webhook cleanup uses delete plus absence read-back. Post cleanup is retention-aware and uses unpublish plus read-back. A separate cleanup-only mode supports later authorized cleanup of a retained recorded post without another publish/webhook/Analytics experiment.
+- Request ceilings: normal target <=9, absolute normal 10, cleanup <=4, total <=14.
+- The data-bearing strategy is an authorized alternative experiment hypothesis, **not** evidence that data-bearing state is required for `analytics.synced`.
+
+### Deterministic validation
+- Focused F10 + P1-T08: `73 / 73 PASS across 2 files`.
+- Affected Provider-spike: `297 / 297 PASS across 11 files`.
+- Full regression: `403 / 403 PASS across 16 files`.
+- Typecheck/build/diff-check: PASS.
+
+Canonical state: P1-T08-F10 = **IMPLEMENTED — AWAITING TEAM LEADER REVIEW**; P1-T08-F09-S01 = **BLOCKED — DNS ACCESS REQUIRED**; Provider contact = **AUTHORIZED / NOT SENT**; clarification packet = **PREPARED / NOT SENT**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Next Task = **NOT_STARTED**. No live F10 run is authorized by this implementation result.

@@ -364,11 +364,11 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 ## Current Task
 
-`P1-T08-F09-S01 - Establish Authorized MarketlyAI Provider-Communication Sender`
+`P1-T08-F10 — Build Data-Bearing analytics.synced Experiment Harness`
 
-**Status: BLOCKED - DNS ACCESS REQUIRED**
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
 
-P1-T08-F09 remains **BLOCKED BEFORE SEND - SENDER IDENTITY SETUP**. Provider contact is **AUTHORIZED / NOT SENT**. Clarification packet remains **PREPARED / NOT SENT**. Provider reply is **NOT APPLICABLE YET**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
+P1-T08-F10 is an offline-only Provider Behavior experiment harness implementation. No live F10 execution is authorized or performed. P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; clarification packet remains **PREPARED / NOT SENT**; parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
 
 ### P1-T08-F09-S01 MarketlyAI sender / reply readiness
 - Approved starting HEAD: `a3f9dfebb5b2c8c0e618fe176d57849c416d4cd3`; branch `p1-t08-zernio-analytics-webhook`; starting tree clean.
@@ -631,6 +631,28 @@ Team Leader verdict: **ACCEPTED**. Recommendation remains unexecuted; Provider c
 - P1-T08-F08 recommendation: **DECISION REQUIRED — CONTACT PROVIDER FOR CLARIFICATION**. Recommendation only; no contact occurred.
 - F03-F07 history preserved. F07 remains DONE / ACCEPTED; parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
 
+### P1-T08-F10 data-bearing analytics.synced experiment harness
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+
+- Starting HEAD: `73cefbddcc3c7cd7eb24799f038c84c2e981023d`; branch `p1-t08-zernio-analytics-webhook`.
+- Scope is implementation + deterministic offline validation only. External Provider calls, webhook operations, Analytics calls, social publishing, media calls, Zernio communication, DNS work, and F09 sender continuation during F10: **0**. All request-shaped test activity uses mocks/test doubles only.
+- Frozen future-live target is fail-closed to Profile A `6ac5a45a8e4ca44f355033ae`, Facebook account `6ac64f8740364f4695dd3077`, Facebook Page `1387424501114639` / `Clothing Brand`, platform `facebook`. Page ID alone is never treated as authorization.
+- Precheck requires explicit live opt-in, explicit human authorization token, exact approved post text, exact SHA-256 match, explicit bounded future retention deadline, controlled HTTPS receiver inputs, frozen target semantics, and request ceilings before any future Provider request.
+- Ordered future-live model implemented: trusted identity -> exact target attestation -> one baseline Analytics read -> one Profile-A-only `analytics.synced` webhook create/read-back -> one text-only Facebook publish -> exact publish read-back -> passive webhook observation with zero Provider polling -> one follow-up Analytics read -> optional single Delta read only behind dedicated authorization -> deterministic classification -> reconciliation/cleanup.
+- Webhook validation reuses accepted P1-T08 raw-body HMAC-before-parse, canonical event ID/header matching, exact Profile/account/platform attribution, foreign-target rejection, canonical event dedupe, and ACK safety. Uncertain webhook create is reconciled by exact unique name without duplicate create.
+- Publish is exactly-once from the harness: one POST with an idempotency key. Ambiguous publish outcome is never blindly retried; one bounded read-back reconciliation replaces retry. Multiple exact reconciliation matches are `CRITICAL_DUPLICATE_CONFIRMED_PUBLISH` and are not arbitrarily deleted.
+- Analytics comparison retains only safe comparison fields and may match the fixture by Provider post ID or platform post ID. `overview.lastSync` remains evidence only; no causal semantics are inferred. Optional Delta is disabled by default and bounded to one read.
+- Non-critical classifications implemented exactly: `DATA_BEARING_ANALYTICS_SYNCED_VERIFIED`, `DATA_BEARING_ANALYTICS_PRESENT_EVENT_NOT_OBSERVED`, `FIXTURE_NOT_YET_REFLECTED_IN_ANALYTICS`, `EVENT_OBSERVED_CORRELATION_INCOMPLETE`, `TECHNICAL_BLOCKER`. A requires a valid exact-target event in the observation window plus explicit follow-up visibility of the test fixture; no universal Provider behavior is claimed.
+- Critical classes remain separate: target mismatch, wrong publish target, accepted invalid signature, accepted foreign event, confirmed duplicate publish, and cleanup safety failure.
+- Retention is explicit and bounded. The main run removes the temporary webhook at session end. Post cleanup happens on successful verified experiment, deadline reached, or explicit cleanup authorization; otherwise the result records cleanup as deferred. A separate cleanup-only mode can later remove the recorded retained post without running publish/webhook/Analytics again and requires cleanup authorization + trusted identity + exact post target attestation.
+- Future-live request ceilings enforced before transport: normal target <=9, absolute normal 10, cleanup max 4, absolute total 14. Normal no-Delta happy path is 9 calls; optional Delta can use the tenth.
+- Data-bearing state remains an **authorized alternative experiment hypothesis only**, not a Provider requirement. Harness evidence exports `hypothesisOnly=true` and `dataBearingRequirementProven=false`.
+- Focused F10 + parent P1-T08 validation: `73 / 73 PASS across 2 files`.
+- Affected Provider-spike validation: `297 / 297 PASS across 11 files`.
+- Full regression suite: `403 / 403 PASS across 16 files`.
+- `npm run typecheck`: PASS; `npm run build`: PASS; `git diff --check`: PASS.
+- P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**. Provider contact remains **AUTHORIZED / NOT SENT**; clarification packet remains **PREPARED / NOT SENT**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**. Analytics Webhook remains `SPIKE_PENDING`. Next Task remains **NOT_STARTED**.
+
 ## Phase 1 Rules
 - Work one Task at a time.
 - Provider Behavior Tests remain separate from System Integration Tests.
@@ -646,4 +668,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-S01 is blocked at **MARKETLYAI_SENDER_BLOCKED - DNS ACCESS REQUIRED** after creating the dedicated Resend domain configuration but before any public DNS change or email send. Team Leader reviews the S01 evidence. P1-T08-F09 remains **BLOCKED BEFORE SEND - SENDER IDENTITY SETUP**; Provider contact is **AUTHORIZED / NOT SENT**; clarification packet is **PREPARED / NOT SENT**; Provider reply is **NOT APPLICABLE YET**; parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**. No Zernio contact, internal routing test, capability promotion, or next task is authorized by S01.
+Team Leader reviews P1-T08-F10 implementation/evidence. P1-T08-F10 is **IMPLEMENTED — AWAITING TEAM LEADER REVIEW** and no live data-bearing experiment is authorized. P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; clarification packet remains **PREPARED / NOT SENT**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**. Do not run F10 live, publish the test post, create the webhook, call Analytics, contact Zernio, continue F09 sender setup, promote Analytics Webhook, close P1-T08, or start another task.
