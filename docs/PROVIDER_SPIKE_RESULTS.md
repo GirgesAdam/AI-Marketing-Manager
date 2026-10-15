@@ -1557,9 +1557,11 @@ Canonical state: P1-T08-F09 = **BLOCKED BEFORE SEND - SENDER IDENTITY SETUP**; P
 
 ## P1-T08-F10 - Data-Bearing analytics.synced Experiment Harness
 
-Status: `REJECTED — FIX REQUIRED`.
+Status: `DONE / ACCEPTED`.
 
-Starting HEAD: `73cefbddcc3c7cd7eb24799f038c84c2e981023d`. Branch: `p1-t08-zernio-analytics-webhook`.
+Historical starting HEAD: `73cefbddcc3c7cd7eb24799f038c84c2e981023d`. Original F10 implementation HEAD: `266885dd5e5962e58fe6b2811ecb1c6a54c48ac2`. Accepted final implementation/evidence HEAD after F10-F01 hardening: `fbbed9f77293d9a68c594562edb6ab2976f85844`. Branch: `p1-t08-zernio-analytics-webhook`.
+
+Team Leader verdict: **ACCEPTED**. F10 is accepted after the F10-F01 hardening fix.
 
 ### OFFLINE IMPLEMENTATION EVIDENCE
 - F10 was implemented and tested entirely offline. External Provider calls: `0 normal / 0 cleanup / 0 total`; live webhook operations `0`; live Analytics calls `0`; posts published `0`; media calls `0`; Zernio emails/support contact `0`. Mock/test-double calls are not Provider activity.
@@ -1581,10 +1583,10 @@ Starting HEAD: `73cefbddcc3c7cd7eb24799f038c84c2e981023d`. Branch: `p1-t08-zerni
 - Full regression: `403 / 403 PASS across 16 files`.
 - Typecheck/build/diff-check: PASS.
 
-Canonical state: P1-T08-F10 = **IMPLEMENTED — AWAITING TEAM LEADER REVIEW**; P1-T08-F09-S01 = **BLOCKED — DNS ACCESS REQUIRED**; Provider contact = **AUTHORIZED / NOT SENT**; clarification packet = **PREPARED / NOT SENT**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Next Task = **NOT_STARTED**. No live F10 run is authorized by this implementation result.
+Canonical state: P1-T08-F10 = **DONE / ACCEPTED**; P1-T08-F10-F01 = **DONE / ACCEPTED**; accepted final F10 implementation/evidence HEAD = `fbbed9f77293d9a68c594562edb6ab2976f85844`; P1-T08-F09-S01 = **BLOCKED — DNS ACCESS REQUIRED**; Provider contact = **AUTHORIZED / NOT SENT**; clarification packet = **PREPARED / NOT SENT**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Next Task = **NOT_STARTED**; live data-bearing experiment = **NOT AUTHORIZED YET**.
 ## P1-T08-F10-F01 - Harden Uncertain Artifact Recovery & Live Observation Window
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`. Parent F10 remains `REJECTED — FIX REQUIRED` until Team Leader acceptance. Starting HEAD: `266885dd5e5962e58fe6b2811ecb1c6a54c48ac2`.
+Status: `DONE / ACCEPTED`. Team Leader verdict: **ACCEPTED**. Parent F10 is `DONE / ACCEPTED` after this hardening fix. Starting HEAD: `266885dd5e5962e58fe6b2811ecb1c6a54c48ac2`. Accepted final implementation/evidence HEAD: `fbbed9f77293d9a68c594562edb6ab2976f85844`.
 
 ### OFFLINE FIX EVIDENCE
 - Provider activity remained hard zero: `0 normal / 0 cleanup / 0 total`; live webhook operations `0`; Analytics calls `0`; posts published `0`; Zernio emails/contact `0`; DNS changes `0`.
@@ -1605,4 +1607,4 @@ Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`. Parent F10 remains `REJEC
 - `npm run build -- --pretty false`: PASS.
 - `git diff --check`: PASS.
 
-Canonical state: P1-T08-F10 = **REJECTED — FIX REQUIRED**; P1-T08-F10-F01 = **IMPLEMENTED — AWAITING TEAM LEADER REVIEW**; P1-T08-F09-S01 = **BLOCKED — DNS ACCESS REQUIRED**; Provider contact = **AUTHORIZED / NOT SENT**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Next Task = **NOT_STARTED**. No live experiment is authorized.
+Canonical state: P1-T08-F10-F01 = **DONE / ACCEPTED**; P1-T08-F10 = **DONE / ACCEPTED**; accepted final F10 implementation/evidence HEAD = `fbbed9f77293d9a68c594562edb6ab2976f85844`; P1-T08-F09-S01 = **BLOCKED — DNS ACCESS REQUIRED**; Provider contact = **AUTHORIZED / NOT SENT**; clarification packet = **PREPARED / NOT SENT**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Next Task = **NOT_STARTED**; live data-bearing experiment = **NOT AUTHORIZED YET**. Documentation finalization performed no Provider/Zernio/live actions.

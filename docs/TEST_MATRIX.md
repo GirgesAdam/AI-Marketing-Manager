@@ -1194,11 +1194,14 @@ No test-suite rerun is required because no source/test/package file changed. Req
 
 ## P1-T08-F10 - Data-Bearing Experiment Harness
 
-Status: `REJECTED — FIX REQUIRED`.
+Status: `DONE / ACCEPTED`.
 
 | Gate / Regression | Result | Evidence |
 |---|---|---|
-| Approved starting HEAD | PASS | `73cefbddcc3c7cd7eb24799f038c84c2e981023d` |
+| Historical starting HEAD | PASS | `73cefbddcc3c7cd7eb24799f038c84c2e981023d` |
+| Original F10 implementation HEAD | PASS | `266885dd5e5962e58fe6b2811ecb1c6a54c48ac2` |
+| Accepted final implementation/evidence HEAD | PASS | `fbbed9f77293d9a68c594562edb6ab2976f85844` |
+| Team Leader verdict | PASS | ACCEPTED after F10-F01 hardening |
 | Provider activity during F10 | PASS / ZERO | 0 external calls; mocks/test doubles only |
 | Frozen Profile/account/Page/platform | PASS | exact Profile A + Facebook account + Page + facebook; mismatch fails closed |
 | Human text approval/hash gate | PASS | exact runtime text + SHA-256 required before publish |
@@ -1225,10 +1228,10 @@ Status: `REJECTED — FIX REQUIRED`.
 | Full suite | PASS | `403 / 403 PASS across 16 files` |
 | Typecheck / build / diff-check | PASS | all PASS |
 
-P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; clarification packet remains **PREPARED / NOT SENT**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**. Analytics Webhook remains `SPIKE_PENDING`. Next Task remains **NOT_STARTED**. No capability is promoted and no live F10 execution occurred.
+P1-T08-F10 and P1-T08-F10-F01 are **DONE / ACCEPTED** at accepted final implementation/evidence HEAD `fbbed9f77293d9a68c594562edb6ab2976f85844`. P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; clarification packet remains **PREPARED / NOT SENT**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**. Analytics Webhook remains `SPIKE_PENDING`. Current Phase remains **PHASE 1 — Provider Feasibility & Basic Cost Safety**. Next Task remains **NOT_STARTED**. Live data-bearing experiment remains **NOT AUTHORIZED YET**.
 ## P1-T08-F10-F01 - Uncertain Artifact Recovery / Observation Hardening
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`. Parent F10 remains `REJECTED — FIX REQUIRED`.
+Status: `DONE / ACCEPTED`. Parent F10 is `DONE / ACCEPTED` after F10-F01 hardening. Team Leader verdict: **ACCEPTED**. Accepted final implementation/evidence HEAD: `fbbed9f77293d9a68c594562edb6ab2976f85844`.
 
 | Gate / Regression | Result | Evidence |
 |---|---|---|
@@ -1255,4 +1258,4 @@ Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`. Parent F10 remains `REJEC
 | Typecheck | PASS | `npm run typecheck -- --pretty false` |
 | Build | PASS | `npm run build -- --pretty false` |
 | Diff check | PASS | `git diff --check` |
-| Canonical state | PASS | F10 rejected/fix required; F10-F01 awaiting review; F09-S01 blocked; parent unresolved; Analytics Webhook SPIKE_PENDING; Next Task NOT_STARTED |
+| Canonical state | PASS | F10-F01 DONE/ACCEPTED; F10 DONE/ACCEPTED; accepted final HEAD `fbbed9f77293d9a68c594562edb6ab2976f85844`; F09-S01 BLOCKED — DNS ACCESS REQUIRED; Provider contact AUTHORIZED / NOT SENT; clarification packet PREPARED / NOT SENT; parent P1-T08 UNRESOLVED / NOT DONE; Analytics Webhook SPIKE_PENDING; Phase 1; Next Task NOT_STARTED; live experiment NOT AUTHORIZED YET |
