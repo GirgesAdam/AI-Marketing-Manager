@@ -1194,7 +1194,7 @@ No test-suite rerun is required because no source/test/package file changed. Req
 
 ## P1-T08-F10 - Data-Bearing Experiment Harness
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Status: `REJECTED — FIX REQUIRED`.
 
 | Gate / Regression | Result | Evidence |
 |---|---|---|
@@ -1226,3 +1226,33 @@ Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
 | Typecheck / build / diff-check | PASS | all PASS |
 
 P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; clarification packet remains **PREPARED / NOT SENT**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**. Analytics Webhook remains `SPIKE_PENDING`. Next Task remains **NOT_STARTED**. No capability is promoted and no live F10 execution occurred.
+## P1-T08-F10-F01 - Uncertain Artifact Recovery / Observation Hardening
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`. Parent F10 remains `REJECTED — FIX REQUIRED`.
+
+| Gate / Regression | Result | Evidence |
+|---|---|---|
+| Provider activity | PASS / ZERO | 0 external calls, posts, webhooks, Analytics, emails, DNS changes; mocks/test doubles only |
+| F10-F01-01 uncertain publish zero-match evidence | PASS | retained safe post evidence; no approved text serialization |
+| F10-F01-02 no second publish | PASS | ambiguous zero-match path keeps one publish attempt maximum |
+| F10-F01-03 unknown-ID reconcile-only entry | PASS | bounded post reconciliation without publish |
+| F10-F01-04 zero-match semantics | PASS | `UNCERTAIN_ARTIFACT_NOT_FOUND`; artifact remains unresolved, not confirmed absent |
+| F10-F01-05 one exact candidate cleanup | PASS | target attested; explicit cleanup auth required; unpublish + verify |
+| F10-F01-06 multiple candidates | PASS | `CRITICAL_DUPLICATE_CONFIRMED_PUBLISH`; zero arbitrary deletes |
+| F10-F01-07 uncertain webhook zero-match evidence | PASS | retained name/URL/event/Profile/uncertainty evidence |
+| F10-F01-08 later webhook recovery | PASS | exact-name recovery; no second webhook create |
+| F10-F01-09 webhook recovery attestation | PASS | exact URL + analytics.synced-only + Profile-A-only required before delete |
+| F10-F01-10 missing observation authorization | PASS | fails before first Provider request |
+| F10-F01-11 below 60m | PASS | precheck rejects |
+| F10-F01-12 above 3h | PASS | precheck rejects |
+| F10-F01-13 approved 2h | PASS | accepted by precheck; not treated as SLA |
+| F10-F01-14 passive logical 2h | PASS | mock wait; zero Provider polling |
+| F10-F01-15 reconcile-only side effects | PASS | zero publish, zero webhook create, zero Analytics |
+| Existing F10 tests + F01 regressions | PASS | `54 / 54 PASS` |
+| Focused F10 + P1-T08 | PASS | `88 / 88 PASS across 2 files` |
+| Affected Provider-spike | PASS | `312 / 312 PASS across 11 files` |
+| Full regression | PASS | `418 / 418 PASS across 16 files` |
+| Typecheck | PASS | `npm run typecheck -- --pretty false` |
+| Build | PASS | `npm run build -- --pretty false` |
+| Diff check | PASS | `git diff --check` |
+| Canonical state | PASS | F10 rejected/fix required; F10-F01 awaiting review; F09-S01 blocked; parent unresolved; Analytics Webhook SPIKE_PENDING; Next Task NOT_STARTED |

@@ -364,11 +364,11 @@ Analytics Bootstrap & Cursor Contract: **`SPIKE_PASS`**.
 
 ## Current Task
 
-`P1-T08-F10 — Build Data-Bearing analytics.synced Experiment Harness`
+`P1-T08-F10-F01 — Harden Uncertain Artifact Recovery & Live Observation Window`
 
 **Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
 
-P1-T08-F10 is an offline-only Provider Behavior experiment harness implementation. No live F10 execution is authorized or performed. P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; clarification packet remains **PREPARED / NOT SENT**; parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
+P1-T08-F10 remains **REJECTED — FIX REQUIRED** until Team Leader accepts F10-F01. F10-F01 is offline-only; no live experiment is authorized or performed. P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; clarification packet remains **PREPARED / NOT SENT**; parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
 
 ### P1-T08-F09-S01 MarketlyAI sender / reply readiness
 - Approved starting HEAD: `a3f9dfebb5b2c8c0e618fe176d57849c416d4cd3`; branch `p1-t08-zernio-analytics-webhook`; starting tree clean.
@@ -632,7 +632,7 @@ Team Leader verdict: **ACCEPTED**. Recommendation remains unexecuted; Provider c
 - F03-F07 history preserved. F07 remains DONE / ACCEPTED; parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
 
 ### P1-T08-F10 data-bearing analytics.synced experiment harness
-**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+**Status: REJECTED — FIX REQUIRED**
 
 - Starting HEAD: `73cefbddcc3c7cd7eb24799f038c84c2e981023d`; branch `p1-t08-zernio-analytics-webhook`.
 - Scope is implementation + deterministic offline validation only. External Provider calls, webhook operations, Analytics calls, social publishing, media calls, Zernio communication, DNS work, and F09 sender continuation during F10: **0**. All request-shaped test activity uses mocks/test doubles only.
@@ -653,6 +653,21 @@ Team Leader verdict: **ACCEPTED**. Recommendation remains unexecuted; Provider c
 - `npm run typecheck`: PASS; `npm run build`: PASS; `git diff --check`: PASS.
 - P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**. Provider contact remains **AUTHORIZED / NOT SENT**; clarification packet remains **PREPARED / NOT SENT**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**. Analytics Webhook remains `SPIKE_PENDING`. Next Task remains **NOT_STARTED**.
 
+### P1-T08-F10-F01 uncertain artifact recovery / observation hardening
+**Status: IMPLEMENTED — AWAITING TEAM LEADER REVIEW**
+
+- Starting HEAD: `266885dd5e5962e58fe6b2811ecb1c6a54c48ac2`; branch `p1-t08-zernio-analytics-webhook`. Team Leader verdict on F10 remains **REJECTED — FIX REQUIRED** until this fix is accepted.
+- Scope remained offline-only. Provider/Zernio calls, webhook operations, Analytics calls, posts published, Zernio emails, and DNS changes during F10-F01: **0**. All request-shaped activity used mocks/test doubles.
+- Ambiguous publish now retains safe post evidence immediately before reconciliation: approved text SHA-256 only (not approved text), exact frozen Profile/account/Page/platform, safe idempotency-key fingerprint, publish-attempt timestamp, retention deadline, `uncertainCreate=true`, and `cleanupConfirmed=false`. Zero first reconciliation matches no longer collapse the possible external artifact to `post=null`.
+- Unknown-post-ID recovery is available through a reconcile-only path with trusted identity, frozen target, runtime-approved text/SHA validation, and an explicit bounded creation-time window. It performs zero publish calls, zero webhook creates, and zero Analytics reads. Zero matches returns `UNCERTAIN_ARTIFACT_NOT_FOUND` with unresolved artifact state; one exact match can be attested and cleaned only with explicit cleanup authorization; multiple exact matches are `CRITICAL_DUPLICATE_CONFIRMED_PUBLISH` with no arbitrary deletion.
+- Ambiguous webhook creation now retains exact unique name, URL, `analytics.synced`-only event scope, Profile-A-only scope, `uncertainCreate=true`, and `cleanupConfirmed=false` before reconciliation. Zero first read-back preserves that evidence. A later reconcile/cleanup-only path uses exact unique name and validates exact URL/event/Profile scope before delete + absence verification; it never creates a second webhook.
+- Main live precheck now requires explicit `P1_T08_F10_APPROVED_OBSERVATION_MS`: finite integer, minimum 60 minutes, maximum 3 hours. Missing/below-min/above-max values fail before the first Provider request. Cleanup/reconcile-only modes do not require this main-run observation authorization.
+- The future-live main path uses the explicitly approved observation duration; it does not silently substitute a longer window. Mock transports may inject a short wait only for deterministic tests. Passive observation remains zero Provider polling and the configured duration is not a Provider SLA.
+- Existing A/B/C/D/E classification discipline is unchanged; classification A still requires an authorized successful publish, valid exact-target `analytics.synced` event in the approved window, and explicit follow-up Analytics visibility of the fixture.
+- Cleanup safety remains delete/unpublish plus verification. Any artifact that may exist but cannot be safely resolved remains explicitly unresolved rather than forgotten. Request ceilings remain normal target <=9, absolute normal 10, cleanup <=4, total <=14.
+- Required F10-F01-01..15 regressions plus all prior F10 tests: `54 / 54 PASS`. Focused F10 + P1-T08: `88 / 88 PASS across 2 files`. Affected Provider-spike: `312 / 312 PASS across 11 files`. Full regression: `418 / 418 PASS across 16 files`. `npm run typecheck -- --pretty false`, `npm run build -- --pretty false`, and `git diff --check`: PASS.
+- Canonical state remains: P1-T08-F10 **REJECTED — FIX REQUIRED**; P1-T08-F10-F01 **IMPLEMENTED — AWAITING TEAM LEADER REVIEW**; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Next Task **NOT_STARTED**. No live experiment is authorized.
+
 ## Phase 1 Rules
 - Work one Task at a time.
 - Provider Behavior Tests remain separate from System Integration Tests.
@@ -668,4 +683,4 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Team Leader reviews P1-T08-F10 implementation/evidence. P1-T08-F10 is **IMPLEMENTED — AWAITING TEAM LEADER REVIEW** and no live data-bearing experiment is authorized. P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; clarification packet remains **PREPARED / NOT SENT**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**. Do not run F10 live, publish the test post, create the webhook, call Analytics, contact Zernio, continue F09 sender setup, promote Analytics Webhook, close P1-T08, or start another task.
+Team Leader reviews P1-T08-F10-F01 fix implementation/evidence. P1-T08-F10 remains **REJECTED — FIX REQUIRED**; P1-T08-F10-F01 is **IMPLEMENTED — AWAITING TEAM LEADER REVIEW**. No live data-bearing experiment is authorized. P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; clarification packet remains **PREPARED / NOT SENT**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**. Do not run F10 live, publish the test post, create a real webhook, call Analytics, contact Zernio, modify DNS, or start another task.

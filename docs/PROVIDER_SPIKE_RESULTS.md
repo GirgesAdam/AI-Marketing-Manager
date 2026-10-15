@@ -1557,7 +1557,7 @@ Canonical state: P1-T08-F09 = **BLOCKED BEFORE SEND - SENDER IDENTITY SETUP**; P
 
 ## P1-T08-F10 - Data-Bearing analytics.synced Experiment Harness
 
-Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`.
+Status: `REJECTED — FIX REQUIRED`.
 
 Starting HEAD: `73cefbddcc3c7cd7eb24799f038c84c2e981023d`. Branch: `p1-t08-zernio-analytics-webhook`.
 
@@ -1582,3 +1582,27 @@ Starting HEAD: `73cefbddcc3c7cd7eb24799f038c84c2e981023d`. Branch: `p1-t08-zerni
 - Typecheck/build/diff-check: PASS.
 
 Canonical state: P1-T08-F10 = **IMPLEMENTED — AWAITING TEAM LEADER REVIEW**; P1-T08-F09-S01 = **BLOCKED — DNS ACCESS REQUIRED**; Provider contact = **AUTHORIZED / NOT SENT**; clarification packet = **PREPARED / NOT SENT**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Next Task = **NOT_STARTED**. No live F10 run is authorized by this implementation result.
+## P1-T08-F10-F01 - Harden Uncertain Artifact Recovery & Live Observation Window
+
+Status: `IMPLEMENTED — AWAITING TEAM LEADER REVIEW`. Parent F10 remains `REJECTED — FIX REQUIRED` until Team Leader acceptance. Starting HEAD: `266885dd5e5962e58fe6b2811ecb1c6a54c48ac2`.
+
+### OFFLINE FIX EVIDENCE
+- Provider activity remained hard zero: `0 normal / 0 cleanup / 0 total`; live webhook operations `0`; Analytics calls `0`; posts published `0`; Zernio emails/contact `0`; DNS changes `0`.
+- Uncertain publish state is retained before reconciliation. Evidence includes approved-text SHA-256 (never approved text), frozen target IDs/platform, safe idempotency fingerprint, publish-attempt timestamp, retention deadline, uncertainty flag, and unconfirmed cleanup state. Zero first matches do not prove absence and do not discard evidence.
+- Post reconcile-only recovery performs trusted-identity verification plus one bounded exact-target/time-window post reconciliation. It contains no publish, webhook-create, or Analytics path. Zero matches => `UNCERTAIN_ARTIFACT_NOT_FOUND` with unresolved state; one exact match may be cleaned only under explicit cleanup authorization; >1 exact matches => `CRITICAL_DUPLICATE_CONFIRMED_PUBLISH` with no arbitrary deletion.
+- Uncertain webhook create state is retained before first read-back with exact unique name, URL, Profile-A-only scope, analytics.synced-only event scope, and unresolved cleanup state. Later exact-name recovery validates URL/event/Profile before delete and exact absence verification and never issues a second webhook create.
+- Main live observation authorization is explicit via `P1_T08_F10_APPROVED_OBSERVATION_MS`, integer-only from 60 minutes through 3 hours. Missing/invalid authorization fails before first Provider request. Cleanup/reconcile-only modes do not require this main-run field. Recommended future 2h is not hard-coded and no observation duration is a Provider SLA.
+- Passive observation still performs zero Provider polling. Tests use mock/short waits only; a mock path can inject a short deterministic wait without weakening live duration enforcement.
+- Cleanup semantics remain deterministic: webhook delete -> absence verification; post unpublish -> non-published/absent verification. Unresolved potentially-created artifacts stay represented in evidence. Existing normal/cleanup/total request ceilings remain unchanged.
+- Classification A/B/C/D/E behavior remains unchanged and conservative; no data-bearing requirement is promoted to Provider fact.
+
+### Deterministic validation
+- F10/F10-F01 test file: `54 / 54 PASS` (all prior F10 tests + required F10-F01-01..15).
+- Focused F10 + P1-T08: `88 / 88 PASS across 2 files`.
+- Affected Provider-spike: `312 / 312 PASS across 11 files`.
+- Full regression: `418 / 418 PASS across 16 files`.
+- `npm run typecheck -- --pretty false`: PASS.
+- `npm run build -- --pretty false`: PASS.
+- `git diff --check`: PASS.
+
+Canonical state: P1-T08-F10 = **REJECTED — FIX REQUIRED**; P1-T08-F10-F01 = **IMPLEMENTED — AWAITING TEAM LEADER REVIEW**; P1-T08-F09-S01 = **BLOCKED — DNS ACCESS REQUIRED**; Provider contact = **AUTHORIZED / NOT SENT**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Next Task = **NOT_STARTED**. No live experiment is authorized.
