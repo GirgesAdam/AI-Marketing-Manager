@@ -1632,6 +1632,24 @@ This entry records PRE-PROVIDER infrastructure/tooling evidence only. It is not 
 - Readiness: **NOT PROVEN**.
 - Blocking dependency: **AUTHORIZED PRIVILEGED NGINX ACCESS REQUIRED**.
 - Nginx syntax, F11 route, tunnel, receiver, and F11 execution readiness remain unproven.
-- Canonical state: P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; P1-T08-F09-S01 = **BLOCKED ? DNS ACCESS REQUIRED**; Provider contact = **AUTHORIZED / NOT SENT**; Current Phase = **PHASE 1 ? Provider Feasibility & Basic Cost Safety**; Next Task = **NOT_STARTED**.
+- Canonical state: P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; P1-T08-F09-S01 = **BLOCKED — DNS ACCESS REQUIRED**; Provider contact = **AUTHORIZED / NOT SENT**; Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Next Task = **NOT_STARTED**.
 
 Post-stop cleanup verification: local port `18087` clear; base HTTPS `404`, no redirect, TLS verification result `0`; exact F11 path `404`, no redirect, TLS verification result `0`; no temporary route/tunnel/receiver existed to clean up.
+
+
+## P1-T08-F11-F02 - Human-Assisted Privileged Nginx Readiness Proof
+
+Status: `EXECUTED — AWAITING TEAM LEADER REVIEW`.
+
+Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**. This is PRE-PROVIDER infrastructure/tooling evidence only, not Zernio Provider Behavior evidence.
+
+- Original starting HEAD: `4870df89929db4c6953ff57af51f161519d2f0ca`; activation HEAD: `d7d6a3d8bac2a9739aeff21c537525367f42f08e`; branch `p1-t08-zernio-analytics-webhook`.
+- Public baseline: DNS `82.29.177.121`; base HTTPS `404`; exact F11 path `404`; no redirect; trusted TLS verification result `0`.
+- SSH identity matched expected `marktuser@srv822206`.
+- Human-assisted sudo did not succeed because the available execution channel could not provide a verifiable direct-human password-entry path without exposing the password to ChatGPT. Password exposure: **NO**.
+- Pre-change `sudo nginx -t`: **NOT RUN**. Exact vhost/fingerprint: **NOT PROVEN / NOT RECORDED**.
+- Receiver, reverse tunnel, temporary exact route, external marker proof, and local F11 precheck: **NOT RUN / NOT STARTED** after the tooling stop.
+- Cleanup verification: no F11 SSH process remained; local `18087` clear; base HTTPS and exact F11 path both `404`, no redirect, TLS verification result `0`; no temporary infrastructure existed to remove.
+- Provider/Zernio calls: `0`; `/v1/auth/verify`: `0`; Accounts: `0`; Analytics: `0`; Provider webhook API: `0`; Provider post API: `0`; Provider contact/email: `0`.
+- F11 authorization consumed: **NO**; P1-T08-F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization remains **AUTHORIZED / UNCONSUMED**.
+- Readiness: **NOT PROVEN**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Next Task **NOT_STARTED**.

@@ -59,7 +59,7 @@ Current Task = `P1-T08-F11-F02 — Human-Assisted Privileged Nginx Readiness Pro
 
 F11-F01 = **DONE / ACCEPTED**
 
-F11-F02 = **IN PROGRESS — AUTHORIZED**
+F11-F02 = **EXECUTED — AWAITING TEAM LEADER REVIEW**
 
 ## P1-T01 Result
 `P1-T01 — Build Minimal Provider Spike Harness`
@@ -792,7 +792,7 @@ Current Task = `P1-T08-F11-F02 — Human-Assisted Privileged Nginx Readiness Pro
 
 F11-F01 = **DONE / ACCEPTED**.
 
-F11-F02 = **IN PROGRESS — AUTHORIZED**.
+F11-F02 = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
 
 P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 one-run authorization = **AUTHORIZED / UNCONSUMED**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; Next Task remains **NOT_STARTED**.
 
@@ -824,9 +824,28 @@ Evidence established before the tooling stop:
 - Webhook created = **NO**; post published = **NO**; Analytics called = **NO**.
 - F11 one-run authorization remains **AUTHORIZED / UNCONSUMED** and P1-T08-F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**.
 - This is infrastructure/tooling readiness evidence only and is not Provider behavior evidence.
-- Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; P1-T08-F09-S01 = **BLOCKED ? DNS ACCESS REQUIRED**; Provider contact = **AUTHORIZED / NOT SENT**.
-- Current Phase = **PHASE 1 ? Provider Feasibility & Basic Cost Safety**; Next Task = **NOT_STARTED**.
+- Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; P1-T08-F09-S01 = **BLOCKED — DNS ACCESS REQUIRED**; Provider contact = **AUTHORIZED / NOT SENT**.
+- Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Next Task = **NOT_STARTED**.
 
 Team Leader verdict: **ACCEPTED**. This accepted result does not prove Nginx syntax, the F11 route, tunnel, receiver, or F11 execution readiness. Authorized human-assisted privileged Nginx access is required before any future readiness retry.
 
 Post-stop cleanup verification: local port `18087` was clear; base HTTPS remained `404` with no redirect and TLS verification result `0`; exact F11 path remained `404` with no redirect and TLS verification result `0`. No temporary route/tunnel/receiver existed to remove or stop.
+
+
+### P1-T08-F11-F02 human-assisted privileged Nginx readiness execution
+Execution date: `2026-10-16`.
+
+- Original starting HEAD: `4870df89929db4c6953ff57af51f161519d2f0ca`.
+- Activation commit HEAD: `d7d6a3d8bac2a9739aeff21c537525367f42f08e` (`docs(p1-t08): activate F11 privileged readiness`).
+- Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**.
+- Baseline public readiness before privileged work: DNS `marketlyai.restartorg.com -> 82.29.177.121`; base HTTPS `404`; exact F11 path `404`; no redirect; TLS verification result `0`.
+- SSH identity: **PASS** for expected user `marktuser` on expected host `srv822206`.
+- Human-assisted sudo succeeded: **NO**. A safe direct human password-entry path could not be established/verified through the available execution channel without routing the password through ChatGPT. No password was requested in chat, read, recorded, logged, echoed, injected, stored, or exposed.
+- Pre-change `sudo nginx -t`: **NOT RUN**. No privileged Nginx operation was confirmed.
+- Exact active MarketlyAI vhost identified: **NO**; pre-change config fingerprint recorded: **NO**.
+- Local receiver: **NOT STARTED**; reverse tunnel: **NOT STARTED**; temporary exact F11 Nginx route: **NOT INSTALLED**; external marker proof: **NOT RUN**; local F11 precheck: **NOT RUN**.
+- Cleanup verification: no F11 SSH process remained; local port `18087` clear; base HTTPS remained `404`; exact F11 path remained `404`; no redirect; TLS verification result `0`. No temporary route/tunnel/receiver existed to remove.
+- Provider/Zernio calls = `0`; `/v1/auth/verify` = `0`; Accounts = `0`; Analytics = `0`; Provider webhook API = `0`; Provider post API = `0`; Provider contact/email = `0`.
+- F11 one-run authorization consumed: **NO**. P1-T08-F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization remains **AUTHORIZED / UNCONSUMED**.
+- Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
+- Readiness remains **NOT PROVEN**. This result is infrastructure/tooling evidence only and is **not Provider Behavior evidence**.

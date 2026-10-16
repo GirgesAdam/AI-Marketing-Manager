@@ -1286,7 +1286,32 @@ Status: **DONE / ACCEPTED**. Result: **PRE_PROVIDER_TOOLING_UNAVAILABLE**. Accep
 | Blocking dependency | BLOCKED | `AUTHORIZED PRIVILEGED NGINX ACCESS REQUIRED` |
 | Final classification | ACCEPTED BLOCKER | `PRE_PROVIDER_TOOLING_UNAVAILABLE`; Team Leader accepted this task result; readiness remains NOT PROVEN |
 | Canonical parent state | PASS | P1-T08-F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING` |
-| Other blockers/contact | PASS | P1-T08-F09-S01 `BLOCKED ? DNS ACCESS REQUIRED`; Provider contact `AUTHORIZED / NOT SENT` |
-| Phase / next task | PASS | `PHASE 1 ? Provider Feasibility & Basic Cost Safety`; Next Task `NOT_STARTED` |
+| Other blockers/contact | PASS | P1-T08-F09-S01 `BLOCKED — DNS ACCESS REQUIRED`; Provider contact `AUTHORIZED / NOT SENT` |
+| Phase / next task | PASS | `PHASE 1 — Provider Feasibility & Basic Cost Safety`; Next Task `NOT_STARTED` |
 
 Post-stop cleanup verification: local `18087` clear; base HTTPS and exact F11 path both remained `404`, no redirect, TLS verification result `0`; no temporary route/tunnel/receiver existed to clean up.
+
+
+## P1-T08-F11-F02 - Privileged Readiness Matrix
+
+Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**. Readiness: **NOT PROVEN**.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Source-of-Truth activation | PASS | activation commit `d7d6a3d8bac2a9739aeff21c537525367f42f08e` before infrastructure work |
+| Repository/source integrity | PASS | no source/test/package changes |
+| Public DNS / HTTPS baseline | PASS | `marketlyai.restartorg.com -> 82.29.177.121`; base `404`; F11 path `404`; no redirect; TLS verify `0` |
+| SSH expected user/host | PASS | `marktuser@srv822206` |
+| Human-assisted sudo | BLOCKED | direct human password-entry path could not be safely established/verified; password exposure `NO` |
+| Pre-change nginx syntax | NOT RUN | privileged access not established |
+| Exact vhost / fingerprint | NOT RUN | stopped before privileged inspection |
+| Local receiver | NOT RUN | stopped before setup; port `18087` later verified clear |
+| Reverse tunnel / VPS loopback proof | NOT RUN | stopped before setup |
+| Temporary exact Nginx route | NOT RUN | no config change |
+| External marker proof | NOT RUN | no route/tunnel/receiver established |
+| Local F11 precheck | NOT RUN | no disposable retention/token generated |
+| Provider activity | PASS / ZERO | Zernio, auth/verify, Accounts, Analytics, webhook/post API, contact all `0` |
+| F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
+| Cleanup | PASS / NO TEMP INFRA | no F11 SSH process remained; port `18087` clear; base/F11 path `404`; no redirect; TLS verify `0` |
+| Final classification | BLOCKED | `PRE_PROVIDER_TOOLING_UNAVAILABLE` |
+| Canonical state | PASS | F11-F02 `EXECUTED — AWAITING TEAM LEADER REVIEW`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Next Task `NOT_STARTED` |
