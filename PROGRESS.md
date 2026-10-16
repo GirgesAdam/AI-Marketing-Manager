@@ -55,13 +55,13 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08-F11-F03 — Complete Privileged Pre-Provider Readiness`
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
 F11-F01 = **DONE / ACCEPTED**
 
 F11-F02 = **DONE / ACCEPTED**
 
-F11-F03 = **EXECUTED — AWAITING TEAM LEADER REVIEW**
+F11-F03 = **DONE / ACCEPTED**
 
 ## P1-T01 Result
 `P1-T01 — Build Minimal Provider Spike Harness`
@@ -765,7 +765,7 @@ Reason = **PROGRESS.md / HANDOFF EXECUTION-STATE MISMATCH**.
 This was a project documentation-state blocker, not Provider behavior.
 
 ### Current Task
-Current Task = `P1-T08-F11-F03 — Complete Privileged Pre-Provider Readiness`.
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
 
 F11-F01 = **DONE / ACCEPTED**.
 
@@ -790,17 +790,17 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Current Task = `P1-T08-F11-F03 — Complete Privileged Pre-Provider Readiness`.
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
 
 F11-F01 = **DONE / ACCEPTED**.
 
 F11-F02 = **DONE / ACCEPTED**.
 
-F11-F03 = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+F11-F03 = **DONE / ACCEPTED**.
 
 P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 one-run authorization = **AUTHORIZED / UNCONSUMED**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; Next Task remains **NOT_STARTED**.
 
-F11-F01 is **DONE / ACCEPTED** with result **PRE_PROVIDER_TOOLING_UNAVAILABLE**. Readiness is **NOT PROVEN**. Blocking dependency is **AUTHORIZED PRIVILEGED NGINX ACCESS REQUIRED**. Do not retry F11-F01 or execute F11 without a new Team Leader authorization/instruction. Do not call Zernio or `/v1/auth/verify`, create a Provider webhook, publish a post, call Analytics, modify source/tests, resume F09, or start another task.
+F11-F01 is **DONE / ACCEPTED** with result **PRE_PROVIDER_TOOLING_UNAVAILABLE**. Its historical blocking dependency was **AUTHORIZED PRIVILEGED NGINX ACCESS REQUIRED**. That privilege prerequisite is now superseded by F11-F03 evidence: privileged access is **PROVEN** and post-entry `sudo -n true` = **PASS**. Current blocker = **PRIVILEGED NGINX COMMAND DISPATCH PATH UNAVAILABLE**. Readiness remains **NOT PROVEN**. Do not execute F11, call Zernio or `/v1/auth/verify`, create a Provider webhook, publish a post, call Analytics, modify source/tests, resume F09, start another readiness retry, or start another task without a new Team Leader instruction.
 
 
 ### P1-T08-F11-F01 pre-Provider readiness execution
@@ -873,7 +873,19 @@ Post-F11-F02 prerequisite update: **DIRECT HUMAN TERMINAL PASSWORD ENTRY = USER-
 ### P1-T08-F11-F03 complete privileged pre-Provider readiness execution
 Execution date: `2026-10-16`.
 
-Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+Status: **DONE / ACCEPTED**.
+
+P1-T08-F11-F03 Result: **PRE_PROVIDER_TOOLING_UNAVAILABLE**.
+
+Accepted evidence HEAD: `052e25d03e445914224b7cc65fb40aa2801052c9`.
+
+Privileged access: **PROVEN**.
+
+Post-entry `sudo -n true`: **PASS**.
+
+Readiness: **NOT PROVEN**.
+
+Current blocker: **PRIVILEGED NGINX COMMAND DISPATCH PATH UNAVAILABLE**.
 
 Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**.
 
@@ -884,7 +896,7 @@ Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**.
 - SSH identity: **PASS** for `marktuser@srv822206`.
 - Initial `sudo -n true`: authentication required. Human entry required: **YES**. The human entered the sudo password directly inside the visible Terminal only. Password exposed to ChatGPT: **NO**; password sent in chat: **NO**.
 - Post-entry `sudo -n true`: **PASS**. Privilege independently verified: **YES**. The local non-secret result marker was exit-code class `20`, meaning human entry occurred and the post-entry non-interactive sudo check succeeded.
-- Pre-change `sudo -n nginx -t`: **NOT RUN**. The execution tooling rejected dispatch of the required privileged Nginx command before it reached the VPS. No Nginx command or change followed.
+- Pre-change `sudo -n nginx -t`: **NOT RUN**. The execution tooling rejected dispatch of the required privileged Nginx command before it reached the VPS. No Nginx command or change followed. This is a tooling/execution-channel blocker, not an Nginx syntax, credential, sudo authorization, Provider, or Zernio failure.
 - Exact MarketlyAI vhost identified: **NO**; config path: **NOT PROVEN**; pre-change fingerprint: **NOT RECORDED**; rollback backup created: **NO**.
 - A non-secret helper transfer via SCP failed with `Connection closed`; no helper was uploaded. A later alternative helper-transfer command was rejected by the execution tooling before dispatch. No remote helper/config change resulted.
 - Local receiver: **NOT STARTED**; reverse tunnel: **NOT STARTED**; VPS loopback marker proof: **NOT RUN**; temporary exact Nginx route: **NOT INSTALLED**; post-change nginx test/reload: **NOT RUN**; external marker proof: **NOT RUN**; local F11 precheck: **NOT RUN**.
@@ -892,4 +904,5 @@ Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**.
 - Provider/Zernio calls = `0`; `/v1/auth/verify` = `0`; Accounts = `0`; Analytics = `0`; Provider webhook API = `0`; Provider post API = `0`; Provider contact/email = `0`.
 - Webhook created = **NO**; post published = **NO**; Analytics called = **NO**; F11 authorization consumed = **NO**.
 - P1-T08-F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization remains **AUTHORIZED / UNCONSUMED**; parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
-- Readiness remains **NOT PROVEN**. This is infrastructure/tooling evidence only and is **not Provider Behavior evidence**.
+- Readiness remains **NOT PROVEN**. Current blocker = **PRIVILEGED NGINX COMMAND DISPATCH PATH UNAVAILABLE**. This is infrastructure/tooling evidence only and is **not Provider Behavior evidence**.
+- Current Task after finalization = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, status **UNRESOLVED / NOT DONE**. Do not activate another readiness retry automatically; Next Task remains **NOT_STARTED**.

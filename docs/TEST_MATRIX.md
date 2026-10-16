@@ -1323,7 +1323,7 @@ Status: **DONE / ACCEPTED**. Final classification: **PRE_PROVIDER_TOOLING_UNAVAI
 
 ## P1-T08-F11-F03 - Privileged Readiness Matrix
 
-Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**. Readiness: **NOT PROVEN**.
+Status: **DONE / ACCEPTED**. Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**. Accepted evidence HEAD: `052e25d03e445914224b7cc65fb40aa2801052c9`. Privileged access: **PROVEN**. Post-entry `sudo -n true`: **PASS**. Readiness: **NOT PROVEN**. Current blocker: **PRIVILEGED NGINX COMMAND DISPATCH PATH UNAVAILABLE**.
 
 | Gate | Result | Evidence |
 |---|---|---|
@@ -1334,6 +1334,7 @@ Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **PR
 | Initial sudo -n true | AUTH REQUIRED | direct human Terminal path required |
 | Human password entry | PASS / SAFE | entered directly in visible Terminal only; password sent to/exposed to ChatGPT **NO** |
 | Post-entry sudo -n true | PASS | non-secret result marker class `20`; privilege independently verified **YES** |
+| Current blocker | BLOCKED | `PRIVILEGED NGINX COMMAND DISPATCH PATH UNAVAILABLE`; tooling/execution-channel blocker, not sudo authorization, credential, Nginx syntax, Provider, or Zernio failure |
 | Pre-change nginx syntax | NOT RUN | required privileged Nginx command rejected by execution tooling before dispatch |
 | Exact vhost / fingerprint / backup | NOT RUN | stopped before privileged Nginx inspection/change |
 | Helper transfer | BLOCKED / NO CHANGE | SCP `Connection closed`; alternative transfer rejected before dispatch; no remote helper/config change |
@@ -1346,5 +1347,5 @@ Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **PR
 | F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
 | Cleanup | PASS / NO TEMP INFRA | no SSH process; local `18087` clear; base/F11 path `404`; TLS verify `0`; redirects `0`; no route/tunnel/receiver/backup existed |
 | Cleanup safety failure | NO | no temporary infrastructure was created |
-| Final classification | BLOCKED | `PRE_PROVIDER_TOOLING_UNAVAILABLE`; readiness remains `NOT PROVEN` |
-| Canonical state | PASS | F11-F03 `EXECUTED — AWAITING TEAM LEADER REVIEW`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics `SPIKE_PENDING`; Next Task `NOT_STARTED` |
+| Final classification | DONE / ACCEPTED | `PRE_PROVIDER_TOOLING_UNAVAILABLE`; accepted evidence HEAD `052e25d03e445914224b7cc65fb40aa2801052c9`; readiness remains `NOT PROVEN` |
+| Canonical state | PASS | F11-F03 `DONE / ACCEPTED`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent/current task P1-T08 `UNRESOLVED / NOT DONE`; Analytics `SPIKE_PENDING`; P1-T08-F09-S01 `BLOCKED — DNS ACCESS REQUIRED`; Provider contact `AUTHORIZED / NOT SENT`; Next Task `NOT_STARTED` |
