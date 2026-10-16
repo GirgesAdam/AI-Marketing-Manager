@@ -47,6 +47,18 @@ Closed definitions include:
 ## Current Execution State
 **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
+Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
+
+Parent Product Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
+
+Parent P1-T08 = **UNRESOLVED / NOT DONE**
+
+Analytics Webhook = `SPIKE_PENDING`
+
+Current Task = `P1-T08-F11-F01 — Restore and Prove Pre-Provider Live Readiness`
+
+F11-F01 = **NOT STARTED — AUTHORIZED**
+
 ## P1-T01 Result
 `P1-T01 — Build Minimal Provider Spike Harness`
 
@@ -652,7 +664,7 @@ Team Leader verdict: **ACCEPTED**. Recommendation remains unexecuted; Provider c
 - Affected Provider-spike validation: `297 / 297 PASS across 11 files`.
 - Full regression suite: `403 / 403 PASS across 16 files`.
 - `npm run typecheck`: PASS; `npm run build`: PASS; `git diff --check`: PASS.
-- Canonical post-acceptance state: P1-T08-F10 **DONE / ACCEPTED**; P1-T08-F10-F01 **DONE / ACCEPTED**; accepted final F10 implementation/evidence HEAD `fbbed9f77293d9a68c594562edb6ab2976f85844`; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; clarification packet **PREPARED / NOT SENT**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Next Task **NOT_STARTED**; live data-bearing experiment **NOT AUTHORIZED YET**.
+- Canonical post-acceptance state: P1-T08-F10 **DONE / ACCEPTED**; P1-T08-F10-F01 **DONE / ACCEPTED**; accepted final F10 implementation/evidence HEAD `fbbed9f77293d9a68c594562edb6ab2976f85844`; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; clarification packet **PREPARED / NOT SENT**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Next Task **NOT_STARTED**; live data-bearing experiment **NOT AUTHORIZED YET AT THAT TIME**; this authorization state is superseded by the later explicit F11 authorization documented below.
 
 ### P1-T08-F10-F01 uncertain artifact recovery / observation hardening
 **Status: DONE / ACCEPTED**
@@ -667,7 +679,97 @@ Team Leader verdict: **ACCEPTED**. Recommendation remains unexecuted; Provider c
 - Existing A/B/C/D/E classification discipline is unchanged; classification A still requires an authorized successful publish, valid exact-target `analytics.synced` event in the approved window, and explicit follow-up Analytics visibility of the fixture.
 - Cleanup safety remains delete/unpublish plus verification. Any artifact that may exist but cannot be safely resolved remains explicitly unresolved rather than forgotten. Request ceilings remain normal target <=9, absolute normal 10, cleanup <=4, total <=14.
 - Required F10-F01-01..15 regressions plus all prior F10 tests: `54 / 54 PASS`. Focused F10 + P1-T08: `88 / 88 PASS across 2 files`. Affected Provider-spike: `312 / 312 PASS across 11 files`. Full regression: `418 / 418 PASS across 16 files`. `npm run typecheck -- --pretty false`, `npm run build -- --pretty false`, and `git diff --check`: PASS.
-- Canonical state: P1-T08-F10-F01 **DONE / ACCEPTED**; P1-T08-F10 **DONE / ACCEPTED**; accepted final F10 implementation/evidence HEAD `fbbed9f77293d9a68c594562edb6ab2976f85844`; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; clarification packet **PREPARED / NOT SENT**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Next Task **NOT_STARTED**; live data-bearing experiment **NOT AUTHORIZED YET**.
+- Canonical state: P1-T08-F10-F01 **DONE / ACCEPTED**; P1-T08-F10 **DONE / ACCEPTED**; accepted final F10 implementation/evidence HEAD `fbbed9f77293d9a68c594562edb6ab2976f85844`; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; clarification packet **PREPARED / NOT SENT**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Next Task **NOT_STARTED**; live data-bearing experiment **NOT AUTHORIZED YET AT THAT TIME**; this authorization state is superseded by the later explicit F11 authorization documented below.
+
+## P1-T08-F11 Authorization / Source-of-Truth Correction
+
+**Correction type: DOCUMENTATION STATE RECONCILIATION ONLY**
+
+This correction canonicalizes the later explicit F11 authorization and current-task state. It is not Provider execution, not F11-F01 execution, and not new product capability behavior.
+
+### Parent / accepted predecessor state
+- Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**.
+- Parent Product Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
+- Parent P1-T08 = **UNRESOLVED / NOT DONE**.
+- Analytics Webhook = `SPIKE_PENDING`.
+- P1-T08-F10 = **DONE / ACCEPTED**.
+- P1-T08-F10-F01 = **DONE / ACCEPTED**.
+- Accepted final F10 implementation/evidence HEAD = `fbbed9f77293d9a68c594562edb6ab2976f85844`.
+- Documentation finalization HEAD = `8fb270421863a1cfb47c6f6403772a34e744db48`.
+- P1-T08-F09-S01 = **BLOCKED — DNS ACCESS REQUIRED**.
+- Provider contact = **AUTHORIZED / NOT SENT**.
+- Clarification packet = **PREPARED / NOT SENT**.
+- Do not resume F09 automatically.
+
+### F11 authorization
+The user explicitly authorized **ONE** controlled P1-T08-F11 data-bearing live experiment.
+
+Approved exact text:
+
+`MarketlyAI internal analytics synchronization test. No action required.`
+
+Approved SHA-256:
+
+`66eec48e7935b5356e13f67f817018a1f2fc678863680b67303b2b26ea8f5dac`
+
+Frozen target:
+- Profile A: `6ac5a45a8e4ca44f355033ae`
+- Facebook account: `6ac64f8740364f4695dd3077`
+- Facebook Page: `1387424501114639`
+- Page name: `Clothing Brand`
+- Platform: `facebook`
+
+Approved passive observation = `7200000 ms` (2 hours).
+
+Approved maximum post retention = **24 hours from the future actual live execution start**.
+
+Authorized content/action constraints:
+- Media: NONE
+- Links: NONE
+- Hashtags: NONE
+- Ads: NONE
+- Manufactured engagement: NONE
+
+### F11 current operational state
+- P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**.
+- F11 one-run authorization = **AUTHORIZED / UNCONSUMED**.
+- The previous attempt stopped **BEFORE** the first Zernio Provider request because of a pre-Provider tooling/safety execution blocker.
+- Provider calls = `0`.
+- `/v1/auth/verify` = `0`.
+- webhook created = **NO**.
+- post published = **NO**.
+- Analytics request = **NO**.
+- analytics.synced Provider Behavior evidence = **NONE**.
+- Provider activity from F11 = **NONE**.
+- Therefore the authorized F11 one-run budget was **NOT consumed**.
+- The aborted attempt is **not** Provider behavior evidence.
+
+### Replacement Senior handoff source-of-truth stop
+The replacement Senior's handoff precheck established:
+- repository HEAD = `8fb270421863a1cfb47c6f6403772a34e744db48`
+- branch = `p1-t08-zernio-analytics-webhook`
+- working tree = **CLEAN**
+- modified files = **NONE**
+- Provider calls = `0`
+- P1-T08-F11-F01 was **NOT executed**
+- execution stopped because `PROGRESS.md` did not yet contain the later F11 authorization/current-task state
+
+Stop classification = **OTHER_PRE_PROVIDER_BLOCKER**.
+
+Reason = **PROGRESS.md / HANDOFF EXECUTION-STATE MISMATCH**.
+
+This was a project documentation-state blocker, not Provider behavior.
+
+### Current Task
+Current Task = `P1-T08-F11-F01 — Restore and Prove Pre-Provider Live Readiness`.
+
+F11-F01 = **NOT STARTED — AUTHORIZED**.
+
+Purpose: independently prove HTTPS/Nginx/tunnel/receiver/local-precheck readiness with **ZERO Zernio calls** before allowing F11 execution.
+
+Readiness has **not** yet been proven by this documentation correction. F11-F01 must be executed later under its previously issued Task Contract.
+
+Next Task = **NOT_STARTED**. Do not name or start a post-F11 task automatically.
 
 ## Phase 1 Rules
 - Work one Task at a time.
@@ -684,4 +786,10 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Execution focus is restored to parent `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, which remains **UNRESOLVED / NOT DONE**. P1-T08-F10-F01 and P1-T08-F10 are **DONE / ACCEPTED** at accepted final implementation/evidence HEAD `fbbed9f77293d9a68c594562edb6ab2976f85844`. P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; clarification packet remains **PREPARED / NOT SENT**; Analytics Webhook remains `SPIKE_PENDING`; Current Phase remains **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Next Task remains **NOT_STARTED**; live data-bearing experiment remains **NOT AUTHORIZED YET**. Do not run F10 live, publish the test post, create a real webhook, call Analytics or Analytics Delta, contact Zernio, continue F09 sender setup, modify DNS, promote Analytics Webhook, close P1-T08, start Community, or start any next Task.
+Current Task = `P1-T08-F11-F01 — Restore and Prove Pre-Provider Live Readiness`.
+
+F11-F01 = **NOT STARTED — AUTHORIZED**.
+
+P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 one-run authorization = **AUTHORIZED / UNCONSUMED**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; Next Task remains **NOT_STARTED**.
+
+This documentation correction does not prove readiness and performs no Provider activity. Do not execute F11-F01, verify HTTPS, touch Nginx, start a receiver/tunnel, call Zernio or `/v1/auth/verify`, create a webhook, publish a post, call Analytics, modify source/tests, resume F09, or start another task until Team Leader verification of this corrected Source of Truth.
