@@ -1608,3 +1608,22 @@ Status: `DONE / ACCEPTED`. Team Leader verdict: **ACCEPTED**. Parent F10 is `DON
 - `git diff --check`: PASS.
 
 Canonical state: P1-T08-F10-F01 = **DONE / ACCEPTED**; P1-T08-F10 = **DONE / ACCEPTED**; accepted final F10 implementation/evidence HEAD = `fbbed9f77293d9a68c594562edb6ab2976f85844`; P1-T08-F09-S01 = **BLOCKED — DNS ACCESS REQUIRED**; Provider contact = **AUTHORIZED / NOT SENT**; clarification packet = **PREPARED / NOT SENT**; parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Next Task = **NOT_STARTED**; live data-bearing experiment = **NOT AUTHORIZED YET**. Documentation finalization performed no Provider/Zernio/live actions.
+
+
+## P1-T08-F11-F01 - Pre-Provider Live Readiness Attempt
+
+Status: `EXECUTED / BLOCKED - PRE_PROVIDER_TOOLING_UNAVAILABLE - AWAITING TEAM LEADER REVIEW`.
+
+This entry records PRE-PROVIDER infrastructure/tooling evidence only. It is not Zernio Provider Behavior evidence.
+
+- Starting HEAD: `aac626468dc3022e8555bbea0d4db98bd4b15b58`; branch `p1-t08-zernio-analytics-webhook`; clean working tree; remote HEAD matched.
+- DNS: `marketlyai.restartorg.com -> 82.29.177.121`; TCP/443 reachable.
+- HTTPS baseline: base `/` = `404`; exact `/p1-t08-f11/analytics-synced` = `404`; no redirect; trusted TLS verification result `0`.
+- SSH to approved VPS succeeded as `marktuser@82.29.177.121` (`srv822206`).
+- Blocking evidence: required `sudo -n nginx -t` could not execute because sudo reported `a password is required`.
+- Per the tooling-failure rule, no Nginx route change, receiver start, reverse tunnel, or local F11 harness precheck followed the blocker. Nginx syntax and exact-route end-to-end readiness remain unproven.
+- Provider/Zernio calls: `0`; `/v1/auth/verify`: `0`; Accounts: `0`; Analytics: `0`; Provider webhook API: `0`; Provider post API: `0`; Provider contact: `0`.
+- F11 authorization consumed: **NO**. P1-T08-F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**.
+- Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**.
+
+Post-stop cleanup verification: local port `18087` clear; base HTTPS `404`, no redirect, TLS verification result `0`; exact F11 path `404`, no redirect, TLS verification result `0`; no temporary route/tunnel/receiver existed to clean up.

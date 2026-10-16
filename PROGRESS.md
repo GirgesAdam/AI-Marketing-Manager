@@ -57,7 +57,7 @@ Analytics Webhook = `SPIKE_PENDING`
 
 Current Task = `P1-T08-F11-F01 — Restore and Prove Pre-Provider Live Readiness`
 
-F11-F01 = **NOT STARTED — AUTHORIZED**
+F11-F01 = **EXECUTED / BLOCKED - PRE_PROVIDER_TOOLING_UNAVAILABLE - AWAITING TEAM LEADER REVIEW**
 
 ## P1-T01 Result
 `P1-T01 — Build Minimal Provider Spike Harness`
@@ -763,11 +763,11 @@ This was a project documentation-state blocker, not Provider behavior.
 ### Current Task
 Current Task = `P1-T08-F11-F01 — Restore and Prove Pre-Provider Live Readiness`.
 
-F11-F01 = **NOT STARTED — AUTHORIZED**.
+F11-F01 = **EXECUTED / BLOCKED - PRE_PROVIDER_TOOLING_UNAVAILABLE - AWAITING TEAM LEADER REVIEW**.
 
 Purpose: independently prove HTTPS/Nginx/tunnel/receiver/local-precheck readiness with **ZERO Zernio calls** before allowing F11 execution.
 
-Readiness has **not** yet been proven by this documentation correction. F11-F01 must be executed later under its previously issued Task Contract.
+F11-F01 was subsequently started under Team Leader authorization but did not prove readiness; the execution stopped PRE-PROVIDER under the tooling-failure rule.
 
 Next Task = **NOT_STARTED**. Do not name or start a post-F11 task automatically.
 
@@ -788,8 +788,30 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 Current Task = `P1-T08-F11-F01 — Restore and Prove Pre-Provider Live Readiness`.
 
-F11-F01 = **NOT STARTED — AUTHORIZED**.
+F11-F01 = **EXECUTED / BLOCKED - PRE_PROVIDER_TOOLING_UNAVAILABLE - AWAITING TEAM LEADER REVIEW**.
 
 P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 one-run authorization = **AUTHORIZED / UNCONSUMED**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; Next Task remains **NOT_STARTED**.
 
-This documentation correction does not prove readiness and performs no Provider activity. Do not execute F11-F01, verify HTTPS, touch Nginx, start a receiver/tunnel, call Zernio or `/v1/auth/verify`, create a webhook, publish a post, call Analytics, modify source/tests, resume F09, or start another task until Team Leader verification of this corrected Source of Truth.
+F11-F01 was started and stopped PRE-PROVIDER with classification **PRE_PROVIDER_TOOLING_UNAVAILABLE** because required privileged Nginx validation/control was unavailable non-interactively. Readiness is not proven. Do not retry F11-F01 or execute F11 until Team Leader review. Do not call Zernio or `/v1/auth/verify`, create a Provider webhook, publish a post, call Analytics, modify source/tests, resume F09, or start another task.
+
+
+### P1-T08-F11-F01 pre-Provider readiness execution
+Execution date: `2026-10-16`.
+
+Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**.
+
+Evidence established before the tooling stop:
+- Starting repository HEAD: `aac626468dc3022e8555bbea0d4db98bd4b15b58`; branch `p1-t08-zernio-analytics-webhook`; working tree CLEAN; remote branch matched local HEAD.
+- Public DNS resolved `marketlyai.restartorg.com -> 82.29.177.121`; TCP/443 reachable.
+- Base HTTPS returned `404`; exact F11 path returned `404` before temporary setup; both used the exact hostname with no redirect and curl TLS verification result `0`.
+- SSH connectivity to the approved VPS succeeded as `marktuser@82.29.177.121` and identified host `srv822206`.
+- Required privileged Nginx validation/control was unavailable non-interactively: `sudo -n nginx -t` returned `sudo: a password is required`.
+- Under the F11-F01 tooling-failure rule, execution stopped immediately after this required-access blocker. No temporary Nginx route was added, no receiver was started, no reverse tunnel was started, and no local F11 precheck was executed.
+- Nginx syntax validity and end-to-end exact-route readiness therefore remain NOT PROVEN by this run.
+- Provider/Zernio calls = `0`; `/v1/auth/verify` = `0`; Accounts = `0`; Analytics = `0`; Provider webhook API = `0`; Provider post API = `0`; Provider email/contact = `0`.
+- F11 one-run authorization remains **AUTHORIZED / UNCONSUMED** and P1-T08-F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**.
+- This is infrastructure/tooling readiness evidence only and is not Provider behavior evidence.
+
+Team Leader review is required before any F11-F01 retry or F11 execution.
+
+Post-stop cleanup verification: local port `18087` was clear; base HTTPS remained `404` with no redirect and TLS verification result `0`; exact F11 path remained `404` with no redirect and TLS verification result `0`. No temporary route/tunnel/receiver existed to remove or stop.

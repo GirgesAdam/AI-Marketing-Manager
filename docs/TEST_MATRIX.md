@@ -1259,3 +1259,25 @@ Status: `DONE / ACCEPTED`. Parent F10 is `DONE / ACCEPTED` after F10-F01 hardeni
 | Build | PASS | `npm run build -- --pretty false` |
 | Diff check | PASS | `git diff --check` |
 | Canonical state | PASS | F10-F01 DONE/ACCEPTED; F10 DONE/ACCEPTED; accepted final HEAD `fbbed9f77293d9a68c594562edb6ab2976f85844`; F09-S01 BLOCKED — DNS ACCESS REQUIRED; Provider contact AUTHORIZED / NOT SENT; clarification packet PREPARED / NOT SENT; parent P1-T08 UNRESOLVED / NOT DONE; Analytics Webhook SPIKE_PENDING; Phase 1; Next Task NOT_STARTED; live experiment NOT AUTHORIZED YET |
+
+
+## P1-T08-F11-F01 - Pre-Provider Readiness Matrix
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Repository HEAD / branch / clean tree | PASS | `aac626468dc3022e8555bbea0d4db98bd4b15b58`; `p1-t08-zernio-analytics-webhook`; remote matched; clean |
+| DNS / TCP 443 | PASS | `marketlyai.restartorg.com -> 82.29.177.121`; TCP/443 reachable |
+| Trusted HTTPS baseline | PASS | base `404`; exact F11 path pre-setup `404`; no redirect; TLS verification result `0` |
+| SSH access to approved VPS | PASS | `marktuser@82.29.177.121`; host `srv822206` |
+| Privileged Nginx syntax/control access | BLOCKED | `sudo -n nginx -t` -> `sudo: a password is required` |
+| Nginx syntax valid | NOT RUN | required privilege unavailable; no inference made |
+| Temporary exact F11 route | NOT RUN | stopped under tooling-failure rule |
+| Local receiver / port 18087 | NOT RUN | stopped before receiver setup |
+| SSH reverse tunnel | NOT RUN | stopped before tunnel setup |
+| External exact-route marker proof | NOT RUN | route/tunnel/receiver were not established |
+| Local F11 precheck | NOT RUN | stopped before local precheck; no retention timestamp generated |
+| Provider activity | PASS / ZERO | Provider/Zernio `/v1/auth/verify`, Accounts, Analytics, webhook/post API, contact all `0` |
+| F11 authorization consumption | PASS / NO | one-run authorization remains `AUTHORIZED / UNCONSUMED` |
+| Final classification | BLOCKED | `PRE_PROVIDER_TOOLING_UNAVAILABLE` |
+
+Post-stop cleanup verification: local `18087` clear; base HTTPS and exact F11 path both remained `404`, no redirect, TLS verification result `0`; no temporary route/tunnel/receiver existed to clean up.
