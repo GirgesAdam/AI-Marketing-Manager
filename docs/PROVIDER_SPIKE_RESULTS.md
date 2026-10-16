@@ -1639,17 +1639,22 @@ Post-stop cleanup verification: local port `18087` clear; base HTTPS `404`, no r
 
 ## P1-T08-F11-F02 - Human-Assisted Privileged Nginx Readiness Proof
 
-Status: `EXECUTED — AWAITING TEAM LEADER REVIEW`.
+Status: `DONE / ACCEPTED`.
 
-Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**. This is PRE-PROVIDER infrastructure/tooling evidence only, not Zernio Provider Behavior evidence.
+Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**. Accepted evidence HEAD: `b1a580debc7c80e5957c77cfb6098dff95d248c1`. Readiness: **NOT PROVEN**. Historical F11-F02 blocker: **SAFE DIRECT HUMAN PRIVILEGED TERMINAL CHANNEL REQUIRED**. This is PRE-PROVIDER infrastructure/tooling evidence only, not Zernio Provider Behavior evidence.
+
+Post-F11-F02 prerequisite update: **DIRECT HUMAN TERMINAL PASSWORD ENTRY = USER-CONFIRMED**. This confirms only a safe direct human Terminal entry path without password exposure to ChatGPT; it does not independently verify sudo command success, an active sudo credential cache, `nginx -t`, Nginx readiness, or F11 readiness.
 
 - Original starting HEAD: `4870df89929db4c6953ff57af51f161519d2f0ca`; activation HEAD: `d7d6a3d8bac2a9739aeff21c537525367f42f08e`; branch `p1-t08-zernio-analytics-webhook`.
 - Public baseline: DNS `82.29.177.121`; base HTTPS `404`; exact F11 path `404`; no redirect; trusted TLS verification result `0`.
 - SSH identity matched expected `marktuser@srv822206`.
-- Human-assisted sudo did not succeed because the available execution channel could not provide a verifiable direct-human password-entry path without exposing the password to ChatGPT. Password exposure: **NO**.
+- During the accepted F11-F02 evidence run, sudo command success was **NOT PROVEN** because a verifiable direct-human password-entry path had not yet been established through the available execution channel. Password exposure to ChatGPT: **NO**.
 - Pre-change `sudo nginx -t`: **NOT RUN**. Exact vhost/fingerprint: **NOT PROVEN / NOT RECORDED**.
 - Receiver, reverse tunnel, temporary exact route, external marker proof, and local F11 precheck: **NOT RUN / NOT STARTED** after the tooling stop.
 - Cleanup verification: no F11 SSH process remained; local `18087` clear; base HTTPS and exact F11 path both `404`, no redirect, TLS verification result `0`; no temporary infrastructure existed to remove.
 - Provider/Zernio calls: `0`; `/v1/auth/verify`: `0`; Accounts: `0`; Analytics: `0`; Provider webhook API: `0`; Provider post API: `0`; Provider contact/email: `0`.
 - F11 authorization consumed: **NO**; P1-T08-F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization remains **AUTHORIZED / UNCONSUMED**.
 - Readiness: **NOT PROVEN**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Next Task **NOT_STARTED**.
+- After the evidence run, direct human Terminal password entry = **USER-CONFIRMED**; password sent in chat = **NO**; password exposure to ChatGPT = **NO**.
+- Activity after the human Terminal entry: Provider/Zernio calls `0`; Nginx changes `0`; readiness retry **NO**.
+- Current Task after documentation finalization: `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, status **UNRESOLVED / NOT DONE**. F11-F03/readiness retry is **NOT ACTIVATED**.

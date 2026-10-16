@@ -1294,16 +1294,20 @@ Post-stop cleanup verification: local `18087` clear; base HTTPS and exact F11 pa
 
 ## P1-T08-F11-F02 - Privileged Readiness Matrix
 
-Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**. Readiness: **NOT PROVEN**.
+Status: **DONE / ACCEPTED**. Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**. Accepted evidence HEAD: `b1a580debc7c80e5957c77cfb6098dff95d248c1`. Readiness: **NOT PROVEN**.
 
 | Gate | Result | Evidence |
 |---|---|---|
 | Source-of-Truth activation | PASS | activation commit `d7d6a3d8bac2a9739aeff21c537525367f42f08e` before infrastructure work |
+| Historical F11-F02 blocker | ACCEPTED HISTORICAL | `SAFE DIRECT HUMAN PRIVILEGED TERMINAL CHANNEL REQUIRED` |
+| Post-F11-F02 prerequisite update | USER-CONFIRMED | `DIRECT HUMAN TERMINAL PASSWORD ENTRY`; confirms only direct human Terminal password entry without exposure to ChatGPT; readiness retry not executed |
 | Repository/source integrity | PASS | no source/test/package changes |
 | Public DNS / HTTPS baseline | PASS | `marketlyai.restartorg.com -> 82.29.177.121`; base `404`; F11 path `404`; no redirect; TLS verify `0` |
 | SSH expected user/host | PASS | `marktuser@srv822206` |
-| Human-assisted sudo | BLOCKED | direct human password-entry path could not be safely established/verified; password exposure `NO` |
-| Pre-change nginx syntax | NOT RUN | privileged access not established |
+| Human-assisted sudo during accepted evidence run | HISTORICAL BLOCKER | sudo success was not independently proven because the direct human password-entry path had not yet been established/verified; password exposure to ChatGPT `NO` |
+| Post-run direct human Terminal password entry | USER-CONFIRMED | password entered directly inside Terminal only; password sent in chat `NO`; password exposure to ChatGPT `NO`; does not prove sudo success/cache or Nginx readiness |
+| Activity after human Terminal entry | PASS / ZERO | Provider/Zernio calls `0`; Nginx changes `0`; readiness retry `NO` |
+| Pre-change nginx syntax | NOT RUN | privileged access was not established/proven during the accepted evidence run; no later retry has executed |
 | Exact vhost / fingerprint | NOT RUN | stopped before privileged inspection |
 | Local receiver | NOT RUN | stopped before setup; port `18087` later verified clear |
 | Reverse tunnel / VPS loopback proof | NOT RUN | stopped before setup |
@@ -1313,5 +1317,5 @@ Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **PR
 | Provider activity | PASS / ZERO | Zernio, auth/verify, Accounts, Analytics, webhook/post API, contact all `0` |
 | F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
 | Cleanup | PASS / NO TEMP INFRA | no F11 SSH process remained; port `18087` clear; base/F11 path `404`; no redirect; TLS verify `0` |
-| Final classification | BLOCKED | `PRE_PROVIDER_TOOLING_UNAVAILABLE` |
-| Canonical state | PASS | F11-F02 `EXECUTED — AWAITING TEAM LEADER REVIEW`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Next Task `NOT_STARTED` |
+| Final classification | DONE / ACCEPTED | `PRE_PROVIDER_TOOLING_UNAVAILABLE`; accepted evidence HEAD `b1a580debc7c80e5957c77cfb6098dff95d248c1`; readiness remains `NOT PROVEN` |
+| Canonical state | PASS | F11-F02 `DONE / ACCEPTED`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; F11 authorization `AUTHORIZED / UNCONSUMED`; parent/current task P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; F11-F03 not activated; Next Task `NOT_STARTED` |

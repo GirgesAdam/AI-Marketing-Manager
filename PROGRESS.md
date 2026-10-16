@@ -55,11 +55,11 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08-F11-F02 — Human-Assisted Privileged Nginx Readiness Proof`
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
 F11-F01 = **DONE / ACCEPTED**
 
-F11-F02 = **EXECUTED — AWAITING TEAM LEADER REVIEW**
+F11-F02 = **DONE / ACCEPTED**
 
 ## P1-T01 Result
 `P1-T01 — Build Minimal Provider Spike Harness`
@@ -763,7 +763,7 @@ Reason = **PROGRESS.md / HANDOFF EXECUTION-STATE MISMATCH**.
 This was a project documentation-state blocker, not Provider behavior.
 
 ### Current Task
-Current Task = `P1-T08-F11-F02 — Human-Assisted Privileged Nginx Readiness Proof`.
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
 
 F11-F01 = **DONE / ACCEPTED**.
 
@@ -788,11 +788,11 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Current Task = `P1-T08-F11-F02 — Human-Assisted Privileged Nginx Readiness Proof`.
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
 
 F11-F01 = **DONE / ACCEPTED**.
 
-F11-F02 = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+F11-F02 = **DONE / ACCEPTED**.
 
 P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 one-run authorization = **AUTHORIZED / UNCONSUMED**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; Next Task remains **NOT_STARTED**.
 
@@ -835,12 +835,24 @@ Post-stop cleanup verification: local port `18087` was clear; base HTTPS remaine
 ### P1-T08-F11-F02 human-assisted privileged Nginx readiness execution
 Execution date: `2026-10-16`.
 
+Status: **DONE / ACCEPTED**.
+
+P1-T08-F11-F02 Result: **PRE_PROVIDER_TOOLING_UNAVAILABLE**.
+
+Accepted evidence HEAD: `b1a580debc7c80e5957c77cfb6098dff95d248c1`.
+
+Readiness: **NOT PROVEN**.
+
+Historical F11-F02 blocker: **SAFE DIRECT HUMAN PRIVILEGED TERMINAL CHANNEL REQUIRED**.
+
+Post-F11-F02 prerequisite update: **DIRECT HUMAN TERMINAL PASSWORD ENTRY = USER-CONFIRMED**. This confirms only that the human operator used a direct Terminal entry path without exposing the password to ChatGPT. It does **not** independently verify sudo command success, an active sudo credential cache, `nginx -t`, Nginx readiness, or F11 readiness.
+
 - Original starting HEAD: `4870df89929db4c6953ff57af51f161519d2f0ca`.
 - Activation commit HEAD: `d7d6a3d8bac2a9739aeff21c537525367f42f08e` (`docs(p1-t08): activate F11 privileged readiness`).
 - Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**.
 - Baseline public readiness before privileged work: DNS `marketlyai.restartorg.com -> 82.29.177.121`; base HTTPS `404`; exact F11 path `404`; no redirect; TLS verification result `0`.
 - SSH identity: **PASS** for expected user `marktuser` on expected host `srv822206`.
-- Human-assisted sudo succeeded: **NO**. A safe direct human password-entry path could not be established/verified through the available execution channel without routing the password through ChatGPT. No password was requested in chat, read, recorded, logged, echoed, injected, stored, or exposed.
+- During the accepted F11-F02 evidence run, human-assisted sudo success was **NOT PROVEN** because a safe direct-human password-entry path had not yet been established/verified through the available execution channel. No password was requested in chat, read, recorded, logged, echoed, injected, stored, or exposed during that run.
 - Pre-change `sudo nginx -t`: **NOT RUN**. No privileged Nginx operation was confirmed.
 - Exact active MarketlyAI vhost identified: **NO**; pre-change config fingerprint recorded: **NO**.
 - Local receiver: **NOT STARTED**; reverse tunnel: **NOT STARTED**; temporary exact F11 Nginx route: **NOT INSTALLED**; external marker proof: **NOT RUN**; local F11 precheck: **NOT RUN**.
@@ -849,3 +861,6 @@ Execution date: `2026-10-16`.
 - F11 one-run authorization consumed: **NO**. P1-T08-F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization remains **AUTHORIZED / UNCONSUMED**.
 - Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
 - Readiness remains **NOT PROVEN**. This result is infrastructure/tooling evidence only and is **not Provider Behavior evidence**.
+- After the accepted evidence run, the human operator reported entering the sudo password directly inside the Terminal only: **USER-CONFIRMED**. Password exposure to ChatGPT = **NO**; password sent in chat = **NO**.
+- Activity after that direct human Terminal entry: Provider/Zernio calls = `0`; Nginx changes = `0`; readiness retry executed = **NO**.
+- Current Task after documentation finalization = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, status **UNRESOLVED / NOT DONE**. Do not activate F11-F03 or any readiness retry until a new explicit Team Leader Task Contract is issued.
