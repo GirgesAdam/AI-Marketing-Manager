@@ -1658,3 +1658,20 @@ Post-F11-F02 prerequisite update: **DIRECT HUMAN TERMINAL PASSWORD ENTRY = USER-
 - After the evidence run, direct human Terminal password entry = **USER-CONFIRMED**; password sent in chat = **NO**; password exposure to ChatGPT = **NO**.
 - Activity after the human Terminal entry: Provider/Zernio calls `0`; Nginx changes `0`; readiness retry **NO**.
 - Current Task after documentation finalization: `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, status **UNRESOLVED / NOT DONE**. F11-F03/readiness retry is **NOT ACTIVATED**.
+
+
+## P1-T08-F11-F03 - Complete Privileged Pre-Provider Readiness
+
+Status: `EXECUTED — AWAITING TEAM LEADER REVIEW`. Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**. Readiness: **NOT PROVEN**.
+
+- Starting HEAD `b429f62acccd79b1b510af0ebc7625dc67d01e4a`; activation HEAD `e12e84eb3fd6b1d33645183ff78927b7be20226b`; branch `p1-t08-zernio-analytics-webhook`.
+- Public baseline PASS: DNS `82.29.177.121`; TCP/443 reachable; base and exact F11 path `404`; TLS verify `0`; no redirect.
+- SSH identity PASS: `marktuser@srv822206`.
+- Initial `sudo -n true` required authentication; human entered password directly in Terminal only; password exposure to ChatGPT/chat = **NO**. Post-entry `sudo -n true` **PASS**; privilege independently verified **YES**.
+- Pre-change `sudo -n nginx -t` **NOT RUN** because the execution tooling rejected the required privileged Nginx command before dispatch. Exact vhost/fingerprint/backup were therefore not established.
+- SCP of a non-secret helper returned `Connection closed`; no helper was uploaded. A subsequent alternative transfer command was rejected before dispatch. No Nginx/config state changed.
+- Receiver/tunnel/temporary route/external marker/local F11 precheck: **NOT RUN / NOT STARTED**.
+- Post-stop state: local `18087` clear; no SSH process; base/F11 path both `404`; TLS verify `0`; no redirect; no temporary infrastructure existed to clean up.
+- Provider/Zernio calls `0`; auth/verify `0`; Accounts `0`; Analytics `0`; webhook/post API `0`; Provider contact `0`; F11 authorization consumed **NO**.
+- Canonical state: F11-F03 **EXECUTED — AWAITING TEAM LEADER REVIEW**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Next Task **NOT_STARTED**.
+- This is PRE-PROVIDER tooling/readiness evidence only, not Zernio Provider Behavior evidence.

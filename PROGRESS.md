@@ -61,7 +61,7 @@ F11-F01 = **DONE / ACCEPTED**
 
 F11-F02 = **DONE / ACCEPTED**
 
-F11-F03 = **IN PROGRESS — AUTHORIZED**
+F11-F03 = **EXECUTED — AWAITING TEAM LEADER REVIEW**
 
 ## P1-T01 Result
 `P1-T01 — Build Minimal Provider Spike Harness`
@@ -796,7 +796,7 @@ F11-F01 = **DONE / ACCEPTED**.
 
 F11-F02 = **DONE / ACCEPTED**.
 
-F11-F03 = **IN PROGRESS — AUTHORIZED**.
+F11-F03 = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
 
 P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 one-run authorization = **AUTHORIZED / UNCONSUMED**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; Next Task remains **NOT_STARTED**.
 
@@ -868,3 +868,28 @@ Post-F11-F02 prerequisite update: **DIRECT HUMAN TERMINAL PASSWORD ENTRY = USER-
 - After the accepted evidence run, the human operator reported entering the sudo password directly inside the Terminal only: **USER-CONFIRMED**. Password exposure to ChatGPT = **NO**; password sent in chat = **NO**.
 - Activity after that direct human Terminal entry: Provider/Zernio calls = `0`; Nginx changes = `0`; readiness retry executed = **NO**.
 - Current Task after documentation finalization = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, status **UNRESOLVED / NOT DONE**. Do not activate F11-F03 or any readiness retry until a new explicit Team Leader Task Contract is issued.
+
+
+### P1-T08-F11-F03 complete privileged pre-Provider readiness execution
+Execution date: `2026-10-16`.
+
+Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+
+Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**.
+
+- Original starting HEAD: `b429f62acccd79b1b510af0ebc7625dc67d01e4a`.
+- Activation HEAD: `e12e84eb3fd6b1d33645183ff78927b7be20226b` (`docs(p1-t08): activate F11 readiness retry`).
+- Branch: `p1-t08-zernio-analytics-webhook`; repository was clean before infrastructure work; no source/test/package changes were made.
+- Public baseline: DNS `marketlyai.restartorg.com -> 82.29.177.121`; TCP/443 reachable; base HTTPS `404`; exact F11 path `404`; TLS verification result `0`; redirects `0`.
+- SSH identity: **PASS** for `marktuser@srv822206`.
+- Initial `sudo -n true`: authentication required. Human entry required: **YES**. The human entered the sudo password directly inside the visible Terminal only. Password exposed to ChatGPT: **NO**; password sent in chat: **NO**.
+- Post-entry `sudo -n true`: **PASS**. Privilege independently verified: **YES**. The local non-secret result marker was exit-code class `20`, meaning human entry occurred and the post-entry non-interactive sudo check succeeded.
+- Pre-change `sudo -n nginx -t`: **NOT RUN**. The execution tooling rejected dispatch of the required privileged Nginx command before it reached the VPS. No Nginx command or change followed.
+- Exact MarketlyAI vhost identified: **NO**; config path: **NOT PROVEN**; pre-change fingerprint: **NOT RECORDED**; rollback backup created: **NO**.
+- A non-secret helper transfer via SCP failed with `Connection closed`; no helper was uploaded. A later alternative helper-transfer command was rejected by the execution tooling before dispatch. No remote helper/config change resulted.
+- Local receiver: **NOT STARTED**; reverse tunnel: **NOT STARTED**; VPS loopback marker proof: **NOT RUN**; temporary exact Nginx route: **NOT INSTALLED**; post-change nginx test/reload: **NOT RUN**; external marker proof: **NOT RUN**; local F11 precheck: **NOT RUN**.
+- Cleanup verification: repository clean before docs; local port `18087` clear; no SSH process remained; base HTTPS and exact F11 path both `404`, no redirect, TLS verification result `0`; no temporary route/tunnel/receiver/backup existed to restore or remove. Cleanup safety failure: **NO**.
+- Provider/Zernio calls = `0`; `/v1/auth/verify` = `0`; Accounts = `0`; Analytics = `0`; Provider webhook API = `0`; Provider post API = `0`; Provider contact/email = `0`.
+- Webhook created = **NO**; post published = **NO**; Analytics called = **NO**; F11 authorization consumed = **NO**.
+- P1-T08-F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization remains **AUTHORIZED / UNCONSUMED**; parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
+- Readiness remains **NOT PROVEN**. This is infrastructure/tooling evidence only and is **not Provider Behavior evidence**.

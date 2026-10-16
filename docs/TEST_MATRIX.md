@@ -1319,3 +1319,32 @@ Status: **DONE / ACCEPTED**. Final classification: **PRE_PROVIDER_TOOLING_UNAVAI
 | Cleanup | PASS / NO TEMP INFRA | no F11 SSH process remained; port `18087` clear; base/F11 path `404`; no redirect; TLS verify `0` |
 | Final classification | DONE / ACCEPTED | `PRE_PROVIDER_TOOLING_UNAVAILABLE`; accepted evidence HEAD `b1a580debc7c80e5957c77cfb6098dff95d248c1`; readiness remains `NOT PROVEN` |
 | Canonical state | PASS | F11-F02 `DONE / ACCEPTED`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; F11 authorization `AUTHORIZED / UNCONSUMED`; parent/current task P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; F11-F03 not activated; Next Task `NOT_STARTED` |
+
+
+## P1-T08-F11-F03 - Privileged Readiness Matrix
+
+Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**. Readiness: **NOT PROVEN**.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Source-of-Truth activation | PASS | activation commit `e12e84eb3fd6b1d33645183ff78927b7be20226b` pushed before infrastructure work |
+| Repository/source integrity | PASS | starting HEAD `b429f62acccd79b1b510af0ebc7625dc67d01e4a`; no source/test/package changes |
+| Public DNS / TCP / HTTPS baseline | PASS | hostname -> `82.29.177.121`; TCP/443 true; base/F11 path `404`; TLS verify `0`; redirects `0` |
+| SSH expected user/host | PASS | `marktuser@srv822206` |
+| Initial sudo -n true | AUTH REQUIRED | direct human Terminal path required |
+| Human password entry | PASS / SAFE | entered directly in visible Terminal only; password sent to/exposed to ChatGPT **NO** |
+| Post-entry sudo -n true | PASS | non-secret result marker class `20`; privilege independently verified **YES** |
+| Pre-change nginx syntax | NOT RUN | required privileged Nginx command rejected by execution tooling before dispatch |
+| Exact vhost / fingerprint / backup | NOT RUN | stopped before privileged Nginx inspection/change |
+| Helper transfer | BLOCKED / NO CHANGE | SCP `Connection closed`; alternative transfer rejected before dispatch; no remote helper/config change |
+| Local receiver | NOT RUN | port `18087` remained clear |
+| Reverse tunnel / VPS loopback proof | NOT RUN | stopped before setup |
+| Temporary exact route | NOT RUN | no Nginx change |
+| External marker proof | NOT RUN | no route/tunnel/receiver established |
+| Local F11 precheck | NOT RUN | no disposable token/retention generated |
+| Provider activity | PASS / ZERO | Zernio/auth/Accounts/Analytics/webhook/post/contact all `0` |
+| F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
+| Cleanup | PASS / NO TEMP INFRA | no SSH process; local `18087` clear; base/F11 path `404`; TLS verify `0`; redirects `0`; no route/tunnel/receiver/backup existed |
+| Cleanup safety failure | NO | no temporary infrastructure was created |
+| Final classification | BLOCKED | `PRE_PROVIDER_TOOLING_UNAVAILABLE`; readiness remains `NOT PROVEN` |
+| Canonical state | PASS | F11-F03 `EXECUTED — AWAITING TEAM LEADER REVIEW`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics `SPIKE_PENDING`; Next Task `NOT_STARTED` |
