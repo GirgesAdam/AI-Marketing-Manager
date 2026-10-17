@@ -1430,7 +1430,7 @@ Status: **DONE / ACCEPTED**. Final classification: **NGINX_FAILED_STATE_ROOT_CAU
 
 ## P1-T08-F11-F06 - Apache Workload Attribution Matrix
 
-Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **APACHE_DEPENDENT_WORKLOAD_PROVEN**. Evidence: **PRE-PROVIDER INFRASTRUCTURE ATTRIBUTION EVIDENCE — NOT Provider Behavior evidence**.
+Status: **DONE / ACCEPTED**. Final classification: **APACHE_DEPENDENT_WORKLOAD_PROVEN**. Accepted evidence HEAD: `3d62dc830500f818dce82df48a0c4f8bf8431b3c`. Workload: **APACHE_SERVES_ACTIVE_ELITE_WORDPRESS_WORKLOAD**. Conflict: **APACHE_AND_NGINX_REQUIRE_TCP_80_UNDER_CURRENT_TOPOLOGY**. Business intent: **NOT FULLY ATTRIBUTED**. Evidence: **PRE-PROVIDER INFRASTRUCTURE ATTRIBUTION EVIDENCE — NOT Provider Behavior evidence**.
 
 | Gate | Result | Evidence |
 |---|---|---|
@@ -1451,7 +1451,9 @@ Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **AP
 | Public DNS attribution | PASS / CORROBORATING | elite.restartorg.com resolves to 82.29.177.121, same VPS; not used alone to infer intent |
 | Sensitive-data boundary | PASS | no .env contents, credentials, DB/customer/patient data, uploads, request bodies, access-log dump, private keys, tokens, or wp-config.php contents read |
 | Dependent Apache workload | **PROVEN** | enabled custom vhost -> existing WordPress DocumentRoot -> Apache/PHP runtime -> HTTP 200 Host-header correlation |
-| Organizational/business intent | NOT FULLY ATTRIBUTED | direct workload/deployment evidence proven; no separate ownership/business-intent record found or inferred |
+| Organizational/business intent | NOT FULLY ATTRIBUTED | active runtime workload proven; elite business ownership/organizational intent not inferred |
+| Canonical workload finding | PROVEN | `APACHE_SERVES_ACTIVE_ELITE_WORDPRESS_WORKLOAD` |
+| Current topology conflict | PROVEN | `APACHE_AND_NGINX_REQUIRE_TCP_80_UNDER_CURRENT_TOPOLOGY`; accepted root cause remains `APACHE_PORT_80_OWNERSHIP_BLOCKS_NGINX_STARTUP_AFTER_REBOOT` |
 | Fresh nginx -t | PASS | privileged syntax/config test successful, exit 0 |
 | MarketlyAI fingerprint | PASS | `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6` unchanged |
 | F11 route | PASS / ABSENT | grep exit 1 |
@@ -1462,6 +1464,6 @@ Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **AP
 | Process signals/kills | PASS / ZERO | `0` |
 | Provider activity | PASS / ZERO | Zernio/auth/Accounts/Analytics/webhook/post/contact all `0` |
 | F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
-| Final classification | EXECUTED / AWAITING REVIEW | `APACHE_DEPENDENT_WORKLOAD_PROVEN` |
-| Recommendation | DECISION REQUIRED | Team Leader to decide later port ownership/reverse-proxy topology; no repair executed |
-| Canonical state | PASS | F11-F06 awaiting review; F11 blocked pre-provider/unconsumed; authorization unconsumed; parent P1-T08 unresolved; Analytics SPIKE_PENDING; Next Task NOT_STARTED |
+| Final classification | DONE / ACCEPTED | `APACHE_DEPENDENT_WORKLOAD_PROVEN`; accepted evidence HEAD `3d62dc830500f818dce82df48a0c4f8bf8431b3c` |
+| Decision state | DECISION REQUIRED | `PORT OWNERSHIP / REVERSE-PROXY TOPOLOGY`; no repair/topology option selected |
+| Canonical state | PASS | F11-F06 `DONE / ACCEPTED`; workload proven; business intent not fully attributed; F11 blocked pre-provider/unconsumed; authorization unconsumed; parent P1-T08 unresolved; Analytics SPIKE_PENDING; Current Task parent P1-T08; Next Task NOT_STARTED |

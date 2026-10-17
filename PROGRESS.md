@@ -55,7 +55,7 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08-F11-F06 — Attribute Apache Workload and Dependency Ownership`
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
 F11-F01 = **DONE / ACCEPTED**
 
@@ -67,7 +67,7 @@ F11-F04 = **DONE / ACCEPTED**
 
 F11-F05 = **DONE / ACCEPTED**
 
-F11-F06 = **EXECUTED — AWAITING TEAM LEADER REVIEW**
+F11-F06 = **DONE / ACCEPTED**
 
 ## P1-T01 Result
 `P1-T01 — Build Minimal Provider Spike Harness`
@@ -802,7 +802,7 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Current Task = `P1-T08-F11-F06 — Attribute Apache Workload and Dependency Ownership`.
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
 
 F11-F01 = **DONE / ACCEPTED**.
 
@@ -814,11 +814,11 @@ F11-F04 = **DONE / ACCEPTED**.
 
 F11-F05 = **DONE / ACCEPTED**.
 
-F11-F06 = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+F11-F06 = **DONE / ACCEPTED**.
 
 P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 one-run authorization = **AUTHORIZED / UNCONSUMED**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; Next Task remains **NOT_STARTED**.
 
-F11-F06 attribution execution is complete and awaits Team Leader review. Final classification = **APACHE_DEPENDENT_WORKLOAD_PROVEN**. Evidence class = **PRE-PROVIDER INFRASTRUCTURE ATTRIBUTION EVIDENCE — NOT Provider Behavior evidence**. The only enabled Apache site is `/etc/apache2/sites-enabled/elite.restartorg.com.conf` -> `../sites-available/elite.restartorg.com.conf`, mapping `*:80` / `ServerName elite.restartorg.com` to local DocumentRoot `/var/www/elite.restartorg.com/html`; no ServerAlias, ProxyPass/ProxyPassReverse, WSGI, Alias, or FastCGI target was present in the enabled site directives inspected. The DocumentRoot exists (`www-data:www-data`, mode `755`) and top-level metadata shows a WordPress application footprint (`index.php`, `wp-admin`, `wp-content`, `wp-includes`, `wp-config.php` metadata only; no secret contents read). Relevant enabled modules observed: `php7_module` and `rewrite_module`. A bounded local HEAD to `127.0.0.1:80` with `Host: elite.restartorg.com` returned `HTTP/1.1 200 OK`, `Server: Apache/2.4.41 (Ubuntu)`, and WordPress REST/shortlink headers without retrieving page content. DNS `elite.restartorg.com -> 82.29.177.121`, the same VPS. The site config is not owned by a Debian package (`dpkg-query` found no package path match), providing custom deployment provenance; no separate ownership/business-intent record was found or inferred. Fresh Apache state remains `loaded/active/running`, enabled, MainPID `852`, no drop-ins; privileged socket inventory maps TCP/80 to the Apache process family and shows no TCP/443 listener. Fresh privileged `nginx -t` = **PASS / exit 0**; MarketlyAI SHA-256 remains `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`; F11 route remains absent (`grep exit 1`). Therefore a real Apache-dependent workload is directly proven; this does **not** authorize stopping Apache or decide port ownership/reverse-proxy topology. Apache start/stop/restart/reload/enable/disable = `0`; Nginx state/config mutations = `0`; process signals = `0`; Provider/Zernio calls = `0`; F11 authorization remains **AUTHORIZED / UNCONSUMED**.
+F11-F06 is **DONE / ACCEPTED** with result **APACHE_DEPENDENT_WORKLOAD_PROVEN** and accepted evidence HEAD `3d62dc830500f818dce82df48a0c4f8bf8431b3c`. Canonical workload finding = **APACHE_SERVES_ACTIVE_ELITE_WORDPRESS_WORKLOAD**. Current infrastructure conflict = **APACHE_AND_NGINX_REQUIRE_TCP_80_UNDER_CURRENT_TOPOLOGY**. Nginx readiness remains **NOT PROVEN**. Organizational/business intent remains **NOT FULLY ATTRIBUTED**. Final classification = **APACHE_DEPENDENT_WORKLOAD_PROVEN**. Evidence class = **PRE-PROVIDER INFRASTRUCTURE ATTRIBUTION EVIDENCE — NOT Provider Behavior evidence**. The only enabled Apache site is `/etc/apache2/sites-enabled/elite.restartorg.com.conf` -> `../sites-available/elite.restartorg.com.conf`, mapping `*:80` / `ServerName elite.restartorg.com` to local DocumentRoot `/var/www/elite.restartorg.com/html`; no ServerAlias, ProxyPass/ProxyPassReverse, WSGI, Alias, or FastCGI target was present in the enabled site directives inspected. The DocumentRoot exists (`www-data:www-data`, mode `755`) and top-level metadata shows a WordPress application footprint (`index.php`, `wp-admin`, `wp-content`, `wp-includes`, `wp-config.php` metadata only; no secret contents read). Relevant enabled modules observed: `php7_module` and `rewrite_module`. A bounded local HEAD to `127.0.0.1:80` with `Host: elite.restartorg.com` returned `HTTP/1.1 200 OK`, `Server: Apache/2.4.41 (Ubuntu)`, and WordPress REST/shortlink headers without retrieving page content. DNS `elite.restartorg.com -> 82.29.177.121`, the same VPS. The site config is not owned by a Debian package (`dpkg-query` found no package path match), providing custom deployment provenance; no separate ownership/business-intent record was found or inferred. Fresh Apache state remains `loaded/active/running`, enabled, MainPID `852`, no drop-ins; privileged socket inventory maps TCP/80 to the Apache process family and shows no TCP/443 listener. Fresh privileged `nginx -t` = **PASS / exit 0**; MarketlyAI SHA-256 remains `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`; F11 route remains absent (`grep exit 1`). Therefore a real Apache-dependent workload is directly proven; this does **not** authorize stopping Apache or decide port ownership/reverse-proxy topology. Apache start/stop/restart/reload/enable/disable = `0`; Nginx state/config mutations = `0`; process signals = `0`; Provider/Zernio calls = `0`; F11 authorization remains **AUTHORIZED / UNCONSUMED**.
 
 F11-F05 is **DONE / ACCEPTED** with result **NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN** and accepted evidence HEAD `b7652550a5f0e131bf00d74bcbdb688aff368ff0`. Canonical root cause = **APACHE_PORT_80_OWNERSHIP_BLOCKS_NGINX_STARTUP_AFTER_REBOOT**. Direct evidence: `apache2.service` became active/running at `2026-10-17 10:11:26 UTC` with MainPID `852` and acquired TCP/80; nginx ExecStart PID `843` subsequently failed repeated IPv4/IPv6 TCP/80 binds with `Address already in use`, then `still could not bind()`, and exited status `1/FAILURE`. This is **not** an Nginx syntax failure, MarketlyAI config corruption, F11 route failure, Provider failure, or Zernio failure. Fresh `nginx -t` = **PASS**; MarketlyAI config SHA-256 remains `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`; fingerprint preserved = **YES**; F11 route present = **NO**. Current observed infrastructure: nginx `loaded/failed/failed`, Result `exit-code`, MainPID `0`, no nginx processes; `/run/nginx.pid` **EXISTS / EMPTY**; `apache2.service` **ACTIVE / RUNNING**, MainPID `852`; TCP/80 owner = **APACHE**; TCP/443 owner = **NONE**; current public HTTPS = **NOT AVAILABLE / TCP 443 NOT REACHABLE**; HTTP/80 is served by Apache. Apache workload intent/dependency ownership = **NOT YET VERIFIED**; do not infer Apache is unwanted and do not stop it. Before any repair, a separate Team Leader-authorized task must establish whether Apache serves an intended workload or dependency. If proven unintended and dependency-safe to stop, a later repair task may remove its TCP/80 ownership and restore Nginx; if intentional, port ownership/reverse-proxy topology requires explicit Team Leader architecture decision. No such decision is made here. External activity during finalization remains hard zero: Apache and Nginx start/stop/restart/reload `0`; reset-failed `0`; config mutation `0`; process kill/signal `0`; Provider/Zernio calls `0`; F11 execution **NO**. P1-T08-F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 authorization remains **AUTHORIZED / UNCONSUMED**. Do not activate Apache intent investigation, repair, readiness retry, or another task automatically.
 
@@ -1006,7 +1006,19 @@ Evidence class: **PRE-PROVIDER INFRASTRUCTURE DIAGNOSTIC EVIDENCE — NOT Provid
 ### P1-T08-F11-F06 apache workload attribution
 Execution date: `2026-10-17`.
 
-Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+Status: **DONE / ACCEPTED**.
+
+P1-T08-F11-F06 Result: **APACHE_DEPENDENT_WORKLOAD_PROVEN**.
+
+Accepted evidence HEAD: `3d62dc830500f818dce82df48a0c4f8bf8431b3c`.
+
+Canonical workload finding: **APACHE_SERVES_ACTIVE_ELITE_WORDPRESS_WORKLOAD**.
+
+Current infrastructure conflict: **APACHE_AND_NGINX_REQUIRE_TCP_80_UNDER_CURRENT_TOPOLOGY**.
+
+Nginx readiness: **NOT PROVEN**.
+
+Apache organizational/business intent: **NOT FULLY ATTRIBUTED**.
 
 Final classification: **APACHE_DEPENDENT_WORKLOAD_PROVEN**.
 
@@ -1025,8 +1037,8 @@ Evidence class: **PRE-PROVIDER INFRASTRUCTURE ATTRIBUTION EVIDENCE — NOT Provi
 - Local Host-header correlation: bounded HEAD to `127.0.0.1:80` with `Host: elite.restartorg.com` returned `HTTP/1.1 200 OK`, `Server: Apache/2.4.41 (Ubuntu)`, and WordPress REST/shortlink headers. No page body was retrieved/reproduced.
 - DNS attribution: `elite.restartorg.com -> 82.29.177.121`, same VPS. DNS is corroborating evidence only and is not used by itself to infer ownership/intent.
 - **Dependent workload PROVEN**: direct enabled custom vhost -> existing local WordPress DocumentRoot -> Apache/PHP handling -> successful local Host-header response establishes that Apache currently serves an identifiable workload. Stopping Apache would therefore affect the currently served HTTP workload unless an authorized topology/replacement action is performed.
-- Intent boundary: a dependent workload is proven, but no separate business-owner/organizational-intent record was found in the bounded metadata. Do not infer more than the direct deployment/runtime evidence. Per contract, Team Leader must decide whether port ownership/reverse-proxy topology requires a separate architecture/repair task.
+- Intent boundary: canonical workload finding = **APACHE_SERVES_ACTIVE_ELITE_WORDPRESS_WORKLOAD**. A dependent runtime workload is **PROVEN**, but organizational/business intent remains **NOT FULLY ATTRIBUTED**. Do not claim Apache is unwanted or safe to stop, do not claim elite.restartorg.com business ownership is proven, and do not infer more than the direct deployment/runtime evidence.
 - Fresh privileged final integrity: TCP/80 owner = Apache process family including MainPID `852`; TCP/443 owner = **NONE observed**; privileged `nginx -t` PASS / exit `0`; MarketlyAI config SHA-256 unchanged at `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`; exact F11 route absent (grep exit `1`).
 - Safety: Apache start/stop/restart/reload `0`; Apache enable/disable `0`; Nginx start/restart/reload/reset-failed/config changes `0`; web-server config mutations `0`; port/DNS/firewall/systemd changes `0`; process signals/kills `0`; receiver/tunnel `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact `0`; F11 authorization consumed **NO**.
-- Recommendation: **DECISION REQUIRED after Team Leader review** for port ownership/reverse-proxy topology because Apache currently serves a proven WordPress workload while blocking Nginx port 80 ownership. No repair action is selected or executed by F11-F06.
-- Canonical pending-review state: F11-F06 **EXECUTED — AWAITING TEAM LEADER REVIEW**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task `P1-T08-F11-F06 — Attribute Apache Workload and Dependency Ownership`; Next Task **NOT_STARTED**.
+- Decision state: **PORT OWNERSHIP / REVERSE-PROXY TOPOLOGY = DECISION REQUIRED**. Combined accepted facts preserve root cause **APACHE_PORT_80_OWNERSHIP_BLOCKS_NGINX_STARTUP_AFTER_REBOOT** and prove Apache serves the active Elite WordPress workload; under the current topology Apache and Nginx both require TCP/80. No topology/repair option is selected or executed in this finalization.
+- Canonical final state: F11-F06 **DONE / ACCEPTED**; result **APACHE_DEPENDENT_WORKLOAD_PROVEN**; accepted evidence HEAD `3d62dc830500f818dce82df48a0c4f8bf8431b3c`; workload **APACHE_SERVES_ACTIVE_ELITE_WORDPRESS_WORKLOAD**; business intent **NOT FULLY ATTRIBUTED**; conflict **APACHE_AND_NGINX_REQUIRE_TCP_80_UNDER_CURRENT_TOPOLOGY**; decision state **PORT OWNERSHIP / REVERSE-PROXY TOPOLOGY = DECISION REQUIRED**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Next Task **NOT_STARTED**.
