@@ -57,9 +57,9 @@ Analytics Webhook = `SPIKE_PENDING`
 
 Current Task = `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`
 
-Architecture Amendment = **EXECUTED — AWAITING TEAM LEADER REVIEW**
+Architecture Amendment = **IN PROGRESS — RESUMED AFTER CANONICAL D-038 REGISTRATION**
 
-Architecture Amendment Result = **DECISION_SEQUENCE_PRECONDITION_FAILED**
+Architecture Amendment Previous Stop = **DECISION_SEQUENCE_PRECONDITION_FAILED — RESOLVED**
 
 Approved Production Backend = **DJANGO / PYTHON**
 
@@ -68,6 +68,12 @@ Approved Async Execution = **REDIS / CELERY**
 Approved ORM = **DJANGO ORM / DJANGO MIGRATIONS**
 
 Approved Auth Foundation = **DJANGO AUTH + CUSTOM USER**
+
+Canonical D-038 = **REGISTERED / VERIFIED**
+
+Canonical D-039 = **NOT YET REGISTERED**
+
+Production Django implementation = **NOT STARTED**
 
 F11-F01 = **DONE / ACCEPTED**
 
@@ -820,9 +826,9 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 Current Task = `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`.
 
-Architecture Amendment = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+Architecture Amendment = **IN PROGRESS — RESUMED AFTER CANONICAL D-038 REGISTRATION**.
 
-Architecture Amendment Result = **DECISION_SEQUENCE_PRECONDITION_FAILED**.
+Architecture Amendment Previous Stop = **DECISION_SEQUENCE_PRECONDITION_FAILED — RESOLVED**.
 
 Approved Production Backend = **DJANGO / PYTHON**.
 
@@ -831,6 +837,12 @@ Approved Async Execution = **REDIS / CELERY**.
 Approved ORM = **DJANGO ORM / DJANGO MIGRATIONS**.
 
 Approved Auth Foundation = **DJANGO AUTH + CUSTOM USER**.
+
+Canonical D-038 = **REGISTERED / VERIFIED**.
+
+Canonical D-039 = **NOT YET REGISTERED**.
+
+Production Django implementation = **NOT STARTED**.
 
 F11-F01 = **DONE / ACCEPTED**.
 
