@@ -1716,3 +1716,23 @@ Status: `DONE / ACCEPTED`. Final classification: **NGINX_FAILED_STATE_ROOT_CAUSE
 - Apache workload intent / dependency ownership = **NOT YET VERIFIED**. Do not state that Apache is unwanted and do not stop it. A separate task must establish intended workload/dependencies before repair. If Apache is proven unintended and dependency-safe to stop, a later repair task may remove its TCP/80 ownership and restore Nginx. If Apache is intentional, port ownership/reverse-proxy topology requires explicit Team Leader architecture decision before repair. No repair decision is made here.
 - Safety: nginx/service mutations `0`; config mutations `0`; signals/kills `0`; receiver/tunnel `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact `0`; F11 authorization consumed **NO**.
 - Canonical final state: F11-F05 `DONE / ACCEPTED`; result `NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN`; accepted evidence HEAD `b7652550a5f0e131bf00d74bcbdb688aff368ff0`; root cause `APACHE_PORT_80_OWNERSHIP_BLOCKS_NGINX_STARTUP_AFTER_REBOOT`; Apache workload intent `NOT YET VERIFIED`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Next Task `NOT_STARTED`.
+
+
+## P1-T08-F11-F06 - Apache Workload and Dependency Attribution
+
+Status: `EXECUTED — AWAITING TEAM LEADER REVIEW`. Final classification: **APACHE_DEPENDENT_WORKLOAD_PROVEN**. Evidence class: **PRE-PROVIDER INFRASTRUCTURE ATTRIBUTION EVIDENCE — NOT Provider Behavior evidence**.
+
+- Starting HEAD `85a640d535736433ed38d9f48a857003c87acd7f`; activation HEAD `c25195be062e269dd6608cba2ef620392d784990`; branch `p1-t08-zernio-analytics-webhook`.
+- Apache fresh state: loaded/active/running, enabled, MainPID `852`, ControlPID `0`, ActiveEnterTimestamp `2026-10-17 10:11:26 UTC`, fragment `/lib/systemd/system/apache2.service`, no drop-ins observed. Unit uses `apachectl start/stop/graceful`, Type `forking`, Restart `on-abort`.
+- Enabled sites: exactly one, `elite.restartorg.com.conf`, enabled by symlink to sites-available. Vhost = `*:80`; ServerName = `elite.restartorg.com`; ServerAlias = none observed; DocumentRoot = `/var/www/elite.restartorg.com/html`; ProxyPass/backend = none observed.
+- Vhost map: `apache2ctl -S` maps `*:80` to `elite.restartorg.com`; no other enabled Apache site was present.
+- Relevant modules: PHP 7.4 module and rewrite enabled. No enabled-site proxy/backend target was identified.
+- DocumentRoot exists as `www-data:www-data`, mode `755`; top-level metadata contains WordPress markers including `index.php`, `wp-admin`, `wp-content`, `wp-includes`, and `wp-config.php`. Secret/application content was not read.
+- Custom provenance: `dpkg-query` found no package owner for the elite Apache site config. This proves non-packaged custom configuration, not business ownership.
+- Local safe Host-header HEAD to `127.0.0.1:80` / `Host: elite.restartorg.com` returned HTTP `200` from Apache with WordPress REST/shortlink headers; response body was not retrieved.
+- DNS: `elite.restartorg.com -> 82.29.177.121` (same VPS). DNS is corroborating only.
+- **Dependent workload proven**: enabled custom Apache vhost directly maps to an existing WordPress application DocumentRoot and currently serves it over HTTP. This satisfies the contract's direct-workload attribution standard. No claim is made beyond the observed deployment/runtime evidence about organizational ownership or business intent.
+- Fresh privileged port/integrity checkpoint: TCP/80 mapped to Apache PIDs including MainPID `852`; no TCP/443 listener observed; privileged `nginx -t` PASS / exit `0`; MarketlyAI SHA `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6` unchanged; F11 route absent (grep exit `1`).
+- Recommendation only: Team Leader architecture/repair decision is required for port ownership/reverse-proxy topology. Do not stop Apache or repair Nginx under F11-F06.
+- Safety: Apache mutations `0`; Nginx mutations/state changes `0`; config/DNS/firewall/systemd/port changes `0`; process signals `0`; receiver/tunnel `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact `0`; F11 authorization consumed **NO**.
+- Canonical pending-review state: F11-F06 `EXECUTED — AWAITING TEAM LEADER REVIEW`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Next Task `NOT_STARTED`.

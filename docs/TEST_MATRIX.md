@@ -1426,3 +1426,42 @@ Status: **DONE / ACCEPTED**. Final classification: **NGINX_FAILED_STATE_ROOT_CAU
 | F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
 | Final classification | DONE / ACCEPTED | `NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN`; accepted evidence HEAD `b7652550a5f0e131bf00d74bcbdb688aff368ff0` |
 | Canonical state | PASS | F11-F05 `DONE / ACCEPTED`; root cause `APACHE_PORT_80_OWNERSHIP_BLOCKS_NGINX_STARTUP_AFTER_REBOOT`; Apache intent `NOT YET VERIFIED`; F11 blocked pre-provider/unconsumed; authorization unconsumed; parent P1-T08 unresolved; Analytics SPIKE_PENDING; Current Task parent P1-T08; Next Task NOT_STARTED |
+
+
+## P1-T08-F11-F06 - Apache Workload Attribution Matrix
+
+Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **APACHE_DEPENDENT_WORKLOAD_PROVEN**. Evidence: **PRE-PROVIDER INFRASTRUCTURE ATTRIBUTION EVIDENCE — NOT Provider Behavior evidence**.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Activation before attribution | PASS | activation HEAD `c25195be062e269dd6608cba2ef620392d784990` |
+| Repository/source integrity | PASS | starting HEAD `85a640d535736433ed38d9f48a857003c87acd7f`; no source/test/package changes |
+| Apache service state | PASS / OBSERVED | loaded, active/running, enabled; MainPID 852; ControlPID 0; no drop-ins; active since `10:11:26 UTC` |
+| Port ownership | PASS | privileged `ss`: TCP/80 Apache family including PID 852; TCP/443 no listener observed |
+| Apache unit definition | PASS | Type=forking; apachectl start/stop/graceful; Restart=on-abort; WantedBy multi-user.target |
+| Enabled-site inventory | PASS / COMPLETE | exactly one enabled symlink: `elite.restartorg.com.conf` |
+| Site source/provenance | PASS | source in sites-available; root-owned; not owned by a Debian package according to dpkg-query |
+| Vhost mapping | PASS | sole observed `*:80` mapping -> `elite.restartorg.com` |
+| ServerAlias | NONE OBSERVED | no ServerAlias directive in enabled site |
+| DocumentRoot | PASS | `/var/www/elite.restartorg.com/html`, exists, www-data:www-data, mode 755 |
+| Proxy/backend target | NONE OBSERVED | no ProxyPass/ProxyPassReverse/WSGI/Alias/FastCGI target in enabled-site directives inspected |
+| Relevant modules | PASS | php7_module + rewrite_module enabled |
+| Workload markers | PASS | WordPress top-level names/metadata: index.php, wp-admin, wp-content, wp-includes, wp-config.php, etc.; no secret contents read |
+| Local Host-header correlation | PASS | HEAD to 127.0.0.1:80 Host elite.restartorg.com -> HTTP 200, Apache server header, WordPress REST/shortlink headers; no body retrieved |
+| Public DNS attribution | PASS / CORROBORATING | elite.restartorg.com resolves to 82.29.177.121, same VPS; not used alone to infer intent |
+| Sensitive-data boundary | PASS | no .env contents, credentials, DB/customer/patient data, uploads, request bodies, access-log dump, private keys, tokens, or wp-config.php contents read |
+| Dependent Apache workload | **PROVEN** | enabled custom vhost -> existing WordPress DocumentRoot -> Apache/PHP runtime -> HTTP 200 Host-header correlation |
+| Organizational/business intent | NOT FULLY ATTRIBUTED | direct workload/deployment evidence proven; no separate ownership/business-intent record found or inferred |
+| Fresh nginx -t | PASS | privileged syntax/config test successful, exit 0 |
+| MarketlyAI fingerprint | PASS | `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6` unchanged |
+| F11 route | PASS / ABSENT | grep exit 1 |
+| Apache start/stop/restart/reload | PASS / ZERO | `0` |
+| Apache enable/disable | PASS / ZERO | `0` |
+| Nginx state/config mutation | PASS / ZERO | `0` |
+| Config/port/DNS/firewall/systemd mutation | PASS / ZERO | `0` |
+| Process signals/kills | PASS / ZERO | `0` |
+| Provider activity | PASS / ZERO | Zernio/auth/Accounts/Analytics/webhook/post/contact all `0` |
+| F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
+| Final classification | EXECUTED / AWAITING REVIEW | `APACHE_DEPENDENT_WORKLOAD_PROVEN` |
+| Recommendation | DECISION REQUIRED | Team Leader to decide later port ownership/reverse-proxy topology; no repair executed |
+| Canonical state | PASS | F11-F06 awaiting review; F11 blocked pre-provider/unconsumed; authorization unconsumed; parent P1-T08 unresolved; Analytics SPIKE_PENDING; Next Task NOT_STARTED |
