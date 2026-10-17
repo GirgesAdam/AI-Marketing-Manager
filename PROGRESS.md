@@ -55,7 +55,7 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
+Current Task = `P1-T08-F11-F07 — Canonicalize Approved Nginx-Edge Decision & Build Cutover Preflight`
 
 F11-F01 = **DONE / ACCEPTED**
 
@@ -68,6 +68,8 @@ F11-F04 = **DONE / ACCEPTED**
 F11-F05 = **DONE / ACCEPTED**
 
 F11-F06 = **DONE / ACCEPTED**
+
+F11-F07 = **IN PROGRESS — AUTHORIZED**
 
 ## P1-T01 Result
 `P1-T01 — Build Minimal Provider Spike Harness`
@@ -802,7 +804,7 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
+Current Task = `P1-T08-F11-F07 — Canonicalize Approved Nginx-Edge Decision & Build Cutover Preflight`.
 
 F11-F01 = **DONE / ACCEPTED**.
 
@@ -815,6 +817,8 @@ F11-F04 = **DONE / ACCEPTED**.
 F11-F05 = **DONE / ACCEPTED**.
 
 F11-F06 = **DONE / ACCEPTED**.
+
+F11-F07 = **IN PROGRESS — AUTHORIZED**.
 
 P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 one-run authorization = **AUTHORIZED / UNCONSUMED**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; Next Task remains **NOT_STARTED**.
 
