@@ -63,7 +63,7 @@ F11-F02 = **DONE / ACCEPTED**
 
 F11-F03 = **DONE / ACCEPTED**
 
-F11-F04 = **IN PROGRESS — AUTHORIZED**
+F11-F04 = **EXECUTED — AWAITING TEAM LEADER REVIEW**
 
 ## P1-T01 Result
 `P1-T01 — Build Minimal Provider Spike Harness`
@@ -800,11 +800,11 @@ F11-F02 = **DONE / ACCEPTED**.
 
 F11-F03 = **DONE / ACCEPTED**
 
-F11-F04 = **IN PROGRESS — AUTHORIZED**.
+F11-F04 = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
 
 P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 one-run authorization = **AUTHORIZED / UNCONSUMED**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; Next Task remains **NOT_STARTED**.
 
-F11-F01 is **DONE / ACCEPTED** with result **PRE_PROVIDER_TOOLING_UNAVAILABLE**. Its historical blocking dependency was **AUTHORIZED PRIVILEGED NGINX ACCESS REQUIRED**. That privilege prerequisite is now superseded by F11-F03 evidence: privileged access is **PROVEN** and post-entry `sudo -n true` = **PASS**. Current blocker = **PRIVILEGED NGINX COMMAND DISPATCH PATH UNAVAILABLE**. Readiness remains **NOT PROVEN**. Do not execute F11, call Zernio or `/v1/auth/verify`, create a Provider webhook, publish a post, call Analytics, modify source/tests, resume F09, start another readiness retry, or start another task without a new Team Leader instruction.
+F11-F04 execution is complete and awaits Team Leader review. Final classification = **HTTPS_OR_NGINX_NOT_READY**. Operator-executed privilege and pre-change `nginx -t` were proven, the exact MarketlyAI vhost and original fingerprint were proven, local receiver and reverse-tunnel loopback readiness were proven, and a matching root-owned rollback backup was created. No Nginx mutation was ever performed. During recovery after the operator workstation interruption, the original config still matched the pre-change fingerprint and contained no F11 route, but `systemctl show nginx` reported `ActiveState=failed` and `SubState=failed` (`CanReload=yes`). Per the Task Contract, execution stopped without repair, patch, reload, external exact-route proof, or local F11 precheck. The temporary receiver/tunnel were stopped and the matching backup was removed after unchanged-config verification. Readiness remains **NOT PROVEN**. Do not execute F11, call Zernio or `/v1/auth/verify`, create a Provider webhook, publish a post, call Analytics, repair/restart Nginx under this task, resume F09, or start another task before Team Leader review/instruction.
 
 
 ### P1-T08-F11-F01 pre-Provider readiness execution
@@ -910,3 +910,36 @@ Final classification: **PRE_PROVIDER_TOOLING_UNAVAILABLE**.
 - P1-T08-F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization remains **AUTHORIZED / UNCONSUMED**; parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Next Task remains **NOT_STARTED**.
 - Readiness remains **NOT PROVEN**. Current blocker = **PRIVILEGED NGINX COMMAND DISPATCH PATH UNAVAILABLE**. This is infrastructure/tooling evidence only and is **not Provider Behavior evidence**.
 - Current Task after finalization = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`, status **UNRESOLVED / NOT DONE**. Do not activate another readiness retry automatically; Next Task remains **NOT_STARTED**.
+
+
+### P1-T08-F11-F04 operator-executed Nginx readiness proof
+Execution dates: `2026-10-16` through `2026-10-17` (operator workstation interruption/recovery).
+
+Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+
+P1-T08-F11-F04 Result: **HTTPS_OR_NGINX_NOT_READY**.
+
+Starting HEAD: `dcd17c2cd8566918ee95232949caabb1258e435e`.
+Activation HEAD: `10f293ac868d1407af86c7838a9727add1f2b190` (`docs(p1-t08): activate operator nginx readiness`).
+
+Readiness: **NOT PROVEN**.
+
+- Activation was docs-only and pushed before infrastructure work; branch remained `p1-t08-zernio-analytics-webhook`; no source/test/package/PROVIDER_CAPABILITIES changes were made.
+- Initial public baseline before temporary setup: DNS `marketlyai.restartorg.com -> 82.29.177.121`; TCP/443 reachable; base HTTPS `404`; exact F11 path `404`; TLS verification result `0`; redirects `0`.
+- Human Checkpoint A: SSH identity `marktuser@srv822206` PASS. Initial `sudo -n true` required authentication; the human entered the sudo password directly in Terminal only; password sent to/exposed to ChatGPT **NO**. Post-entry `sudo -n true` PASS. Pre-change `sudo nginx -t` PASS with syntax OK/test successful and exit `0`.
+- Exact enabled vhost identification PASS: `/etc/nginx/sites-enabled/marketlyai.restartorg.com` -> `/etc/nginx/sites-available/marketlyai.restartorg.com`; exact `server_name marketlyai.restartorg.com`; existing fallback `location / { return 404; }`.
+- Pre-change config fingerprint: `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`.
+- Controlled local receiver PASS on `127.0.0.1:18087`, exact path `/p1-t08-f11/analytics-synced`; readiness and confirmation returned HTTP `401` with the expected fresh receiver marker and same-process counters advanced.
+- Reverse tunnel PASS before Nginx mutation: VPS listener was loopback-only `127.0.0.1:18087`; VPS-loopback readiness/confirmation reached the same local receiver marker/process.
+- Rollback preparation PASS before any mutation: temporary root-owned backup `/var/tmp/aimm-f11-f04-marketlyai-nginx.bak`; mode `600`; backup SHA-256 exactly matched the original fingerprint. Original config mode/owner before mutation remained `644 root:root`.
+- **No guarded Nginx patch was executed. No Nginx reload was executed.** The F11 exact route was never installed.
+- The operator workstation interruption terminated transient local receiver/tunnel state; repository recovery remained clean at activation HEAD and remote matched. Transient receiver/tunnel were recreated only for non-privileged readiness recovery.
+- Privilege recovery PASS: `marktuser@srv822206`; human `sudo -v` direct Terminal entry; `sudo -n true` exit `0`. Recovery `nginx -t` exit `0`.
+- Recovery integrity PASS: current MarketlyAI config SHA-256 still equaled the pre-change fingerprint; backup SHA matched it; exact F11 route grep returned no match (`exit 1`); backup remained `600 root:root`.
+- Final Nginx service-state gate **FAILED**: `systemctl show nginx` returned `ActiveState=failed`, `SubState=failed`, `CanReload=yes`. This is sufficient to stop under `HTTPS_OR_NGINX_NOT_READY`. The task does not infer the root cause and did not attempt restart, repair, reload, or config mutation.
+- Because the Nginx service-state gate failed before any route mutation, external exact-route marker proof and the local F11 harness precheck were **NOT RUN**. `F11_PRE_PROVIDER_READY` was not established.
+- Cleanup: transient local receiver/tunnel sessions stopped; local port `18087` verified clear. No F11 route existed to roll back. Original config fingerprint remained unchanged. Temporary backup was removed by the human operator; `BACKUP_REMOVED_EXIT=0`. Cleanup safety failure: **NO**.
+- Provider/Zernio calls = `0`; `/v1/auth/verify` = `0`; Accounts = `0`; Analytics = `0`; Provider webhook API = `0`; Provider post API = `0`; Provider contact/email = `0`.
+- Webhook created = **NO**; post published = **NO**; Analytics called = **NO**; F11 one-run authorization consumed = **NO**.
+- This task provides PRE-PROVIDER infrastructure/readiness evidence only and is **not Provider Behavior evidence**.
+- Canonical state pending Team Leader review: F11-F04 **EXECUTED — AWAITING TEAM LEADER REVIEW**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task `P1-T08-F11-F04 — Operator-Executed Nginx Readiness Proof`; Next Task **NOT_STARTED**.

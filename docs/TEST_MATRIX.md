@@ -1349,3 +1349,40 @@ Status: **DONE / ACCEPTED**. Final classification: **PRE_PROVIDER_TOOLING_UNAVAI
 | Cleanup safety failure | NO | no temporary infrastructure was created |
 | Final classification | DONE / ACCEPTED | `PRE_PROVIDER_TOOLING_UNAVAILABLE`; accepted evidence HEAD `052e25d03e445914224b7cc65fb40aa2801052c9`; readiness remains `NOT PROVEN` |
 | Canonical state | PASS | F11-F03 `DONE / ACCEPTED`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent/current task P1-T08 `UNRESOLVED / NOT DONE`; Analytics `SPIKE_PENDING`; P1-T08-F09-S01 `BLOCKED — DNS ACCESS REQUIRED`; Provider contact `AUTHORIZED / NOT SENT`; Next Task `NOT_STARTED` |
+
+
+## P1-T08-F11-F04 - Operator-Executed Nginx Readiness Matrix
+
+Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **HTTPS_OR_NGINX_NOT_READY**. Readiness: **NOT PROVEN**.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Source-of-Truth activation | PASS | activation commit `10f293ac868d1407af86c7838a9727add1f2b190` pushed before infrastructure work |
+| Repository/source integrity | PASS | starting HEAD `dcd17c2cd8566918ee95232949caabb1258e435e`; no source/test/package/PROVIDER_CAPABILITIES changes |
+| Initial DNS / TCP / HTTPS baseline | PASS | hostname -> `82.29.177.121`; TCP/443 reachable; base/F11 path `404`; TLS verify `0`; redirects `0` |
+| SSH expected user/host | PASS | `marktuser@srv822206` |
+| Human password handling | PASS / SAFE | password entered directly in visible Terminal only; sent to/exposed to ChatGPT **NO** |
+| Privilege proof | PASS | post-entry `sudo -n true` exit `0` |
+| Pre-change Nginx syntax | PASS | `sudo nginx -t`: syntax OK; config test successful; exit `0` |
+| Exact enabled vhost | PASS | enabled `/etc/nginx/sites-enabled/marketlyai.restartorg.com` -> real `/etc/nginx/sites-available/marketlyai.restartorg.com`; exact server_name proven |
+| Pre-change config fingerprint | PASS | `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6` |
+| Local receiver | PASS | `127.0.0.1:18087`; exact F11 path; readiness + confirmation `401`; marker match; same-process counters |
+| Reverse tunnel / VPS loopback | PASS | VPS listener loopback-only `127.0.0.1:18087`; loopback requests reached same receiver marker/process |
+| Rollback preparation | PASS | root-owned backup; mode `600`; SHA exactly matched original before any mutation |
+| Guarded Nginx route mutation | NOT RUN | stop occurred before mutation; exact F11 route was never installed |
+| Operator workstation interruption recovery | PASS | repo clean/remote matched; transient receiver/tunnel recreated only for readiness recovery |
+| Recovery sudo / nginx syntax | PASS | `sudo -n true` exit `0`; recovery `nginx -t` exit `0` |
+| Recovery config integrity | PASS | current config and backup still matched original SHA; F11 route grep exit `1`; backup `600 root:root` |
+| Nginx service state | **FAIL / STOP** | `ActiveState=failed`; `SubState=failed`; `CanReload=yes`; no cause inferred and no repair attempted |
+| External exact-route marker proof | NOT RUN | route mutation prohibited after failed service-state gate |
+| Local F11 precheck | NOT RUN | external route readiness not established; no F11 Provider precheck executed |
+| F11_PRE_PROVIDER_READY | NOT ESTABLISHED | readiness remains NOT PROVEN |
+| Provider activity | PASS / ZERO | Zernio/auth/Accounts/Analytics/webhook/post/contact all `0` |
+| Provider artifacts/actions | PASS / ZERO | webhook created **NO**; post published **NO**; Analytics called **NO** |
+| F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
+| Cleanup transient receiver/tunnel | PASS | sessions stopped; local port `18087` clear |
+| Config rollback requirement | N/A / NO MUTATION | original config was never mutated and retained the exact pre-change fingerprint |
+| Backup cleanup | PASS | temporary backup removed after unchanged-config verification; `BACKUP_REMOVED_EXIT=0` |
+| Cleanup safety failure | NO | no unresolved temporary Nginx state/artifact remains from F04 |
+| Final classification | EXECUTED / AWAITING REVIEW | `HTTPS_OR_NGINX_NOT_READY` |
+| Canonical state | PASS | F11-F04 awaiting review; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics `SPIKE_PENDING`; F09-S01 blocked; Provider contact not sent; Next Task `NOT_STARTED` |

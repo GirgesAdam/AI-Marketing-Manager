@@ -1675,3 +1675,25 @@ Status: `DONE / ACCEPTED`. Final classification: **PRE_PROVIDER_TOOLING_UNAVAILA
 - Provider/Zernio calls `0`; auth/verify `0`; Accounts `0`; Analytics `0`; webhook/post API `0`; Provider contact `0`; F11 authorization consumed **NO**.
 - Canonical state: F11-F03 **DONE / ACCEPTED**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Next Task **NOT_STARTED**.
 - This is PRE-PROVIDER tooling/readiness evidence only, not Zernio Provider Behavior evidence.
+
+
+## P1-T08-F11-F04 - Operator-Executed Nginx Readiness Proof
+
+Status: `EXECUTED — AWAITING TEAM LEADER REVIEW`. Final classification: **HTTPS_OR_NGINX_NOT_READY**. Readiness: **NOT PROVEN**. This is PRE-PROVIDER infrastructure/readiness evidence only, not Zernio Provider Behavior evidence.
+
+- Starting HEAD `dcd17c2cd8566918ee95232949caabb1258e435e`; activation HEAD `10f293ac868d1407af86c7838a9727add1f2b190`; branch `p1-t08-zernio-analytics-webhook`.
+- Initial baseline PASS: DNS `82.29.177.121`; TCP/443 reachable; base/F11 path `404`; TLS verify `0`; redirects `0`.
+- Human operator privilege proof PASS: `marktuser@srv822206`; direct Terminal password entry only; post-entry `sudo -n true` PASS; password exposed/sent to ChatGPT **NO**.
+- Pre-change Nginx syntax PASS: `sudo nginx -t` reported syntax OK/test successful, exit `0`.
+- Exact enabled MarketlyAI vhost proven: `/etc/nginx/sites-enabled/marketlyai.restartorg.com` -> `/etc/nginx/sites-available/marketlyai.restartorg.com`; exact `server_name marketlyai.restartorg.com`.
+- PRE_CHANGE_CONFIG_SHA256: `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`.
+- Local receiver PASS on `127.0.0.1:18087`, exact `/p1-t08-f11/analytics-synced`, readiness + confirmation HTTP `401`, marker match, same-process confirmation.
+- Reverse-tunnel loopback proof PASS before Nginx mutation: listener only on VPS `127.0.0.1:18087`; VPS loopback reached the same receiver marker/process.
+- Rollback backup prepared before mutation: root-owned mode `600`; SHA-256 exactly matched original.
+- No Nginx route patch or reload was performed.
+- After operator workstation interruption/recovery, repo remained clean at activation HEAD; sudo recovery PASS; recovery `nginx -t` exit `0`; original config and backup still matched PRE_CHANGE_CONFIG_SHA256; exact F11 route remained absent (`grep` exit `1`).
+- Final service-state gate failed: `ActiveState=failed`; `SubState=failed`; `CanReload=yes`. No cause is inferred. Per contract, no repair/restart/reload/mutation followed and execution stopped as **HTTPS_OR_NGINX_NOT_READY**.
+- External exact-route marker proof and local F11 harness precheck were NOT RUN because the stop occurred before route mutation. `F11_PRE_PROVIDER_READY` was not established.
+- Cleanup PASS: receiver/tunnel stopped; local `18087` clear; original config fingerprint unchanged; no F11 route existed; temporary backup removed (`BACKUP_REMOVED_EXIT=0`); cleanup safety failure **NO**.
+- Provider/Zernio calls `0`; auth/verify `0`; Accounts `0`; Analytics `0`; webhook/post API `0`; Provider contact `0`; webhook created **NO**; post published **NO**; F11 authorization consumed **NO**.
+- Canonical pending-review state: F11-F04 `EXECUTED — AWAITING TEAM LEADER REVIEW`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; F09-S01 `BLOCKED — DNS ACCESS REQUIRED`; Provider contact `AUTHORIZED / NOT SENT`; Next Task `NOT_STARTED`.
