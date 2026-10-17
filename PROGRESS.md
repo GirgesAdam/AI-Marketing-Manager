@@ -55,7 +55,7 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08-F11-F05 — Diagnose Nginx Failed Service State`
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
 F11-F01 = **DONE / ACCEPTED**
 
@@ -65,7 +65,7 @@ F11-F03 = **DONE / ACCEPTED**
 
 F11-F04 = **DONE / ACCEPTED**
 
-F11-F05 = **EXECUTED — AWAITING TEAM LEADER REVIEW**
+F11-F05 = **DONE / ACCEPTED**
 
 ## P1-T01 Result
 `P1-T01 — Build Minimal Provider Spike Harness`
@@ -800,7 +800,7 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Current Task = `P1-T08-F11-F05 — Diagnose Nginx Failed Service State`.
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
 
 F11-F01 = **DONE / ACCEPTED**.
 
@@ -810,11 +810,11 @@ F11-F03 = **DONE / ACCEPTED**
 
 F11-F04 = **DONE / ACCEPTED**.
 
-F11-F05 = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+F11-F05 = **DONE / ACCEPTED**.
 
 P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 one-run authorization = **AUTHORIZED / UNCONSUMED**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; Next Task remains **NOT_STARTED**.
 
-F11-F05 diagnostic execution is complete and awaits Team Leader review. Final classification = **NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN**. Proven root cause: during boot, `apache2.service` became active at `2026-10-17 10:11:26 UTC` with MainPID `852` and acquired TCP/80; nginx ExecStart PID `843` then failed from `10:11:27` through `10:11:29 UTC` with explicit `bind() ... :80 failed (98: Address already in use)` and exited status `1`. Current `ss -ltnp` maps TCP/80 to the same systemd-managed Apache process family; TCP/443 has no listener. nginx currently has MainPID `0` and no running nginx processes; `/run/nginx.pid` exists but is empty. Fresh `nginx -t` = **PASS**; MarketlyAI config fingerprint remains `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`; F11 route remains absent. Fresh public baseline: DNS `82.29.177.121`; TCP/80 reachable; TCP/443 not reachable; HTTPS base/F11 probes timed out before TLS/HTTP; HTTP/80 base returned `500` and F11 path `404`, both without redirect. This is **PRE-PROVIDER INFRASTRUCTURE DIAGNOSTIC EVIDENCE**, not Provider Behavior evidence. No repair/start/restart/reload/reset-failed/config mutation/process signal occurred; Provider/Zernio calls remain `0`; F11 authorization remains **AUTHORIZED / UNCONSUMED**. Safest bounded repair recommendation, NOT EXECUTED: in a separate Team Leader-authorized repair task, first confirm whether Apache is an intended workload/port owner; if it is unintended and no dependent workload exists, remove its port-80 ownership before starting nginx; if Apache is intentional, explicitly redesign port ownership/reverse-proxy topology rather than stopping it blindly. Repair risks include outage to any Apache-served workload and renewed bind conflicts. Post-repair verification must include port-owner checks, nginx systemd state, `nginx -t`, trusted public TLS/HTTPS, and unrelated-host regression checks.
+F11-F05 is **DONE / ACCEPTED** with result **NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN** and accepted evidence HEAD `b7652550a5f0e131bf00d74bcbdb688aff368ff0`. Canonical root cause = **APACHE_PORT_80_OWNERSHIP_BLOCKS_NGINX_STARTUP_AFTER_REBOOT**. Direct evidence: `apache2.service` became active/running at `2026-10-17 10:11:26 UTC` with MainPID `852` and acquired TCP/80; nginx ExecStart PID `843` subsequently failed repeated IPv4/IPv6 TCP/80 binds with `Address already in use`, then `still could not bind()`, and exited status `1/FAILURE`. This is **not** an Nginx syntax failure, MarketlyAI config corruption, F11 route failure, Provider failure, or Zernio failure. Fresh `nginx -t` = **PASS**; MarketlyAI config SHA-256 remains `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`; fingerprint preserved = **YES**; F11 route present = **NO**. Current observed infrastructure: nginx `loaded/failed/failed`, Result `exit-code`, MainPID `0`, no nginx processes; `/run/nginx.pid` **EXISTS / EMPTY**; `apache2.service` **ACTIVE / RUNNING**, MainPID `852`; TCP/80 owner = **APACHE**; TCP/443 owner = **NONE**; current public HTTPS = **NOT AVAILABLE / TCP 443 NOT REACHABLE**; HTTP/80 is served by Apache. Apache workload intent/dependency ownership = **NOT YET VERIFIED**; do not infer Apache is unwanted and do not stop it. Before any repair, a separate Team Leader-authorized task must establish whether Apache serves an intended workload or dependency. If proven unintended and dependency-safe to stop, a later repair task may remove its TCP/80 ownership and restore Nginx; if intentional, port ownership/reverse-proxy topology requires explicit Team Leader architecture decision. No such decision is made here. External activity during finalization remains hard zero: Apache and Nginx start/stop/restart/reload `0`; reset-failed `0`; config mutation `0`; process kill/signal `0`; Provider/Zernio calls `0`; F11 execution **NO**. P1-T08-F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 authorization remains **AUTHORIZED / UNCONSUMED**. Do not activate Apache intent investigation, repair, readiness retry, or another task automatically.
 
 F11-F04 is **DONE / ACCEPTED** with result **HTTPS_OR_NGINX_NOT_READY** and accepted evidence HEAD `859e06806899e66e1984f9900fc6cc6960f1b615`. Canonical infrastructure finding = **NGINX_SERVICE_STATE_FAILED_WITH_VALID_CONFIG**. Pre-change and recovery `nginx -t` both passed, the original MarketlyAI config fingerprint remained `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`, the original config was never changed, and no F11 route was installed. Nginx mutation/reload/restart = `0 / 0 / 0`. Final observed systemd state was `ActiveState=failed`, `SubState=failed`, `CanReload=yes`; root cause = **NOT YET DETERMINED** and must not be inferred. External F11 exact-route proof and local F11 harness precheck were **NOT RUN**. Cleanup completed: receiver stopped, reverse tunnel stopped, local `18087` clear, temporary backup removed with `BACKUP_REMOVED_EXIT=0`; cleanup safety failure = **NO**. Readiness remains **NOT PROVEN**. Do not execute F11, call Zernio or `/v1/auth/verify`, create a Provider webhook, publish a post, call Analytics, repair/restart/reload Nginx, activate a readiness retry, resume F09, or start another task without a new Team Leader instruction.
 
@@ -966,9 +966,17 @@ Root cause: **NOT YET DETERMINED**.
 ### P1-T08-F11-F05 nginx failed-service-state diagnosis
 Execution date: `2026-10-17`.
 
-Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+Status: **DONE / ACCEPTED**.
 
-Final classification: **NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN**.
+P1-T08-F11-F05 Result: **NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN**.
+
+Accepted evidence HEAD: `b7652550a5f0e131bf00d74bcbdb688aff368ff0`.
+
+Current infrastructure root cause: **APACHE_PORT_80_OWNERSHIP_BLOCKS_NGINX_STARTUP_AFTER_REBOOT**.
+
+Nginx readiness: **NOT PROVEN**.
+
+Apache workload intent / dependency ownership: **NOT YET VERIFIED**.
 
 Starting HEAD: `be3084c795fb71599cac3dfe37c0fd4e3bf91256`.
 Activation HEAD: `b068e7ffe7165e441a76e34eb8e507327b7e2a22` (`docs(p1-t08): activate nginx failure diagnosis`).
@@ -983,7 +991,7 @@ Evidence class: **PRE-PROVIDER INFRASTRUCTURE DIAGNOSTIC EVIDENCE — NOT Provid
 - nginx process inventory: no nginx master or worker exists. This is not an unmanaged/orphan nginx case.
 - PID correlation: configured PIDFile is `/run/nginx.pid`; current file exists as `root:root`, mode `644`, size `0`, and contains no PID. There is no live nginx master to match it and systemd MainPID is `0`.
 - Fresh config validation: `nginx -t` PASS / exit `0`; only pre-existing staging-admin duplicate-server-name warnings observed. MarketlyAI SHA-256 remains `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`; exact F11 route absent (grep exit `1`). No config mutation occurred.
-- **Root cause PROVEN**: nginx.service failed at boot because Apache had already acquired TCP/80, causing nginx ExecStart to fail its port-80 bind and exit status 1. This is not an nginx syntax failure, MarketlyAI config corruption, F11 route failure, Provider failure, or Zernio failure.
-- Repair recommendation only, NOT EXECUTED: separate authorized repair task must first establish whether Apache is intended. If unintended and no dependent workload exists, remove Apache's port-80 ownership before starting nginx; if intentional, explicitly redesign port ownership/reverse-proxy topology. Risks: outage to Apache-dependent workloads, unrelated-host regression, recurring bind conflict. Required post-repair checks: socket ownership 80/443, nginx active/running, PID correlation, `nginx -t`, trusted public TLS/HTTPS, MarketlyAI base/F11 expected statuses, and unrelated-domain regression checks.
+- **Root cause PROVEN**: **APACHE_PORT_80_OWNERSHIP_BLOCKS_NGINX_STARTUP_AFTER_REBOOT**. nginx.service failed at boot because systemd-managed Apache had already acquired TCP/80, causing nginx ExecStart to fail its port-80 bind and exit status 1. This is not an Nginx syntax failure, MarketlyAI config corruption, F11 route failure, Provider failure, or Zernio failure.
+- Required next decision input: Apache workload intent / dependency ownership = **NOT YET VERIFIED**. Do not state Apache is unwanted and do not stop it. A separate task must establish whether Apache serves an intended workload or unrelated dependency on this VPS. If Apache is proven unintended and dependency-safe to stop, a later repair task may remove its TCP/80 ownership and restore Nginx. If Apache is proven intentional, port ownership/reverse-proxy topology requires an explicit Team Leader architecture decision before repair. No such decision is made in F11-F05 finalization.
 - Safety: nginx start/restart/reload/stop `0`; reset-failed `0`; daemon-reload `0`; config mutation `0`; process signals/kills `0`; receiver/tunnel `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact all `0`; F11 authorization consumed **NO**.
-- Canonical pending-review state: F11-F05 **EXECUTED — AWAITING TEAM LEADER REVIEW**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task `P1-T08-F11-F05 — Diagnose Nginx Failed Service State`; Next Task **NOT_STARTED**.
+- Canonical final state: F11-F05 **DONE / ACCEPTED**; F11-F05 Result **NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN**; accepted evidence HEAD `b7652550a5f0e131bf00d74bcbdb688aff368ff0`; current infrastructure root cause **APACHE_PORT_80_OWNERSHIP_BLOCKS_NGINX_STARTUP_AFTER_REBOOT**; Apache workload intent **NOT YET VERIFIED**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Next Task **NOT_STARTED**.

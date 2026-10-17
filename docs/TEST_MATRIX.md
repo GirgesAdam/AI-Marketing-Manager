@@ -1390,7 +1390,7 @@ Status: **DONE / ACCEPTED**. Final classification: **HTTPS_OR_NGINX_NOT_READY**.
 
 ## P1-T08-F11-F05 - Nginx Failed Service Diagnostic Matrix
 
-Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN**. Evidence: **PRE-PROVIDER INFRASTRUCTURE DIAGNOSTIC EVIDENCE — NOT Provider Behavior evidence**.
+Status: **DONE / ACCEPTED**. Final classification: **NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN**. Accepted evidence HEAD: `b7652550a5f0e131bf00d74bcbdb688aff368ff0`. Root cause: **APACHE_PORT_80_OWNERSHIP_BLOCKS_NGINX_STARTUP_AFTER_REBOOT**. Apache workload intent: **NOT YET VERIFIED**. Evidence: **PRE-PROVIDER INFRASTRUCTURE DIAGNOSTIC EVIDENCE — NOT Provider Behavior evidence**.
 
 | Gate | Result | Evidence |
 |---|---|---|
@@ -1413,7 +1413,9 @@ Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **NG
 | Fresh nginx -t | PASS | syntax OK/test successful; exit 0; duplicate staging-admin warnings only |
 | MarketlyAI fingerprint | PASS | `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6` unchanged |
 | F11 route | PASS / ABSENT | grep exit 1 |
-| Root cause | **PROVEN** | apache2 acquired TCP/80 before nginx bind attempts; nginx failed bind and exited status 1 |
+| Root cause | **PROVEN** | `APACHE_PORT_80_OWNERSHIP_BLOCKS_NGINX_STARTUP_AFTER_REBOOT`; apache2 acquired TCP/80 before nginx bind attempts; nginx failed bind and exited status 1 |
+| Non-causes | PASS / EXPLICIT | not Nginx syntax failure; not MarketlyAI config corruption; not F11 route failure; not Provider failure; not Zernio failure |
+| Apache workload intent | UNVERIFIED | dependency ownership / intended workload **NOT YET VERIFIED**; no stop/repair decision made |
 | Repair executed | NO | diagnostic-only; recommendation documented separately |
 | Nginx start/restart/reload/stop | PASS / ZERO | `0` |
 | reset-failed / daemon-reload | PASS / ZERO | `0 / 0` |
@@ -1422,5 +1424,5 @@ Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **NG
 | receiver/tunnel | PASS / ZERO | `0 / 0` |
 | Provider activity | PASS / ZERO | Zernio/auth/Accounts/Analytics/webhook/post/contact all `0` |
 | F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
-| Final classification | EXECUTED / AWAITING REVIEW | `NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN` |
-| Canonical state | PASS | F11-F05 awaiting review; F11 blocked pre-provider/unconsumed; authorization unconsumed; parent P1-T08 unresolved; Analytics SPIKE_PENDING; Next Task NOT_STARTED |
+| Final classification | DONE / ACCEPTED | `NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN`; accepted evidence HEAD `b7652550a5f0e131bf00d74bcbdb688aff368ff0` |
+| Canonical state | PASS | F11-F05 `DONE / ACCEPTED`; root cause `APACHE_PORT_80_OWNERSHIP_BLOCKS_NGINX_STARTUP_AFTER_REBOOT`; Apache intent `NOT YET VERIFIED`; F11 blocked pre-provider/unconsumed; authorization unconsumed; parent P1-T08 unresolved; Analytics SPIKE_PENDING; Current Task parent P1-T08; Next Task NOT_STARTED |
