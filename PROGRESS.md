@@ -55,7 +55,17 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
+Current Task = `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`
+
+Architecture Amendment = **IN PROGRESS — AUTHORIZED**
+
+Approved Production Backend = **DJANGO / PYTHON**
+
+Approved Async Execution = **REDIS / CELERY**
+
+Approved ORM = **DJANGO ORM / DJANGO MIGRATIONS**
+
+Approved Auth Foundation = **DJANGO AUTH + CUSTOM USER**
 
 F11-F01 = **DONE / ACCEPTED**
 
@@ -806,7 +816,17 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
+Current Task = `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`.
+
+Architecture Amendment = **IN PROGRESS — AUTHORIZED**.
+
+Approved Production Backend = **DJANGO / PYTHON**.
+
+Approved Async Execution = **REDIS / CELERY**.
+
+Approved ORM = **DJANGO ORM / DJANGO MIGRATIONS**.
+
+Approved Auth Foundation = **DJANGO AUTH + CUSTOM USER**.
 
 F11-F01 = **DONE / ACCEPTED**.
 
