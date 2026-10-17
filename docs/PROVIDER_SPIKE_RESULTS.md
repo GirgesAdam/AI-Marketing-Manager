@@ -1679,7 +1679,7 @@ Status: `DONE / ACCEPTED`. Final classification: **PRE_PROVIDER_TOOLING_UNAVAILA
 
 ## P1-T08-F11-F04 - Operator-Executed Nginx Readiness Proof
 
-Status: `EXECUTED — AWAITING TEAM LEADER REVIEW`. Final classification: **HTTPS_OR_NGINX_NOT_READY**. Readiness: **NOT PROVEN**. This is PRE-PROVIDER infrastructure/readiness evidence only, not Zernio Provider Behavior evidence.
+Status: `DONE / ACCEPTED`. Final classification: **HTTPS_OR_NGINX_NOT_READY**. Accepted evidence HEAD: `859e06806899e66e1984f9900fc6cc6960f1b615`. Readiness: **NOT PROVEN**. Current infrastructure blocker: **NGINX_SERVICE_STATE_FAILED_WITH_VALID_CONFIG**. Root cause: **NOT YET DETERMINED**. This is PRE-PROVIDER infrastructure/readiness evidence only, not Zernio Provider Behavior evidence.
 
 - Starting HEAD `dcd17c2cd8566918ee95232949caabb1258e435e`; activation HEAD `10f293ac868d1407af86c7838a9727add1f2b190`; branch `p1-t08-zernio-analytics-webhook`.
 - Initial baseline PASS: DNS `82.29.177.121`; TCP/443 reachable; base/F11 path `404`; TLS verify `0`; redirects `0`.
@@ -1690,10 +1690,10 @@ Status: `EXECUTED — AWAITING TEAM LEADER REVIEW`. Final classification: **HTTP
 - Local receiver PASS on `127.0.0.1:18087`, exact `/p1-t08-f11/analytics-synced`, readiness + confirmation HTTP `401`, marker match, same-process confirmation.
 - Reverse-tunnel loopback proof PASS before Nginx mutation: listener only on VPS `127.0.0.1:18087`; VPS loopback reached the same receiver marker/process.
 - Rollback backup prepared before mutation: root-owned mode `600`; SHA-256 exactly matched original.
-- No Nginx route patch or reload was performed.
+- No Nginx route patch, reload, or restart was performed. Temporary F11 route = **NEVER INSTALLED**; Nginx mutation/reload/restart = `0 / 0 / 0`.
 - After operator workstation interruption/recovery, repo remained clean at activation HEAD; sudo recovery PASS; recovery `nginx -t` exit `0`; original config and backup still matched PRE_CHANGE_CONFIG_SHA256; exact F11 route remained absent (`grep` exit `1`).
-- Final service-state gate failed: `ActiveState=failed`; `SubState=failed`; `CanReload=yes`. No cause is inferred. Per contract, no repair/restart/reload/mutation followed and execution stopped as **HTTPS_OR_NGINX_NOT_READY**.
+- Final service-state gate failed: `ActiveState=failed`; `SubState=failed`; `CanReload=yes`. Canonical infrastructure finding: **NGINX_SERVICE_STATE_FAILED_WITH_VALID_CONFIG**. This is not a syntax failure, configuration corruption, F11 route failure, Provider failure, or Zernio failure. Root cause = **NOT YET DETERMINED**. Per contract, no repair/restart/reload/mutation followed and execution stopped as **HTTPS_OR_NGINX_NOT_READY**.
 - External exact-route marker proof and local F11 harness precheck were NOT RUN because the stop occurred before route mutation. `F11_PRE_PROVIDER_READY` was not established.
-- Cleanup PASS: receiver/tunnel stopped; local `18087` clear; original config fingerprint unchanged; no F11 route existed; temporary backup removed (`BACKUP_REMOVED_EXIT=0`); cleanup safety failure **NO**.
+- Cleanup PASS: temporary F11 route **NEVER INSTALLED**; original config restore **NOT REQUIRED — NEVER CHANGED**; original fingerprint preserved **YES**; receiver stopped **YES**; reverse tunnel stopped **YES**; local `18087` clear **YES**; temporary backup removed **YES** (`BACKUP_REMOVED_EXIT=0`); cleanup safety failure **NO**.
 - Provider/Zernio calls `0`; auth/verify `0`; Accounts `0`; Analytics `0`; webhook/post API `0`; Provider contact `0`; webhook created **NO**; post published **NO**; F11 authorization consumed **NO**.
-- Canonical pending-review state: F11-F04 `EXECUTED — AWAITING TEAM LEADER REVIEW`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; F09-S01 `BLOCKED — DNS ACCESS REQUIRED`; Provider contact `AUTHORIZED / NOT SENT`; Next Task `NOT_STARTED`.
+- Canonical final state: F11-F04 `DONE / ACCEPTED`; F11-F04 Result `HTTPS_OR_NGINX_NOT_READY`; accepted evidence HEAD `859e06806899e66e1984f9900fc6cc6960f1b615`; current infrastructure blocker `NGINX_SERVICE_STATE_FAILED_WITH_VALID_CONFIG`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; F09-S01 `BLOCKED — DNS ACCESS REQUIRED`; Provider contact `AUTHORIZED / NOT SENT`; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Next Task `NOT_STARTED`.

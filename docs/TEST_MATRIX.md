@@ -1353,7 +1353,7 @@ Status: **DONE / ACCEPTED**. Final classification: **PRE_PROVIDER_TOOLING_UNAVAI
 
 ## P1-T08-F11-F04 - Operator-Executed Nginx Readiness Matrix
 
-Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **HTTPS_OR_NGINX_NOT_READY**. Readiness: **NOT PROVEN**.
+Status: **DONE / ACCEPTED**. Final classification: **HTTPS_OR_NGINX_NOT_READY**. Accepted evidence HEAD: `859e06806899e66e1984f9900fc6cc6960f1b615`. Readiness: **NOT PROVEN**. Current infrastructure blocker: **NGINX_SERVICE_STATE_FAILED_WITH_VALID_CONFIG**.
 
 | Gate | Result | Evidence |
 |---|---|---|
@@ -1369,20 +1369,20 @@ Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **HT
 | Local receiver | PASS | `127.0.0.1:18087`; exact F11 path; readiness + confirmation `401`; marker match; same-process counters |
 | Reverse tunnel / VPS loopback | PASS | VPS listener loopback-only `127.0.0.1:18087`; loopback requests reached same receiver marker/process |
 | Rollback preparation | PASS | root-owned backup; mode `600`; SHA exactly matched original before any mutation |
-| Guarded Nginx route mutation | NOT RUN | stop occurred before mutation; exact F11 route was never installed |
+| Guarded Nginx route mutation | NOT RUN | temporary F11 route **NEVER INSTALLED**; Nginx mutation `0` |
 | Operator workstation interruption recovery | PASS | repo clean/remote matched; transient receiver/tunnel recreated only for readiness recovery |
 | Recovery sudo / nginx syntax | PASS | `sudo -n true` exit `0`; recovery `nginx -t` exit `0` |
-| Recovery config integrity | PASS | current config and backup still matched original SHA; F11 route grep exit `1`; backup `600 root:root` |
-| Nginx service state | **FAIL / STOP** | `ActiveState=failed`; `SubState=failed`; `CanReload=yes`; no cause inferred and no repair attempted |
-| External exact-route marker proof | NOT RUN | route mutation prohibited after failed service-state gate |
+| Recovery config integrity | PASS | current config and backup still matched original SHA; F11 route grep exit `1`; original fingerprint preserved **YES**; backup `600 root:root` |
+| Nginx service state | **FAIL / STOP** | `ActiveState=failed`; `SubState=failed`; `CanReload=yes`; canonical finding `NGINX_SERVICE_STATE_FAILED_WITH_VALID_CONFIG`; root cause **NOT YET DETERMINED** |
+| External exact-route marker proof | NOT RUN | readiness stopped before any F11 route installation |
 | Local F11 precheck | NOT RUN | external route readiness not established; no F11 Provider precheck executed |
 | F11_PRE_PROVIDER_READY | NOT ESTABLISHED | readiness remains NOT PROVEN |
 | Provider activity | PASS / ZERO | Zernio/auth/Accounts/Analytics/webhook/post/contact all `0` |
 | Provider artifacts/actions | PASS / ZERO | webhook created **NO**; post published **NO**; Analytics called **NO** |
 | F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
-| Cleanup transient receiver/tunnel | PASS | sessions stopped; local port `18087` clear |
-| Config rollback requirement | N/A / NO MUTATION | original config was never mutated and retained the exact pre-change fingerprint |
-| Backup cleanup | PASS | temporary backup removed after unchanged-config verification; `BACKUP_REMOVED_EXIT=0` |
+| Cleanup transient receiver/tunnel | PASS | receiver stopped **YES**; reverse tunnel stopped **YES**; local `18087` clear **YES** |
+| Config rollback requirement | N/A / NO MUTATION | original config restored **NOT REQUIRED — NEVER CHANGED**; original fingerprint preserved **YES** |
+| Backup cleanup | PASS | temporary backup removed **YES** after unchanged-config verification; `BACKUP_REMOVED_EXIT=0` |
 | Cleanup safety failure | NO | no unresolved temporary Nginx state/artifact remains from F04 |
-| Final classification | EXECUTED / AWAITING REVIEW | `HTTPS_OR_NGINX_NOT_READY` |
-| Canonical state | PASS | F11-F04 awaiting review; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics `SPIKE_PENDING`; F09-S01 blocked; Provider contact not sent; Next Task `NOT_STARTED` |
+| Final classification | DONE / ACCEPTED | `HTTPS_OR_NGINX_NOT_READY`; accepted evidence HEAD `859e06806899e66e1984f9900fc6cc6960f1b615` |
+| Canonical state | PASS | F11-F04 `DONE / ACCEPTED`; blocker `NGINX_SERVICE_STATE_FAILED_WITH_VALID_CONFIG`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics `SPIKE_PENDING`; Current Task parent P1-T08; Next Task `NOT_STARTED` |
