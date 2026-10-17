@@ -1386,3 +1386,41 @@ Status: **DONE / ACCEPTED**. Final classification: **HTTPS_OR_NGINX_NOT_READY**.
 | Cleanup safety failure | NO | no unresolved temporary Nginx state/artifact remains from F04 |
 | Final classification | DONE / ACCEPTED | `HTTPS_OR_NGINX_NOT_READY`; accepted evidence HEAD `859e06806899e66e1984f9900fc6cc6960f1b615` |
 | Canonical state | PASS | F11-F04 `DONE / ACCEPTED`; blocker `NGINX_SERVICE_STATE_FAILED_WITH_VALID_CONFIG`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics `SPIKE_PENDING`; Current Task parent P1-T08; Next Task `NOT_STARTED` |
+
+
+## P1-T08-F11-F05 - Nginx Failed Service Diagnostic Matrix
+
+Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN**. Evidence: **PRE-PROVIDER INFRASTRUCTURE DIAGNOSTIC EVIDENCE — NOT Provider Behavior evidence**.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Activation before diagnosis | PASS | activation HEAD `b068e7ffe7165e441a76e34eb8e507327b7e2a22` |
+| Repository/source integrity | PASS | starting HEAD `be3084c795fb71599cac3dfe37c0fd4e3bf91256`; no source/test/package changes |
+| Fresh DNS | PASS | `marketlyai.restartorg.com -> 82.29.177.121` |
+| Fresh TCP/80 | PASS / REACHABLE | public TCP/80 reachable |
+| Fresh TCP/443 | FAIL / NOT REACHABLE | public TCP/443 connection not established |
+| Fresh HTTPS base/F11 | NOT REACHED | both timed out before TLS/HTTP; no current HTTPS status/cert inferred |
+| HTTP/80 observation | OBSERVED | base `500`; exact F11 path `404`; redirects `0` |
+| nginx systemd state | FAIL / OBSERVED | loaded; enabled; ActiveState=failed; SubState=failed; Result=exit-code; MainPID=0; ControlPID=0; CanReload=yes |
+| Failed operation metadata | PASS / PROVEN | ExecStart PID `843`; exited status `1`; stopped `2026-10-17 10:11:29 UTC` |
+| Bounded nginx journal | PASS | explicit port-80 bind failures, error 98 Address already in use, then still could not bind |
+| nginx unit definition | PASS | Type=forking; PIDFile=/run/nginx.pid; ExecStartPre config-test; ExecStart daemon; ExecReload signal reload; Restart=no; no drop-ins |
+| nginx processes | PASS / NONE | no nginx master/workers; unmanaged/orphan determination = NO |
+| Apache service correlation | PASS / PROVEN | apache2 active since `10:11:26 UTC`; MainPID 852; PPID 1; systemd-managed |
+| TCP/80 ownership | PASS / PROVEN | privileged ss maps `*:80` to apache2 process family including MainPID 852 |
+| TCP/443 ownership | PASS / NONE | no listener observed on TCP/443 |
+| PID file correlation | PASS | /run/nginx.pid exists, root:root 644, size 0, no PID; no live nginx; systemd MainPID=0 |
+| Fresh nginx -t | PASS | syntax OK/test successful; exit 0; duplicate staging-admin warnings only |
+| MarketlyAI fingerprint | PASS | `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6` unchanged |
+| F11 route | PASS / ABSENT | grep exit 1 |
+| Root cause | **PROVEN** | apache2 acquired TCP/80 before nginx bind attempts; nginx failed bind and exited status 1 |
+| Repair executed | NO | diagnostic-only; recommendation documented separately |
+| Nginx start/restart/reload/stop | PASS / ZERO | `0` |
+| reset-failed / daemon-reload | PASS / ZERO | `0 / 0` |
+| config mutation | PASS / ZERO | `0` |
+| process signals/kills | PASS / ZERO | `0` |
+| receiver/tunnel | PASS / ZERO | `0 / 0` |
+| Provider activity | PASS / ZERO | Zernio/auth/Accounts/Analytics/webhook/post/contact all `0` |
+| F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
+| Final classification | EXECUTED / AWAITING REVIEW | `NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN` |
+| Canonical state | PASS | F11-F05 awaiting review; F11 blocked pre-provider/unconsumed; authorization unconsumed; parent P1-T08 unresolved; Analytics SPIKE_PENDING; Next Task NOT_STARTED |

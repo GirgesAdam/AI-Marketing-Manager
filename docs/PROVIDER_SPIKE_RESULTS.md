@@ -1697,3 +1697,22 @@ Status: `DONE / ACCEPTED`. Final classification: **HTTPS_OR_NGINX_NOT_READY**. A
 - Cleanup PASS: temporary F11 route **NEVER INSTALLED**; original config restore **NOT REQUIRED — NEVER CHANGED**; original fingerprint preserved **YES**; receiver stopped **YES**; reverse tunnel stopped **YES**; local `18087` clear **YES**; temporary backup removed **YES** (`BACKUP_REMOVED_EXIT=0`); cleanup safety failure **NO**.
 - Provider/Zernio calls `0`; auth/verify `0`; Accounts `0`; Analytics `0`; webhook/post API `0`; Provider contact `0`; webhook created **NO**; post published **NO**; F11 authorization consumed **NO**.
 - Canonical final state: F11-F04 `DONE / ACCEPTED`; F11-F04 Result `HTTPS_OR_NGINX_NOT_READY`; accepted evidence HEAD `859e06806899e66e1984f9900fc6cc6960f1b615`; current infrastructure blocker `NGINX_SERVICE_STATE_FAILED_WITH_VALID_CONFIG`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; F09-S01 `BLOCKED — DNS ACCESS REQUIRED`; Provider contact `AUTHORIZED / NOT SENT`; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Next Task `NOT_STARTED`.
+
+
+## P1-T08-F11-F05 - Nginx Failed Service State Diagnosis
+
+Status: `EXECUTED — AWAITING TEAM LEADER REVIEW`. Final classification: **NGINX_FAILED_STATE_ROOT_CAUSE_PROVEN**. Evidence class: **PRE-PROVIDER INFRASTRUCTURE DIAGNOSTIC EVIDENCE — NOT Provider Behavior evidence**.
+
+- Starting HEAD `be3084c795fb71599cac3dfe37c0fd4e3bf91256`; activation HEAD `b068e7ffe7165e441a76e34eb8e507327b7e2a22`; branch `p1-t08-zernio-analytics-webhook`.
+- Fresh public baseline: DNS `82.29.177.121`; TCP/80 reachable; TCP/443 not reachable; HTTPS base/F11 timed out before TLS/HTTP; HTTP/80 base `500`, F11 path `404`, no redirect.
+- nginx remains systemd `failed/failed`, Result `exit-code`, MainPID `0`. Failed ExecStart PID `843` exited status `1` at `2026-10-17 10:11:29 UTC`.
+- Journal direct evidence: nginx ExecStart repeatedly failed bind on IPv4/IPv6 TCP/80 with `Address already in use`, then `still could not bind()`.
+- apache2.service direct correlation: active/running since `10:11:26 UTC`, MainPID `852`, systemd-managed; socket inventory maps TCP/80 to Apache process family. Apache became active before nginx's failing bind attempts at `10:11:27-10:11:29 UTC`. TCP/443 has no listener.
+- No nginx processes are running; no unmanaged/orphan nginx master exists. `/run/nginx.pid` is present but empty (0 bytes), and systemd MainPID is `0`.
+- Unit evidence: Type `forking`; PIDFile `/run/nginx.pid`; ExecStartPre is nginx config test; ExecStart daemonizes nginx; ExecReload uses `-s reload`; Restart `no`; no drop-ins observed.
+- Fresh `nginx -t` PASS, exit `0`. MarketlyAI config SHA remains `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`. F11 route absent.
+- Root cause: **PROVEN — nginx.service failed because systemd-managed Apache had already acquired TCP/80, so nginx ExecStart could not bind port 80 and exited status 1.**
+- No claim is made that config syntax, MarketlyAI config corruption, F11 route, Provider, or Zernio caused the failure.
+- Repair recommendation only, NOT EXECUTED: separately authorize port-ownership repair after confirming whether Apache is intended; do not stop it blindly. If Apache is unintended and dependency-safe, remove its port-80 ownership before starting nginx; otherwise explicitly redesign port ownership/reverse-proxy topology.
+- Safety: nginx/service mutations `0`; config mutations `0`; signals/kills `0`; receiver/tunnel `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact `0`; F11 authorization consumed **NO**.
+- Canonical pending-review state: F11-F05 `EXECUTED — AWAITING TEAM LEADER REVIEW`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Next Task `NOT_STARTED`.
