@@ -57,9 +57,11 @@ Analytics Webhook = `SPIKE_PENDING`
 
 Current Task = `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`
 
-Architecture Amendment = **EXECUTED — AWAITING TEAM LEADER REVIEW**
+Architecture Amendment = **AWAITING CANONICAL REPLACEMENT / VERIFICATION**
 
-Architecture Amendment Result = **DJANGO_ARCHITECTURE_CANDIDATES_PREPARED**
+Architecture Amendment Candidate Preparation = **DONE / ACCEPTED**
+
+Architecture Amendment Candidate Result = **DJANGO_ARCHITECTURE_CANDIDATES_PREPARED**
 
 Architecture Amendment Previous Stop = **DECISION_SEQUENCE_PRECONDITION_FAILED — RESOLVED**
 
@@ -77,7 +79,7 @@ Canonical D-039 = **NO / NOT COMPLETED**
 
 MASTER Django amendment canonical = **NO / NOT COMPLETED**
 
-Candidates = **PREPARED / NOT CANONICAL**
+Candidates = **PREPARED / ACCEPTED / NOT CANONICAL**
 
 Production Django implementation = **NOT STARTED**
 
@@ -836,9 +838,11 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 Current Task = `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`.
 
-Architecture Amendment = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+Architecture Amendment = **AWAITING CANONICAL REPLACEMENT / VERIFICATION**.
 
-Architecture Amendment Result = **DJANGO_ARCHITECTURE_CANDIDATES_PREPARED**.
+Architecture Amendment Candidate Preparation = **DONE / ACCEPTED**
+
+Architecture Amendment Candidate Result = **DJANGO_ARCHITECTURE_CANDIDATES_PREPARED**.
 
 Architecture Amendment Previous Stop = **DECISION_SEQUENCE_PRECONDITION_FAILED — RESOLVED**.
 
@@ -856,7 +860,7 @@ Canonical D-039 = **NO / NOT COMPLETED**.
 
 MASTER Django amendment canonical = **NO / NOT COMPLETED**.
 
-Candidates = **PREPARED / NOT CANONICAL**.
+Candidates = **PREPARED / ACCEPTED / NOT CANONICAL**.
 
 Production Django implementation = **NOT STARTED**.
 
@@ -1210,9 +1214,11 @@ Evidence class: **CANONICAL ARCHITECTURE DOCUMENT PRECONDITION EVIDENCE — NOT 
 ### ARCH-AMEND-01 — resumed canonical architecture candidate preparation
 Execution date: `2026-10-17`.
 
-Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+Status: **CANDIDATE PREPARATION DONE / ACCEPTED**.
 
 Result / final classification: **DJANGO_ARCHITECTURE_CANDIDATES_PREPARED**.
+
+Accepted evidence HEAD: `e2d4e8ec9c6cc3c772ac02fddb48d0862b53a73a`.
 
 Original task starting HEAD: `545bc036b9f7bd01c791caf9ffbe46c997282131`.
 Original activation HEAD: `729e56c27a997d6dfcdc9f075110e542fb50cc61`.
@@ -1225,8 +1231,8 @@ Evidence class: **CANONICAL ARCHITECTURE REPLACEMENT-CANDIDATE EVIDENCE — NOT 
 - **OLD FAILED-PRECONDITION SNAPSHOT:** old canonical DECISIONS source ref `file_0000000084d082109bb2da7793c2753b`, version `1`, bytes `14871`, SHA-256 `e179b318e4db3f1cc62b2bf25345ff652923aeb535f4afa622f146bacbe7241c`; latest decision D-037; D-038 count `0`. This remains historical evidence only and was not reused as current candidate input.
 - **CURRENT CANONICAL SOURCE SNAPSHOT — DECISIONS:** Project file `file_00000000a96081f484c5c58ce9216f60`, source_kind `project`, version `1`, bytes `15743`, SHA-256 `d426c0232ff048bbc0fd0d6918ad955ff7d0daebaebd5df23f5d7a7840d9b237`; D-038 count `1`, D-038 status **Accepted**, D-039 pre-candidate count `0`, latest accepted decision D-038.
 - **CURRENT CANONICAL SOURCE SNAPSHOT — MASTER:** Project file `file_000000005578820abbbda4088e77e782`, source_kind `project`, version `1`, bytes `35900`, SHA-256 `d4c550ca7859ee9ed0b4ea351dd94619e854cf6cac90c9d0efb94c9834d9a722`.
-- DECISIONS candidate `DECISIONS.D-039.candidate.md` = **PREPARED / NOT CANONICAL**, outside repository; bytes `18593`; SHA-256 `7de3f2ce8b3313395dec0269aa42528d39188365ca9f1d8df4aba09291d3e639`; byte delta `2850`. Candidate first `15743` bytes equal current canonical DECISIONS exactly = **YES**; removed existing lines = `0`; D-001..D-038 modified = **NO**; D-038 count = `1`; D-039 count = `1`; D-039 EOF append only = **YES**.
-- MASTER candidate `MASTER_IMPLEMENTATION_PLAN.DJANGO.candidate.md` = **PREPARED / NOT CANONICAL**, outside repository; bytes `39867`; SHA-256 `7fdc04cecddfe8504f540da54dc17b04fb02f8ffb93ce14d6f3dbb5c6bca85b1`; byte delta `3967`. Unified diff contains `14` approved architecture hunks and **NO unrelated product/scope changes**.
+- DECISIONS candidate `DECISIONS.D-039.candidate.md` = **PREPARED / ACCEPTED / NOT CANONICAL**, outside repository; bytes `18593`; SHA-256 `7de3f2ce8b3313395dec0269aa42528d39188365ca9f1d8df4aba09291d3e639`; byte delta `2850`. Candidate first `15743` bytes equal current canonical DECISIONS exactly = **YES**; removed existing lines = `0`; D-001..D-038 modified = **NO**; D-038 count = `1`; D-039 count = `1`; D-039 EOF append only = **YES**.
+- MASTER candidate `MASTER_IMPLEMENTATION_PLAN.DJANGO.candidate.md` = **PREPARED / ACCEPTED / NOT CANONICAL**, outside repository; bytes `39867`; SHA-256 `7fdc04cecddfe8504f540da54dc17b04fb02f8ffb93ce14d6f3dbb5c6bca85b1`; byte delta `3967`. Unified diff contains `14` approved architecture hunks and **NO unrelated product/scope changes**.
 - MASTER changed-hunk categories: runtime components; core stack/auth/DB/API-contract safety; async architecture; durable schedule/action authority; target repository structure + fixed Vertical filenames; scheduling/worker execution terminology; outbox destination/transaction semantics; external-action retry safety; Phase 2; Phase 3; Phase 19; Phase 22; evidence-driven planning note.
 - MASTER textual validation: no active production declarations remain for Node.js API, Drizzle ORM, Better Auth, BullMQ, or Redis/BullMQ. A single Node.js note remains valid for the Next.js toolchain/runtime boundary and explicitly says it is not the production API backend. No fabricated Python/Django/Celery version pins were added.
 - Target production architecture candidate: Python + Django + Django REST Framework; Django ORM + Django Migrations; Django Auth + Custom User foundation; explicit Organization/Brand/Membership/Role/Permission ownership boundaries; Redis + Celery execution; PostgreSQL + pgvector durable data/vector foundation and durable schedule/action/idempotency/lease/reconciliation authority; Pydantic structured contracts; DRF/OpenAPI → generated/validated TypeScript frontend contracts; Next.js/React/TypeScript/Tailwind frontend; Caddy production-plan reverse proxy; D-038 Nginx scope remains Phase-1 test VPS-only.
@@ -1234,4 +1240,26 @@ Evidence class: **CANONICAL ARCHITECTURE REPLACEMENT-CANDIDATE EVIDENCE — NOT 
 - Reviewed/no semantic change and not modified: `PRODUCT_SPEC.md`, `AUTONOMY_MODEL.md`, `RISK_MATRIX.md`, `PACKAGE_MODEL.md`, `RELEASE_CRITERIA.md`. `PROVIDER_CAPABILITIES.md` historical findings/statuses remain unchanged.
 - Canonical Project replacements = **NOT PERFORMED**. Canonical D-039 registration = **NO / NOT COMPLETED**. MASTER Django amendment canonical = **NO / NOT COMPLETED**. Candidates = **PREPARED / NOT CANONICAL**. Production Django implementation = **NOT STARTED**.
 - Safety counters: production source changes `0`; tests `0`; package/dependency `0`; database `0`; migration execution `0`; infrastructure `0`; Apache/Nginx/Caddy actions `0`; Redis/Celery installation `0`; Provider/Zernio/auth/Analytics/webhook/post calls `0`; F11 execution **NO**; F11 authorization consumed **NO**.
-- Canonical pending-review state: ARCH-AMEND-01 **EXECUTED — AWAITING TEAM LEADER REVIEW**; result **DJANGO_ARCHITECTURE_CANDIDATES_PREPARED**; previous stop **DECISION_SEQUENCE_PRECONDITION_FAILED — RESOLVED**; user architecture approval **YES**; Canonical D-038 **REGISTERED / VERIFIED**; Canonical D-039 **NO / NOT COMPLETED**; MASTER Django amendment canonical **NO / NOT COMPLETED**; candidates **PREPARED / NOT CANONICAL**; production Django implementation **NOT STARTED**; P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization **AUTHORIZED / UNCONSUMED**; Current Task `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`; Next Task **NOT_STARTED**.
+- Canonical review-finalized state: ARCH-AMEND-01 Candidate Preparation **DONE / ACCEPTED**; Candidate Result **DJANGO_ARCHITECTURE_CANDIDATES_PREPARED**; Architecture Amendment Overall **AWAITING CANONICAL REPLACEMENT / VERIFICATION**; previous stop **DECISION_SEQUENCE_PRECONDITION_FAILED — RESOLVED**; user architecture approval **YES**; Canonical D-038 **REGISTERED / VERIFIED**; Canonical D-039 **NO / NOT COMPLETED**; MASTER Django amendment canonical **NO / NOT COMPLETED**; candidates **PREPARED / ACCEPTED / NOT CANONICAL**; production Django implementation **NOT STARTED**; P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization **AUTHORIZED / UNCONSUMED**; Current Task `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`; Next Task **NOT_STARTED**.
+
+### ARCH-AMEND-01 — Team Leader candidate review finalization
+Review date: `2026-10-17`.
+
+Candidate review verdict: **ACCEPTED**.
+
+ARCH-AMEND-01 Candidate Preparation = **DONE / ACCEPTED**.
+ARCH-AMEND-01 Candidate Result = **DJANGO_ARCHITECTURE_CANDIDATES_PREPARED**.
+Accepted evidence HEAD = `e2d4e8ec9c6cc3c772ac02fddb48d0862b53a73a`.
+Resume-state HEAD = `1e5d2c2a970fedf5b2134f507883add749169680`.
+Previous blocker HEAD = `4ab9a4c7732c85327a73e7489fe4251e418fccee`.
+Previous Stop = **DECISION_SEQUENCE_PRECONDITION_FAILED — RESOLVED**.
+
+- Team Leader independently verified `DECISIONS.D-039.candidate.md`: bytes `18593`; SHA-256 `7de3f2ce8b3313395dec0269aa42528d39188365ca9f1d8df4aba09291d3e639`; candidate first `15743` bytes equal canonical DECISIONS = **YES**; existing removed lines `0`; D-001..D-038 modified **NO**; D-038 occurrence `1`; D-039 occurrence `1`; scope **EOF APPEND ONLY**.
+- Team Leader independently verified `MASTER_IMPLEMENTATION_PLAN.DJANGO.candidate.md`: bytes `39867`; SHA-256 `7fdc04cecddfe8504f540da54dc17b04fb02f8ffb93ce14d6f3dbb5c6bca85b1`; unified diff hunks `14`; unrelated Commercial V1 scope/product changes **NO**; seven Verticals, Scope LOCKED, 56–74 planning baseline, Phase-1 TypeScript Provider harness and historical Provider evidence **PRESERVED**; generic plugin framework introduced **NO**.
+- Accepted target production architecture remains Next.js/React/TypeScript/Tailwind frontend; Python/Django/DRF backend; PostgreSQL + pgvector; Django ORM/Migrations; Django Auth + Custom User; explicit Organization/Brand/Membership/Role/Permission + server-side ownership validation; Redis + Celery execution; Pydantic structured non-ORM contracts; DRF/OpenAPI to generated/validated TypeScript contracts; Caddy production-plan reverse proxy. D-038 remains unchanged and Phase-1-VPS-specific.
+- Reliability/security semantics remain: PostgreSQL durable authority for schedules/business/action state/action IDs/idempotency/claims/leases/reconciliation; Celery/Redis execution only; schedule_version, atomic claims, worker leases, stable action_id/idempotency_key, Unknown, reconciliation, downtime recovery, ScheduleRebuilder-equivalent recovery and transactional outbox remain mandatory; Celery retry/redelivery does not authorize blind external-Provider retry; Django Auth/Groups/Admin do not bypass Brand authority, policy, money controls, Healthcare restrictions or external-action authority.
+- D-005 PostgreSQL durable scheduling authority remains preserved; only its BullMQ execution wording is superseded by D-039 **when D-039 becomes canonical**. D-038 remains unchanged and does not replace Caddy for Commercial V1 production.
+- Canonical Project DECISIONS replacement = **NOT YET PERFORMED**. Canonical Project MASTER replacement = **NOT YET PERFORMED**. D-039 canonical registration = **NO / NOT COMPLETED**. MASTER Django architecture canonical = **NO / NOT COMPLETED**.
+- Architecture Amendment Overall = **AWAITING CANONICAL REPLACEMENT / VERIFICATION**. Candidates = **PREPARED / ACCEPTED / NOT CANONICAL**. Production Django implementation = **NOT STARTED**.
+- Safety: production code `0`; tests `0`; dependencies `0`; database `0`; migration execution `0`; infrastructure `0`; Provider/Zernio calls `0`; F11 execution **NO**; F11 authorization consumed **NO**.
+- Current state: Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization **AUTHORIZED / UNCONSUMED**; Current Task `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`; Next Task **NOT_STARTED**.
