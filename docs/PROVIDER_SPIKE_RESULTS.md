@@ -1756,13 +1756,13 @@ Status: `DONE / ACCEPTED`. Final classification: **CANONICAL_DECISION_DOC_UNAVAI
 
 ## P1-T08-F11-F08 - Canonical D-038 Replacement Artifact
 
-Status: `EXECUTED — AWAITING TEAM LEADER REVIEW`. Final classification: **CANONICAL_REPLACEMENT_ARTIFACT_PREPARED**. Evidence class: **PRE-CANONICAL DOCUMENT REPLACEMENT ARTIFACT EVIDENCE — NOT Provider Behavior evidence**.
+Status: `DONE / ACCEPTED`. Final classification: **CANONICAL_REPLACEMENT_ARTIFACT_PREPARED**. Accepted evidence HEAD: `234839de7d602c5dd1238aac4054afde2b5d2ddd`. Candidate integrity: **TEAM LEADER INDEPENDENTLY VERIFIED**. Evidence class: **PRE-CANONICAL DOCUMENT REPLACEMENT ARTIFACT EVIDENCE — NOT Provider Behavior evidence**.
 
 - Starting HEAD `7c9fb23f5a117b93d5536730fbd2f7b505c65233`; activation HEAD `9b51597a092f5229a0a4bc30716361f9f77019db`; branch `p1-t08-zernio-analytics-webhook`.
 - Canonical source identity: `DECISIONS.md`, source_kind `project`, ref `file_0000000084d082109bb2da7793c2753b`, version `1`. Raw snapshot was safely materialized from this source.
 - Original snapshot: `14871` bytes; SHA-256 `e179b318e4db3f1cc62b2bf25345ff652923aeb535f4afa622f146bacbe7241c`; final existing decision D-037; D-038 absent.
-- Candidate: `DECISIONS.D-038.candidate.md`, outside the repository; `15743` bytes; delta `872`; SHA-256 `d426c0232ff048bbc0fd0d6918ad955ff7d0daebaebd5df23f5d7a7840d9b237`; status **CANDIDATE / NOT CANONICAL**.
-- Byte-faithful proof: candidate prefix of `14871` bytes equals original exactly. Unified diff has zero removed lines and only the D-038 EOF append. Existing D-001..D-037 content is unchanged.
+- Candidate: `DECISIONS.D-038.candidate.md`, outside the repository; `15743` bytes; delta `872`; SHA-256 `d426c0232ff048bbc0fd0d6918ad955ff7d0daebaebd5df23f5d7a7840d9b237`; status **PREPARED / ACCEPTED / NOT CANONICAL**.
+- Byte-faithful proof: candidate prefix of `14871` bytes equals original exactly. Unified diff has zero removed lines and only the D-038 EOF append. Existing D-001..D-037 content is unchanged. Team Leader independently re-verified candidate prefix = original, D-037 occurrence `1`, D-038 occurrence `1`, and existing D-001..D-037 modified = **NO**.
 - Exact appended decision title/status: **D-038 — Phase-1 Test VPS Public Ingress Ownership** / **Accepted**.
 
 ```diff
@@ -1784,4 +1784,4 @@ Status: `EXECUTED — AWAITING TEAM LEADER REVIEW`. Final classification: **CANO
 
 - Canonical Project mutation = **NO**; substitute canonical upload = **NO**; canonical D-038 registration remains **NO / NOT COMPLETED**.
 - Infrastructure activity = `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact = `0`; F11 execution **NO**; authorization consumed **NO**.
-- Canonical pending-review state: F11-F08 `EXECUTED — AWAITING TEAM LEADER REVIEW`; candidate `PREPARED / NOT CANONICAL`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Next Task `NOT_STARTED`.
+- Canonical final state: F11-F08 `DONE / ACCEPTED`; result `CANONICAL_REPLACEMENT_ARTIFACT_PREPARED`; accepted evidence HEAD `234839de7d602c5dd1238aac4054afde2b5d2ddd`; candidate `PREPARED / ACCEPTED / NOT CANONICAL`; D-038 canonical registration `NO / NOT COMPLETED`; Project replacement `NOT YET PERFORMED`; infrastructure preflight `NOT STARTED`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Next Task `NOT_STARTED`.
