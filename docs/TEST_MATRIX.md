@@ -1471,7 +1471,7 @@ Status: **DONE / ACCEPTED**. Final classification: **APACHE_DEPENDENT_WORKLOAD_P
 
 ## P1-T08-F11-F07 - Canonical Decision / Cutover Preflight Gate Matrix
 
-Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **CANONICAL_DECISION_DOC_UNAVAILABLE**. Evidence: **PRE-PROVIDER INFRASTRUCTURE CUTOVER PREFLIGHT GATE EVIDENCE — NOT Provider Behavior evidence**.
+Status: **DONE / ACCEPTED**. Final classification: **CANONICAL_DECISION_DOC_UNAVAILABLE**. Accepted evidence HEAD: `31f4092903c735fb5e39c0c76d6056e916df5a57`. Architecture approval: **YES**. Canonical D-038 registration: **NO**. Architecture decision: **APPROVED BUT NOT YET CANONICALLY REGISTERED**. Evidence: **PRE-PROVIDER INFRASTRUCTURE CUTOVER PREFLIGHT GATE EVIDENCE — NOT Provider Behavior evidence**.
 
 | Gate | Result | Evidence |
 |---|---|---|
@@ -1496,5 +1496,7 @@ Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **CA
 | Receiver/tunnel / F11 execution | PASS / ZERO | none; F11 not executed |
 | Provider activity | PASS / ZERO | Zernio/auth/Accounts/Analytics/webhook/post/contact all `0` |
 | F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
-| Final classification | EXECUTED / AWAITING REVIEW | `CANONICAL_DECISION_DOC_UNAVAILABLE` |
-| Canonical state | PASS | F11-F07 awaiting review; F11 blocked pre-provider/unconsumed; parent unresolved; Analytics SPIKE_PENDING; Next Task NOT_STARTED |
+| Architecture approval | PASS / YES | `OPTION A — NGINX PUBLIC EDGE + APACHE LOOPBACK BACKEND` |
+| Canonical D-038 registration | NOT COMPLETED | architecture approved but not yet canonically registered; write-back path unavailable through current tooling |
+| Final classification | DONE / ACCEPTED | `CANONICAL_DECISION_DOC_UNAVAILABLE`; accepted evidence HEAD `31f4092903c735fb5e39c0c76d6056e916df5a57` |
+| Canonical state | PASS | F11-F07 DONE/ACCEPTED; F11 blocked pre-provider/unconsumed; authorization unconsumed; parent unresolved; Analytics SPIKE_PENDING; Current Task parent P1-T08; Next Task NOT_STARTED |

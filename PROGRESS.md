@@ -55,7 +55,7 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08-F11-F07 — Canonicalize Approved Nginx-Edge Decision & Build Cutover Preflight`
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
 F11-F01 = **DONE / ACCEPTED**
 
@@ -69,7 +69,7 @@ F11-F05 = **DONE / ACCEPTED**
 
 F11-F06 = **DONE / ACCEPTED**
 
-F11-F07 = **EXECUTED — AWAITING TEAM LEADER REVIEW**
+F11-F07 = **DONE / ACCEPTED**
 
 ## P1-T01 Result
 `P1-T01 — Build Minimal Provider Spike Harness`
@@ -804,7 +804,7 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Current Task = `P1-T08-F11-F07 — Canonicalize Approved Nginx-Edge Decision & Build Cutover Preflight`.
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
 
 F11-F01 = **DONE / ACCEPTED**.
 
@@ -818,11 +818,11 @@ F11-F05 = **DONE / ACCEPTED**.
 
 F11-F06 = **DONE / ACCEPTED**.
 
-F11-F07 = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+F11-F07 = **DONE / ACCEPTED**.
 
 P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 one-run authorization = **AUTHORIZED / UNCONSUMED**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; Next Task remains **NOT_STARTED**.
 
-F11-F07 stopped at the mandatory canonical-decision registration gate with final classification **CANONICAL_DECISION_DOC_UNAVAILABLE**. Activation was committed/pushed first at `03e73a002591281391822b5ac4c48a3f2d31073a`. The authoritative Project-backed `DECISIONS.md` was safely readable and its latest accepted entry was observed as **D-037 — Healthcare Sensitive-Inbox Retention and LLM Boundary**; no D-038 registration was present. However, the available Project Files surface did not provide a mutation/write-back path for that same Project-backed source, Google Drive search returned no writable `DECISIONS.md`, and no canonical local documentation workspace copy existed under the authorized user workspace. Per Task Contract, no substitute/duplicate Source of Truth was created and execution stopped **before infrastructure preflight**. D-038 registration = **NOT PERFORMED**; VPS service/socket/config/TLS/ACME inspection under F11-F07 = **NOT STARTED**; proposed cutover plan/rollback/success gates = **NOT PRODUCED** because their prerequisite canonical decision registration was not safely writable. Infrastructure/service/config/network mutations = `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact calls = `0`; F11 authorization consumed = **NO**.
+F11-F07 is **DONE / ACCEPTED** with result **CANONICAL_DECISION_DOC_UNAVAILABLE** and accepted evidence HEAD `31f4092903c735fb5e39c0c76d6056e916df5a57`. Architecture approval = **YES** for **OPTION A — NGINX PUBLIC EDGE + APACHE LOOPBACK BACKEND**, but canonical registration = **NO**; therefore the architecture decision is **APPROVED BUT NOT YET CANONICALLY REGISTERED**. Canonical write-back path = **UNAVAILABLE THROUGH CURRENT TOOLING**. Activation was committed/pushed first at `03e73a002591281391822b5ac4c48a3f2d31073a`. The authoritative Project-backed `DECISIONS.md` was safely readable and its latest accepted entry was observed as **D-037 — Healthcare Sensitive-Inbox Retention and LLM Boundary**; no D-038 registration was present. However, the available Project Files surface did not provide a mutation/write-back path for that same Project-backed source, Google Drive search returned no writable `DECISIONS.md`, and no canonical local documentation workspace copy existed under the authorized user workspace. Per Task Contract, no substitute/duplicate Source of Truth was created and execution stopped **before infrastructure preflight**. D-038 registration = **NOT PERFORMED**; VPS service/socket/config/TLS/ACME inspection under F11-F07 = **NOT STARTED**; proposed cutover plan/rollback/success gates = **NOT PRODUCED** because their prerequisite canonical decision registration was not safely writable. Infrastructure/service/config/network mutations = `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact calls = `0`; F11 authorization consumed = **NO**.
 
 F11-F06 is **DONE / ACCEPTED** with result **APACHE_DEPENDENT_WORKLOAD_PROVEN** and accepted evidence HEAD `3d62dc830500f818dce82df48a0c4f8bf8431b3c`. Canonical workload finding = **APACHE_SERVES_ACTIVE_ELITE_WORDPRESS_WORKLOAD**. Current infrastructure conflict = **APACHE_AND_NGINX_REQUIRE_TCP_80_UNDER_CURRENT_TOPOLOGY**. Nginx readiness remains **NOT PROVEN**. Organizational/business intent remains **NOT FULLY ATTRIBUTED**. Final classification = **APACHE_DEPENDENT_WORKLOAD_PROVEN**. Evidence class = **PRE-PROVIDER INFRASTRUCTURE ATTRIBUTION EVIDENCE — NOT Provider Behavior evidence**. The only enabled Apache site is `/etc/apache2/sites-enabled/elite.restartorg.com.conf` -> `../sites-available/elite.restartorg.com.conf`, mapping `*:80` / `ServerName elite.restartorg.com` to local DocumentRoot `/var/www/elite.restartorg.com/html`; no ServerAlias, ProxyPass/ProxyPassReverse, WSGI, Alias, or FastCGI target was present in the enabled site directives inspected. The DocumentRoot exists (`www-data:www-data`, mode `755`) and top-level metadata shows a WordPress application footprint (`index.php`, `wp-admin`, `wp-content`, `wp-includes`, `wp-config.php` metadata only; no secret contents read). Relevant enabled modules observed: `php7_module` and `rewrite_module`. A bounded local HEAD to `127.0.0.1:80` with `Host: elite.restartorg.com` returned `HTTP/1.1 200 OK`, `Server: Apache/2.4.41 (Ubuntu)`, and WordPress REST/shortlink headers without retrieving page content. DNS `elite.restartorg.com -> 82.29.177.121`, the same VPS. The site config is not owned by a Debian package (`dpkg-query` found no package path match), providing custom deployment provenance; no separate ownership/business-intent record was found or inferred. Fresh Apache state remains `loaded/active/running`, enabled, MainPID `852`, no drop-ins; privileged socket inventory maps TCP/80 to the Apache process family and shows no TCP/443 listener. Fresh privileged `nginx -t` = **PASS / exit 0**; MarketlyAI SHA-256 remains `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`; F11 route remains absent (`grep exit 1`). Therefore a real Apache-dependent workload is directly proven; this does **not** authorize stopping Apache or decide port ownership/reverse-proxy topology. Apache start/stop/restart/reload/enable/disable = `0`; Nginx state/config mutations = `0`; process signals = `0`; Provider/Zernio calls = `0`; F11 authorization remains **AUTHORIZED / UNCONSUMED**.
 
@@ -1053,7 +1053,21 @@ Evidence class: **PRE-PROVIDER INFRASTRUCTURE ATTRIBUTION EVIDENCE — NOT Provi
 ### P1-T08-F11-F07 canonical decision / cutover preflight stop
 Execution date: `2026-10-17`.
 
-Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+Status: **DONE / ACCEPTED**.
+
+P1-T08-F11-F07 Result: **CANONICAL_DECISION_DOC_UNAVAILABLE**.
+
+Accepted evidence HEAD: `31f4092903c735fb5e39c0c76d6056e916df5a57`.
+
+Architecture approval: **YES — OPTION A — NGINX PUBLIC EDGE + APACHE LOOPBACK BACKEND**.
+
+Canonical D-038 registration: **NO / NOT COMPLETED**.
+
+Architecture decision state: **APPROVED BUT NOT YET CANONICALLY REGISTERED**.
+
+Canonical write-back path: **UNAVAILABLE THROUGH CURRENT TOOLING**.
+
+Infrastructure preflight: **NOT STARTED**.
 
 Final classification: **CANONICAL_DECISION_DOC_UNAVAILABLE**.
 
@@ -1073,4 +1087,4 @@ Evidence class: **PRE-PROVIDER INFRASTRUCTURE CUTOVER PREFLIGHT GATE EVIDENCE �
 - Mandatory stop honored: Apache/Nginx service/socket/config/TLS/ACME/backend-port/vhost inspection for F11-F07 = **NOT STARTED**.
 - No patch plan, cutover sequence, rollback plan, success/regression gates, or reboot-persistence plan was produced because the canonical-decision prerequisite failed first.
 - Safety: Apache mutations `0`; Nginx mutations/state changes `0`; service state changes `0`; DNS/firewall/systemd mutations `0`; port/listener changes `0`; certificate operations `0`; receiver/tunnel `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact `0`; F11 authorization consumed **NO**.
-- Canonical pending-review state: F11-F07 **EXECUTED — AWAITING TEAM LEADER REVIEW**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Current Task `P1-T08-F11-F07 — Canonicalize Approved Nginx-Edge Decision & Build Cutover Preflight`; Next Task **NOT_STARTED**.
+- Canonical final state: F11-F07 **DONE / ACCEPTED**; result **CANONICAL_DECISION_DOC_UNAVAILABLE**; accepted evidence HEAD `31f4092903c735fb5e39c0c76d6056e916df5a57`; architecture approval **YES**; D-038 canonical registration **NO**; architecture decision **APPROVED BUT NOT YET CANONICALLY REGISTERED**; canonical write-back path **UNAVAILABLE THROUGH CURRENT TOOLING**; infrastructure preflight **NOT STARTED**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Next Task **NOT_STARTED**.
