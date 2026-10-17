@@ -57,7 +57,9 @@ Analytics Webhook = `SPIKE_PENDING`
 
 Current Task = `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`
 
-Architecture Amendment = **IN PROGRESS — AUTHORIZED**
+Architecture Amendment = **EXECUTED — AWAITING TEAM LEADER REVIEW**
+
+Architecture Amendment Result = **DECISION_SEQUENCE_PRECONDITION_FAILED**
 
 Approved Production Backend = **DJANGO / PYTHON**
 
@@ -818,7 +820,9 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 Current Task = `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`.
 
-Architecture Amendment = **IN PROGRESS — AUTHORIZED**.
+Architecture Amendment = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+
+Architecture Amendment Result = **DECISION_SEQUENCE_PRECONDITION_FAILED**.
 
 Approved Production Backend = **DJANGO / PYTHON**.
 
@@ -845,6 +849,8 @@ F11-F07 = **DONE / ACCEPTED**.
 F11-F08 = **DONE / ACCEPTED**.
 
 P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 one-run authorization = **AUTHORIZED / UNCONSUMED**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; Next Task remains **NOT_STARTED**.
+
+ARCH-AMEND-01 stopped at the mandatory DECISIONS sequence precondition with result **DECISION_SEQUENCE_PRECONDITION_FAILED**. Activation HEAD = `729e56c27a997d6dfcdc9f075110e542fb50cc61`. Current authoritative Project raw sources were safely materialized: `MASTER_IMPLEMENTATION_PLAN.md` source ref `file_000000005578820abbbda4088e77e782`, version `1`, `35900` bytes, SHA-256 `d4c550ca7859ee9ed0b4ea351dd94619e854cf6cac90c9d0efb94c9834d9a722`; canonical `DECISIONS.md` source ref `file_0000000084d082109bb2da7793c2753b`, version `1`, `14871` bytes, SHA-256 `e179b318e4db3f1cc62b2bf25345ff652923aeb535f4afa622f146bacbe7241c`. The canonical `DECISIONS.md` latest accepted decision remains **D-037 — Healthcare Sensitive-Inbox Retention and LLM Boundary**; D-038 occurrence count = `0`; D-039 occurrence count = `0`. A separate Project-backed `DECISIONS.D-038.candidate.md` contains D-038, but it is a candidate file and is prohibited as a source substitute. Therefore D-038 is not canonically registered in `DECISIONS.md`, D-039 candidate preparation did not start, and the MASTER Django candidate did not start. User architecture approval remains **YES**; approved production backend = **DJANGO / PYTHON**; canonical D-039 registration = **NO / NOT COMPLETED**; MASTER Django amendment canonical = **NO / NOT COMPLETED**; candidates = **NOT PREPARED**; production Django implementation = **NOT STARTED**; Phase-1 TypeScript Provider Harness = **PRESERVED**; historical Provider Behavior evidence = **PRESERVED**. Production source/test/package/database/migration/infrastructure changes = `0`; Provider/Zernio calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**.
 
 F11-F08 is **DONE / ACCEPTED** with result **CANONICAL_REPLACEMENT_ARTIFACT_PREPARED** and accepted evidence HEAD `234839de7d602c5dd1238aac4054afde2b5d2ddd`. Team Leader independent verification confirmed candidate integrity against the raw canonical Project source: original bytes `14871`; ORIGINAL_SHA256 `e179b318e4db3f1cc62b2bf25345ff652923aeb535f4afa622f146bacbe7241c`; candidate bytes `15743`; byte delta `872`; CANDIDATE_SHA256 `d426c0232ff048bbc0fd0d6918ad955ff7d0daebaebd5df23f5d7a7840d9b237`; candidate first `14871` bytes equal original = **YES**; unified raw diff removed existing lines = `0`; diff scope = **ONLY EOF APPEND**; D-037 occurrence = `1`; D-038 occurrence = `1`; existing D-001..D-037 modified = **NO**. Candidate `DECISIONS.D-038.candidate.md` = **PREPARED / ACCEPTED / NOT CANONICAL**. Canonical D-038 registration remains **NO / NOT COMPLETED**; Project replacement has **NOT YET BEEN PERFORMED**. Infrastructure preflight remains **NOT STARTED**; infrastructure/provider activity = `0`; F11 authorization consumed = **NO**.
 
@@ -1143,3 +1149,28 @@ Evidence class: **PRE-CANONICAL DOCUMENT REPLACEMENT ARTIFACT EVIDENCE — NOT P
 - Infrastructure preflight = **NOT STARTED**; Apache/Nginx/systemd/socket/DNS/firewall/certificate/receiver/tunnel activity = `0`.
 - Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**.
 - Canonical final state: F11-F08 **DONE / ACCEPTED**; result **CANONICAL_REPLACEMENT_ARTIFACT_PREPARED**; accepted evidence HEAD `234839de7d602c5dd1238aac4054afde2b5d2ddd`; candidate **PREPARED / ACCEPTED / NOT CANONICAL**; D-038 registration **NO / NOT COMPLETED**; Project replacement **NOT YET PERFORMED**; infrastructure preflight **NOT STARTED**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Next Task **NOT_STARTED**.
+
+### ARCH-AMEND-01 — Django/Python production backend architecture amendment stop
+Execution date: `2026-10-17`.
+
+Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+
+Result / final classification: **DECISION_SEQUENCE_PRECONDITION_FAILED**.
+
+Starting HEAD: `545bc036b9f7bd01c791caf9ffbe46c997282131`.
+Activation HEAD: `729e56c27a997d6dfcdc9f075110e542fb50cc61` (`docs(architecture): activate django backend amendment`).
+
+Evidence class: **CANONICAL ARCHITECTURE DOCUMENT PRECONDITION EVIDENCE — NOT Provider Behavior evidence**.
+
+- User-approved production architecture: Python + Django + Django REST Framework backend; Django ORM/migrations; Django Auth + Custom User foundation; explicit Organization/Brand/RBAC ownership boundaries; Redis + Celery async execution; PostgreSQL + pgvector durable data/vector foundation; Pydantic structured AI/provider/tool/internal contracts; Next.js/React/TypeScript/Tailwind frontend; Caddy remains the Commercial V1 production-plan reverse proxy.
+- Current Phase-1 test VPS D-038 boundary was intended to remain unchanged; however, canonical `DECISIONS.md` raw source did not yet contain D-038.
+- Canonical MASTER source: Project file `file_000000005578820abbbda4088e77e782`, version `1`, bytes `35900`, SHA-256 `d4c550ca7859ee9ed0b4ea351dd94619e854cf6cac90c9d0efb94c9834d9a722`.
+- Canonical DECISIONS source: Project file `file_0000000084d082109bb2da7793c2753b`, version `1`, bytes `14871`, SHA-256 `e179b318e4db3f1cc62b2bf25345ff652923aeb535f4afa622f146bacbe7241c`.
+- DECISIONS sequence verification: latest canonical decision = D-037; canonical D-038 count = `0`; canonical D-039 count = `0`. Required precondition “D-038 exists exactly once and is latest accepted decision” = **FAIL**.
+- Separate Project-backed `DECISIONS.D-038.candidate.md` was observed with D-038 Accepted, but the amendment contract forbids sourcing from a previous candidate; it was not promoted or used as canonical input.
+- `DECISIONS.D-039.candidate.md` = **NOT CREATED**. `MASTER_IMPLEMENTATION_PLAN.DJANGO.candidate.md` = **NOT CREATED**. No candidate diff/hashes exist because STOP occurred before candidate creation.
+- Canonical D-039 registration = **NO / NOT COMPLETED**. MASTER Django amendment canonical = **NO / NOT COMPLETED**. Candidates = **NOT PREPARED**. Production Django implementation = **NOT STARTED**.
+- Phase-1 TypeScript Provider Harness = **PRESERVED**; accepted historical Provider Behavior evidence = **PRESERVED**; no rewrite/port performed.
+- Product-semantic docs `PRODUCT_SPEC.md`, `AUTONOMY_MODEL.md`, `RISK_MATRIX.md`, `PACKAGE_MODEL.md`, `RELEASE_CRITERIA.md` were not modified. Provider capability conclusions were not modified.
+- Safety: production source `0`; tests `0`; package/dependency `0`; database `0`; migrations `0`; infrastructure `0`; Apache/Nginx/Caddy `0`; Redis/Celery installation `0`; Provider/Zernio calls `0`; F11 execution **NO**; F11 authorization consumed **NO**.
+- Canonical pending-review state: ARCH-AMEND-01 **EXECUTED — AWAITING TEAM LEADER REVIEW**; result **DECISION_SEQUENCE_PRECONDITION_FAILED**; user architecture approval **YES**; P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization **AUTHORIZED / UNCONSUMED**; Current Task `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`; Next Task **NOT_STARTED**.
