@@ -1736,3 +1736,19 @@ Status: `DONE / ACCEPTED`. Final classification: **APACHE_DEPENDENT_WORKLOAD_PRO
 - Decision state: **PORT OWNERSHIP / REVERSE-PROXY TOPOLOGY = DECISION REQUIRED**. Preserve accepted root cause **APACHE_PORT_80_OWNERSHIP_BLOCKS_NGINX_STARTUP_AFTER_REBOOT**; combined evidence now proves a genuine conflict because Apache serves an active workload while current Apache and Nginx topology both require TCP/80. No repair/topology choice is made here.
 - Safety: Apache mutations `0`; Nginx mutations/state changes `0`; config/DNS/firewall/systemd/port changes `0`; process signals `0`; receiver/tunnel `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact `0`; F11 authorization consumed **NO**.
 - Canonical final state: F11-F06 `DONE / ACCEPTED`; result `APACHE_DEPENDENT_WORKLOAD_PROVEN`; accepted evidence HEAD `3d62dc830500f818dce82df48a0c4f8bf8431b3c`; workload `APACHE_SERVES_ACTIVE_ELITE_WORDPRESS_WORKLOAD`; business intent `NOT FULLY ATTRIBUTED`; conflict `APACHE_AND_NGINX_REQUIRE_TCP_80_UNDER_CURRENT_TOPOLOGY`; decision state `PORT OWNERSHIP / REVERSE-PROXY TOPOLOGY = DECISION REQUIRED`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Next Task `NOT_STARTED`.
+
+
+## P1-T08-F11-F07 - Canonical Decision / Cutover Preflight Gate
+
+Status: `EXECUTED — AWAITING TEAM LEADER REVIEW`. Final classification: **CANONICAL_DECISION_DOC_UNAVAILABLE**. Evidence class: **PRE-PROVIDER INFRASTRUCTURE CUTOVER PREFLIGHT GATE EVIDENCE — NOT Provider Behavior evidence**.
+
+- Starting HEAD `e8ee199d11a05bf776ebcd609447a505cda67315`; activation HEAD `03e73a002591281391822b5ac4c48a3f2d31073a`; branch `p1-t08-zernio-analytics-webhook`.
+- Team Leader approved Option A: Nginx public TCP/80+443 edge; Elite Apache workload behind a loopback-only backend. This decision is scoped to the current Phase-1 test VPS recovery path.
+- F11-F07 required **D-038 — Phase-1 Test VPS Public Ingress Ownership** to be written to the authoritative Project `DECISIONS.md` before infrastructure preflight.
+- The canonical Project-backed `DECISIONS.md` was read successfully and latest accepted entry observed was D-037. D-038 was not registered.
+- Safe canonical mutation path was unavailable: Project Files access exposed the Project source for read/retrieval but not write-back; personal Library mutation would not mutate the Project source; connected Google Drive search found no writable `DECISIONS.md`; local authorized workspace search found no canonical copy.
+- No mounted/local copy was promoted as a substitute Source of Truth and no duplicate decision file was created.
+- Contract stop triggered before all VPS preflight activity. Apache/Nginx fresh state, sockets, candidate loopback port, config fingerprints, enabled Nginx vhost inventory, nginx -t, TLS/ACME inspection, reverse-proxy compatibility, proposed patch/rollback/cutover/success gates were **NOT RUN / NOT PRODUCED** under F11-F07.
+- Provider/Zernio calls = `0`; `/v1/auth/verify` = `0`; Accounts = `0`; Analytics = `0`; Provider webhook/post/contact = `0`; F11 authorization consumed **NO**.
+- Infrastructure mutations = `0`: no Apache/Nginx service action, config edit, port/listener change, DNS/firewall/systemd change, certificate operation, package operation, receiver or tunnel.
+- Canonical pending-review state: F11-F07 `EXECUTED — AWAITING TEAM LEADER REVIEW`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Next Task `NOT_STARTED`.

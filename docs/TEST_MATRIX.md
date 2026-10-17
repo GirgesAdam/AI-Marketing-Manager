@@ -1467,3 +1467,34 @@ Status: **DONE / ACCEPTED**. Final classification: **APACHE_DEPENDENT_WORKLOAD_P
 | Final classification | DONE / ACCEPTED | `APACHE_DEPENDENT_WORKLOAD_PROVEN`; accepted evidence HEAD `3d62dc830500f818dce82df48a0c4f8bf8431b3c` |
 | Decision state | DECISION REQUIRED | `PORT OWNERSHIP / REVERSE-PROXY TOPOLOGY`; no repair/topology option selected |
 | Canonical state | PASS | F11-F06 `DONE / ACCEPTED`; workload proven; business intent not fully attributed; F11 blocked pre-provider/unconsumed; authorization unconsumed; parent P1-T08 unresolved; Analytics SPIKE_PENDING; Current Task parent P1-T08; Next Task NOT_STARTED |
+
+
+## P1-T08-F11-F07 - Canonical Decision / Cutover Preflight Gate Matrix
+
+Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **CANONICAL_DECISION_DOC_UNAVAILABLE**. Evidence: **PRE-PROVIDER INFRASTRUCTURE CUTOVER PREFLIGHT GATE EVIDENCE — NOT Provider Behavior evidence**.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Repository starting state | PASS | starting HEAD `e8ee199d11a05bf776ebcd609447a505cda67315`; branch correct; clean; remote matched |
+| Activation before preflight | PASS | activation HEAD `03e73a002591281391822b5ac4c48a3f2d31073a`; PROGRESS-only activation committed/pushed |
+| Approved topology input | PASS / RECEIVED | Option A: Nginx public edge + Apache loopback backend, current Phase-1 VPS scope only |
+| Canonical DECISIONS source located | PASS | Project-backed `DECISIONS.md` readable |
+| Current latest accepted decision | PASS / OBSERVED | D-037 present as latest accepted entry |
+| D-038 registration | **BLOCKED / NOT PERFORMED** | no safe write-back path to same Project-backed canonical source |
+| Duplicate/substitute Source of Truth | PASS / NONE | no replacement `DECISIONS.md` created in spike repo, Library, or local workspace |
+| Google Drive canonical candidate | NONE FOUND | connected Drive search returned no writable `DECISIONS.md` |
+| Local canonical workspace copy | NONE FOUND | authorized user-workspace search returned no `DECISIONS.md` |
+| Infrastructure preflight | NOT STARTED | mandatory stop occurred before VPS inspection |
+| Apache/Nginx service/socket inspection | NOT RUN | prerequisite D-038 registration failed |
+| Candidate loopback backend port | NOT SELECTED | not inspected/bound |
+| Config fingerprints / vhost inventory | NOT RUN | no preflight after stop |
+| TLS / ACME / nginx -t F07 checks | NOT RUN | no preflight after stop |
+| Patch / cutover / rollback plan | NOT PRODUCED | prerequisite canonical decision registration unavailable |
+| Apache mutations | PASS / ZERO | `0` |
+| Nginx mutations/state changes | PASS / ZERO | `0` |
+| DNS/firewall/systemd/certificate/package mutations | PASS / ZERO | `0` |
+| Receiver/tunnel / F11 execution | PASS / ZERO | none; F11 not executed |
+| Provider activity | PASS / ZERO | Zernio/auth/Accounts/Analytics/webhook/post/contact all `0` |
+| F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
+| Final classification | EXECUTED / AWAITING REVIEW | `CANONICAL_DECISION_DOC_UNAVAILABLE` |
+| Canonical state | PASS | F11-F07 awaiting review; F11 blocked pre-provider/unconsumed; parent unresolved; Analytics SPIKE_PENDING; Next Task NOT_STARTED |
