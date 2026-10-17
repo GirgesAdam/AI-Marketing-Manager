@@ -1752,3 +1752,36 @@ Status: `DONE / ACCEPTED`. Final classification: **CANONICAL_DECISION_DOC_UNAVAI
 - Provider/Zernio calls = `0`; `/v1/auth/verify` = `0`; Accounts = `0`; Analytics = `0`; Provider webhook/post/contact = `0`; F11 authorization consumed **NO**.
 - Infrastructure mutations = `0`: no Apache/Nginx service action, config edit, port/listener change, DNS/firewall/systemd change, certificate operation, package operation, receiver or tunnel.
 - Canonical final state: F11-F07 `DONE / ACCEPTED`; result `CANONICAL_DECISION_DOC_UNAVAILABLE`; accepted evidence HEAD `31f4092903c735fb5e39c0c76d6056e916df5a57`; architecture approval `YES`; D-038 canonical registration `NO`; architecture decision `APPROVED BUT NOT YET CANONICALLY REGISTERED`; canonical write-back path `UNAVAILABLE THROUGH CURRENT TOOLING`; infrastructure preflight `NOT STARTED`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Next Task `NOT_STARTED`.
+
+
+## P1-T08-F11-F08 - Canonical D-038 Replacement Artifact
+
+Status: `EXECUTED — AWAITING TEAM LEADER REVIEW`. Final classification: **CANONICAL_REPLACEMENT_ARTIFACT_PREPARED**. Evidence class: **PRE-CANONICAL DOCUMENT REPLACEMENT ARTIFACT EVIDENCE — NOT Provider Behavior evidence**.
+
+- Starting HEAD `7c9fb23f5a117b93d5536730fbd2f7b505c65233`; activation HEAD `9b51597a092f5229a0a4bc30716361f9f77019db`; branch `p1-t08-zernio-analytics-webhook`.
+- Canonical source identity: `DECISIONS.md`, source_kind `project`, ref `file_0000000084d082109bb2da7793c2753b`, version `1`. Raw snapshot was safely materialized from this source.
+- Original snapshot: `14871` bytes; SHA-256 `e179b318e4db3f1cc62b2bf25345ff652923aeb535f4afa622f146bacbe7241c`; final existing decision D-037; D-038 absent.
+- Candidate: `DECISIONS.D-038.candidate.md`, outside the repository; `15743` bytes; delta `872`; SHA-256 `d426c0232ff048bbc0fd0d6918ad955ff7d0daebaebd5df23f5d7a7840d9b237`; status **CANDIDATE / NOT CANONICAL**.
+- Byte-faithful proof: candidate prefix of `14871` bytes equals original exactly. Unified diff has zero removed lines and only the D-038 EOF append. Existing D-001..D-037 content is unchanged.
+- Exact appended decision title/status: **D-038 — Phase-1 Test VPS Public Ingress Ownership** / **Accepted**.
+
+```diff
+--- DECISIONS.md
++++ DECISIONS.D-038.candidate.md
+@@ -301,0 +302,11 @@
++
++---
++
++## D-038 — Phase-1 Test VPS Public Ingress Ownership
++**Status:** Accepted
++
++For the current Phase-1 shared test VPS recovery/readiness path, Nginx is the canonical public HTTP/HTTPS ingress and owns public TCP/80 and TCP/443. The existing Elite WordPress workload remains supported by Apache, but Apache runs behind Nginx on a loopback-only backend listener. Nginx routes `elite.restartorg.com` to that backend while preserving MarketlyAI routing/TLS responsibilities.
++
++Apache must not retain public TCP/80 or TCP/443 ownership after the completed cutover. The cutover must be bounded, reversible, preserve the Elite workload and unrelated hosts, and include explicit rollback.
++
++This decision is scoped only to the current Phase-1 test VPS recovery/readiness path. It does not mandate Apache, Nginx, or this exact topology for Commercial V1 production deployments.
+```
+
+- Canonical Project mutation = **NO**; substitute canonical upload = **NO**; canonical D-038 registration remains **NO / NOT COMPLETED**.
+- Infrastructure activity = `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact = `0`; F11 execution **NO**; authorization consumed **NO**.
+- Canonical pending-review state: F11-F08 `EXECUTED — AWAITING TEAM LEADER REVIEW`; candidate `PREPARED / NOT CANONICAL`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Next Task `NOT_STARTED`.

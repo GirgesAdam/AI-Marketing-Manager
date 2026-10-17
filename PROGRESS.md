@@ -71,7 +71,7 @@ F11-F06 = **DONE / ACCEPTED**
 
 F11-F07 = **DONE / ACCEPTED**
 
-F11-F08 = **IN PROGRESS — AUTHORIZED**
+F11-F08 = **EXECUTED — AWAITING TEAM LEADER REVIEW**
 
 ## P1-T01 Result
 `P1-T01 — Build Minimal Provider Spike Harness`
@@ -822,9 +822,11 @@ F11-F06 = **DONE / ACCEPTED**.
 
 F11-F07 = **DONE / ACCEPTED**.
 
-F11-F08 = **IN PROGRESS — AUTHORIZED**.
+F11-F08 = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
 
 P1-T08-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER** and F11 one-run authorization = **AUTHORIZED / UNCONSUMED**. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; P1-T08-F09-S01 remains **BLOCKED — DNS ACCESS REQUIRED**; Provider contact remains **AUTHORIZED / NOT SENT**; Next Task remains **NOT_STARTED**.
+
+F11-F08 execution complete pending Team Leader review. Result = **CANONICAL_REPLACEMENT_ARTIFACT_PREPARED**. Canonical D-038 registration remains **NO / NOT COMPLETED**. Candidate `DECISIONS.D-038.candidate.md` = **PREPARED / NOT CANONICAL**. Canonical raw source = Project-backed `DECISIONS.md`, source ref `file_0000000084d082109bb2da7793c2753b`, version `1`, source_kind `project`; original bytes `14871`; ORIGINAL_SHA256 `e179b318e4db3f1cc62b2bf25345ff652923aeb535f4afa622f146bacbe7241c`; latest existing decision D-037; D-038 absent before append. Candidate bytes `15743`; byte delta `872`; CANDIDATE_SHA256 `d426c0232ff048bbc0fd0d6918ad955ff7d0daebaebd5df23f5d7a7840d9b237`. Byte-prefix proof = **PASS**; unified diff removed lines = `0`; only EOF append = **YES**; D-001..D-037 modified = **NO**. Infrastructure preflight remains **NOT STARTED**; infrastructure/provider activity = `0`; F11 authorization consumed = **NO**.
 
 F11-F07 is **DONE / ACCEPTED** with result **CANONICAL_DECISION_DOC_UNAVAILABLE** and accepted evidence HEAD `31f4092903c735fb5e39c0c76d6056e916df5a57`. Architecture approval = **YES** for **OPTION A — NGINX PUBLIC EDGE + APACHE LOOPBACK BACKEND**, but canonical registration = **NO**; therefore the architecture decision is **APPROVED BUT NOT YET CANONICALLY REGISTERED**. Canonical write-back path = **UNAVAILABLE THROUGH CURRENT TOOLING**. Activation was committed/pushed first at `03e73a002591281391822b5ac4c48a3f2d31073a`. The authoritative Project-backed `DECISIONS.md` was safely readable and its latest accepted entry was observed as **D-037 — Healthcare Sensitive-Inbox Retention and LLM Boundary**; no D-038 registration was present. However, the available Project Files surface did not provide a mutation/write-back path for that same Project-backed source, Google Drive search returned no writable `DECISIONS.md`, and no canonical local documentation workspace copy existed under the authorized user workspace. Per Task Contract, no substitute/duplicate Source of Truth was created and execution stopped **before infrastructure preflight**. D-038 registration = **NOT PERFORMED**; VPS service/socket/config/TLS/ACME inspection under F11-F07 = **NOT STARTED**; proposed cutover plan/rollback/success gates = **NOT PRODUCED** because their prerequisite canonical decision registration was not safely writable. Infrastructure/service/config/network mutations = `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact calls = `0`; F11 authorization consumed = **NO**.
 
@@ -1092,3 +1094,28 @@ Evidence class: **PRE-PROVIDER INFRASTRUCTURE CUTOVER PREFLIGHT GATE EVIDENCE �
 - No patch plan, cutover sequence, rollback plan, success/regression gates, or reboot-persistence plan was produced because the canonical-decision prerequisite failed first.
 - Safety: Apache mutations `0`; Nginx mutations/state changes `0`; service state changes `0`; DNS/firewall/systemd mutations `0`; port/listener changes `0`; certificate operations `0`; receiver/tunnel `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact `0`; F11 authorization consumed **NO**.
 - Canonical final state: F11-F07 **DONE / ACCEPTED**; result **CANONICAL_DECISION_DOC_UNAVAILABLE**; accepted evidence HEAD `31f4092903c735fb5e39c0c76d6056e916df5a57`; architecture approval **YES**; D-038 canonical registration **NO**; architecture decision **APPROVED BUT NOT YET CANONICALLY REGISTERED**; canonical write-back path **UNAVAILABLE THROUGH CURRENT TOOLING**; infrastructure preflight **NOT STARTED**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Next Task **NOT_STARTED**.
+
+
+### P1-T08-F11-F08 canonical D-038 replacement artifact preparation
+Execution date: `2026-10-17`.
+
+Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+
+Result / final classification: **CANONICAL_REPLACEMENT_ARTIFACT_PREPARED**.
+
+Starting HEAD: `7c9fb23f5a117b93d5536730fbd2f7b505c65233`.
+Activation HEAD: `9b51597a092f5229a0a4bc30716361f9f77019db` (`docs(p1-t08): activate D-038 replacement preparation`).
+
+Evidence class: **PRE-CANONICAL DOCUMENT REPLACEMENT ARTIFACT EVIDENCE — NOT Provider Behavior evidence**.
+
+- Canonical source: name `DECISIONS.md`; source_kind `project`; source ref `file_0000000084d082109bb2da7793c2753b`; version `1`.
+- Raw source snapshot materialized from the Project-backed source; no snippet reconstruction used. Original bytes = `14871`; ORIGINAL_SHA256 = `e179b318e4db3f1cc62b2bf25345ff652923aeb535f4afa622f146bacbe7241c`.
+- Final existing decision = **D-037 — Healthcare Sensitive-Inbox Retention and LLM Boundary**; D-038 absent from original = **YES**.
+- Candidate artifact = `DECISIONS.D-038.candidate.md`, generated outside the repository working tree; status = **CANDIDATE / NOT CANONICAL**.
+- Candidate bytes = `15743`; byte delta = `872`; CANDIDATE_SHA256 = `d426c0232ff048bbc0fd0d6918ad955ff7d0daebaebd5df23f5d7a7840d9b237`.
+- Candidate integrity: candidate begins with the exact original `14871` bytes = **YES**; D-038 occurrence count = `1`; D-037 occurrence count remains `1`.
+- Unified diff proof: removed existing lines = `0`; only EOF append = **YES**; D-001..D-037 modified/reordered/reformatted/renumbered/deleted = **NO**. Exact appended title = **D-038 — Phase-1 Test VPS Public Ingress Ownership**; status = **Accepted**.
+- Canonical Project mutation = **NO**; personal Library/Google Drive substitute = **NO**; spike-repo candidate copy = **NO**. Canonical D-038 registration remains **NO / NOT COMPLETED**.
+- Infrastructure preflight = **NOT STARTED**; Apache/Nginx/systemd/socket/DNS/firewall/certificate/receiver/tunnel activity = `0`.
+- Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**.
+- Canonical pending-review state: F11-F08 **EXECUTED — AWAITING TEAM LEADER REVIEW**; candidate **PREPARED / NOT CANONICAL**; D-038 registration **NO / NOT COMPLETED**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Current Task `P1-T08-F11-F08 — Prepare Canonical D-038 Replacement Artifact`; Next Task **NOT_STARTED**.

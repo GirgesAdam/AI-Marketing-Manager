@@ -1500,3 +1500,36 @@ Status: **DONE / ACCEPTED**. Final classification: **CANONICAL_DECISION_DOC_UNAV
 | Canonical D-038 registration | NOT COMPLETED | architecture approved but not yet canonically registered; write-back path unavailable through current tooling |
 | Final classification | DONE / ACCEPTED | `CANONICAL_DECISION_DOC_UNAVAILABLE`; accepted evidence HEAD `31f4092903c735fb5e39c0c76d6056e916df5a57` |
 | Canonical state | PASS | F11-F07 DONE/ACCEPTED; F11 blocked pre-provider/unconsumed; authorization unconsumed; parent unresolved; Analytics SPIKE_PENDING; Current Task parent P1-T08; Next Task NOT_STARTED |
+
+
+## P1-T08-F11-F08 - Canonical Replacement Artifact Matrix
+
+Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **CANONICAL_REPLACEMENT_ARTIFACT_PREPARED**. Evidence: **PRE-CANONICAL DOCUMENT REPLACEMENT ARTIFACT EVIDENCE — NOT Provider Behavior evidence**.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Starting repository state | PASS | HEAD `7c9fb23f5a117b93d5536730fbd2f7b505c65233`; branch correct; clean/remote matched |
+| Activation before artifact preparation | PASS | activation HEAD `9b51597a092f5229a0a4bc30716361f9f77019db`; PROGRESS-only commit/push |
+| Canonical source identity | PASS | `DECISIONS.md`; source_kind `project`; ref `file_0000000084d082109bb2da7793c2753b`; version `1` |
+| Raw source materialization | PASS | exact raw file available; no reconstruction from snippets |
+| Latest original decision | PASS | D-037 — Healthcare Sensitive-Inbox Retention and LLM Boundary |
+| Original D-038 absent | PASS | count `0` before append |
+| Original bytes | PASS | `14871` |
+| Original SHA-256 | PASS | `e179b318e4db3f1cc62b2bf25345ff652923aeb535f4afa622f146bacbe7241c` |
+| Candidate outside repo | PASS | `DECISIONS.D-038.candidate.md`; candidate/not canonical |
+| Candidate bytes | PASS | `15743` |
+| Byte delta | PASS | `872` |
+| Candidate SHA-256 | PASS | `d426c0232ff048bbc0fd0d6918ad955ff7d0daebaebd5df23f5d7a7840d9b237` |
+| Original byte prefix preserved | PASS | candidate first `14871` bytes equal original exactly |
+| Diff removed lines | PASS / ZERO | `0` |
+| Diff scope | PASS | only D-038 appended at EOF |
+| Existing D-001..D-037 modified | PASS / NO | no edits/reorder/reformat/renumber/delete |
+| D-038 exact title | PASS | `D-038 — Phase-1 Test VPS Public Ingress Ownership` |
+| D-038 status | PASS | `Accepted` |
+| Canonical Project mutation | PASS / NO | original Project file not replaced or mutated |
+| Canonical D-038 registration | NOT COMPLETED | candidate prepared only |
+| Infrastructure activity | PASS / ZERO | Apache/Nginx/systemd/socket/DNS/firewall/certificate/receiver/tunnel all `0` |
+| Provider activity | PASS / ZERO | Zernio/auth/Accounts/Analytics/webhook/post/contact all `0` |
+| F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
+| Final classification | EXECUTED / AWAITING REVIEW | `CANONICAL_REPLACEMENT_ARTIFACT_PREPARED` |
+| Canonical state | PASS | candidate prepared/not canonical; D-038 not registered; F11 blocked pre-provider/unconsumed; parent unresolved; Analytics SPIKE_PENDING; Next Task NOT_STARTED |
