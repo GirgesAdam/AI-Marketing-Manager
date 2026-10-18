@@ -1939,3 +1939,141 @@ A separately authorized cutover may pass only if privileged Nginx config validat
 Non-interactive privilege is **NOT AVAILABLE**: the read-only non-interactive privilege check returned exit `1` / password required. The later cutover therefore requires controlled human/operator privileged execution for root-owned config backups/writes, remoteip enablement, privileged Nginx effective-config/certificate/socket checks, and service transition. This is a known operator-assisted path, not authorization to use or expose a password. Classification: **CUTOVER_PREFLIGHT_READY_OPERATOR_PRIVILEGE_REQUIRED**.
 
 Safety totals: Apache/Nginx config changes `0`; service actions `0`; port/listener changes `0`; DNS/firewall/systemd/certificate/package/WordPress/PHP/database changes `0`; receiver/tunnel `0`; Provider/Zernio `/v1/auth/verify`/Accounts/Analytics/Delta/webhook/post/contact calls `0`; F11 execution **NO**; F11 authorization consumed **NO**. Analytics Webhook remains `SPIKE_PENDING`.
+
+## P1-T08-F11-F09-R01 — Privileged Read-Only Nginx/TLS Evidence
+
+Capture time: `2026-10-18T11:47:26Z`. Host: `srv822206.hstgr.cloud`. Kernel: `Linux 5.4.0-216-generic x86_64 GNU/Linux`.
+Repository branch: `p1-t08-zernio-analytics-webhook`; R01 activation HEAD: `f3117c4cae755c2eec6df8638276a3781fcc75f2`.
+Evidence class: **PRIVILEGED READ-ONLY INFRASTRUCTURE EVIDENCE — NOT PROVIDER BEHAVIOR**.
+Capture completion marker: `R01_READ_ONLY_CAPTURE_COMPLETE`; local capture/tee exit: `0`. No password or private key was recorded in the capture.
+
+### Service state, journal, and sockets
+
+| Check | Captured result | Classification |
+|---|---|---|
+| systemctl show nginx.service | loaded, enabled, ActiveState=failed, SubState=failed, MainPID=0, Result=exit-code | **FAIL — SERVICE NOT RUNNING** |
+| systemctl show apache2.service | loaded, enabled, ActiveState=active, SubState=running, MainPID=852, Result=success | **PASS — SERVICE ACTIVE** |
+| Privileged journalctl for Nginx/Apache | exit 0; Nginx logged bind failures for 0.0.0.0:80 and [::]:80 with Address already in use, followed by still could not bind and systemd startup failure | **FAIL — TCP/80 BIND CONFLICT EVIDENCED** |
+| Same journal | duplicate staging-admin.restartorg.com warnings on 0.0.0.0:443 and 0.0.0.0:80 | **WARNING — PRE-EXISTING DUPLICATE SERVER NAME** |
+| ss -ltnp | Apache processes own wildcard *:80; no TCP/443 listener and no TCP/18080 listener appear in the captured inventory | **FAIL — PUBLIC HTTPS NOT RESTORED; BACKEND NOT LISTENING** |
+| Apache process inventory | Main PID 852, workers 13294, 13296–13298, 13468–13473 own port-80 sockets | **PASS — PORT-80 OWNERSHIP ATTRIBUTED TO APACHE** |
+| apachectl -S | only enabled Apache vhost shown: *:80 elite.restartorg.com from /etc/apache2/sites-enabled/elite.restartorg.com.conf:1 | **PASS — APACHE VHOST INVENTORY** |
+
+The observed Nginx startup failure is supported by the captured journal: Apache owns TCP/80 while Nginx attempted to bind IPv4 and IPv6 TCP/80. This is not inferred from service state alone. No active Nginx listener or TCP/443 listener was observed. Successful configuration tests below do **not** establish service startup, public HTTPS, or external reachability.
+
+### Nginx and Apache configuration validation
+
+| Command | Exact result | Classification |
+|---|---|---|
+| nginx -t | exit 0; syntax is ok; test is successful; duplicate staging-admin.restartorg.com warnings on IPv4 ports 443 and 80 | **PASS WITH WARNINGS** |
+| nginx -T | exit 0; 693 raw output lines; effective directives were inspected and summarized in the capture; same duplicate-name warnings | **PASS WITH WARNINGS — CONFIG READ, NOT SERVICE READINESS** |
+| apachectl -t | exit 0; Syntax OK | **PASS** |
+| apachectl -S | Elite is the only listed enabled Apache vhost, on *:80 | **PASS — INVENTORY ONLY** |
+
+Nginx includes /etc/nginx/sites-enabled/*. The enabled directory contains symlinks to site files and a regular file staging-admin.save; the wildcard includes that .save file. It defines a second staging-admin.restartorg.com vhost and explains the captured duplicate-name warnings. The file is unrelated to the target patch and remains untouched.
+
+No explicit default_server directive was observed in the captured effective directives. Implicit default selection therefore depends on the first server for each listen address/port in include order; the captured order begins with the Clinic vhost for IPv4 wildcard ports 80 and 443, while the default site defines the captured IPv6 [::]:80 and [::]:443 listeners. This describes configuration ordering only; Nginx was not running.
+
+### Effective enabled Virtual Host inventory
+
+The following inventory is from the captured nginx -T effective configuration summary and /etc/nginx/sites-enabled listing. Redirect/404 notes describe configured directives, not live responses while Nginx is failed.
+
+| Enabled source | listen / server_name | Routing and TLS references observed |
+|---|---|---|
+| clinic.restartorg.com → sites-available/clinic.restartorg.com | 443 ssl, 80; clinic.restartorg.com | Root /var/www/clinic.restartorg.com/html; PHP FastCGI /run/php/php7.4-fpm.sock; certificate /etc/letsencrypt/live/clinic.restartorg.com/fullchain.pem; HTTP conditional HTTPS redirect with fallback 404 |
+| default → sites-available/default | 80, [::]:80, 443 ssl, [::]:443 ssl; restartorg.com and www.restartorg.com | Root /var/www/staging; PHP FastCGI /var/run/php/php7.4-fpm.sock; certificate /etc/letsencrypt/live/restartorg.com/fullchain.pem; HTTP-to-HTTPS redirect |
+| elite.restartorg.com → sites-available/elite.restartorg.com | 443 ssl, 80; elite.restartorg.com | Root /var/www/elite.restartorg.com/html; PHP FastCGI /run/php/php7.4-fpm.sock; certificate /etc/letsencrypt/live/elite.restartorg.com/fullchain.pem; existing HTTP conditional redirect with fallback 404 |
+| go.restartorg.com → sites-available/go.restartorg.com | 443 ssl, 80; go.restartorg.com | Root /var/www/go.restartorg.com/html; PHP FastCGI /run/php/php7.4-fpm.sock; certificate /etc/letsencrypt/live/go.restartorg.com/fullchain.pem; HTTP conditional redirect with fallback 404 |
+| marketlyai.restartorg.com → sites-available/marketlyai.restartorg.com | 80, 443 ssl; marketlyai.restartorg.com | HTTP return 404; TLS certificate /etc/letsencrypt/live/marketlyai.restartorg.com/fullchain.pem; no explicit root, proxy_pass, or fastcgi_pass was observed for these server blocks in the captured effective directive summary |
+| restart_your_self → sites-available/restart_your_self | 443 ssl, 80; api.restartorg.com | Root /root/restart_your_self; proxy to http://unix:/run/restart_your_self.sock; proxy_params; CORS headers; certificate /etc/letsencrypt/live/api.restartorg.com/fullchain.pem; HTTP conditional redirect with fallback 404 |
+| staging-admin → sites-available/staging-admin | 443 ssl, 80; staging-admin.restartorg.com | Root /var/www/mobileApp/staging-admin; SPA try_files to /index.html; certificate path uses /etc/letsencrypt/live/staging-clinic.restartorg.com/fullchain.pem; HTTP conditional redirect with fallback 404 |
+| staging-admin.save (regular enabled file) | 443 ssl, 80; staging-admin.restartorg.com | Duplicates staging-admin root, routing, and staging-clinic certificate references; causes duplicate-name warnings; preserved unchanged |
+| staging-backend → sites-available/staging-backend | 443 ssl, 80; staging-backend.restartorg.com | Proxy http://localhost:5000; WebSocket upgrade/connection headers; certificate /etc/letsencrypt/live/staging-backend.restartorg.com/fullchain.pem; HTTP conditional redirect with fallback 404 |
+| staging-clinic → sites-available/staging-clinic | 443 ssl, 80; staging-clinic.restartorg.com | Root /var/www/mobileApp/staging-clinic; SPA try_files to /index.html; certificate /etc/letsencrypt/live/staging-clinic.restartorg.com/fullchain.pem; HTTP conditional redirect with fallback 404 |
+| staging.yourdomain.com → sites-available/staging.yourdomain.com | 80; staging.yourdomain.com | Root /var/www/staging; PHP FastCGI /run/php/php-fpm.sock; no TLS listener was present in this vhost summary |
+| start.restartorg.com → sites-available/start.restartorg.com | 443 ssl, 80; start.restartorg.com | Root /var/www/start.restartorg.com/html; PHP FastCGI /run/php/php7.4-fpm.sock; certificate /etc/letsencrypt/live/start.restartorg.com/fullchain.pem; HTTP conditional redirect with fallback 404 |
+| therapy → sites-available/therapy | 443 ssl, 80; therapy.restartorg.com | Proxy http://unix:/run/theraby.sock with 500-second read/connect timeouts; certificate /etc/letsencrypt/live/therapy.restartorg.com/fullchain.pem; HTTP conditional redirect with fallback 404 |
+
+The two target Certbot renewal files exist and record authenticator = nginx and installer = nginx:
+- /etc/letsencrypt/renewal/marketlyai.restartorg.com.conf
+- /etc/letsencrypt/renewal/elite.restartorg.com.conf
+
+These metadata entries are supplementary only; current certificate identity and validity were independently checked below.
+
+### Target TLS certificate evidence
+
+Both target certificate paths were readable and resolved to archived certificate files. OpenSSL hostname, not-expired, not-before, and trust-chain checks all passed for each target. These checks do not validate unrelated host certificates or prove that TLS is being served on the network.
+
+| Field | MarketlyAI | Elite |
+|---|---|---|
+| Configured certificate path | /etc/letsencrypt/live/marketlyai.restartorg.com/fullchain.pem | /etc/letsencrypt/live/elite.restartorg.com/fullchain.pem |
+| Resolved path | /etc/letsencrypt/archive/marketlyai.restartorg.com/fullchain1.pem | /etc/letsencrypt/archive/elite.restartorg.com/fullchain6.pem |
+| Subject | CN = marketlyai.restartorg.com | CN = elite.restartorg.com |
+| SAN | DNS:marketlyai.restartorg.com | DNS:elite.restartorg.com |
+| Issuer | C = US, O = Let's Encrypt, CN = YR2 | C = US, O = Let's Encrypt, CN = YR2 |
+| Serial | 0591ED20556637C5F5CA861616ECBF0D4856 | 05C6DD2570CFEC8148765CB8677BB8D8E965 |
+| Not before | 2026-10-13 15:50:57 UTC | 2026-08-19 11:59:18 UTC |
+| Not after | 2027-01-11 15:50:56 UTC | 2026-11-17 11:59:17 UTC |
+| SHA-256 fingerprint | 64:BE:BC:E0:FD:C5:86:D5:EF:DB:56:EC:5B:38:85:AA:F2:0A:A4:72:B6:9D:39:6C:1E:28:D8:4F:45:01:BD:D7 | 7E:A7:BA:05:1C:7A:3F:63:6E:2D:0E:0C:F8:B5:25:41:14:37:19:1B:69:D7:24:2B:8E:FB:6D:F6:B4:B2:6F:D2 |
+| openssl x509 -checkhost | hostname matched; exit 0 | hostname matched; exit 0 |
+| openssl x509 -checkend 0 | Certificate will not expire; exit 0 | Certificate will not expire; exit 0 |
+| Not-before check | PASS | PASS |
+| openssl verify with configured chain and system trust store | cert.pem: OK; exit 0 | cert.pem: OK; exit 0 |
+| Overall certificate evidence | **PASS — IDENTITY + CURRENT VALIDITY + CHAIN** | **PASS — IDENTITY + CURRENT VALIDITY + CHAIN** |
+
+### Captured configuration fingerprints
+
+The six cutover-relevant fingerprints match the previously recorded F09 preflight values in this capture:
+
+| File | SHA-256 |
+|---|---|
+| /etc/nginx/sites-available/marketlyai.restartorg.com | f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6 |
+| /etc/nginx/sites-available/elite.restartorg.com | 239a36f957928ec534ac79f06a6516ef495b789c803c43d5944acb5f4b880be6 |
+| /etc/nginx/proxy_params | 7cff43a9768c1112bb074e9f26aaa1173da6ef85a7a20838242e846835c8eeb2 |
+| /etc/apache2/ports.conf | 9d2d53be30cbb4c42af6b25458077db5b5ad1be4f5810fa2fee4a1d53ac604a2 |
+| /etc/apache2/sites-available/elite.restartorg.com.conf | 85ce3df3c888430cbdd528c7cacded9fe6aa6fcf4c2ec18b99ae8a9580996b59 |
+| /etc/apache2/mods-available/remoteip.load | 9d6c102e8e6aae55f585b234fe73ef55849a3f5dfcc38079faf748c8117ee2e2 |
+
+The capture also fingerprinted enabled Nginx site targets:
+
+| Enabled source/target | SHA-256 |
+|---|---|
+| clinic.restartorg.com | edb2aceb849e44a9a5ad7d64253e9b5183846e3ea21b16d7b383e985badf3111 |
+| default | 16b34c2d1e561acc5b7e763ebeb3a4a630a83ddf0bdd11d7c452fecc35927dc8 |
+| elite.restartorg.com | 239a36f957928ec534ac79f06a6516ef495b789c803c43d5944acb5f4b880be6 |
+| go.restartorg.com | e686c12bd872b7cdddfd4fff4d8ac7a57806c2fe26c9912aba48758e2420b951 |
+| marketlyai.restartorg.com | f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6 |
+| restart_your_self | 5836d848bd16e2c0dc1c8bf1dfe0bbc923a2071ac80ad330204e61011d3ee85d |
+| staging-admin | d8766031cbb966c6721990355bd834d5c88260eff5b227cc1bfae99c72eddcea |
+| staging-admin.save | f0d1fed9fb2609316524160cb14675f9a49de15564583bea4a3e2c4c204dca43 |
+| staging-backend | 2a35a3d501824ca43f5139800eacb687655c28e47eb02c19bf065c44b71c1b77 |
+| staging-clinic | 3ecfe79bb4cd00993941e39f274d2930f48dba6f3c798d43a78a270920830db3 |
+| staging.yourdomain.com | 1504940dff306aefd1de2911631ac4396d8b774465a1a6d201e43cbd9e52860f |
+| start.restartorg.com | 4eceb2cf2e46e2c106f93a061e5a1aefb7d68f7d3cbd663fdf7d124d53a30826 |
+| therapy | d7b4cf459b43d7a05a085e8cb7219289b1451e2051d8845e594bdb002f03c3b8 |
+
+The hashes are read-only fingerprints; no file was edited on the VPS. The staging-admin.save file remains in place.
+
+### Review-only patch compatibility and discrepancies
+
+- **Apache backend prerequisite remains absent.** Current Apache owns *:80 and its enabled Elite vhost remains *:80; TCP/18080 was not listening. The proposed Listen 127.0.0.1:18080, Elite vhost relocation, loopback-only mod_remoteip trust, and Nginx proxy changes remain unapplied. No claim of backend readiness is supported.
+- **Elite TLS references are compatible with the existing target certificate.** The effective Elite vhost already references the Elite fullchain and private-key paths; the leaf certificate identity/validity/chain checks passed. The private key was never read. Nginx is failed, so this is certificate/config evidence, not served HTTPS evidence.
+- **Host/client-IP/HTTPS semantics are planned but not runtime-verified.** Existing /etc/nginx/proxy_params sets Host $http_host, X-Real-IP $remote_addr, X-Forwarded-For $proxy_add_x_forwarded_for, and X-Forwarded-Proto $scheme. The reviewed patch depends on Apache interpreting forwarded scheme and trusting only loopback for X-Forwarded-For; this has not been tested after cutover.
+- **Elite HTTP behavior requires explicit acceptance/validation.** The current Nginx config contains Certbot conditional HTTP-to-HTTPS redirect logic with a 404 fallback. The review-only proposal replaces that block with same-host proxying and no forced redirect to preserve the previously observed Apache-served HTTP 200 behavior while Nginx is down. This is an intentional config-behavior change and is not a proven post-cutover result.
+- **MarketlyAI routing is a material unresolved discrepancy.** Its current effective vhost has HTTP return 404 and an HTTPS certificate reference, but no explicit root, proxy_pass, or fastcgi_pass was observed in the captured target-server directives. The previous preflight's wording that expected MarketlyAI routing would be preserved is not enough to establish what application route should be served. The proposed patch does not edit the MarketlyAI file, and its TLS certificate passed validation, but expected MarketlyAI application routing and public HTTPS remain **NOT VERIFIED**.
+- **Duplicate staging-admin remains unresolved and out of scope.** staging-admin.save is loaded by the wildcard include and references the staging-clinic certificate. The target checks did not validate whether that certificate SAN covers staging-admin.restartorg.com; treat SAN compatibility as **NOT VERIFIED**, not as a proven certificate failure.
+- **No behavior claims for unrelated sites.** Their effective configuration references and hashes were inventoried, but unrelated-host HTTP/TLS/application behavior was not exercised. Redirect-loop, mixed-scheme, Elite WordPress/PHP, client-IP interpretation, and unrelated-host regression checks remain future cutover validation gates.
+- **Patch status:** **REVIEW ONLY / NOT APPLIED**. No target or unrelated vhost, Apache config, service, listener, certificate, DNS, firewall, systemd unit, package, WordPress/PHP, or database state was changed.
+
+### R01 classification and safety boundary
+
+- Evidence capture: **COMPLETE**.
+- Documentation finalization: **SUBMITTED FOR TEAM LEADER REVIEW**.
+- Nginx/HTTPS recovery: **NOT PERFORMED**.
+- Cutover: **NOT EXECUTED**.
+- Provider/Zernio calls: 0.
+- F11 execution / authorization consumption: **NO / NO**; F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**.
+- Analytics Webhook: SPIKE_PENDING.
+- Parent P1-T08: **UNRESOLVED / NOT DONE**.
+- Next Task: **NOT STARTED**.
+- Cutover readiness and external reachability: **NOT ESTABLISHED**.

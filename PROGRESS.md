@@ -55,13 +55,23 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08-F11-F09-R01 — Complete Privileged Read-Only Nginx/TLS Evidence`
+Current Task = `P1-T08-F11-F09-R01 — Documentation Finalization`
 
-P1-T08-F11-F09-R01 = **IN PROGRESS — ACTIVATED**
+P1-T08-F11-F09-R01 = **DOCUMENTATION FINALIZED — AWAITING TEAM LEADER REVIEW**
 
-P1-T08-F11-F09-R01 Result = **PENDING EVIDENCE COLLECTION**
+P1-T08-F11-F09-R01 Result = **R01_DOCUMENTATION_FINALIZATION_READY_FOR_TEAM_LEADER_REVIEW**
 
-Task Type = **READ-ONLY INFRASTRUCTURE EVIDENCE REMEDIATION**
+Task Type = **DOCUMENTATION-ONLY EVIDENCE FINALIZATION**
+
+R01 evidence capture = **COMPLETED — 2026-10-18T11:47:26Z**
+
+Documentation files = **3 AUTHORIZED FILES ONLY**; local `git diff --check` = **PASS**
+
+Nginx/HTTPS recovery = **NOT PERFORMED**; cutover = **NOT EXECUTED**
+
+F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; Analytics Webhook = `SPIKE_PENDING`
+
+Parent P1-T08 = **UNRESOLVED / NOT DONE**; Next Task = **NOT_STARTED**
 
 ARCH-AMEND-01 = **DONE / ACCEPTED**
 
@@ -844,13 +854,23 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Current Task = `P1-T08-F11-F09-R01 — Complete Privileged Read-Only Nginx/TLS Evidence`.
+Current Task = `P1-T08-F11-F09-R01 — Documentation Finalization`.
 
-P1-T08-F11-F09-R01 = **IN PROGRESS — ACTIVATED**.
+P1-T08-F11-F09-R01 = **DOCUMENTATION FINALIZED — AWAITING TEAM LEADER REVIEW**.
 
-P1-T08-F11-F09-R01 Result = **PENDING EVIDENCE COLLECTION**.
+P1-T08-F11-F09-R01 Result = **R01_DOCUMENTATION_FINALIZATION_READY_FOR_TEAM_LEADER_REVIEW**.
 
-Task Type = **READ-ONLY INFRASTRUCTURE EVIDENCE REMEDIATION**.
+Task Type = **DOCUMENTATION-ONLY EVIDENCE FINALIZATION**.
+
+R01 privileged evidence capture = **COMPLETED — 2026-10-18T11:47:26Z**.
+
+Local `git diff --check` = **PASS**; changes limited to the three authorized documentation files.
+
+Nginx/HTTPS recovery = **NOT PERFORMED**; cutover = **NOT EXECUTED**.
+
+F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; Analytics Webhook = `SPIKE_PENDING`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Next Task = **NOT_STARTED**.
+
+Stop condition: submit evidence for Team Leader review; do not begin another task.
 
 ARCH-AMEND-01 = **DONE / ACCEPTED**.
 
@@ -1323,3 +1343,21 @@ Starting HEAD: `eeeeaa6c4c8d3d84f7719c993c3292b2f87474a7`. Activation HEAD: `6e7
 - Privilege path: `sudo -n true` exit `1` (password required). Future cutover requires controlled human direct sudo authentication. Mandatory privileged pre-gates before mutation: fresh `nginx -t/-T`, cert subject/SAN/issuer/validity reads, privileged socket/PID map, and drift/hash verification. Password must never enter chat/logs/tool input.
 - Safety: Apache/Nginx config mutations `0`; service mutations `0`; ports/listeners `0`; DNS/firewall/systemd/certificate/package/WordPress/PHP/database mutations `0`; receiver/tunnel `0`; Provider/Zernio/auth/Accounts/Analytics/Delta/webhook/post/contact calls `0`; F11 execution **NO**; F11 authorization consumed **NO**.
 - Canonical pending-review state: F11-F09 **EXECUTED — AWAITING TEAM LEADER REVIEW**; result **CUTOVER_PREFLIGHT_READY_OPERATOR_PRIVILEGE_REQUIRED**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Production Django implementation **NOT STARTED**; Next Task **NOT_STARTED**.
+
+
+### P1-T08-F11-F09-R01 — Documentation Finalization
+
+Activation HEAD / starting HEAD: `f3117c4cae755c2eec6df8638276a3781fcc75f2`. Branch: `p1-t08-zernio-analytics-webhook`. Evidence capture completed at `2026-10-18T11:47:26Z` on `srv822206.hstgr.cloud`. Capture completion marker: `R01_READ_ONLY_CAPTURE_COMPLETE`.
+
+Current result: **R01_DOCUMENTATION_FINALIZATION_READY_FOR_TEAM_LEADER_REVIEW**. Local diff review and `git diff --check` passed; final commit/push and remote-HEAD/clean-tree verification are recorded in the task submission.
+
+- Captured Nginx service: enabled but failed, MainPID 0, Result exit-code. The captured journal supports failure to bind IPv4 and IPv6 TCP/80 because the address was already in use while Apache owned wildcard TCP/80.
+- Captured Apache service: enabled and active/running, MainPID 852; only enabled Apache vhost is Elite on *:80.
+- nginx -t exit 0 and nginx -T exit 0, both with duplicate staging-admin.restartorg.com warnings on IPv4 ports 80 and 443. apachectl -t exit 0.
+- No TCP/443 or TCP/18080 listener appeared in the privileged socket capture. Nginx syntax/effective-config success does not prove service readiness or live HTTPS.
+- MarketlyAI and Elite leaf certificates independently passed hostname, validity-period, and trust-chain checks. Exact subject/SAN/issuer/serial/dates/fingerprints are recorded in docs/PROVIDER_SPIKE_RESULTS.md.
+- Effective vhost inventory and target/all-enabled-site configuration fingerprints are recorded. staging-admin.save remains untouched and its duplicate server-name warnings persist.
+- Review-only patch remains unapplied. MarketlyAI application routing and staging-admin certificate SAN compatibility are not verified. Elite redirect behavior, client-IP/HTTPS forwarding, WordPress/PHP, redirect-loop, mixed-scheme, and unrelated-host regression behavior remain future validation gates.
+- Documentation updates are limited to PROGRESS.md, docs/PROVIDER_SPIKE_RESULTS.md, and docs/TEST_MATRIX.md.
+- Nginx/HTTPS recovery: NOT PERFORMED. Cutover: NOT EXECUTED. Provider/Zernio calls: 0. F11 execution and authorization consumption: NO / NO.
+- F11 remains UNCONSUMED / BLOCKED PRE-PROVIDER. Analytics Webhook remains SPIKE_PENDING. Parent P1-T08 remains UNRESOLVED / NOT DONE. Next Task remains NOT_STARTED.

@@ -1586,3 +1586,46 @@ Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **CU
 | F11 execution / auth consumption | PASS | execution NO; authorization remains AUTHORIZED / UNCONSUMED |
 | Final classification | PENDING TEAM LEADER REVIEW | `CUTOVER_PREFLIGHT_READY_OPERATOR_PRIVILEGE_REQUIRED` |
 | Canonical pending-review state | PASS | F11-F09 executed/awaiting review; cutover not executed; F11 blocked pre-provider/unconsumed; parent unresolved; Analytics SPIKE_PENDING; Django implementation not started; Next Task NOT_STARTED |
+
+
+## P1-T08-F11-F09-R01 — Privileged Read-Only Nginx/TLS Evidence Matrix
+
+Evidence source: local operator capture `C:\Users\USER\Desktop\R01-privileged-readonly-capture.txt`; capture timestamp `2026-10-18T11:47:26Z`; host `srv822206.hstgr.cloud`; completion marker `R01_READ_ONLY_CAPTURE_COMPLETE`. The capture is outside the repository; no raw capture file was added to the repository. This is infrastructure evidence, not Provider Behavior evidence.
+
+| ID | Check / captured command | Result | Classification / evidence |
+|---|---|---|---|
+| R01-01 | git branch --show-current; git rev-parse HEAD; git ls-remote; git status --short --branch | branch p1-t08-zernio-analytics-webhook; starting and remote HEAD both f3117c4cae755c2eec6df8638276a3781fcc75f2; working tree clean | **PASS — STARTING STATE VERIFIED** |
+| R01-02 | Capture begin/end markers | capture starts 2026-10-18T11:47:26Z; R01_READ_ONLY_CAPTURE_COMPLETE; local tee exit 0 | **PASS — CAPTURE COMPLETE** |
+| R01-03 | systemctl show/status nginx.service | Nginx enabled but failed; MainPID=0; Result=exit-code | **FAIL — NGINX NOT RUNNING** |
+| R01-04 | systemctl show/status apache2.service | Apache enabled, active/running; MainPID 852; Result success | **PASS — APACHE ACTIVE** |
+| R01-05 | journalctl -u nginx.service -u apache2.service --since '2026-10-17 00:00:00 UTC' --no-pager -n 150 -o short-iso-precise | exit 0; Nginx failed binding IPv4 and IPv6 TCP/80 with Address already in use; duplicate staging-admin warnings on ports 80/443 | **FAIL / WARNING — ROOT CAUSE EVIDENCE CAPTURED** |
+| R01-06 | ss -ltnp and target-port socket query | Apache owns *:80; no TCP/443 or TCP/18080 listener appears in captured inventory | **FAIL — HTTPS NOT RESTORED; BACKEND ABSENT** |
+| R01-07 | ps -eo pid,ppid,user,comm,args filtered for Nginx/Apache | Apache master PID 852 and listed workers; no Nginx process in filtered output | **PASS — PROCESS OWNERSHIP ATTRIBUTED** |
+| R01-08 | nginx -t | exit 0; syntax OK / test successful; duplicate staging-admin warnings on 0.0.0.0:443 and 0.0.0.0:80 | **PASS WITH WARNINGS — DOES NOT PROVE SERVICE READINESS** |
+| R01-09 | nginx -T | exit 0; 693 raw output lines; effective config directive summary captured; duplicate-name warnings remain | **PASS WITH WARNINGS — EFFECTIVE CONFIG REVIEWED** |
+| R01-10 | /etc/nginx/sites-enabled listing, symlink targets, file SHA-256 | relevant enabled entries inventoried; staging-admin.save is a regular file included by wildcard and duplicates staging-admin | **PASS — INVENTORY; EXISTING DUPLICATE PRESERVED** |
+| R01-11 | Effective vhost/listen/routing/certificate summary from nginx -T | 13 enabled source entries including staging-admin.save; no explicit default_server observed | **PASS — RELEVANT CONFIG INVENTORY; IMPLICIT DEFAULT ORDER RECORDED** |
+| R01-12 | openssl x509 subject/issuer/serial/dates/SAN/fingerprint for MarketlyAI and Elite | exact values recorded in docs/PROVIDER_SPIKE_RESULTS.md | **PASS — BOTH TARGET LEAF CERTIFICATES READ** |
+| R01-13 | openssl x509 -checkhost marketlyai.restartorg.com | hostname matches; exit 0 | **PASS — MARKETLYAI IDENTITY** |
+| R01-14 | openssl x509 -checkhost elite.restartorg.com | hostname matches; exit 0 | **PASS — ELITE IDENTITY** |
+| R01-15 | openssl x509 -checkend 0 for both targets | both report Certificate will not expire; exit 0; not-before checks PASS | **PASS — CURRENT VALIDITY PERIOD** |
+| R01-16 | openssl verify using system CA file and configured chain for both targets | each target cert.pem: OK; exit 0 | **PASS — TARGET CHAIN VERIFICATION** |
+| R01-17 | apachectl -t | exit 0; Syntax OK | **PASS — APACHE CONFIG SYNTAX** |
+| R01-18 | apachectl -S | only enabled Apache vhost is Elite on *:80 | **PASS — APACHE VHOST MAP** |
+| R01-19 | Six cutover-relevant file fingerprints and enabled Nginx site target fingerprints | exact SHA-256 values preserved in docs/PROVIDER_SPIKE_RESULTS.md; six primary values match historical F09 preflight values | **PASS — READ-ONLY FINGERPRINTS RECORDED** |
+| R01-20 | Review-only patch vs captured effective config and fingerprints | no patch applied; Apache backend 18080 absent; Elite HTTP configured redirect differs from proposed no-forced-redirect proxy behavior; MarketlyAI application route not established | **NOT VERIFIED — CUTOVER MUST NOT PROCEED ON THIS EVIDENCE ALONE** |
+| R01-21 | Staging-admin certificate SAN compatibility | staging-admin config points to staging-clinic certificate; R01 target checks did not validate this hostname | **NOT VERIFIED — NOT A PROVEN CERTIFICATE FAILURE** |
+| R01-22 | External HTTPS reachability, post-cutover redirects/mixed-scheme behavior, Elite WordPress/PHP, unrelated-host regression | not exercised by this read-only capture | **NOT RUN / FUTURE SEPARATELY AUTHORIZED VALIDATION** |
+| R01-23 | Final safety markers in capture | configuration mutations 0; service actions 0; port/listener changes 0; DNS/firewall/systemd changes 0; certificate/package operations 0; Provider calls 0; F11 execution NO; F11 authorization consumed NO | **PASS — ZERO PROHIBITED ACTIONS REPORTED** |
+
+Interpretation gate: nginx -t and nginx -T both exited 0, but the running Nginx service remains failed because its captured startup attempt could not bind TCP/80. Syntax/effective-config success is not a recovery test. Both target certificates passed identity, current validity, and chain checks, but the absence of a TCP/443 listener means those results do not establish live HTTPS.
+
+Final task state after documentation/Git checks: R01_DOCUMENTATION_FINALIZATION_READY_FOR_TEAM_LEADER_REVIEW. This is not cutover approval, service recovery, F11 authorization consumption, or completion of parent P1-T08.
+
+### Documentation-only Git scope checks
+
+| ID | Check | Result | Classification |
+|---|---|---|---|
+| R01-24 | `git diff --check` after final documentation edits | Exit `0` | **PASS — NO WHITESPACE ERRORS** |
+| R01-25 | `git diff --name-only` | Only `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, and `docs/TEST_MATRIX.md` | **PASS — AUTHORIZED DOCUMENTATION FILES ONLY** |
+| R01-26 | Source/test/package/infrastructure scope audit | No source, test, package, migration, or infrastructure files changed; no additional VPS commands or Provider calls after the captured read-only run | **PASS — SCOPE PRESERVED** |
