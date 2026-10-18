@@ -55,7 +55,7 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`
+Current Task = `P1-T08-F11-F09-R03 - Authoritative MarketlyAI Deployment Route Evidence`
 
 P1-T08-F11-F09-R02 = **CLOSED / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -1395,3 +1395,11 @@ Task result: **CUTOVER_PREFLIGHT_EVIDENCE_INCOMPLETE**. This is read-only infras
 - Cutover readiness = **BLOCKED**; cutover execution = **NOT EXECUTED**; Nginx/HTTPS recovery = **NOT PERFORMED**.
 - F11 execution = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Analytics Webhook = `SPIKE_PENDING`.
 - Parent P1-T08 = **UNRESOLVED / NOT DONE**; Next Task = **NOT_STARTED**. No successor task has been activated.
+
+### P1-T08-F11-F09-R03 - activation
+
+Task status: **ACTIVATED - READ-ONLY REPOSITORY / DEPLOYMENT-SOURCE INVESTIGATION ONLY**.
+Team Leader authorization: **APPROVED**; official Task ID confirmed.
+Activation baseline: branch p1-t08-zernio-analytics-webhook; starting HEAD c5c265e270bfa1bf43b418a26756ead88fdff150; live remote HEAD matched at pre-activation verification.
+Activation commit is separate from the evidence/documentation commit. No new R03 repository/deployment evidence was collected before the activation commit was pushed and verified.
+Boundaries: no infrastructure/service changes, deployment/cutover, Provider/Zernio calls, F11 execution, or F11 authorization consumption. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; cutover remains **BLOCKED**; Analytics Webhook remains SPIKE_PENDING; F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER** with one-run authorization **AUTHORIZED / UNCONSUMED**; Next Task remains **NOT_STARTED**.
