@@ -1646,3 +1646,58 @@ Final task state after Team Leader review: R01_DOCUMENTATION_FINALIZATION_ACCEPT
 | R02-09 | Documentation diff scope and `git diff --check` after edits | git diff --check exit 0; only three authorized documentation files changed; no source/test/package/infrastructure changes | **PASS - DIFF CHECK AND SCOPE VERIFIED** |
 
 Interpretation gate: certificate hostname, validity, and trust-chain checks pass for staging-admin, but public TCP/443 remains unreachable. Effective configuration includes staging-admin.save and emits duplicate-name warnings; the file remains untouched. MarketlyAI intended application routing is still NOT VERIFIED because no authoritative deployment evidence was found in the bounded search and the current target vhost returns 404. Overall R02 result: **CUTOVER_PREFLIGHT_EVIDENCE_INCOMPLETE**. No cutover, repair, service action, or Provider operation is authorized by this evidence.
+
+### P1-T08-F11-F09-R03 - Authoritative MarketlyAI Deployment Route Evidence
+
+| ID | Check / command or source | Observed result | Classification |
+|---|---|---|---|
+| R03-01 | Activation commit, branch, local HEAD, tracking HEAD, live remote HEAD, working tree, diff check | Activation HEAD 9936921851cac6c55445425b8d12f2fbec9c6269 was pushed before investigation; local/tracking/live remote HEAD matched; working tree clean; diff check exit 0 | PASS - ACTIVATION VERIFIED BEFORE EVIDENCE COLLECTION |
+| R03-02 | README.md:3-4 at source commit 804e9dea4b0fdf4e0454923a3f3cc6298dae8521; package.json:2-5, 8-20 | Repository explicitly identifies itself as the internal Provider Spike Harness, not the production application/monorepo; scripts are test/build/provider-runner scripts | PASS - CURRENT REPOSITORY IS NOT AUTHORITATIVE PRODUCTION APP SOURCE |
+| R03-03 | Tracked file inventory and deployment-artifact path filter | 56 tracked files; zero paths matching conventional deployment/reverse-proxy/service artifact names | NOT VERIFIED - NO DEPLOYMENT MANIFEST IN THIS REPOSITORY |
+| R03-04 | All-ref history path audit | Zero matching deployment-artifact paths in Git history | NOT VERIFIED - DOES NOT RULE OUT EXTERNAL SOURCE |
+| R03-05 | Source-only git grep for hostname, proxy, server, and application-runtime markers | Only output was tests/provider-spike/p1-t08-f10.test.ts:8 using marketlyai.example.invalid; no production hostname/upstream was found in source/tests/config | NOT VERIFIED - TEST FIXTURE IS NOT A DEPLOYMENT ROUTE |
+| R03-06 | All-ref application-source git log -G query | No matching commit output; exit 0 | NOT VERIFIED - NO AUTHORITATIVE ROUTE SOURCE IDENTIFIED |
+| R03-07 | GitHub code search for exact hostname, marketlyai, and MarketlyAI deployment route | No search results in the searched index | BLOCKED / NOT VERIFIED - PRIVATE OR UNINDEXED SOURCES MAY EXIST |
+| R03-08 | Vercel project searches (marketlyai, AI-Marketing-Manager, and repository GirgesAdam/AI-Marketing-Manager); Railway project-name inventory | Vercel filters returned zero projects; Railway returned two accessible projects, neither name matched the target identifiers | NOT VERIFIED - BOUNDED PLATFORM DISCOVERY ONLY |
+| R03-09 | Existing R02 MarketlyAI vhost evidence, Provider Spike Results lines 2121-2127; R02 Test Matrix lines 1644-1648 | Captured vhost returns 404 and has no explicit root/proxy_pass/fastcgi_pass; intended route was already NOT VERIFIED | BLOCKED - AUTHORITATIVE APPLICATION UPSTREAM MISSING |
+| R03-10 | R02 external connectivity results, Provider Spike Results lines 2088-2092 | R02 recorded TCP/443 connection timeouts on 2026-10-18; no R03 external connectivity recheck was performed | NOT RECHECKED - R02 RESULT IS HISTORICAL ONLY |
+| R03-11 | Missing-source decision gate | No authoritative production repository/deployment manifest or custom-domain-to-service mapping found in examined sources | NOT VERIFIED - AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND |
+| R03-12 | Safety boundary audit | No VPS commands, service actions, infrastructure changes, Provider/Zernio calls, receiver/tunnel setup, or F11 execution during R03 | PASS - READ-ONLY BOUNDARY PRESERVED |
+| R03-13 | Documentation scope and final Git validation | Final evidence commit validation and synchronization recorded in the completion report | PASS - PRE-COMMIT DIFF/SCOPE VALIDATED; POST-PUSH SYNC IN COMPLETION REPORT |
+
+Exact repository commands and observed results:
+
+    git -C <repo> branch --show-current
+    Result: p1-t08-zernio-analytics-webhook
+
+    git -C <repo> rev-parse HEAD
+    Result before evidence collection: 9936921851cac6c55445425b8d12f2fbec9c6269
+
+    git -C <repo> ls-files
+    Result count: 56 tracked files.
+
+    git -C <repo> log --all --name-only --pretty=format:
+    Followed by a PowerShell filename filter for Docker/Compose, Nginx/Apache/Caddy, deploy/release, systemd, Procfile, Vercel/Railway, WSGI/ASGI, Gunicorn/Uvicorn, YAML, and TOML patterns.
+    Result: zero matching tracked paths in history.
+
+    git -C <repo> grep -n -I -i -E 'marketlyai\.restartorg\.com|marketlyai|server_name|proxy_pass|manage\.py|gunicorn|uvicorn|docker|compose|caddy|systemd|procfile' HEAD -- src tests README.md package.json
+    Exit: 0. Sole output: tests/provider-spike/p1-t08-f10.test.ts:8 with synthetic host marketlyai.example.invalid.
+
+    git -C <repo> log --all --oneline -G 'marketlyai\.restartorg\.com|server_name marketlyai|proxy_pass|docker compose|gunicorn|uvicorn|manage\.py' -- . ':!PROGRESS.md' ':!docs/PROVIDER_SPIKE_RESULTS.md' ':!docs/TEST_MATRIX.md'
+    Result: no matching commit output; exit 0.
+
+Interpretation gate: repository and bounded deployment-source searches do not establish the intended MarketlyAI application route. A successful search command or the existence of the historical Nginx vhost is not proof of application correctness. The precise missing input is the authoritative application deployment artifact mapping marketlyai.restartorg.com to its intended service/upstream, plus owner confirmation of hostname purpose if the artifact does not establish intent. Cutover remains BLOCKED. R02 evidence remains historical and unchanged. No successor task is activated.
+
+Additional exact documentation validation commands:
+
+    git -C <repo> diff --check
+    Result before commit: exit 0.
+
+    git -C <repo> diff --name-only
+    Result before commit:
+    PROGRESS.md
+    docs/PROVIDER_SPIKE_RESULTS.md
+    docs/TEST_MATRIX.md
+
+    git -C <repo> status --short --branch
+    Result before evidence commit: only those three authorized documentation files modified; no source/test/package/infrastructure files modified.

@@ -2137,3 +2137,69 @@ The R02 read-only search for matching deployment/config files under `/etc/nginx`
 - Cutover readiness: **CUTOVER_PREFLIGHT_EVIDENCE_INCOMPLETE**.
 - Apache/Nginx/systemd/config/listener/DNS/firewall/certificate/package mutations: 0. Service actions: 0. Receiver/tunnel: 0. Provider/Zernio/auth/Accounts/Analytics/Delta/webhook/post/contact calls: 0. F11 execution: NO; F11 authorization consumed: NO.
 - Existing R01 findings remain historical. R02 supersedes only the prior staging-admin SAN/chain verification gap; it does not establish live HTTPS or resolve MarketlyAI routing.
+
+### P1-T08-F11-F09-R03 - Authoritative MarketlyAI Deployment Route Evidence (2026-10-18)
+
+Status: EXECUTED - AWAITING TEAM LEADER REVIEW.
+
+Result: NOT VERIFIED - AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND.
+
+Investigation timestamp (UTC): 2026-10-18T14:43:44.045Z. Repository revision after the separately pushed activation commit: 9936921851cac6c55445425b8d12f2fbec9c6269. The activation commit was pushed and its local, tracking, and live remote HEADs were verified equal before this investigation began.
+
+#### Repository identity and authoritative-source findings
+
+- README.md lines 3-4, originating at commit 804e9dea4b0fdf4e0454923a3f3cc6298dae8521, explicitly describes this repository as the minimal internal P1-T01 Provider Spike Harness and says it is not the production application/monorepo.
+- package.json lines 2-5 names and describes the package as ai-marketing-manager-provider-spike-harness / internal Phase 1 provider behavior tooling. Lines 8-20 contain test, typecheck, build, and P1 provider-runner scripts; no production application start or deployment script is declared.
+- The activated branch contains 56 tracked files. A filename audit for Docker/Compose, Nginx/Apache/Caddy, deploy/release, systemd, Procfile, Vercel/Railway, WSGI/ASGI, Gunicorn/Uvicorn, YAML, and TOML deployment artifacts returned zero matching paths.
+- The same deployment-artifact filename audit over all Git refs/history returned zero matching paths. This is a repository/history finding, not proof that an application does not exist elsewhere.
+- Source-only command executed:
+    git grep -n -I -i -E 'marketlyai\.restartorg\.com|marketlyai|server_name|proxy_pass|manage\.py|gunicorn|uvicorn|docker|compose|caddy|systemd|procfile' HEAD -- src tests README.md package.json
+  Exit: 0. The only output was tests/provider-spike/p1-t08-f10.test.ts:8, which uses the synthetic URL https://marketlyai.example.invalid/p1-t08-f10/analytics-synced. This is a test fixture, not an application route or deploy target.
+- All-ref application-source history query executed:
+    git log --all --oneline -G 'marketlyai\.restartorg\.com|server_name marketlyai|proxy_pass|docker compose|gunicorn|uvicorn|manage\.py' -- . ':!PROGRESS.md' ':!docs/PROVIDER_SPIKE_RESULTS.md' ':!docs/TEST_MATRIX.md'
+  Result: no matching commit output; command exit 0. No authoritative application routing source was identified in the repository history examined.
+- Read-only GitHub code searches for marketlyai.restartorg.com, marketlyai, and MarketlyAI deployment route returned no results in the searched index. Search/index visibility is bounded and this is not proof that no private or unindexed source exists.
+- Read-only Vercel project-name searches for marketlyai and AI-Marketing-Manager returned zero projects; the repository filter GirgesAdam/AI-Marketing-Manager returned zero projects. The accessible Railway project inventory contained two projects and neither project name matched MarketlyAI, AI Marketing Manager, or restartorg. These were bounded discovery checks; no unrelated project configuration was inspected and no deployment platform was changed.
+
+#### Existing R02 evidence preserved
+
+R02 evidence is preserved unchanged at docs/PROVIDER_SPIKE_RESULTS.md lines 2082-2137 and docs/TEST_MATRIX.md lines 1634-1648, originating in evidence commit 9d3453f8722cc9810991a7d598f06233735d01f1.
+
+- The previously captured MarketlyAI Nginx vhost defines listen 80, listen 443 ssl, server_name marketlyai.restartorg.com, a location / returning 404, and certificate references under /etc/letsencrypt/live/marketlyai.restartorg.com/. No explicit root, proxy_pass, or fastcgi_pass was observed in the captured target directives.
+- R02's bounded VPS search under /etc/nginx, /etc/apache2, /etc/systemd/system, /opt, /srv, and /var/www returned no matching deployment/config paths for the specified extensions and marketlyai|ai-marketing-manager terms.
+- R02 recorded external TCP/443 connection timeouts for MarketlyAI and staging-admin on 2026-10-18. R03 did not repeat an external connectivity probe; the R02 result remains historical evidence and must not be presented as a fresh R03 status.
+- The staging-admin certificate result does not establish the intended MarketlyAI application route or live HTTPS availability.
+
+#### Determination and required missing artifact
+
+NOT VERIFIED - AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND.
+
+No verified application upstream, local service/port, production application repository, or deployment manifest can be derived from the sources examined. The existing hostname and historical test-receiver paths are not sufficient to infer the intended application route.
+
+Required input before any future cutover decision:
+1. The authoritative production application repository and commit plus its deployment manifest/service definition, OR the authoritative deployment-platform project configuration showing the source repository/revision and the custom-domain-to-service/upstream mapping; and
+2. If that artifact does not settle intent, an owner decision confirming whether marketlyai.restartorg.com is intended to serve the production application or only the Phase-1 test receiver.
+
+Do not invent an upstream or prepare/apply a route patch from this evidence. Cutover readiness remains BLOCKED and no infrastructure action is authorized by R03.
+
+#### Safety and canonical state
+
+- Infrastructure, Apache/Nginx/systemd, port/listener, DNS/firewall, certificate, package, and deployment mutations: 0.
+- External connectivity probes during R03: 0.
+- Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact calls: 0.
+- Receiver/tunnel setup: 0.
+- F11 execution: NO; F11 authorization consumed: NO.
+- Parent P1-T08: UNRESOLVED / NOT DONE.
+- Analytics Webhook: SPIKE_PENDING.
+- F11: UNCONSUMED / BLOCKED PRE-PROVIDER; one-run authorization AUTHORIZED / UNCONSUMED.
+- Next Task: NOT_STARTED.
+
+#### Exact deployment-artifact filename filters
+
+    $files=git -C $repo ls-files
+    $pathMatches=@($files | Where-Object { $_ -match '(?i)(docker|compose|nginx|apache|caddy|deploy|release|systemd|procfile|vercel|railway|fly\.toml|workflow|marketlyai|gunicorn|uvicorn|wsgi|asgi|\.ya?ml$|\.toml$)' })
+    Result: TRACKED_FILE_COUNT=56; DEPLOYMENT_PATH_MATCH_COUNT=0.
+
+    $historyPaths=git -C $repo log --all --name-only --pretty=format:
+    $historyMatches=@($historyPaths | Where-Object { $_ -match '(?i)(docker|compose|nginx|apache|caddy|deploy|release|systemd|procfile|vercel|railway|fly\.toml|workflow|marketlyai|gunicorn|uvicorn|wsgi|asgi)' } | Sort-Object -Unique)
+    Result: HISTORY_DEPLOYMENT_PATH_MATCH_COUNT=0.

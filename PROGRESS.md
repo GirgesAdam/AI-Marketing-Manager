@@ -1398,8 +1398,20 @@ Task result: **CUTOVER_PREFLIGHT_EVIDENCE_INCOMPLETE**. This is read-only infras
 
 ### P1-T08-F11-F09-R03 - activation
 
-Task status: **ACTIVATED - READ-ONLY REPOSITORY / DEPLOYMENT-SOURCE INVESTIGATION ONLY**.
+Task status: **EXECUTED - AWAITING TEAM LEADER REVIEW**.
 Team Leader authorization: **APPROVED**; official Task ID confirmed.
 Activation baseline: branch p1-t08-zernio-analytics-webhook; starting HEAD c5c265e270bfa1bf43b418a26756ead88fdff150; live remote HEAD matched at pre-activation verification.
 Activation commit is separate from the evidence/documentation commit. No new R03 repository/deployment evidence was collected before the activation commit was pushed and verified.
 Boundaries: no infrastructure/service changes, deployment/cutover, Provider/Zernio calls, F11 execution, or F11 authorization consumption. Parent P1-T08 remains **UNRESOLVED / NOT DONE**; cutover remains **BLOCKED**; Analytics Webhook remains SPIKE_PENDING; F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER** with one-run authorization **AUTHORIZED / UNCONSUMED**; Next Task remains **NOT_STARTED**.
+
+### P1-T08-F11-F09-R03 - investigation result
+
+Task status: EXECUTED - AWAITING TEAM LEADER REVIEW.
+Task result: NOT VERIFIED - AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND.
+Evidence collection began only after activation commit 9936921851cac6c55445425b8d12f2fbec9c6269 was pushed and verified.
+README.md lines 3-4 and package.json lines 2-5, 8-20 establish that this repository is the internal Provider Spike Harness, not the production application/monorepo. Tracked-file and all-ref history audits found no deployment/reverse-proxy/service manifest. Source-only search found only a synthetic marketlyai.example.invalid test fixture. Bounded GitHub/Vercel/Railway discovery did not identify an authoritative production route source.
+Existing R02 findings remain unchanged: the captured MarketlyAI vhost returned 404 with no explicit root/proxy_pass/fastcgi_pass, and intended application routing was NOT VERIFIED. R02 external TCP/443 timeout evidence is historical; no R03 external connectivity recheck was performed.
+Required missing input: authoritative production application repository/commit and deployment manifest/service definition, or deployment-platform configuration proving the custom-domain-to-service/upstream mapping. If that source does not establish intent, obtain owner confirmation whether marketlyai.restartorg.com is for the production application or only the Phase-1 test receiver.
+Cutover readiness = BLOCKED; cutover execution = NOT EXECUTED. No route or upstream is inferred.
+Safety: infrastructure/service/DNS/firewall/certificate/package/deployment mutations 0; external connectivity probes 0; Provider/Zernio calls 0; receiver/tunnel 0; F11 execution NO; F11 authorization consumed NO.
+Parent P1-T08 = UNRESOLVED / NOT DONE; Analytics Webhook = SPIKE_PENDING; F11 = UNCONSUMED / BLOCKED PRE-PROVIDER; F11 one-run authorization = AUTHORIZED / UNCONSUMED; Next Task = NOT_STARTED.
