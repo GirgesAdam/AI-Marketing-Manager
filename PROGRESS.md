@@ -55,13 +55,19 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08-F11-F09-R02 — Resolve Remaining Pre-Cutover Evidence Gaps`
+Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`
 
-P1-T08-F11-F09-R02 = **ACTIVATED — READ-ONLY ONLY**
+P1-T08-F11-F09-R02 = **CLOSED / ACCEPTED WITH NON-BLOCKING NOTES**
 
-Official Task ID = `P1-T08-F11-F09-R02`
+Last Closed Subtask ID = `P1-T08-F11-F09-R02`
 
 Task activation commit is separate from evidence/documentation commit; no VPS evidence collection began before activation push.
+
+R02 Team Leader review = **ACCEPTED WITH NON-BLOCKING NOTES** (2026-10-18); reviewed evidence/documentation commit = `9d3453f8722cc9810991a7d598f06233735d01f1`.
+
+R02 closure scope = **READ-ONLY EVIDENCE + DOCUMENTATION ONLY**; this acceptance is not cutover readiness approval.
+
+R02 evidence result = **CUTOVER_PREFLIGHT_EVIDENCE_INCOMPLETE**; cutover readiness remains **BLOCKED**.
 
 P1-T08-F11-F09-R01 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -75,9 +81,9 @@ Documentation files = **3 AUTHORIZED FILES ONLY**; local `git diff --check` = **
 
 R01 accepted documentation commit = `837a6ae41f10b3154f2f15e7be9ac9035b741f48`; Team Leader disposition = **ACCEPTED WITH NON-BLOCKING NOTES**.
 
-Nginx/HTTPS recovery = **NOT PERFORMED**; cutover = **NOT EXECUTED**
+Nginx/HTTPS recovery = **NOT PERFORMED**; Cutover readiness = **BLOCKED**; cutover execution = **NOT EXECUTED**
 
-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; Analytics Webhook = `SPIKE_PENDING`
+F11 execution = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Analytics Webhook = `SPIKE_PENDING`
 
 Parent P1-T08 = **UNRESOLVED / NOT DONE**; Next Task = **NOT_STARTED**
 
@@ -860,31 +866,25 @@ The previous single-Vertical estimate is obsolete. The 56–74 week figure remai
 
 Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test usage; do not invent a fixed forecast before measurements exist.
 
-## Immediate Next Action
+## R02 Review Closure / Current Handoff
 
-Current Task = `P1-T08-F11-F09-R02 — Resolve Remaining Pre-Cutover Evidence Gaps`.
+Current Phase = **PHASE 1 - Provider Feasibility & Basic Cost Safety**.
 
-P1-T08-F11-F09-R02 = **ACTIVATED — READ-ONLY ONLY**.
+Parent Product Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`.
 
-Official Task ID = `P1-T08-F11-F09-R02`; Team Leader authorization = **APPROVED FOR ACTIVATION — READ-ONLY ONLY**.
+Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`; status = **UNRESOLVED / NOT DONE**.
 
-Activation preflight = **PASS**: branch `p1-t08-zernio-analytics-webhook`; starting/local/remote HEAD `b3c5e7acef535e8868249d2c6c921002eb4cf195`; working tree clean; `git diff --check` exit 0.
+P1-T08-F11-F09-R02 = **CLOSED / ACCEPTED WITH NON-BLOCKING NOTES**. Team Leader disposition applies only to the read-only evidence/documentation task; R02 evidence result remains **CUTOVER_PREFLIGHT_EVIDENCE_INCOMPLETE**.
 
-Activation commit = **PENDING**; no new VPS evidence collection before activation commit is pushed.
+Reviewed commit = `9d3453f8722cc9810991a7d598f06233735d01f1`. Closure documentation changes are limited to `PROGRESS.md`; no source code, tests, or infrastructure files are in scope.
 
-Authorized task scope: determine MarketlyAI route from authoritative deployment evidence; verify staging-admin certificate identity/SAN/validity/hostname coverage; verify staging-admin.save effective inclusion and documented implications; update cutover gate matrix. Read-only only.
+Cutover readiness = **BLOCKED**; cutover execution = **NOT EXECUTED**; Nginx/HTTPS recovery = **NOT PERFORMED**.
 
-P1-T08-F11-F09-R01 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**.
+F11 execution = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**.
 
-P1-T08-F11-F09-R01 Result = **R01_DOCUMENTATION_FINALIZATION_ACCEPTED_WITH_NON_BLOCKING_NOTES**.
+Analytics Webhook = `SPIKE_PENDING`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Next Task = **NOT_STARTED**.
 
-R01 privileged evidence capture = **COMPLETED — 2026-10-18T11:47:26Z**.
-
-Nginx/HTTPS recovery = **NOT PERFORMED**; cutover = **NOT EXECUTED**.
-
-F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; Analytics Webhook = `SPIKE_PENDING`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Next Task = **NOT_STARTED**.
-
-Stop condition: after R02 evidence/documentation commit and full report, stop for Team Leader review. Do not begin another task.
+No new task is activated. Stop after documentation synchronization and evidence handoff; do not execute VPS mutations, service actions, route repair, cutover, Provider/Zernio calls, or F11.
 
 ARCH-AMEND-01 = **DONE / ACCEPTED**.
 
@@ -1389,4 +1389,9 @@ Task result: **CUTOVER_PREFLIGHT_EVIDENCE_INCOMPLETE**. This is read-only infras
 - Cutover readiness: **BLOCKED** until authoritative MarketlyAI deployment/routing evidence is supplied and public HTTPS can be revalidated after a separately authorized infrastructure action. No such action is authorized by R02.
 - Safety: Apache/Nginx/systemd/config/listener/DNS/firewall/certificate/package mutations = 0; service actions = 0; receiver/tunnel = 0; Provider/Zernio/auth/Accounts/Analytics/Delta/webhook/post/contact calls = 0; F11 execution = NO; F11 authorization consumed = NO.
 - Canonical product state remains: F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; one-run authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook **SPIKE_PENDING**; Next Task **NOT_STARTED**.
-- Current Phase = **PHASE 1 - Provider Feasibility & Basic Cost Safety**. Current Task = **P1-T08-F11-F09-R02 - Resolve Remaining Pre-Cutover Evidence Gaps**, awaiting Team Leader review of this incomplete result.
+- Team Leader review (2026-10-18) = **ACCEPTED WITH NON-BLOCKING NOTES** for R02 read-only evidence/documentation only; reviewed commit = `9d3453f8722cc9810991a7d598f06233735d01f1`.
+- R02 closure = **CLOSED / ACCEPTED WITH NON-BLOCKING NOTES**. Evidence result remains **CUTOVER_PREFLIGHT_EVIDENCE_INCOMPLETE**; this decision does not approve cutover readiness.
+- Current Phase = **PHASE 1 - Provider Feasibility & Basic Cost Safety**. Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior` (**UNRESOLVED / NOT DONE**).
+- Cutover readiness = **BLOCKED**; cutover execution = **NOT EXECUTED**; Nginx/HTTPS recovery = **NOT PERFORMED**.
+- F11 execution = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Analytics Webhook = `SPIKE_PENDING`.
+- Parent P1-T08 = **UNRESOLVED / NOT DONE**; Next Task = **NOT_STARTED**. No successor task has been activated.
