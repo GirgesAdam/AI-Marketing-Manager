@@ -55,13 +55,13 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08-F11-F09 — Build Nginx-Edge / Apache-Backend Cutover Preflight`
+Current Task = `P1-T08-F11-F09-R01 — Complete Privileged Read-Only Nginx/TLS Evidence`
 
-P1-T08-F11-F09 = **EXECUTED — AWAITING TEAM LEADER REVIEW**
+P1-T08-F11-F09-R01 = **IN PROGRESS — ACTIVATED**
 
-P1-T08-F11-F09 Result = **CUTOVER_PREFLIGHT_READY_OPERATOR_PRIVILEGE_REQUIRED**
+P1-T08-F11-F09-R01 Result = **PENDING EVIDENCE COLLECTION**
 
-Task Type = **READ-ONLY INFRASTRUCTURE PREFLIGHT**
+Task Type = **READ-ONLY INFRASTRUCTURE EVIDENCE REMEDIATION**
 
 ARCH-AMEND-01 = **DONE / ACCEPTED**
 
@@ -844,13 +844,13 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Current Task = `P1-T08-F11-F09 — Build Nginx-Edge / Apache-Backend Cutover Preflight`.
+Current Task = `P1-T08-F11-F09-R01 — Complete Privileged Read-Only Nginx/TLS Evidence`.
 
-P1-T08-F11-F09 = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+P1-T08-F11-F09-R01 = **IN PROGRESS — ACTIVATED**.
 
-P1-T08-F11-F09 Result = **CUTOVER_PREFLIGHT_READY_OPERATOR_PRIVILEGE_REQUIRED**.
+P1-T08-F11-F09-R01 Result = **PENDING EVIDENCE COLLECTION**.
 
-Task Type = **READ-ONLY INFRASTRUCTURE PREFLIGHT**.
+Task Type = **READ-ONLY INFRASTRUCTURE EVIDENCE REMEDIATION**.
 
 ARCH-AMEND-01 = **DONE / ACCEPTED**.
 
