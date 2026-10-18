@@ -61,7 +61,11 @@ P1-T08-F11-F09-R02 = **CLOSED / ACCEPTED WITH NON-BLOCKING NOTES**
 
 P1-T08-F11-F09-R03 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
-P1-T08-F11-F09-R04 = **ACTIVATED — READ-ONLY INVESTIGATION NOT YET STARTED**
+P1-T08-F11-F09-R04 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+
+R04 final classification = **NO_AUTHORITATIVE_MARKETLYAI_DEPLOYMENT_FOUND_WITHIN_ACCESSIBLE_SOURCES**
+
+R04 evidence scope = **READ-ONLY GITHUB + VERCEL + RAILWAY DISCOVERY; NO VPS CORRELATION TRIGGERED**.
 
 P1-T08-F11-F09-R04-D02 = **DONE / ACCEPTED**
 
@@ -1487,3 +1491,27 @@ Current Task remains `P1-T08-F11-F09-R04 — Identify Authoritative MarketlyAI A
 Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Cutover remains **BLOCKED**; F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization remains **AUTHORIZED / UNCONSUMED**; Next Task remains **NOT_STARTED**.
 
 Documentation finalization safety boundary: `PROGRESS.md` only. No source/test/package/infrastructure changes, VPS/service/DNS/TLS/deployment activity, Provider/Zernio calls, receiver/tunnel setup, F11 execution, or authorization consumption occurred.
+### P1-T08-F11-F09-R04 - read-only deployment mapping investigation
+
+Task status: **EXECUTED / AWAITING TEAM LEADER REVIEW**.
+
+Investigation starting HEAD: `a9a8cae46e6f056c60e913e290a1cac5d546945e`.
+
+Investigation began after the pre-investigation Git gate passed at `2026-10-18T18:03:46.9732636Z`; the branch, local HEAD, live remote HEAD, and clean working tree all matched the authorized start state.
+
+Final classification: **NO_AUTHORITATIVE_MARKETLYAI_DEPLOYMENT_FOUND_WITHIN_ACCESSIBLE_SOURCES**.
+
+Evidence summary:
+- The approved `GirgesAdam/AI-Marketing-Manager` branch still identifies itself as the Phase-1 Provider Spike Harness and contains no production Django/DRF/Next.js runtime or deployment artifacts at the investigation HEAD.
+- Accessible GitHub discovery found no repository or artifact that links an application source to `marketlyai.restartorg.com`. Serious application candidates inspected (`Linka_AI`, `tia`, `flowops-ai-business-agent`, `securelife-local-ai-assistant`) are distinct products/stacks and contain no MarketlyAI hostname association in the evidence reviewed.
+- The connected Vercel team exposes two projects only: `tia-ai-staging` linked to `GirgesAdam/Linka_AI`, and `flowops-ai-business-agent` linked to its eponymous repository. Their production deployments/domains do not include `marketlyai.restartorg.com`.
+- The connected Railway workspace exposes two projects; the only project with services is Tia/Linka-related. Its `tia-api` service is sourced from `GirgesAdam/Linka_AI` `main`, root `backend`, and its successful deployed revision is `1f3667c96b5adfe1c4ad97bc5ef334c6dcb21793`; Railway exposes only generated Tia domains and no MarketlyAI custom domain.
+- No Stage-C VPS correlation was performed because Stage A/B produced no concrete MarketlyAI repository/deployment/service candidate. Repeating R03's broad VPS search would not answer a new evidence-chain question.
+
+Interpretation boundary: this result means no authoritative MarketlyAI deployment mapping was found **within the accessible GitHub/Vercel/Railway sources inspected**. It does not prove that no application or deployment exists globally. If a deployment exists outside those connected sources, the authoritative repository or control-plane account/artifact must be provided; no specific inaccessible MarketlyAI source was identified during this investigation.
+
+Evidence chain remains incomplete at the first authoritative MarketlyAI application-source/deployment link; therefore no upstream, port, runtime, or route is inferred.
+
+Canonical state remains: Parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Cutover **BLOCKED**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization **AUTHORIZED / UNCONSUMED**; Next Task **NOT_STARTED**.
+
+Safety: source/test/package/infrastructure mutations = 0; deployment mutations/triggers/restarts = 0; VPS access = 0; DNS/TLS/service changes = 0; Provider/Zernio calls = 0; receiver/tunnel setup = 0; F11 execution = NO; F11 authorization consumed = NO.

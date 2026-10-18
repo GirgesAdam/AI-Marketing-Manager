@@ -1714,3 +1714,28 @@ Technical result remains exactly: **NOT VERIFIED — AUTHORITATIVE MARKETLYAI DE
 Canonical state: Parent P1-T08 **UNRESOLVED / NOT DONE**; cutover **BLOCKED**; Analytics Webhook `SPIKE_PENDING`; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; one-run authorization **AUTHORIZED / UNCONSUMED**; Next Task **NOT_STARTED**. R02 connectivity evidence remains historical; no R03 external connectivity check, Provider/Zernio action, F11 execution, or infrastructure mutation was performed.
 
 The finalization commit and post-push verification results are recorded in the task completion report. No source code, tests, package configuration, or infrastructure files were changed.
+### P1-T08-F11-F09-R04 - deployment mapping evidence
+
+| ID | Read-only check / source | Observed result | Classification |
+|---|---|---|---|
+| R04-01 | Pre-investigation Git gate | Branch `p1-t08-zernio-analytics-webhook`; local/live HEAD `a9a8cae46e6f056c60e913e290a1cac5d546945e`; working tree clean | PASS |
+| R04-02 | Current AI Marketing Manager HEAD: README/package/runtime/deployment path filter | Repository explicitly remains Phase-1 Provider Spike Harness; 56 tracked files; zero production runtime/deployment path matches; no MarketlyAI/Django/Next runtime token matches outside historical evidence docs | REJECTED AS PRODUCTION APP SOURCE |
+| R04-03 | GitHub visible/installed repository discovery + serious candidate inspection | `Linka_AI`, `tia`, `flowops-ai-business-agent`, and `securelife-local-ai-assistant` are distinct products/stacks; none links to `marketlyai.restartorg.com` | NO AUTHORITATIVE MARKETLYAI SOURCE FOUND |
+| R04-04 | GitHub code searches: `manage.py`, `marketlyai.restartorg.com`, `next.config` | No results; relevant repository code-search indexing unavailable, so no-result is not treated as proof of absence | SUPPORTING / COVERAGE-LIMITED |
+| R04-05 | `GirgesAdam/Linka_AI` source revision | `main` = `1f3667c96b5adfe1c4ad97bc5ef334c6dcb21793`; FastAPI + Next.js clinic platform | REJECTED - DIFFERENT PRODUCT |
+| R04-06 | `GirgesAdam/tia` source revision | `main` = `8df5845eabf49f6d030dce797bb8c3d790c9db0c`; FastAPI clinic platform | REJECTED - DIFFERENT PRODUCT |
+| R04-07 | `GirgesAdam/flowops-ai-business-agent` source revision | `main` = `b91aa75426c66198db972cbb21e04fda8d9e7cde`; separate FastAPI/LangGraph B2B operations product | REJECTED - DIFFERENT PRODUCT |
+| R04-08 | `GirgesAdam/securelife-local-ai-assistant` source revision | `main` = `6bcd0b9c2cbd2cb1efe8b60b8b41ff7c4d243f7d`; local/offline insurance demo | REJECTED - DIFFERENT PRODUCT |
+| R04-09 | Connected Vercel team project inventory | Exactly two projects: `tia-ai-staging` -> `Linka_AI`; `flowops-ai-business-agent` -> eponymous repo | NO MARKETLYAI PROJECT |
+| R04-10 | Vercel domains | Linka/Tia domains and FlowOps `vercel.app` domain only; no `marketlyai.restartorg.com` | NO MARKETLYAI HOSTNAME BINDING |
+| R04-11 | Vercel production deployments | Linka latest `READY` at `1f3667c...`; FlowOps latest `READY` at `1791d93...`; neither maps MarketlyAI hostname | REJECTED DEPLOYMENTS |
+| R04-12 | Connected Railway workspace project/service inventory | Two projects; only `remarkable-kindness` has five Tia-related services; `surprising-intuition` has none | NO MARKETLYAI PROJECT/SERVICE |
+| R04-13 | Railway domain inventory | Tia Railway-generated domains only; no custom domains on `tia-api`; no MarketlyAI hostname | NO MARKETLYAI HOSTNAME BINDING |
+| R04-14 | Railway `tia-api` service/deployment metadata | Source `GirgesAdam/Linka_AI` main/root `backend`; Uvicorn/8000; successful deploy commit `1f3667c...` | COMPLETE LINKA CHAIN, REJECTED FOR MARKETLYAI |
+| R04-15 | Conditional VPS correlation gate | No concrete MarketlyAI candidate emerged from Stage A/B; VPS not accessed | PASS - NO BROAD R03 REPEAT |
+| R04-16 | Final evidence-chain test | No authoritative MarketlyAI source -> deployment -> hostname -> runtime chain established within accessible sources | `NO_AUTHORITATIVE_MARKETLYAI_DEPLOYMENT_FOUND_WITHIN_ACCESSIBLE_SOURCES` |
+| R04-17 | Safety boundary | No source/test/package, infrastructure, deployment, service, DNS/TLS, Provider/Zernio, receiver/tunnel, or F11 actions | PASS |
+
+Interpretation: `NO_AUTHORITATIVE_MARKETLYAI_DEPLOYMENT_FOUND_WITHIN_ACCESSIBLE_SOURCES` is bounded to the connected/accessible sources inspected. It is not a global non-existence claim. No specific inaccessible MarketlyAI source was discovered; if another private/unconnected repository or deployment control plane exists, it must be supplied or connected to continue.
+
+Required canonical state remains: Parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Cutover `BLOCKED`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; one-run authorization `AUTHORIZED / UNCONSUMED`; Next Task `NOT_STARTED`.

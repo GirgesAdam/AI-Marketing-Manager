@@ -2213,3 +2213,139 @@ Team Leader disposition: **ACCEPTED WITH NON-BLOCKING NOTES**. Reviewed R03 HEAD
 Technical result is unchanged: **NOT VERIFIED — AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND**. Acceptance is limited to investigation/evidence/documentation quality; it is not proof of the intended route/upstream, not HTTPS readiness approval, and not cutover authorization.
 
 Canonical state remains: Parent P1-T08 **UNRESOLVED / NOT DONE**; cutover **BLOCKED**; Analytics Webhook `SPIKE_PENDING`; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; one-run authorization **AUTHORIZED / UNCONSUMED**; Next Task **NOT_STARTED**. R02 connectivity observations remain historical; no R03 connectivity probe or Provider action was performed.
+### P1-T08-F11-F09-R04 - Authoritative MarketlyAI Application Source and Deployment Mapping (2026-10-18)
+
+Status: **EXECUTED / AWAITING TEAM LEADER REVIEW**.
+
+Final classification: **NO_AUTHORITATIVE_MARKETLYAI_DEPLOYMENT_FOUND_WITHIN_ACCESSIBLE_SOURCES**.
+
+Investigation start: `2026-10-18T18:03:46.9732636Z` at repository HEAD `a9a8cae46e6f056c60e913e290a1cac5d546945e`. Pre-write safety recheck at `2026-10-18T18:10:39.7956578Z` still showed the same clean local/live-remote HEAD.
+
+#### Stage A - GitHub application-source discovery
+
+Authorized source operations:
+- GitHub repository discovery for `user:GirgesAdam` and installed/accessible AI-related repositories.
+- GitHub code searches for `manage.py`, `marketlyai.restartorg.com`, and `next.config`.
+- Read-only root/README/commit inspection for serious candidates.
+- Local Git inspection of the approved AI Marketing Manager investigation branch at the exact starting HEAD.
+
+Coverage/result:
+- Visible repository discovery returned the owner's public repository set; installed-repository discovery with AI terms surfaced `GirgesAdam/AI-Marketing-Manager`, `GirgesAdam/Linka_AI`, `GirgesAdam/flowops-ai-business-agent`, and `GirgesAdam/securelife-local-ai-assistant`. `GirgesAdam/tia` was also manually inspected because its application structure and Tia deployment naming made it a serious related candidate.
+- Code-search queries returned no matching `manage.py`, `marketlyai.restartorg.com`, or `next.config` result. Relevant installed repositories reported code-search indexing unavailable, so these no-result searches are supporting evidence only and are not treated as proof of absence.
+
+Candidate findings:
+
+| Repository | Branch / exact revision | Candidate evidence | Determination |
+|---|---|---|---|
+| `GirgesAdam/AI-Marketing-Manager` | `p1-t08-zernio-analytics-webhook` / `a9a8cae46e6f056c60e913e290a1cac5d546945e` | README states it is the Phase-1 Provider Spike Harness; `package.json` identifies `ai-marketing-manager-provider-spike-harness`. At HEAD there are 56 tracked files and zero paths matching the production Django/DRF/Next.js/deployment artifact filter. Source grep for MarketlyAI hostname/Django/Next/proxy/runtime tokens outside historical evidence docs returned no matches. | **REJECTED AS PRODUCTION APPLICATION SOURCE** - authoritative evidence says this repository is the spike harness, not the production app/monorepo. |
+| `GirgesAdam/Linka_AI` | `main` / `1f3667c96b5adfe1c4ad97bc5ef334c6dcb21793` | Full application repo with `backend/`, `frontend/`, `deploy/`; FastAPI + Next.js + PostgreSQL/Supabase. README identifies product as Linka for aesthetic clinics. | **REJECTED** - real application and deployment source, but different product and no `marketlyai.restartorg.com` association. |
+| `GirgesAdam/tia` | `main` / `8df5845eabf49f6d030dce797bb8c3d790c9db0c` | `backend/`, `frontend/`, `n8n/`; README identifies Tia AI as an aesthetic-clinic operating system using FastAPI/SQLAlchemy/Alembic/Supabase. | **REJECTED** - clinic product/precursor, non-Django stack, no MarketlyAI hostname association in inspected evidence. |
+| `GirgesAdam/flowops-ai-business-agent` | `main` / `b91aa75426c66198db972cbb21e04fda8d9e7cde` | Dockerfile, compose, application code; README identifies a FastAPI/LangGraph B2B operations assistant with its own Vercel deployment. | **REJECTED** - different product and deployment identity; no MarketlyAI hostname association. |
+| `GirgesAdam/securelife-local-ai-assistant` | `main` / `6bcd0b9c2cbd2cb1efe8b60b8b41ff7c4d243f7d` | Local/offline fictional insurance assistant using FastAPI/Ollama; no production MarketlyAI deployment evidence. | **REJECTED** - different local demo product; no MarketlyAI mapping. |
+
+Local exact commands on the approved repository:
+
+    git branch --show-current
+    Result: p1-t08-zernio-analytics-webhook
+
+    git rev-parse HEAD
+    Result: a9a8cae46e6f056c60e913e290a1cac5d546945e
+
+    git status --short --branch
+    Result: clean tracking state before evidence collection.
+
+    git ls-remote origin refs/heads/p1-t08-zernio-analytics-webhook
+    Result: a9a8cae46e6f056c60e913e290a1cac5d546945e; exit 0.
+
+    git ls-tree -r --name-only HEAD
+    Followed by a read-only path filter for manage.py, Django settings/urls/ASGI/WSGI, pyproject/requirements, Next config/apps/web/backend, Docker/Compose/Caddy/Nginx/systemd/Procfile/Vercel/Railway/workflows, and marketlyai.restartorg.com.
+    Result: TRACKED_FILE_COUNT=56; ARCH_DEPLOY_PATH_MATCH_COUNT=0.
+
+    git grep -n -I -i -E 'marketlyai\.restartorg\.com|Django|django-rest-framework|djangorestframework|Next\.js|next\.config|proxy_pass|gunicorn|uvicorn' HEAD -- ':!PROGRESS.md' ':!docs/PROVIDER_SPIKE_RESULTS.md' ':!docs/TEST_MATRIX.md'
+    Result: no matches; exit 1.
+
+#### Stage B - deployment control-plane discovery
+
+##### Vercel
+
+Connected team: `girgesadam's projects` (`team_LOlsB7U1MFUaTN0cFIHeJc9L`). Project listing returned exactly two projects:
+
+1. `tia-ai-staging` (`prj_eo65bi5wrPCuC1PT5CogQ1Tw7AOO`)
+   - Git source: `GirgesAdam/Linka_AI`.
+   - Latest listed production deployment: `READY`, commit `1f3667c96b5adfe1c4ad97bc5ef334c6dcb21793`, branch `main`.
+   - Domains: `app.linkaai.online`, `app.tiaai.online`, and the project's `vercel.app` domain.
+   - `marketlyai.restartorg.com`: **NOT PRESENT**.
+2. `flowops-ai-business-agent` (`prj_YEdFkvKYXofoYVDytL1p6lR6Qjuk`)
+   - Git source: `GirgesAdam/flowops-ai-business-agent`.
+   - Latest listed production deployment: `READY`, deployed commit `1791d93b2f8eedc550c68f6d14d899be52cf01bd`, branch `main`.
+   - Domain: `flowops-ai-business-agent.vercel.app`.
+   - `marketlyai.restartorg.com`: **NOT PRESENT**.
+
+No Vercel project linked to `GirgesAdam/AI-Marketing-Manager` and no MarketlyAI custom domain was present in the connected team's project/domain inventory.
+
+##### Railway
+
+Connected workspace: `Girges Ezzat's Projects`. Project listing returned exactly two projects:
+- `remarkable-kindness` (`f862f881-e39f-47d1-81e1-bc79caf370de`), production environment with five Tia-related services.
+- `surprising-intuition` (`b00c5725-8790-41e4-8bdc-7b2a748846ed`), production environment with zero services.
+
+`remarkable-kindness` service/domain inventory:
+- `tia-agent-eval`: no domains.
+- `tia-automation-waker`: no domains.
+- `tia-whatsapp-transport-waker`: no domains.
+- `tia-whatsapp-staging`: Railway-generated domain only, target port 8000, no custom domain.
+- `tia-api`: Railway-generated domain only, target port 8000, no custom domain.
+
+Read-only `tia-api` service metadata proves a complete **Linka** deployment chain, not a MarketlyAI chain:
+- source repo `GirgesAdam/Linka_AI`;
+- configured branch `main`;
+- root directory `backend`;
+- Dockerfile build;
+- runtime command uses Uvicorn on port 8000;
+- latest successful deployment `dc98ef7a-e6d7-4cfd-a3b1-86c8607d3d8b`;
+- deployed commit `1f3667c96b5adfe1c4ad97bc5ef334c6dcb21793`;
+- no custom domain; only Railway-generated Tia domain.
+
+No connected Railway project/service/domain references `marketlyai.restartorg.com` or the AI Marketing Manager repository.
+
+No environment-variable values, tokens, credentials, private keys, database URLs, or secrets were inspected or recorded.
+
+#### Stage C - cross-source correlation and VPS decision
+
+Evidence chain sought:
+
+    Authoritative MarketlyAI Application Repository
+      -> Exact Source Revision
+      -> Deployment Project / Service
+      -> Deployed Revision
+      -> marketlyai.restartorg.com Binding
+      -> Actual Runtime / Upstream
+
+Within the accessible sources, the chain does not establish its first MarketlyAI-specific repository/deployment link. The only complete source-to-deployment chains observed belong to Linka/Tia or FlowOps and have different domains.
+
+**VPS correlation was NOT performed.** Stage A/B produced no concrete new MarketlyAI repository/service/port/directory/deployment candidate that would justify bounded VPS inspection. This avoids repeating R03 broad searches without a new evidence target.
+
+#### Final determination and access boundary
+
+**NO_AUTHORITATIVE_MARKETLYAI_DEPLOYMENT_FOUND_WITHIN_ACCESSIBLE_SOURCES**
+
+This means only that no authoritative MarketlyAI deployment mapping was found in the connected/accessible GitHub, Vercel, and Railway sources inspected. It must not be converted into a claim that no deployment exists globally.
+
+No specific inaccessible MarketlyAI repository, project, or account was identified. If an authoritative deployment exists in another private/unconnected repository, another Vercel/Railway team/workspace, another deployment provider, or an operator-controlled source, that repository/control-plane artifact or access must be supplied before the evidence chain can continue.
+
+Owner-confirmed hostname intent remains planning/ownership intent only; it does not establish an upstream or current deployment.
+
+#### Safety and canonical state
+
+- Source/test/package changes: 0.
+- Infrastructure/VPS mutations: 0; VPS access during R04: 0.
+- Deployment create/redeploy/restart/configuration mutations: 0.
+- Service/DNS/firewall/TLS/certificate mutations: 0.
+- Provider/Zernio/auth/Analytics/webhook/publishing calls: 0.
+- Receiver/tunnel setup: 0.
+- F11 execution: NO; F11 authorization consumed: NO.
+- Parent P1-T08: UNRESOLVED / NOT DONE.
+- Analytics Webhook: SPIKE_PENDING.
+- Cutover: BLOCKED.
+- F11: UNCONSUMED / BLOCKED PRE-PROVIDER; one-run authorization AUTHORIZED / UNCONSUMED.
+- Next Task: NOT_STARTED.
