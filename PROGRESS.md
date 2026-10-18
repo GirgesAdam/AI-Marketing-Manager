@@ -1407,7 +1407,7 @@ Boundaries: no infrastructure/service changes, deployment/cutover, Provider/Zern
 ### P1-T08-F11-F09-R03 - investigation result
 
 Task status: EXECUTED - AWAITING TEAM LEADER REVIEW.
-Task result: NOT VERIFIED - AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND.
+Task result: NOT VERIFIED — AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND.
 Evidence collection began only after activation commit 9936921851cac6c55445425b8d12f2fbec9c6269 was pushed and verified.
 README.md lines 3-4 and package.json lines 2-5, 8-20 establish that this repository is the internal Provider Spike Harness, not the production application/monorepo. Tracked-file and all-ref history audits found no deployment/reverse-proxy/service manifest. Source-only search found only a synthetic marketlyai.example.invalid test fixture. Bounded GitHub/Vercel/Railway discovery did not identify an authoritative production route source.
 Existing R02 findings remain unchanged: the captured MarketlyAI vhost returned 404 with no explicit root/proxy_pass/fastcgi_pass, and intended application routing was NOT VERIFIED. R02 external TCP/443 timeout evidence is historical; no R03 external connectivity recheck was performed.

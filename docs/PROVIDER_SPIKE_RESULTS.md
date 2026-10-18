@@ -2142,7 +2142,7 @@ The R02 read-only search for matching deployment/config files under `/etc/nginx`
 
 Status: EXECUTED - AWAITING TEAM LEADER REVIEW.
 
-Result: NOT VERIFIED - AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND.
+Result: NOT VERIFIED — AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND.
 
 Investigation timestamp (UTC): 2026-10-18T14:43:44.045Z. Repository revision after the separately pushed activation commit: 9936921851cac6c55445425b8d12f2fbec9c6269. The activation commit was pushed and its local, tracking, and live remote HEADs were verified equal before this investigation began.
 
@@ -2172,7 +2172,7 @@ R02 evidence is preserved unchanged at docs/PROVIDER_SPIKE_RESULTS.md lines 2082
 
 #### Determination and required missing artifact
 
-NOT VERIFIED - AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND.
+NOT VERIFIED — AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND.
 
 No verified application upstream, local service/port, production application repository, or deployment manifest can be derived from the sources examined. The existing hostname and historical test-receiver paths are not sufficient to infer the intended application route.
 
