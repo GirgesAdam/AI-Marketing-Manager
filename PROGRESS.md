@@ -63,6 +63,12 @@ P1-T08-F11-F09-R03 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
 P1-T08-F11-F09-R04 = **ACTIVATED — READ-ONLY INVESTIGATION NOT YET STARTED**
 
+P1-T08-F11-F09-R04-D02 = **DONE / ACCEPTED**
+
+R04-D02 Team Leader disposition = **ACCEPTED**.
+
+R04-D02 accepted evidence/activation HEAD = `6ad39b2de502f283e21cd3b6744a9dc18f1108cd`.
+
 R04 Team Leader authorization = **APPROVED**; activation scope = isolated clean checkout and activation commit only.
 
 R04 approved starting baseline = `f2f3b4de860f9a422cb3296b03b926615a84b7ae`.
@@ -1466,3 +1472,18 @@ Clean checkout path: `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean`.
 Activation boundary: this commit activates R04 only. The deployment/source investigation has **NOT STARTED**. No source/test/package/infrastructure changes, deployment operations, service actions, DNS/TLS changes, Provider/Zernio calls, receiver/tunnel setup, F11 execution, or authorization consumption are permitted in this activation step.
 
 Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Cutover remains **BLOCKED**; F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization remains **AUTHORIZED / UNCONSUMED**; Next Task remains **NOT_STARTED**.
+### P1-T08-F11-F09-R04-D02 — acceptance finalization
+
+Final status: **DONE / ACCEPTED**.
+
+Team Leader disposition: **ACCEPTED**.
+
+Accepted D02 evidence/activation HEAD: `6ad39b2de502f283e21cd3b6744a9dc18f1108cd`.
+
+R04 remains **ACTIVATED — READ-ONLY INVESTIGATION NOT YET STARTED**. This finalization records acceptance of the isolated clean-checkout activation evidence only; it does not begin or add deployment/source investigation findings.
+
+Current Task remains `P1-T08-F11-F09-R04 — Identify Authoritative MarketlyAI Application Source and Deployment Mapping`.
+
+Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Cutover remains **BLOCKED**; F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization remains **AUTHORIZED / UNCONSUMED**; Next Task remains **NOT_STARTED**.
+
+Documentation finalization safety boundary: `PROGRESS.md` only. No source/test/package/infrastructure changes, VPS/service/DNS/TLS/deployment activity, Provider/Zernio calls, receiver/tunnel setup, F11 execution, or authorization consumption occurred.
