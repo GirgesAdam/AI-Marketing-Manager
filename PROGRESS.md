@@ -55,7 +55,13 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
+Current Task = `P1-T08-F11-F09-R02 — Resolve Remaining Pre-Cutover Evidence Gaps`
+
+P1-T08-F11-F09-R02 = **ACTIVATED — READ-ONLY ONLY**
+
+Official Task ID = `P1-T08-F11-F09-R02`
+
+Task activation commit is separate from evidence/documentation commit; no VPS evidence collection began before activation push.
 
 P1-T08-F11-F09-R01 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -856,25 +862,29 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
+Current Task = `P1-T08-F11-F09-R02 — Resolve Remaining Pre-Cutover Evidence Gaps`.
+
+P1-T08-F11-F09-R02 = **ACTIVATED — READ-ONLY ONLY**.
+
+Official Task ID = `P1-T08-F11-F09-R02`; Team Leader authorization = **APPROVED FOR ACTIVATION — READ-ONLY ONLY**.
+
+Activation preflight = **PASS**: branch `p1-t08-zernio-analytics-webhook`; starting/local/remote HEAD `b3c5e7acef535e8868249d2c6c921002eb4cf195`; working tree clean; `git diff --check` exit 0.
+
+Activation commit = **PENDING**; no new VPS evidence collection before activation commit is pushed.
+
+Authorized task scope: determine MarketlyAI route from authoritative deployment evidence; verify staging-admin certificate identity/SAN/validity/hostname coverage; verify staging-admin.save effective inclusion and documented implications; update cutover gate matrix. Read-only only.
 
 P1-T08-F11-F09-R01 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**.
 
 P1-T08-F11-F09-R01 Result = **R01_DOCUMENTATION_FINALIZATION_ACCEPTED_WITH_NON_BLOCKING_NOTES**.
 
-Task Type = **DOCUMENTATION-ONLY EVIDENCE FINALIZATION**.
-
 R01 privileged evidence capture = **COMPLETED — 2026-10-18T11:47:26Z**.
-
-Local `git diff --check` = **PASS**; changes limited to the three authorized documentation files.
-
-R01 accepted documentation commit = `837a6ae41f10b3154f2f15e7be9ac9035b741f48`; remaining notes block cutover, not acceptance of this documentation task.
 
 Nginx/HTTPS recovery = **NOT PERFORMED**; cutover = **NOT EXECUTED**.
 
 F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; Analytics Webhook = `SPIKE_PENDING`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Next Task = **NOT_STARTED**.
 
-Stop condition: submit evidence for Team Leader review; do not begin another task.
+Stop condition: after R02 evidence/documentation commit and full report, stop for Team Leader review. Do not begin another task.
 
 ARCH-AMEND-01 = **DONE / ACCEPTED**.
 
