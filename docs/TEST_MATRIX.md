@@ -1533,3 +1533,56 @@ Status: **DONE / ACCEPTED**. Final classification: **CANONICAL_REPLACEMENT_ARTIF
 | F11 authorization consumption | PASS / NO | remains `AUTHORIZED / UNCONSUMED` |
 | Final classification | DONE / ACCEPTED | `CANONICAL_REPLACEMENT_ARTIFACT_PREPARED`; accepted evidence HEAD `234839de7d602c5dd1238aac4054afde2b5d2ddd` |
 | Canonical state | PASS | F11-F08 DONE/ACCEPTED; candidate prepared/accepted/not canonical; D-038 not registered; infrastructure preflight not started; F11 blocked pre-provider/unconsumed; authorization unconsumed; parent unresolved; Analytics SPIKE_PENDING; Current Task parent P1-T08; Next Task NOT_STARTED |
+
+## P1-T08-F11-F09 - Nginx-Edge / Apache-Backend Cutover Preflight Matrix
+
+Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**. Final classification: **CUTOVER_PREFLIGHT_READY_OPERATOR_PRIVILEGE_REQUIRED**. Evidence: **INFRASTRUCTURE PREFLIGHT EVIDENCE — NOT PROVIDER BEHAVIOR**.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Starting repository state | PASS | HEAD `eeeeaa6c4c8d3d84f7719c993c3292b2f87474a7`; branch correct; clean/remote matched |
+| Activation before VPS inspection | PASS | activation HEAD `6e7797ed35aae173d22044a694e426b77345268b`; PROGRESS-only commit/push |
+| Canonical D-038 | PASS | `REGISTERED / VERIFIED / ACCEPTED` |
+| Fresh host identity | PASS | `marktuser@srv822206`; public IPv4 `82.29.177.121`; boot `2026-10-17 10:11:16 UTC` |
+| DNS | PASS | MarketlyAI + Elite both resolve to `82.29.177.121` |
+| Apache service | PASS / OBSERVED | enabled + active/running; MainPID `852`; Result success |
+| Nginx service | PASS / OBSERVED | enabled + failed/failed; MainPID `0`; Result exit-code |
+| Fresh journal detail | PRIVILEGE-LIMITED | current user cannot read system service journal entries |
+| Public TCP/80 | PASS / REACHABLE | external workstation succeeds; Apache HTTP response observed |
+| Public TCP/443 | PASS / ABSENT CURRENTLY | external workstation fails; VPS socket inventory has no 443 listener |
+| Backend `127.0.0.1:18080` | PASS / FREE | no current IPv4/IPv6 listener observed |
+| Privileged PID socket map | OPERATOR REQUIRED | non-interactive privilege unavailable |
+| Apache vhost inventory | PASS / COMPLETE | only Elite enabled; `*:80`; no unrelated Apache vhost |
+| Apache syntax | PASS | `apachectl -t` exit 0 |
+| Apache runtime modules | PASS | mod_php 7.4 + rewrite; setenvif available; remoteip module available but not enabled |
+| Apache ports.conf fingerprint | PASS | SHA `9d2d53be30cbb4c42af6b25458077db5b5ad1be4f5810fa2fee4a1d53ac604a2` |
+| Apache Elite vhost fingerprint | PASS | SHA `85ce3df3c888430cbdd528c7cacded9fe6aa6fcf4c2ec18b99ae8a9580996b59` |
+| Elite current HTTP baseline | PASS | HTTP 200 from Apache; WordPress Link headers; REST `url/home` both HTTP |
+| MarketlyAI current public baseline | NOT READY / PROVEN | HTTP currently served as Elite by Apache default; public 443 unavailable |
+| Host preservation behind proxy | PASS / NO ISSUE FOUND | Nginx proxy params preserve Host |
+| Client IP preservation | CONFIG REQUIRED | enable/configure remoteip trusted only for loopback proxy |
+| HTTPS detection behind proxy | CONFIG REQUIRED | current Apache ignores XFP; proposed SetEnvIf mapping required |
+| Redirect-loop safety | FUTURE VALIDATION GATE | cannot be proven without cutover; no blind assumption |
+| .htaccess/rewrite | PASS / NO ISSUE FOUND | rewrite enabled; no current `.htaccess` |
+| PHP continuity | PASS / PLANNED | final workload remains Apache mod_php |
+| Nginx version | PASS | `1.18.0` |
+| Fresh Nginx syntax/effective config | OPERATOR REQUIRED | unprivileged check blocked by root-only Certbot live cert path; not classified as syntax failure |
+| MarketlyAI Nginx fingerprint | PASS | SHA `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6` |
+| Elite Nginx fingerprint | PASS | SHA `239a36f957928ec534ac79f06a6516ef495b789c803c43d5944acb5f4b880be6` |
+| Shared proxy_params fingerprint | PASS | SHA `7cff43a9768c1112bb074e9f26aaa1173da6ef85a7a20838242e846835c8eeb2` |
+| Elite TLS state | `ELITE_HTTPS_ALREADY_CONFIGURED` | enabled Nginx 443/cert refs + renewal metadata; no new cert/HSTS/forced redirect proposed |
+| MarketlyAI/Elite cert identity/validity | OPERATOR REQUIRED | live cert directory root-only; privileged pre-gate required |
+| ACME renewal metadata | PASS | both use nginx authenticator/installer |
+| Unrelated Nginx hosts inventoried | PASS | all enabled configs enumerated; certificate refs have renewal configs |
+| Duplicate staging-admin condition | PRE-EXISTING / PRESERVE | `staging-admin.save` duplicates name; no cleanup proposed |
+| Proposed final topology | PASS / PRODUCED | Nginx public 80/443; Apache `127.0.0.1:18080`; no Apache public bind |
+| Exact proposed patch | PASS / PRODUCED / NOT APPLIED | Apache ports/vhost + Elite Nginx only; MarketlyAI/unrelated files untouched |
+| Cutover sequence | PASS / PRODUCED / NOT EXECUTED | drift, backups, config gates, bounded service transition, validation, later reboot plan |
+| Rollback plan | PASS / PRODUCED / NOT EXECUTED | exact original file restore/module pre-state and Apache public-80 topology restoration |
+| Future validation gates | PASS / DEFINED | syntax/cert/socket/Elite/MarketlyAI/unrelated/reboot objective gates |
+| Non-interactive privilege | NOT AVAILABLE | password required; controlled human/operator privilege needed later |
+| Config/service/DNS/firewall/cert/package mutations | PASS / ZERO | `0` |
+| Provider activity | PASS / ZERO | Zernio/auth/Accounts/Analytics/Delta/webhook/post/contact all `0` |
+| F11 execution / auth consumption | PASS | execution NO; authorization remains AUTHORIZED / UNCONSUMED |
+| Final classification | PENDING TEAM LEADER REVIEW | `CUTOVER_PREFLIGHT_READY_OPERATOR_PRIVILEGE_REQUIRED` |
+| Canonical pending-review state | PASS | F11-F09 executed/awaiting review; cutover not executed; F11 blocked pre-provider/unconsumed; parent unresolved; Analytics SPIKE_PENDING; Django implementation not started; Next Task NOT_STARTED |

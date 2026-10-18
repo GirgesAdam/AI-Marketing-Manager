@@ -57,7 +57,9 @@ Analytics Webhook = `SPIKE_PENDING`
 
 Current Task = `P1-T08-F11-F09 — Build Nginx-Edge / Apache-Backend Cutover Preflight`
 
-P1-T08-F11-F09 = **IN PROGRESS — AUTHORIZED**
+P1-T08-F11-F09 = **EXECUTED — AWAITING TEAM LEADER REVIEW**
+
+P1-T08-F11-F09 Result = **CUTOVER_PREFLIGHT_READY_OPERATOR_PRIVILEGE_REQUIRED**
 
 Task Type = **READ-ONLY INFRASTRUCTURE PREFLIGHT**
 
@@ -844,7 +846,9 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 Current Task = `P1-T08-F11-F09 — Build Nginx-Edge / Apache-Backend Cutover Preflight`.
 
-P1-T08-F11-F09 = **IN PROGRESS — AUTHORIZED**.
+P1-T08-F11-F09 = **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+
+P1-T08-F11-F09 Result = **CUTOVER_PREFLIGHT_READY_OPERATOR_PRIVILEGE_REQUIRED**.
 
 Task Type = **READ-ONLY INFRASTRUCTURE PREFLIGHT**.
 
@@ -1295,3 +1299,27 @@ User Architecture Approval: **YES**.
 - Production Django implementation = **NOT STARTED**; no Phase 2 implementation has begun.
 - Safety: production source changes `0`; tests `0`; dependency changes `0`; database changes `0`; migrations `0`; infrastructure changes `0`; Provider/Zernio calls `0`; F11 execution **NO**; F11 authorization consumed **NO**.
 - Final execution state after amendment: Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; P1-T08-F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization **AUTHORIZED / UNCONSUMED**; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; Next Task **NOT_STARTED**. Naming P1-T08 as Current Task does not authorize any new subtask, VPS cutover/preflight, or F11 execution.
+
+### P1-T08-F11-F09 — Nginx-edge / Apache-backend cutover preflight
+Execution date: `2026-10-18`.
+
+Status: **EXECUTED — AWAITING TEAM LEADER REVIEW**.
+
+Result / final classification: **CUTOVER_PREFLIGHT_READY_OPERATOR_PRIVILEGE_REQUIRED**.
+
+Starting HEAD: `eeeeaa6c4c8d3d84f7719c993c3292b2f87474a7`. Activation HEAD: `6e7797ed35aae173d22044a694e426b77345268b`. Evidence class: **INFRASTRUCTURE PREFLIGHT EVIDENCE — NOT PROVIDER BEHAVIOR**.
+
+- Canonical D-038 = **REGISTERED / VERIFIED / ACCEPTED**. Cutover = **NOT EXECUTED**. Apache moved to loopback = **NO**. MarketlyAI readiness restored = **NO**.
+- Fresh host: UTC `2026-10-18T10:55:39Z`; `marktuser@srv822206`; kernel `5.4.0-216-generic`; boot `2026-10-17 10:11:16 UTC`; public IPv4 `82.29.177.121`. DNS for MarketlyAI and Elite both resolves to that IPv4.
+- Fresh services: Apache loaded/enabled/active/running, MainPID `852`, Result `success`; Nginx loaded/enabled/failed/failed, MainPID `0`, Result `exit-code`. Current-user journal access is insufficient for fresh service journal lines.
+- Fresh listeners: public TCP/80 reachable and served by Apache; no TCP/443 listener; `127.0.0.1:18080` is free. IPv6 socket inventory shows wildcard `*:80`; external IPv4 TCP/80 is reachable. Privileged PID socket map is unavailable because `sudo -n` requires a password.
+- Apache: only enabled site is Elite; `Listen 80`; vhost `*:80`; DocumentRoot `/var/www/elite.restartorg.com/html`; mod_php 7.4 + rewrite; no current .htaccess; `apachectl -t` PASS. Proposed-change fingerprints: ports.conf SHA `9d2d53be30cbb4c42af6b25458077db5b5ad1be4f5810fa2fee4a1d53ac604a2`; Elite Apache vhost SHA `85ce3df3c888430cbdd528c7cacded9fe6aa6fcf4c2ec18b99ae8a9580996b59`.
+- Elite baseline: local and external HTTP return `200` from Apache with WordPress headers. WordPress REST metadata reports `url=http://elite.restartorg.com`, `home=http://elite.restartorg.com`. Sending `X-Forwarded-Proto: https` to current Apache still emits HTTP WordPress links; proxy HTTPS detection therefore requires explicit Apache mapping.
+- Reverse-proxy compatibility: Host preservation = **NO ISSUE FOUND**; X-Forwarded-For/client-IP semantics = **CONFIG REQUIRED** via loopback-trusted mod_remoteip; X-Forwarded-Proto/HTTPS detection = **CONFIG REQUIRED** via `SetEnvIf`; redirect-loop behavior = **UNVERIFIED UNTIL CUTOVER VALIDATION**; .htaccess/rewrite = **NO ISSUE FOUND**; PHP stays on Apache mod_php.
+- Nginx `1.18.0`; MarketlyAI vhost SHA remains `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`; Elite Nginx vhost SHA `239a36f957928ec534ac79f06a6516ef495b789c803c43d5944acb5f4b880be6`; shared `/etc/nginx/proxy_params` SHA `7cff43a9768c1112bb074e9f26aaa1173da6ef85a7a20838242e846835c8eeb2`. Unprivileged `nginx -t/-T` cannot complete because Certbot live directories are root-only; this is a privilege-bound proof gap, not evidence of syntax failure.
+- Elite TLS classification = **ELITE_HTTPS_ALREADY_CONFIGURED**: enabled Nginx config already has Elite 443/certificate references and Certbot renewal metadata (authenticator/installer `nginx`). Current public 443 is unavailable because Nginx is failed. No new Elite certificate, forced HTTP→HTTPS, or HSTS is proposed. MarketlyAI/Elite certificate subject/SAN/issuer/validity require privileged read at future cutover pre-gate.
+- Unrelated-host protection: Apache has no other enabled vhosts. Nginx enabled hosts include clinic, restartorg/default, go, API/restart_your_self, staging-admin, staging-backend, staging-clinic, staging.yourdomain.com, start, therapy, Elite, and MarketlyAI. `staging-admin.save` duplicates staging-admin and must remain untouched; all observed certificate references have renewal configs. No unrelated cleanup/refactor is proposed.
+- Planned final topology: Nginx owns public TCP/80+443; Elite HTTP and existing HTTPS both proxy to Apache at **127.0.0.1:18080**; Apache has no public 80/443 bind; MarketlyAI remains on its existing Nginx vhost/TLS. Existing Elite HTTP is preserved without forced redirect.
+- Privilege path: `sudo -n true` exit `1` (password required). Future cutover requires controlled human direct sudo authentication. Mandatory privileged pre-gates before mutation: fresh `nginx -t/-T`, cert subject/SAN/issuer/validity reads, privileged socket/PID map, and drift/hash verification. Password must never enter chat/logs/tool input.
+- Safety: Apache/Nginx config mutations `0`; service mutations `0`; ports/listeners `0`; DNS/firewall/systemd/certificate/package/WordPress/PHP/database mutations `0`; receiver/tunnel `0`; Provider/Zernio/auth/Accounts/Analytics/Delta/webhook/post/contact calls `0`; F11 execution **NO**; F11 authorization consumed **NO**.
+- Canonical pending-review state: F11-F09 **EXECUTED — AWAITING TEAM LEADER REVIEW**; result **CUTOVER_PREFLIGHT_READY_OPERATOR_PRIVILEGE_REQUIRED**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Production Django implementation **NOT STARTED**; Next Task **NOT_STARTED**.

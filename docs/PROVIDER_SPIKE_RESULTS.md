@@ -1785,3 +1785,157 @@ Status: `DONE / ACCEPTED`. Final classification: **CANONICAL_REPLACEMENT_ARTIFAC
 - Canonical Project mutation = **NO**; substitute canonical upload = **NO**; canonical D-038 registration remains **NO / NOT COMPLETED**.
 - Infrastructure activity = `0`; Provider/Zernio/auth/Accounts/Analytics/webhook/post/contact = `0`; F11 execution **NO**; authorization consumed **NO**.
 - Canonical final state: F11-F08 `DONE / ACCEPTED`; result `CANONICAL_REPLACEMENT_ARTIFACT_PREPARED`; accepted evidence HEAD `234839de7d602c5dd1238aac4054afde2b5d2ddd`; candidate `PREPARED / ACCEPTED / NOT CANONICAL`; D-038 canonical registration `NO / NOT COMPLETED`; Project replacement `NOT YET PERFORMED`; infrastructure preflight `NOT STARTED`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Next Task `NOT_STARTED`.
+
+## P1-T08-F11-F09 - Nginx-Edge / Apache-Backend Cutover Preflight
+
+Status: `EXECUTED — AWAITING TEAM LEADER REVIEW`. Final classification: **CUTOVER_PREFLIGHT_READY_OPERATOR_PRIVILEGE_REQUIRED**. Evidence class: **INFRASTRUCTURE PREFLIGHT EVIDENCE — NOT PROVIDER BEHAVIOR**. Starting HEAD `eeeeaa6c4c8d3d84f7719c993c3292b2f87474a7`; activation HEAD `6e7797ed35aae173d22044a694e426b77345268b`; branch `p1-t08-zernio-analytics-webhook`. D-038 is canonical/verified/accepted. No cutover or Provider action was executed.
+
+### Fresh observed baseline
+- Host: `marktuser@srv822206`; UTC `2026-10-18T10:55:39Z`; boot `2026-10-17 10:11:16 UTC`; kernel `5.4.0-216-generic`; public IPv4 `82.29.177.121`. `marketlyai.restartorg.com` and `elite.restartorg.com` both resolve to that IPv4.
+- Apache: loaded/enabled/active/running, MainPID `852`, Result `success`; only enabled site is `/etc/apache2/sites-enabled/elite.restartorg.com.conf -> ../sites-available/elite.restartorg.com.conf`; vhost `*:80`; ServerName `elite.restartorg.com`; DocumentRoot `/var/www/elite.restartorg.com/html`; PHP 7.4 module + rewrite; no `.htaccess`; `apachectl -t` exit `0`.
+- Nginx: `1.18.0`; loaded/enabled/failed/failed, MainPID `0`, Result `exit-code`. Fresh unprivileged `nginx -t/-T` stops on root-only Certbot certificate access; this does not prove syntax failure. Current-user journal access is insufficient for service journal lines.
+- Sockets: public TCP/80 reachable; no TCP/443 listener; no listener on candidate backend `18080`. IPv6 socket table shows wildcard `*:80`; external IPv4 TCP/80 works and HTTP identifies Apache. Privileged PID socket mapping is unavailable without operator sudo.
+- Independent external workstation baseline: both names A-resolve to `82.29.177.121`; TCP/80 succeeds for both; TCP/443 fails for both; HTTP HEAD for both currently returns Apache/WordPress Elite `200`; HTTPS cannot connect. This proves MarketlyAI public routing is not restored.
+
+### Apache fingerprints / affected scope
+- `/etc/apache2/ports.conf`: size `320`, `root:root`, mode `644`, SHA-256 `9d2d53be30cbb4c42af6b25458077db5b5ad1be4f5810fa2fee4a1d53ac604a2`.
+- `/etc/apache2/sites-available/elite.restartorg.com.conf`: size `351`, `root:root`, mode `644`, SHA-256 `85ce3df3c888430cbdd528c7cacded9fe6aa6fcf4c2ec18b99ae8a9580996b59`.
+- Enabled Elite symlink target = `/etc/apache2/sites-available/elite.restartorg.com.conf`.
+- `mod_remoteip` is available but not enabled; source `/etc/apache2/mods-available/remoteip.load`, SHA-256 `9d6c102e8e6aae55f585b234fe73ef55849a3f5dfcc38079faf748c8117ee2e2`. `setenvif_module` is already loaded.
+- Apache has no other enabled vhost, so listener relocation affects the proven Elite workload only.
+
+### Elite baseline / proxy-compatibility classification
+- Direct local and public HTTP return `200` with `Server: Apache/2.4.41 (Ubuntu)` and WordPress Link headers.
+- WordPress REST root reports `url=http://elite.restartorg.com` and `home=http://elite.restartorg.com`.
+- Current Apache ignores `X-Forwarded-Proto: https` for WordPress scheme generation; WordPress links remain HTTP. `HTTP_X_FORWARDED_PROTO`, `FORCE_SSL_ADMIN`, and `HTTPS` proxy markers were not found in bounded wp-config marker checks; no secret wp-config content was read.
+- Host preservation: **NO ISSUE FOUND** using Nginx proxy headers.
+- `X-Forwarded-For` / application + Apache log client-IP preservation: **CONFIG REQUIRED** (`mod_remoteip`, trusted loopback proxy only).
+- `X-Forwarded-Proto` / WordPress HTTPS detection: **CONFIG REQUIRED** (`SetEnvIf` mapping in the Apache Elite vhost).
+- Redirect loop: **UNVERIFIED UNTIL CUTOVER VALIDATION**; explicit future pass gate required.
+- Rewrite/.htaccess: **NO ISSUE FOUND**; rewrite module is enabled and no current `.htaccess` exists.
+- PHP: **NO ISSUE FOUND**; final topology keeps Elite execution under Apache mod_php.
+### Nginx/TLS/ACME baseline
+- MarketlyAI vhost `/etc/nginx/sites-available/marketlyai.restartorg.com`: size `512`, SHA-256 `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`; enabled symlink preserved.
+- Elite vhost `/etc/nginx/sites-available/elite.restartorg.com`: size `1084`, SHA-256 `239a36f957928ec534ac79f06a6516ef495b789c803c43d5944acb5f4b880be6`; it already contains `listen 443 ssl`, existing Elite certificate references, and a Certbot-generated HTTP redirect block.
+- Shared `/etc/nginx/proxy_params`: size `180`, mode `644`, SHA-256 `7cff43a9768c1112bb074e9f26aaa1173da6ef85a7a20838242e846835c8eeb2`; it sets Host, X-Real-IP, X-Forwarded-For, and X-Forwarded-Proto.
+- MarketlyAI and Elite renewal metadata both exist and declare Certbot `authenticator = nginx`, `installer = nginx`. Root-only `/etc/letsencrypt/live` prevents current user from reading certificate subject/SAN/issuer/validity; these are mandatory privileged pre-cutover checks.
+- Elite TLS classification: **ELITE_HTTPS_ALREADY_CONFIGURED**. Public 443 is currently unavailable because Nginx is failed. The proposed cutover does **not** issue/renew a certificate, add HSTS, or force HTTP to HTTPS. Existing Elite HTTP `200` behavior is intentionally preserved through proxying.
+
+### Unrelated enabled Nginx hosts
+Observed enabled configurations include `clinic.restartorg.com`, `default` (`restartorg.com` / `www.restartorg.com`), `elite.restartorg.com`, `go.restartorg.com`, `marketlyai.restartorg.com`, `restart_your_self` (`api.restartorg.com`), `staging-admin`, `staging-admin.save`, `staging-backend`, `staging-clinic`, `staging.yourdomain.com`, `start.restartorg.com`, and `therapy`. Every observed certificate reference has a corresponding renewal config. `staging-admin.save` duplicates the staging-admin server name and is a pre-existing condition; no cleanup is authorized or proposed. No explicit `default_server` directive was observed. Future cutover must leave all unrelated files untouched and validate no unrelated-host regression.
+
+### Proposed final topology — NOT APPLIED
+```text
+PUBLIC TCP/80 + TCP/443
+          |
+        NGINX
+          |-- marketlyai.restartorg.com -> existing MarketlyAI vhost/TLS
+          `-- elite.restartorg.com
+                |-- HTTP  -> proxy (no forced redirect)
+                `-- existing HTTPS -> proxy
+                              |
+                    http://127.0.0.1:18080
+                              |
+                           APACHE
+                              |
+                 Elite WordPress / mod_php
+```
+Apache public bind after cutover: **NONE**. Apache backend bind: **`127.0.0.1:18080` only**. Port `18080` was fresh-observed free.
+
+### Exact proposed patch — REVIEW ONLY / APPLIED = NO
+Apache `/etc/apache2/ports.conf`:
+```diff
+-Listen 80
+-
+-<IfModule ssl_module>
+-    Listen 443
+-</IfModule>
+-
+-<IfModule mod_gnutls.c>
+-    Listen 443
+-</IfModule>
++Listen 127.0.0.1:18080
+```
+Removing dormant public-443 Listen clauses ensures Apache cannot regain public 443 merely because an SSL module is later enabled.
+
+Apache `/etc/apache2/sites-available/elite.restartorg.com.conf` (requires `mod_remoteip` enabled during the separately authorized cutover):
+```diff
+-<VirtualHost *:80>
++<VirtualHost 127.0.0.1:18080>
+     ServerName elite.restartorg.com
+     DocumentRoot /var/www/elite.restartorg.com/html
++
++    SetEnvIf X-Forwarded-Proto "^https$" HTTPS=on
++    RemoteIPHeader X-Forwarded-For
++    RemoteIPInternalProxy 127.0.0.1
+```
+All existing Directory/ErrorLog/CustomLog directives remain unchanged.
+Nginx `/etc/nginx/sites-available/elite.restartorg.com` HTTPS server:
+```diff
+-    root /var/www/elite.restartorg.com/html;
+-    index index.php index.html index.htm;
+-
+     access_log /var/log/nginx/elite.access.log;
+     error_log  /var/log/nginx/elite.error.log;
+
+     location / {
+-        try_files $uri $uri/ /index.php?$args;
+-    }
+-
+-    location ~ \.php$ {
+-        include snippets/fastcgi-php.conf;
+-        fastcgi_pass unix:/run/php/php7.4-fpm.sock;
++        include /etc/nginx/proxy_params;
++        proxy_pass http://127.0.0.1:18080;
+     }
+```
+Keep the existing `.ht` deny, `listen 443 ssl`, certificate paths, SSL include, and DH params unchanged.
+
+Nginx Elite HTTP server: replace the existing Certbot HTTP-to-HTTPS redirect/404 block with a same-host HTTP proxy so current externally observable HTTP service is preserved and no new forced redirect is introduced:
+```diff
+ server {
+-    if ($host = elite.restartorg.com) {
+-        return 301 https://$host$request_uri;
+-    }
+-
+     listen 80;
+     server_name elite.restartorg.com;
+-    return 404;
++
++    location / {
++        include /etc/nginx/proxy_params;
++        proxy_pass http://127.0.0.1:18080;
++    }
+ }
+```
+No MarketlyAI or unrelated Nginx file is changed.
+### Future cutover sequence — NOT EXECUTED
+1. Human/operator obtains direct privileged authorization; no password through chat/tool input.
+2. Re-check exact hashes/fingerprints and abort on drift for Apache ports/site, Nginx Elite/MarketlyAI, `proxy_params`, and remoteip module source.
+3. Before mutation, perform privileged socket/PID mapping, privileged Nginx syntax/effective-config validation, MarketlyAI + Elite certificate identity/validity reads, and relevant journal checks. Any failure or unexpected new warning => STOP.
+4. Back up every file to be modified with root-owned exact copies and record backup hashes.
+5. Enable Apache `remoteip`; apply only the pre-reviewed Apache ports/vhost changes and Nginx Elite patch. Leave MarketlyAI and unrelated vhosts untouched.
+6. Validate Apache and Nginx configuration before service transition. Failure => restore file/module pre-state; no cutover.
+7. Apply the authorized Apache service transition so it moves from public 80 to loopback `127.0.0.1:18080`; immediately verify local Host-header HTTP `200`, PHP/WordPress baseline, XFP HTTP/HTTPS behavior, and no Apache public 80/443 socket.
+8. Apply the authorized Nginx service transition; verify Nginx owns public 80/443 and Apache owns only `127.0.0.1:18080`.
+9. Run local Host-header validation through Nginx for Elite HTTP/HTTPS semantics and MarketlyAI expected routing.
+10. Run external validation: Elite HTTP remains functional without forced redirect; existing Elite HTTPS has no loop/mixed-scheme failure; MarketlyAI returns expected Nginx routing with trusted TLS; no unrelated-host regression.
+11. Re-verify certificate state, both config tests, and final socket ownership.
+12. Reboot persistence remains a later separately authorized validation: require Apache loopback-only, Nginx public 80/443, healthy services, Elite + MarketlyAI validation PASS, and no unrelated regression.
+### Explicit rollback — NOT EXECUTED
+Rollback triggers: Elite non-200/unexpected behavior, redirect loop, PHP/WordPress failure, MarketlyAI route/TLS failure, unrelated-host regression, Nginx bind/activation failure, Apache backend failure, config-test failure, unexpected certificate state, or unexpected socket ownership.
+
+Rollback procedure for the future cutover task:
+1. Return Nginx to non-serving state if the cutover activated it, so public 80/443 are released.
+2. Restore exact original Apache `ports.conf` and Elite vhost backups plus the exact original Nginx Elite vhost backup; restore only cutover-specific module state if `remoteip` was newly enabled.
+3. Validate restored configuration and confirm restored hashes equal the pre-cutover fingerprints.
+4. Transition Apache back to original `Listen 80` / `*:80` Elite topology; keep Nginx non-serving as required to avoid the original port collision.
+5. Verify Elite public HTTP returns the proven Apache WordPress baseline, Apache owns public 80, backend 18080 is absent, and no unexpected 443 listener exists.
+6. Verify no unrelated config file changed. DNS/firewall/certificates remain untouched.
+
+### Future objective PASS gates
+A separately authorized cutover may pass only if privileged Nginx config validation PASS; Apache syntax PASS; expected certificate identity/validity PASS; Nginx public TCP/80 and configured TCP/443 ownership proven; Apache public 80/443 absent; Apache listener exactly loopback backend; Elite HTTP baseline preserved without forced redirect; existing Elite HTTPS works with no loop/mixed-scheme failure; MarketlyAI expected routing + trusted TLS preserved; no unrelated-host regression; client-IP/XFP semantics verified; hashes match approved patch inputs; and reboot persistence is later explicitly verified.
+### Privilege/execution path
+Non-interactive privilege is **NOT AVAILABLE**: the read-only non-interactive privilege check returned exit `1` / password required. The later cutover therefore requires controlled human/operator privileged execution for root-owned config backups/writes, remoteip enablement, privileged Nginx effective-config/certificate/socket checks, and service transition. This is a known operator-assisted path, not authorization to use or expose a password. Classification: **CUTOVER_PREFLIGHT_READY_OPERATOR_PRIVILEGE_REQUIRED**.
+
+Safety totals: Apache/Nginx config changes `0`; service actions `0`; port/listener changes `0`; DNS/firewall/systemd/certificate/package/WordPress/PHP/database changes `0`; receiver/tunnel `0`; Provider/Zernio `/v1/auth/verify`/Accounts/Analytics/Delta/webhook/post/contact calls `0`; F11 execution **NO**; F11 authorization consumed **NO**. Analytics Webhook remains `SPIKE_PENDING`.
