@@ -328,3 +328,61 @@ Pydantic is the preferred structured contract layer for AI structured outputs, P
 The accepted Phase-1 TypeScript Provider Spike Harness and its historical Provider Behavior evidence remain valid; no Python rewrite is required merely because the production backend changed. D-005 is superseded only where it names BullMQ as the execution mechanism; its PostgreSQL durable-scheduling-authority decision remains valid. D-038 remains unchanged and continues to apply only to the current Phase-1 test VPS recovery/readiness path. Caddy remains the planned Commercial V1 production reverse proxy unless superseded by a later explicit decision.
 
 This architecture amendment changes implementation technology only. It does not add or remove Commercial V1 product capabilities.
+
+---
+
+## D-040 — Phase-1 MarketlyAI Dedicated Test Receiver Routing Scope
+
+**Status:** Accepted
+
+For the current `P1-T08` `analytics.synced` Provider Behavior experiment, a completed Commercial V1 production application deployment or production application upstream is not required merely to expose the bounded temporary webhook receiver used by the experiment.
+
+This decision records the Owner-approved Phase-1 Option B only. It removes the production-application-upstream prerequisite for this specific test path. It does not establish that the Commercial V1 application is deployed, that the receiver is currently reachable, or that any routing, service, TLS configuration, or cutover is already operational.
+
+`marketlyai.restartorg.com` remains the intended future platform hostname. Its generic `/` route must retain its existing safe HTTP 404 behavior unless a separate explicit decision changes that behavior.
+
+For the current Phase-1 experiment, only the exact path:
+
+`/p1-t08-f11/analytics-synced`
+
+is eligible for temporary receiver routing.
+
+After a separately authorized operational cutover/readiness task, Nginx may route that exact path to a temporary loopback-only receiver.
+
+This decision does not authorize:
+
+- a prefix route
+- wildcard routing
+- catch-all routing
+- a generic MarketlyAI reverse proxy
+- invention of a production application upstream, runtime, repository, service, or port
+- deployment of the Commercial V1 application
+- receiver creation
+- infrastructure modification
+- public HTTPS cutover
+- Provider/Zernio execution
+- F11 execution or consumption of its one-run authorization
+
+D-038 remains fully applicable to the Phase-1 shared test VPS: Nginx remains the canonical public ingress, the existing Elite workload remains preserved behind its approved loopback topology, Apache must not regain public TCP/80 or TCP/443 ownership after completed cutover, unrelated hosts must remain unaffected, and any cutover must remain bounded and reversible with explicit rollback.
+
+D-039 remains unchanged. The current Commercial V1 production target remains VPS hosting with Caddy as the planned production reverse proxy, as defined by the existing architecture and D-039. This decision does not change the approved production hosting architecture or make any new hosting-platform decision. D-040 does not establish that the target production runtime has been implemented.
+
+Any later operational task implementing the temporary Phase-1 route must verify, before Provider execution:
+
+- the route matches only `/p1-t08-f11/analytics-synced`
+- the backend receiver is loopback-only
+- generic `marketlyai.restartorg.com/` retains the safe existing 404 behavior
+- `elite.restartorg.com` continues to work
+- unrelated virtual hosts remain unchanged
+- Apache does not own public TCP/80 or TCP/443 after completed cutover
+- Nginx configuration validation passes
+- effective routing configuration is reviewed
+- MarketlyAI TLS/HTTPS readiness is explicitly verified
+- rollback is bounded and tested or demonstrably ready
+- receiver readiness is proven before any Provider/Zernio call
+
+D-040 does not execute, consume, expand, or renew F11 authorization.
+
+F11 remains `AUTHORIZED / UNCONSUMED` and `UNCONSUMED / BLOCKED PRE-PROVIDER` until a separately authorized operational task satisfies its prerequisites.
+
+P1-T08 remains unresolved and `analytics.synced` remains `SPIKE_PENDING`.
