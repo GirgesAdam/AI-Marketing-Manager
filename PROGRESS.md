@@ -55,15 +55,23 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
-Architecture Amendment = **AWAITING CANONICAL REPLACEMENT / VERIFICATION**
+ARCH-AMEND-01 = **DONE / ACCEPTED**
 
-Architecture Amendment Candidate Preparation = **DONE / ACCEPTED**
+ARCH-AMEND-01 Final Result = **DJANGO_ARCHITECTURE_CANONICALIZED**
 
-Architecture Amendment Candidate Result = **DJANGO_ARCHITECTURE_CANDIDATES_PREPARED**
+User Architecture Approval = **YES**
+
+Canonical D-039 = **REGISTERED / VERIFIED / ACCEPTED**
+
+MASTER Django Amendment = **CANONICAL / VERIFIED / ACCEPTED**
+
+Canonical replacement verification = **PASS**
 
 Architecture Amendment Previous Stop = **DECISION_SEQUENCE_PRECONDITION_FAILED — RESOLVED**
+
+Candidate Preparation = **DONE / ACCEPTED**
 
 Approved Production Backend = **DJANGO / PYTHON**
 
@@ -74,12 +82,6 @@ Approved ORM = **DJANGO ORM / DJANGO MIGRATIONS**
 Approved Auth Foundation = **DJANGO AUTH + CUSTOM USER**
 
 Canonical D-038 = **REGISTERED / VERIFIED**
-
-Canonical D-039 = **NO / NOT COMPLETED**
-
-MASTER Django amendment canonical = **NO / NOT COMPLETED**
-
-Candidates = **PREPARED / ACCEPTED / NOT CANONICAL**
 
 Production Django implementation = **NOT STARTED**
 
@@ -836,15 +838,21 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Current Task = `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`.
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
 
-Architecture Amendment = **AWAITING CANONICAL REPLACEMENT / VERIFICATION**.
+ARCH-AMEND-01 = **DONE / ACCEPTED**.
 
-Architecture Amendment Candidate Preparation = **DONE / ACCEPTED**
+ARCH-AMEND-01 Final Result = **DJANGO_ARCHITECTURE_CANONICALIZED**.
 
-Architecture Amendment Candidate Result = **DJANGO_ARCHITECTURE_CANDIDATES_PREPARED**.
+Canonical D-039 = **REGISTERED / VERIFIED / ACCEPTED**.
+
+MASTER Django Amendment = **CANONICAL / VERIFIED / ACCEPTED**.
+
+Canonical replacement verification = **PASS**.
 
 Architecture Amendment Previous Stop = **DECISION_SEQUENCE_PRECONDITION_FAILED — RESOLVED**.
+
+Candidate Preparation = **DONE / ACCEPTED**.
 
 Approved Production Backend = **DJANGO / PYTHON**.
 
@@ -855,12 +863,6 @@ Approved ORM = **DJANGO ORM / DJANGO MIGRATIONS**.
 Approved Auth Foundation = **DJANGO AUTH + CUSTOM USER**.
 
 Canonical D-038 = **REGISTERED / VERIFIED**.
-
-Canonical D-039 = **NO / NOT COMPLETED**.
-
-MASTER Django amendment canonical = **NO / NOT COMPLETED**.
-
-Candidates = **PREPARED / ACCEPTED / NOT CANONICAL**.
 
 Production Django implementation = **NOT STARTED**.
 
@@ -1263,3 +1265,25 @@ Previous Stop = **DECISION_SEQUENCE_PRECONDITION_FAILED — RESOLVED**.
 - Architecture Amendment Overall = **AWAITING CANONICAL REPLACEMENT / VERIFICATION**. Candidates = **PREPARED / ACCEPTED / NOT CANONICAL**. Production Django implementation = **NOT STARTED**.
 - Safety: production code `0`; tests `0`; dependencies `0`; database `0`; migration execution `0`; infrastructure `0`; Provider/Zernio calls `0`; F11 execution **NO**; F11 authorization consumed **NO**.
 - Current state: Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization **AUTHORIZED / UNCONSUMED**; Current Task `ARCH-AMEND-01 — Canonicalize Django/Python Production Backend Architecture`; Next Task **NOT_STARTED**.
+
+### ARCH-AMEND-01 — canonical replacement verification and finalization
+Finalization date: `2026-10-18`.
+
+Status: **DONE / ACCEPTED**.
+
+Final Result: **DJANGO_ARCHITECTURE_CANONICALIZED**.
+
+Accepted candidate evidence HEAD: `e2d4e8ec9c6cc3c772ac02fddb48d0862b53a73a`.
+Candidate review-finalization HEAD: `10ee06eded1b99c966a6597e09151cbbf68cbebf`.
+Previous Stop: **DECISION_SEQUENCE_PRECONDITION_FAILED — RESOLVED**.
+Candidate Preparation: **DONE / ACCEPTED**.
+User Architecture Approval: **YES**.
+
+- Canonical Project `DECISIONS.md`: raw bytes `18593`; SHA-256 `7de3f2ce8b3313395dec0269aa42528d39188365ca9f1d8df4aba09291d3e639`; byte-for-byte match to the accepted D-039 candidate = **YES**. D-039 — Django/Python Production Backend Stack = **PRESENT / Accepted / CANONICAL / VERIFIED**.
+- Canonical Project `MASTER_IMPLEMENTATION_PLAN.md`: raw bytes `39867`; SHA-256 `7fdc04cecddfe8504f540da54dc17b04fb02f8ffb93ce14d6f3dbb5c6bca85b1`; byte-for-byte match to the accepted Django MASTER candidate = **YES**. MASTER Django architecture = **CANONICAL / VERIFIED / ACCEPTED**.
+- Canonical production architecture now in force: Next.js + React + TypeScript + Tailwind CSS frontend; Python + Django + Django REST Framework backend; PostgreSQL + pgvector; Django ORM + Django Migrations; Django authentication + Custom User foundation; explicit Organization/Brand/Membership/Role/Permission with mandatory server-side Brand-scoped ownership validation; Redis + Celery async execution; Pydantic structured non-ORM contracts; DRF serializers/OpenAPI to generated or validated TypeScript frontend contracts; Caddy as the Commercial V1 production-plan reverse proxy. D-038 Nginx public-edge architecture remains scoped only to the current Phase-1 test VPS recovery/readiness path.
+- D-039 canonical durability/reliability boundary: D-005 PostgreSQL durable scheduling authority remains **VALID**; D-005 BullMQ execution wording is **SUPERSEDED BY D-039**. PostgreSQL remains durable authority for schedules, business/action state, stable action_id, idempotency state, claims, worker leases and reconciliation state. Redis/Celery are execution mechanisms only. Required semantics remain schedule_version, atomic claims, worker leases, idempotency, Unknown, reconciliation, downtime recovery, ScheduleRebuilder-equivalent recovery and transactional outbox. Celery retry/redelivery is not authorization for a blind Provider retry.
+- Historical Phase-1 TypeScript Provider Spike Harness = **PRESERVED**; historical accepted Provider Behavior evidence = **PRESERVED**; Python rewrite of the historical Provider Spike Harness = **NOT REQUIRED**. P1-T01 through current P1-T08 accepted evidence remains valid.
+- Production Django implementation = **NOT STARTED**; no Phase 2 implementation has begun.
+- Safety: production source changes `0`; tests `0`; dependency changes `0`; database changes `0`; migrations `0`; infrastructure changes `0`; Provider/Zernio calls `0`; F11 execution **NO**; F11 authorization consumed **NO**.
+- Final execution state after amendment: Current Phase **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; P1-T08-F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization **AUTHORIZED / UNCONSUMED**; P1-T08-F09-S01 **BLOCKED — DNS ACCESS REQUIRED**; Provider contact **AUTHORIZED / NOT SENT**; Next Task **NOT_STARTED**. Naming P1-T08 as Current Task does not authorize any new subtask, VPS cutover/preflight, or F11 execution.
