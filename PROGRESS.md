@@ -55,7 +55,11 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
+Current Task = `P1-T08-F11-F09 — Build Nginx-Edge / Apache-Backend Cutover Preflight`
+
+P1-T08-F11-F09 = **IN PROGRESS — AUTHORIZED**
+
+Task Type = **READ-ONLY INFRASTRUCTURE PREFLIGHT**
 
 ARCH-AMEND-01 = **DONE / ACCEPTED**
 
@@ -81,7 +85,7 @@ Approved ORM = **DJANGO ORM / DJANGO MIGRATIONS**
 
 Approved Auth Foundation = **DJANGO AUTH + CUSTOM USER**
 
-Canonical D-038 = **REGISTERED / VERIFIED**
+Canonical D-038 = **REGISTERED / VERIFIED / ACCEPTED**
 
 Production Django implementation = **NOT STARTED**
 
@@ -838,7 +842,11 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
+Current Task = `P1-T08-F11-F09 — Build Nginx-Edge / Apache-Backend Cutover Preflight`.
+
+P1-T08-F11-F09 = **IN PROGRESS — AUTHORIZED**.
+
+Task Type = **READ-ONLY INFRASTRUCTURE PREFLIGHT**.
 
 ARCH-AMEND-01 = **DONE / ACCEPTED**.
 
@@ -862,7 +870,7 @@ Approved ORM = **DJANGO ORM / DJANGO MIGRATIONS**.
 
 Approved Auth Foundation = **DJANGO AUTH + CUSTOM USER**.
 
-Canonical D-038 = **REGISTERED / VERIFIED**.
+Canonical D-038 = **REGISTERED / VERIFIED / ACCEPTED**.
 
 Production Django implementation = **NOT STARTED**.
 
