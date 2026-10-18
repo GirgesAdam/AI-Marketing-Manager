@@ -55,17 +55,23 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08-F11-F09-R04 — Identify Authoritative MarketlyAI Application Source and Deployment Mapping`
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
 P1-T08-F11-F09-R02 = **CLOSED / ACCEPTED WITH NON-BLOCKING NOTES**
 
 P1-T08-F11-F09-R03 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
-P1-T08-F11-F09-R04 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+P1-T08-F11-F09-R04 = **DONE / ACCEPTED**
 
 R04 final classification = **NO_AUTHORITATIVE_MARKETLYAI_DEPLOYMENT_FOUND_WITHIN_ACCESSIBLE_SOURCES**
 
 R04 evidence scope = **READ-ONLY GITHUB + VERCEL + RAILWAY DISCOVERY; NO VPS CORRELATION TRIGGERED**.
+
+R04 Team Leader disposition = **ACCEPTED**.
+
+R04 accepted evidence HEAD = `cd695900f26c5f2893c662539d9b9b349831eb68`.
+
+R04 accepted final classification = **NO_AUTHORITATIVE_MARKETLYAI_DEPLOYMENT_FOUND_WITHIN_ACCESSIBLE_SOURCES**.
 
 P1-T08-F11-F09-R04-D02 = **DONE / ACCEPTED**
 
@@ -91,7 +97,7 @@ R03 closure scope = **INVESTIGATION / EVIDENCE / DOCUMENTATION QUALITY ONLY**; t
 
 F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**.
 
-Last Closed Subtask ID = `P1-T08-F11-F09-R03`
+Last Closed Subtask ID = `P1-T08-F11-F09-R04`
 
 Task activation commit is separate from evidence/documentation commit; no VPS evidence collection began before activation push.
 
@@ -1515,3 +1521,22 @@ Evidence chain remains incomplete at the first authoritative MarketlyAI applicat
 Canonical state remains: Parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook `SPIKE_PENDING`; Cutover **BLOCKED**; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization **AUTHORIZED / UNCONSUMED**; Next Task **NOT_STARTED**.
 
 Safety: source/test/package/infrastructure mutations = 0; deployment mutations/triggers/restarts = 0; VPS access = 0; DNS/TLS/service changes = 0; Provider/Zernio calls = 0; receiver/tunnel setup = 0; F11 execution = NO; F11 authorization consumed = NO.
+### P1-T08-F11-F09-R04 — acceptance finalization
+
+Final status: **DONE / ACCEPTED**.
+
+Team Leader disposition: **ACCEPTED**.
+
+Accepted R04 evidence HEAD: `cd695900f26c5f2893c662539d9b9b349831eb68`.
+
+Accepted final classification: **NO_AUTHORITATIVE_MARKETLYAI_DEPLOYMENT_FOUND_WITHIN_ACCESSIBLE_SOURCES**.
+
+R04 evidence scope: **read-only GitHub + Vercel + Railway discovery; no VPS correlation triggered**.
+
+Interpretation boundary: this acceptance means no authoritative MarketlyAI deployment mapping was found within the accessible GitHub, Vercel, and Railway sources inspected. It does **not** prove that no deployment exists globally.
+
+Acceptance does **not** establish a production application route, upstream, runtime, port, HTTPS readiness, or cutover approval.
+
+Canonical state after closure: Last Closed Subtask ID = `P1-T08-F11-F09-R04`; Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
+
+Documentation finalization scope: `PROGRESS.md` only. No new investigation evidence was added; no GitHub/Vercel/Railway search was repeated; no VPS access, infrastructure/deployment/service/DNS/TLS change, cutover/HTTPS recovery, application creation/deployment, Provider/Zernio call, F11 execution, authorization consumption, or successor-task activation occurred.
