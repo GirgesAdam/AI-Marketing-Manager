@@ -2068,7 +2068,7 @@ The hashes are read-only fingerprints; no file was edited on the VPS. The stagin
 ### R01 classification and safety boundary
 
 - Evidence capture: **COMPLETE**.
-- Documentation finalization: **SUBMITTED FOR TEAM LEADER REVIEW**.
+- Documentation finalization: **ACCEPTED WITH NON-BLOCKING NOTES** at documentation commit `837a6ae41f10b3154f2f15e7be9ac9035b741f48`.
 - Nginx/HTTPS recovery: **NOT PERFORMED**.
 - Cutover: **NOT EXECUTED**.
 - Provider/Zernio calls: 0.

@@ -55,17 +55,19 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08-F11-F09-R01 — Documentation Finalization`
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
-P1-T08-F11-F09-R01 = **DOCUMENTATION FINALIZED — AWAITING TEAM LEADER REVIEW**
+P1-T08-F11-F09-R01 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
-P1-T08-F11-F09-R01 Result = **R01_DOCUMENTATION_FINALIZATION_READY_FOR_TEAM_LEADER_REVIEW**
+P1-T08-F11-F09-R01 Result = **R01_DOCUMENTATION_FINALIZATION_ACCEPTED_WITH_NON_BLOCKING_NOTES**
 
 Task Type = **DOCUMENTATION-ONLY EVIDENCE FINALIZATION**
 
 R01 evidence capture = **COMPLETED — 2026-10-18T11:47:26Z**
 
 Documentation files = **3 AUTHORIZED FILES ONLY**; local `git diff --check` = **PASS**
+
+R01 accepted documentation commit = `837a6ae41f10b3154f2f15e7be9ac9035b741f48`; Team Leader disposition = **ACCEPTED WITH NON-BLOCKING NOTES**.
 
 Nginx/HTTPS recovery = **NOT PERFORMED**; cutover = **NOT EXECUTED**
 
@@ -854,17 +856,19 @@ Cash cost must be tracked from actual Coding LLM/provider/infrastructure/ad-test
 
 ## Immediate Next Action
 
-Current Task = `P1-T08-F11-F09-R01 — Documentation Finalization`.
+Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`.
 
-P1-T08-F11-F09-R01 = **DOCUMENTATION FINALIZED — AWAITING TEAM LEADER REVIEW**.
+P1-T08-F11-F09-R01 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**.
 
-P1-T08-F11-F09-R01 Result = **R01_DOCUMENTATION_FINALIZATION_READY_FOR_TEAM_LEADER_REVIEW**.
+P1-T08-F11-F09-R01 Result = **R01_DOCUMENTATION_FINALIZATION_ACCEPTED_WITH_NON_BLOCKING_NOTES**.
 
 Task Type = **DOCUMENTATION-ONLY EVIDENCE FINALIZATION**.
 
 R01 privileged evidence capture = **COMPLETED — 2026-10-18T11:47:26Z**.
 
 Local `git diff --check` = **PASS**; changes limited to the three authorized documentation files.
+
+R01 accepted documentation commit = `837a6ae41f10b3154f2f15e7be9ac9035b741f48`; remaining notes block cutover, not acceptance of this documentation task.
 
 Nginx/HTTPS recovery = **NOT PERFORMED**; cutover = **NOT EXECUTED**.
 
@@ -1349,7 +1353,7 @@ Starting HEAD: `eeeeaa6c4c8d3d84f7719c993c3292b2f87474a7`. Activation HEAD: `6e7
 
 Activation HEAD / starting HEAD: `f3117c4cae755c2eec6df8638276a3781fcc75f2`. Branch: `p1-t08-zernio-analytics-webhook`. Evidence capture completed at `2026-10-18T11:47:26Z` on `srv822206.hstgr.cloud`. Capture completion marker: `R01_READ_ONLY_CAPTURE_COMPLETE`.
 
-Current result: **R01_DOCUMENTATION_FINALIZATION_READY_FOR_TEAM_LEADER_REVIEW**. Local diff review and `git diff --check` passed; final commit/push and remote-HEAD/clean-tree verification are recorded in the task submission.
+Final result: **R01_DOCUMENTATION_FINALIZATION_ACCEPTED_WITH_NON_BLOCKING_NOTES**. Team Leader review accepted the documentation task at commit 837a6ae41f10b3154f2f15e7be9ac9035b741f48. Remaining MarketlyAI routing, staging-admin SAN, post-cutover behavior, and unrelated-host regression gaps remain blockers for any future cutover; they are not blockers for accurate documentation finalization.
 
 - Captured Nginx service: enabled but failed, MainPID 0, Result exit-code. The captured journal supports failure to bind IPv4 and IPv6 TCP/80 because the address was already in use while Apache owned wildcard TCP/80.
 - Captured Apache service: enabled and active/running, MainPID 852; only enabled Apache vhost is Elite on *:80.

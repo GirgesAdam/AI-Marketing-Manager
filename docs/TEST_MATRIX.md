@@ -1620,7 +1620,7 @@ Evidence source: local operator capture `C:\Users\USER\Desktop\R01-privileged-re
 
 Interpretation gate: nginx -t and nginx -T both exited 0, but the running Nginx service remains failed because its captured startup attempt could not bind TCP/80. Syntax/effective-config success is not a recovery test. Both target certificates passed identity, current validity, and chain checks, but the absence of a TCP/443 listener means those results do not establish live HTTPS.
 
-Final task state after documentation/Git checks: R01_DOCUMENTATION_FINALIZATION_READY_FOR_TEAM_LEADER_REVIEW. This is not cutover approval, service recovery, F11 authorization consumption, or completion of parent P1-T08.
+Final task state after Team Leader review: R01_DOCUMENTATION_FINALIZATION_ACCEPTED_WITH_NON_BLOCKING_NOTES (documentation commit `837a6ae41f10b3154f2f15e7be9ac9035b741f48`). This is not cutover approval, service recovery, F11 authorization consumption, or completion of parent P1-T08. Remaining routing, staging-admin SAN, and runtime regression gaps remain blockers for any future cutover.
 
 ### Documentation-only Git scope checks
 
