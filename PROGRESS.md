@@ -1540,3 +1540,23 @@ Acceptance does **not** establish a production application route, upstream, runt
 Canonical state after closure: Last Closed Subtask ID = `P1-T08-F11-F09-R04`; Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
 
 Documentation finalization scope: `PROGRESS.md` only. No new investigation evidence was added; no GitHub/Vercel/Railway search was repeated; no VPS access, infrastructure/deployment/service/DNS/TLS change, cutover/HTTPS recovery, application creation/deployment, Provider/Zernio call, F11 execution, authorization consumption, or successor-task activation occurred.
+
+### DOC-MIGRATION-02 — DECISIONS canonical-source migration finalization
+
+Status: **COMPLETED / AWAITING TEAM LEADER REVIEW**.
+
+Team Leader disposition for `DOC-MIGRATION-01`: **ACCEPTED**.
+
+Approved migration PR: `#1 — docs: migrate canonical decisions into repository root`.
+
+Migration PR final state: **MERGED**.
+
+Migration merge commit: `11c03113b9f63929dd3553a6814eb69501f75402`.
+
+Canonical decision-source policy: root `DECISIONS.md` on the active GitHub repository branch is now the **SOLE CANONICAL DECISION SOURCE**. The ChatGPT Project-backed `DECISIONS.md` copy is a **STALE / REFERENCE SNAPSHOT ONLY** and must not be treated as an alternative authority. Deleting the Project attachment, if desired, is a separate Owner action and was not performed by this task.
+
+Migration content verification: **PASS** — root `DECISIONS.md` contains exactly D-001 through D-039 in the approved order; D-039 remains last; D-040 is not present; the merged blob remains the approved migration blob.
+
+Execution-state preservation: Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
+
+Safety boundary: documentation migration only. D-040 was not registered; no VPS/Nginx/Apache/DNS/TLS/cutover/receiver/deployment activity, Provider/Zernio call, F11 execution, authorization consumption, or successor operational task occurred.
