@@ -55,11 +55,21 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`
+Current Task = `P1-T08-F11-F09-R04 — Identify Authoritative MarketlyAI Application Source and Deployment Mapping`
 
 P1-T08-F11-F09-R02 = **CLOSED / ACCEPTED WITH NON-BLOCKING NOTES**
 
 P1-T08-F11-F09-R03 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
+
+P1-T08-F11-F09-R04 = **ACTIVATED — READ-ONLY INVESTIGATION NOT YET STARTED**
+
+R04 Team Leader authorization = **APPROVED**; activation scope = isolated clean checkout and activation commit only.
+
+R04 approved starting baseline = `f2f3b4de860f9a422cb3296b03b926615a84b7ae`.
+
+R04 clean checkout = `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean`.
+
+R04 activation safety boundary = **NO DEPLOYMENT INVESTIGATION YET**; no infrastructure/deployment/service/DNS/TLS/Provider/Zernio/F11 activity is authorized by this activation.
 
 R03 Team Leader disposition = **ACCEPTED WITH NON-BLOCKING NOTES** (2026-10-18); reviewed R03 HEAD = `61ea290706e3101bf9f6c64afacb4808c52f918b`.
 
@@ -1442,3 +1452,17 @@ Technical result remains: **NOT VERIFIED — AUTHORITATIVE MARKETLYAI DEPLOYMENT
 Canonical state after closure: Last Closed Subtask ID = `P1-T08-F11-F09-R03`; Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior` (**UNRESOLVED / NOT DONE**); Parent P1-T08 = **UNRESOLVED / NOT DONE**; Cutover readiness = **BLOCKED**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
 
 Closure finalization was documentation-only. No source/test/package/infrastructure changes, service actions, new external connectivity probes, Provider/Zernio calls, receiver/tunnel setup, F11 execution, or authorization consumption occurred.
+
+### P1-T08-F11-F09-R04 — activation
+
+Task status: **ACTIVATED — READ-ONLY INVESTIGATION NOT YET STARTED**.
+
+Team Leader authorization: **APPROVED** for isolated clean-checkout activation.
+
+Approved starting baseline / activation parent: `f2f3b4de860f9a422cb3296b03b926615a84b7ae`.
+
+Clean checkout path: `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean`.
+
+Activation boundary: this commit activates R04 only. The deployment/source investigation has **NOT STARTED**. No source/test/package/infrastructure changes, deployment operations, service actions, DNS/TLS changes, Provider/Zernio calls, receiver/tunnel setup, F11 execution, or authorization consumption are permitted in this activation step.
+
+Parent P1-T08 remains **UNRESOLVED / NOT DONE**; Analytics Webhook remains `SPIKE_PENDING`; Cutover remains **BLOCKED**; F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization remains **AUTHORIZED / UNCONSUMED**; Next Task remains **NOT_STARTED**.
