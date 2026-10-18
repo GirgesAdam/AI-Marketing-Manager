@@ -1562,8 +1562,26 @@ Migration merge commit: `11c03113b9f63929dd3553a6814eb69501f75402`.
 
 Canonical decision-source policy: root `DECISIONS.md` on the active GitHub repository branch is now the **SOLE CANONICAL DECISION SOURCE**. The previous ChatGPT Project-backed `DECISIONS.md` copy is a **STALE / REFERENCE SNAPSHOT ONLY** and must not be treated as an alternative authority; it may be removed by the Owner. Deleting the Project attachment was not performed by this task.
 
-Migration content verification: **PASS** — root `DECISIONS.md` contains exactly D-001 through D-039 in the approved order; D-039 remains last; D-040 is not present; the merged blob remains the approved migration blob.
+Migration content verification at DOC-MIGRATION-02 completion: **PASS** — root `DECISIONS.md` contained exactly D-001 through D-039 in the approved order; D-039 was last; D-040 was not part of that migration. This historical migration statement is superseded for current decision state by accepted `P1-T08-D040-REGISTER-01`.
 
 Execution-state preservation: Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
 
-Safety boundary: documentation migration only. D-040 was not registered; no VPS/Nginx/Apache/DNS/TLS/cutover/receiver/deployment activity, Provider/Zernio call, F11 execution, authorization consumption, or successor operational task occurred.
+Safety boundary for DOC-MIGRATION-02: documentation migration only. D-040 was not registered by that migration task; that historical statement is superseded for current decision state by accepted `P1-T08-D040-REGISTER-01`. No VPS/Nginx/Apache/DNS/TLS/cutover/receiver/deployment activity, Provider/Zernio call, F11 execution, authorization consumption, or successor operational task occurred during the migration.
+
+### P1-T08-D040-CLOSEOUT-01 — D-040 acceptance closeout
+
+P1-T08-D040-REGISTER-01 = **DONE / ACCEPTED**.
+
+Team Leader disposition = **ACCEPTED**.
+
+Canonical D-040 = **REGISTERED / VERIFIED / ACCEPTED**.
+
+Accepted D-040 commit = `9a8983953f7d770972a3719adfcdd3bfa3f30ac2`.
+
+D-040 permits only the bounded Phase-1 exact-path receiver routing scope described in the canonical decision `D-040 — Phase-1 MarketlyAI Dedicated Test Receiver Routing Scope`.
+
+D-040 itself does **not** authorize Cutover, receiver creation, infrastructure mutation, Provider/Zernio calls, or F11 execution.
+
+Execution-state preservation: Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
+
+Closeout safety boundary: documentation-only. No `DECISIONS.md` change, VPS/Nginx/Apache/DNS/TLS change, receiver creation, Cutover, deployment, Provider/Zernio call, F11 execution, authorization consumption/expansion, or successor-task activation is authorized or performed by this closeout.
