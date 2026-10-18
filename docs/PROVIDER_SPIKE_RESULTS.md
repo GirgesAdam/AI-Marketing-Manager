@@ -2140,7 +2140,7 @@ The R02 read-only search for matching deployment/config files under `/etc/nginx`
 
 ### P1-T08-F11-F09-R03 - Authoritative MarketlyAI Deployment Route Evidence (2026-10-18)
 
-Status: EXECUTED - AWAITING TEAM LEADER REVIEW.
+Status: **DONE / ACCEPTED WITH NON-BLOCKING NOTES**.
 
 Result: NOT VERIFIED — AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND.
 
@@ -2203,3 +2203,13 @@ Do not invent an upstream or prepare/apply a route patch from this evidence. Cut
     $historyPaths=git -C $repo log --all --name-only --pretty=format:
     $historyMatches=@($historyPaths | Where-Object { $_ -match '(?i)(docker|compose|nginx|apache|caddy|deploy|release|systemd|procfile|vercel|railway|fly\.toml|workflow|marketlyai|gunicorn|uvicorn|wsgi|asgi)' } | Sort-Object -Unique)
     Result: HISTORY_DEPLOYMENT_PATH_MATCH_COUNT=0.
+
+#### Team Leader acceptance / closure (2026-10-18)
+
+Task status: **DONE / ACCEPTED WITH NON-BLOCKING NOTES**.
+
+Team Leader disposition: **ACCEPTED WITH NON-BLOCKING NOTES**. Reviewed R03 HEAD: `61ea290706e3101bf9f6c64afacb4808c52f918b`; R03 evidence/documentation commit: `dc00d5d42ec0b7506f27b1e22a45bcb77d87a49b`; activation commit: `9936921851cac6c55445425b8d12f2fbec9c6269`.
+
+Technical result is unchanged: **NOT VERIFIED — AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND**. Acceptance is limited to investigation/evidence/documentation quality; it is not proof of the intended route/upstream, not HTTPS readiness approval, and not cutover authorization.
+
+Canonical state remains: Parent P1-T08 **UNRESOLVED / NOT DONE**; cutover **BLOCKED**; Analytics Webhook `SPIKE_PENDING`; F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; one-run authorization **AUTHORIZED / UNCONSUMED**; Next Task **NOT_STARTED**. R02 connectivity observations remain historical; no R03 connectivity probe or Provider action was performed.

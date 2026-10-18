@@ -55,11 +55,23 @@ Parent P1-T08 = **UNRESOLVED / NOT DONE**
 
 Analytics Webhook = `SPIKE_PENDING`
 
-Current Task = `P1-T08-F11-F09-R03 - Authoritative MarketlyAI Deployment Route Evidence`
+Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`
 
 P1-T08-F11-F09-R02 = **CLOSED / ACCEPTED WITH NON-BLOCKING NOTES**
 
-Last Closed Subtask ID = `P1-T08-F11-F09-R02`
+P1-T08-F11-F09-R03 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
+
+R03 Team Leader disposition = **ACCEPTED WITH NON-BLOCKING NOTES** (2026-10-18); reviewed R03 HEAD = `61ea290706e3101bf9f6c64afacb4808c52f918b`.
+
+R03 technical result = **NOT VERIFIED — AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND**.
+
+R03 evidence result = **NOT VERIFIED — AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND**; cutover readiness remains **BLOCKED**.
+
+R03 closure scope = **INVESTIGATION / EVIDENCE / DOCUMENTATION QUALITY ONLY**; this acceptance does not approve route correctness, upstream selection, HTTPS readiness, or cutover.
+
+F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**.
+
+Last Closed Subtask ID = `P1-T08-F11-F09-R03`
 
 Task activation commit is separate from evidence/documentation commit; no VPS evidence collection began before activation push.
 
@@ -1398,7 +1410,7 @@ Task result: **CUTOVER_PREFLIGHT_EVIDENCE_INCOMPLETE**. This is read-only infras
 
 ### P1-T08-F11-F09-R03 - activation
 
-Task status: **EXECUTED - AWAITING TEAM LEADER REVIEW**.
+Activation record status: **ACTIVATION COMMIT PUSHED AND VERIFIED**.
 Team Leader authorization: **APPROVED**; official Task ID confirmed.
 Activation baseline: branch p1-t08-zernio-analytics-webhook; starting HEAD c5c265e270bfa1bf43b418a26756ead88fdff150; live remote HEAD matched at pre-activation verification.
 Activation commit is separate from the evidence/documentation commit. No new R03 repository/deployment evidence was collected before the activation commit was pushed and verified.
@@ -1406,7 +1418,8 @@ Boundaries: no infrastructure/service changes, deployment/cutover, Provider/Zern
 
 ### P1-T08-F11-F09-R03 - investigation result
 
-Task status: EXECUTED - AWAITING TEAM LEADER REVIEW.
+Task status: **DONE / ACCEPTED WITH NON-BLOCKING NOTES**.
+Team Leader disposition: **ACCEPTED WITH NON-BLOCKING NOTES** (2026-10-18); acceptance covers investigation/evidence/documentation quality only.
 Task result: NOT VERIFIED — AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND.
 Evidence collection began only after activation commit 9936921851cac6c55445425b8d12f2fbec9c6269 was pushed and verified.
 README.md lines 3-4 and package.json lines 2-5, 8-20 establish that this repository is the internal Provider Spike Harness, not the production application/monorepo. Tracked-file and all-ref history audits found no deployment/reverse-proxy/service manifest. Source-only search found only a synthetic marketlyai.example.invalid test fixture. Bounded GitHub/Vercel/Railway discovery did not identify an authoritative production route source.
@@ -1415,3 +1428,17 @@ Required missing input: authoritative production application repository/commit a
 Cutover readiness = BLOCKED; cutover execution = NOT EXECUTED. No route or upstream is inferred.
 Safety: infrastructure/service/DNS/firewall/certificate/package/deployment mutations 0; external connectivity probes 0; Provider/Zernio calls 0; receiver/tunnel 0; F11 execution NO; F11 authorization consumed NO.
 Parent P1-T08 = UNRESOLVED / NOT DONE; Analytics Webhook = SPIKE_PENDING; F11 = UNCONSUMED / BLOCKED PRE-PROVIDER; F11 one-run authorization = AUTHORIZED / UNCONSUMED; Next Task = NOT_STARTED.
+
+### P1-T08-F11-F09-R03 - acceptance finalization
+
+Final status: **DONE / ACCEPTED WITH NON-BLOCKING NOTES**.
+
+Team Leader disposition: **ACCEPTED WITH NON-BLOCKING NOTES** (2026-10-18).
+
+Reviewed R03 HEAD: `61ea290706e3101bf9f6c64afacb4808c52f918b`; R03 evidence/documentation commit: `dc00d5d42ec0b7506f27b1e22a45bcb77d87a49b`; activation commit: `9936921851cac6c55445425b8d12f2fbec9c6269`.
+
+Technical result remains: **NOT VERIFIED — AUTHORITATIVE MARKETLYAI DEPLOYMENT ROUTE NOT FOUND**. Acceptance applies only to investigation, evidence, and documentation quality; it does not establish an application route or upstream and does not approve HTTPS recovery or cutover.
+
+Canonical state after closure: Last Closed Subtask ID = `P1-T08-F11-F09-R03`; Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior` (**UNRESOLVED / NOT DONE**); Parent P1-T08 = **UNRESOLVED / NOT DONE**; Cutover readiness = **BLOCKED**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
+
+Closure finalization was documentation-only. No source/test/package/infrastructure changes, service actions, new external connectivity probes, Provider/Zernio calls, receiver/tunnel setup, F11 execution, or authorization consumption occurred.
