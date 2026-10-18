@@ -2077,3 +2077,63 @@ The hashes are read-only fingerprints; no file was edited on the VPS. The stagin
 - Parent P1-T08: **UNRESOLVED / NOT DONE**.
 - Next Task: **NOT STARTED**.
 - Cutover readiness and external reachability: **NOT ESTABLISHED**.
+
+
+### P1-T08-F11-F09-R02 - Follow-up Read-Only Evidence (2026-10-18)
+
+Branch: `p1-t08-zernio-analytics-webhook`. Starting/activation HEAD: `412c18dcf2abe91a7b023ec677d5630df82bbe62`. No VPS or Provider action was authorized beyond read-only inspection.
+
+#### External HTTPS observations
+
+From Windows PowerShell, using `curl.exe` with `--max-time 10 --max-redirs 0` and `Test-NetConnection -Port 443`:
+
+- `marketlyai.restartorg.com` resolved to `82.29.177.121`; curl exit 28 after 10.012150 seconds; `HTTP_CODE=000`, no remote IP established by curl, and TCP/443 test returned `TcpTestSucceeded=False`.
+- `staging-admin.restartorg.com` resolved to `82.29.177.121`; curl exit 28 after approximately 10 seconds; TCP/443 test returned `TcpTestSucceeded=False`.
+- These results establish external TCP/HTTPS unavailability at test time. They do not establish a TLS certificate failure because the TLS handshake/hostname validation was not reached. The curl `TLS_VERIFY=0` field from the timed-out MarketlyAI attempt is not a successful TLS check.
+
+#### staging-admin certificate verification
+
+Certificate file inspected: `/etc/letsencrypt/live/staging-clinic.restartorg.com/fullchain.pem`.
+
+- Subject: `CN = staging-clinic.restartorg.com`.
+- Issuer: `C = US, O = Let's Encrypt, CN = YR2`.
+- Serial: `05229C5532638AAE50857E5CFAADD960EE8E`.
+- Validity: `notBefore=Sep 1 22:36:53 2026 GMT`; `notAfter=Nov 30 22:36:52 2026 GMT`.
+- SAN: `DNS:staging-admin.restartorg.com`, `DNS:staging-clinic.restartorg.com`.
+- SHA-256 fingerprint: `2B:36:28:DF:CB:ED:1C:52:E8:9A:F5:2D:BB:30:9A:87:20:81:22:27:C0:F2:B7:42:B2:7B:57:AC:E5:08:D9:0C`.
+- `openssl x509 ... -checkhost staging-admin.restartorg.com`: hostname matches; exit 0.
+- `openssl x509 ... -checkend 0`: "Certificate will not expire"; exit 0.
+- `openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt -untrusted /etc/letsencrypt/live/staging-clinic.restartorg.com/chain.pem /etc/letsencrypt/live/staging-clinic.restartorg.com/cert.pem`: certificate OK; exit 0.
+- Result: **PASS - CERTIFICATE HOSTNAME, CURRENT VALIDITY, AND TRUST CHAIN**. The private key was not read. This does not prove the certificate is being served over live HTTPS.
+
+#### Effective Nginx inclusion of staging-admin.save
+
+Command used: `sudo nginx -T 2>&1 | grep -n -B 4 -A 18 'staging-admin\.restartorg\.com'`.
+
+Observed output:
+- Nginx reports conflicting `staging-admin.restartorg.com` server names on `0.0.0.0:443` and `0.0.0.0:80`, marked "ignored".
+- The effective dump contains `# configuration file /etc/nginx/sites-enabled/staging-admin:` and later `# configuration file /etc/nginx/sites-enabled/staging-admin.save:`.
+- Both define `staging-admin.restartorg.com` on 443 ssl and 80, the same document root `/var/www/mobileApp/staging-admin`, and the same `staging-clinic` certificate paths.
+- Conclusion: `staging-admin.save` is included in the effective configuration and creates duplicate-name warnings. It remains preserved and unmodified. The warnings do not prove service availability; external TCP/443 remains unreachable.
+
+#### MarketlyAI intended routing - unresolved blocker
+
+The previously captured MarketlyAI vhost has `listen 80`, `listen 443 ssl`, `server_name marketlyai.restartorg.com`, a `location /` returning 404, and certificate references under `/etc/letsencrypt/live/marketlyai.restartorg.com/`. No explicit `root`, `proxy_pass`, or `fastcgi_pass` was observed in the target directives.
+
+The R02 read-only search for matching deployment/config files under `/etc/nginx`, `/etc/apache2`, `/etc/systemd/system`, `/opt`, `/srv`, and `/var/www` returned no paths for the specified file extensions and `marketlyai|ai-marketing-manager` terms. This bounded search is not proof that an application does not exist elsewhere.
+
+- Intended MarketlyAI application route: **NOT VERIFIED**.
+- Exact blocker: no authoritative deployment manifest/service/config matching the searched terms was found in the searched locations, while the current target vhost explicitly returns 404 and has no configured application root or upstream in the captured directives.
+- Required resolution: authoritative deployment/routing evidence must be provided or located in a separately authorized read-only investigation. No routing change is authorized by R02.
+
+#### R02 classification and safety
+
+- Staging-admin certificate hostname/SAN: **PASS**.
+- Staging-admin certificate current validity: **PASS**.
+- Staging-admin certificate trust chain: **PASS**.
+- staging-admin.save effective inclusion and duplicate-name warnings: **CONFIRMED / PRESERVE UNCHANGED**.
+- External HTTPS TCP/443: **FAIL - CONNECTION TIMEOUT** for both tested hostnames.
+- Intended MarketlyAI application routing: **NOT VERIFIED / BLOCKED**.
+- Cutover readiness: **CUTOVER_PREFLIGHT_EVIDENCE_INCOMPLETE**.
+- Apache/Nginx/systemd/config/listener/DNS/firewall/certificate/package mutations: 0. Service actions: 0. Receiver/tunnel: 0. Provider/Zernio/auth/Accounts/Analytics/Delta/webhook/post/contact calls: 0. F11 execution: NO; F11 authorization consumed: NO.
+- Existing R01 findings remain historical. R02 supersedes only the prior staging-admin SAN/chain verification gap; it does not establish live HTTPS or resolve MarketlyAI routing.

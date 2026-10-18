@@ -1629,3 +1629,20 @@ Final task state after Team Leader review: R01_DOCUMENTATION_FINALIZATION_ACCEPT
 | R01-24 | `git diff --check` after final documentation edits | Exit `0` | **PASS — NO WHITESPACE ERRORS** |
 | R01-25 | `git diff --name-only` | Only `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, and `docs/TEST_MATRIX.md` | **PASS — AUTHORIZED DOCUMENTATION FILES ONLY** |
 | R01-26 | Source/test/package/infrastructure scope audit | No source, test, package, migration, or infrastructure files changed; no additional VPS commands or Provider calls after the captured read-only run | **PASS — SCOPE PRESERVED** |
+
+
+### P1-T08-F11-F09-R02 - Remaining Pre-Cutover Evidence Gates
+
+| ID | Check / command | Observed result | Classification |
+|---|---|---|---|
+| R02-01 | `git fetch origin p1-t08-zernio-analytics-webhook`; branch/HEAD/remote/status; pre-edit `git diff --check` | Branch correct; local and remote HEAD both `412c18dcf2abe91a7b023ec677d5630df82bbe62`; working tree clean; diff check exit 0 | **PASS - ACTIVATION BASELINE VERIFIED** |
+| R02-02 | External Windows PowerShell `curl.exe` with 10-second timeout and `Test-NetConnection -Port 443` for MarketlyAI and staging-admin | Both curl attempts timed out (exit 28); TCP/443 to `82.29.177.121` failed for both | **FAIL - EXTERNAL HTTPS UNAVAILABLE** |
+| R02-03 | `openssl x509 ... -checkhost staging-admin.restartorg.com` on configured staging-clinic fullchain | Hostname matches certificate; exit 0; SAN includes staging-admin and staging-clinic | **PASS - HOSTNAME/SAN** |
+| R02-04 | `openssl x509 ... -checkend 0` | "Certificate will not expire"; exit 0; notAfter 2026-11-30 22:36:52 GMT | **PASS - CURRENT VALIDITY** |
+| R02-05 | `openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt -untrusted .../chain.pem .../cert.pem` | Certificate OK; exit 0 | **PASS - TRUST CHAIN** |
+| R02-06 | `sudo nginx -T 2>&1 | grep -n -B 4 -A 18 'staging-admin\.restartorg\.com'` | Effective dump includes both `sites-enabled/staging-admin` and `sites-enabled/staging-admin.save`; conflicting-name warnings on ports 80 and 443 say ignored | **PASS WITH WARNINGS - DUPLICATE INCLUDED; PRESERVE UNCHANGED** |
+| R02-07 | MarketlyAI vhost directives plus bounded search for deployment/config files under `/etc/nginx`, `/etc/apache2`, `/etc/systemd/system`, `/opt`, `/srv`, `/var/www` | Target vhost returns 404 and has no explicit root/proxy_pass/fastcgi_pass; bounded search printed no matching paths | **NOT VERIFIED - AUTHORITATIVE APPLICATION ROUTE MISSING** |
+| R02-08 | Read-only safety audit | No infrastructure/service/config mutations; no receiver/tunnel; Provider/Zernio calls 0; F11 not executed and authorization not consumed | **PASS - SAFETY BOUNDARY PRESERVED** |
+| R02-09 | Documentation diff scope and `git diff --check` after edits | git diff --check exit 0; only three authorized documentation files changed; no source/test/package/infrastructure changes | **PASS - DIFF CHECK AND SCOPE VERIFIED** |
+
+Interpretation gate: certificate hostname, validity, and trust-chain checks pass for staging-admin, but public TCP/443 remains unreachable. Effective configuration includes staging-admin.save and emits duplicate-name warnings; the file remains untouched. MarketlyAI intended application routing is still NOT VERIFIED because no authoritative deployment evidence was found in the bounded search and the current target vhost returns 404. Overall R02 result: **CUTOVER_PREFLIGHT_EVIDENCE_INCOMPLETE**. No cutover, repair, service action, or Provider operation is authorized by this evidence.

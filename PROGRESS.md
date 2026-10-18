@@ -1375,3 +1375,18 @@ Final result: **R01_DOCUMENTATION_FINALIZATION_ACCEPTED_WITH_NON_BLOCKING_NOTES*
 - Documentation updates are limited to PROGRESS.md, docs/PROVIDER_SPIKE_RESULTS.md, and docs/TEST_MATRIX.md.
 - Nginx/HTTPS recovery: NOT PERFORMED. Cutover: NOT EXECUTED. Provider/Zernio calls: 0. F11 execution and authorization consumption: NO / NO.
 - F11 remains UNCONSUMED / BLOCKED PRE-PROVIDER. Analytics Webhook remains SPIKE_PENDING. Parent P1-T08 remains UNRESOLVED / NOT DONE. Next Task remains NOT_STARTED.
+
+
+### P1-T08-F11-F09-R02 - Resolve Remaining Pre-Cutover Evidence Gaps
+
+Task result: **CUTOVER_PREFLIGHT_EVIDENCE_INCOMPLETE**. This is read-only infrastructure evidence, not Provider Behavior evidence and not cutover approval.
+
+- Repository precheck before documentation edits: branch `p1-t08-zernio-analytics-webhook`; local HEAD and fetched `origin/p1-t08-zernio-analytics-webhook` both `412c18dcf2abe91a7b023ec677d5630df82bbe62`; working tree clean; pre-edit `git diff --check` exit 0.
+- Public HTTPS from external Windows PowerShell: `marketlyai.restartorg.com:443` and `staging-admin.restartorg.com:443` both timed out; `curl.exe` exit 28; TCP tests to `82.29.177.121:443` returned `TcpTestSucceeded=False`. `HTTP_CODE=000` for MarketlyAI; TLS verification was not reached and `TLS_VERIFY=0` is not a successful TLS validation.
+- Staging-admin certificate: the configured `staging-clinic` certificate SAN includes `staging-admin.restartorg.com`; `-checkhost` exit 0; `-checkend 0` exit 0; trust-chain verification using system CA plus `chain.pem` exit 0. Certificate identity, current validity and chain checks are PASS; served HTTPS remains unavailable.
+- Effective Nginx configuration: `nginx -T` output reported syntax OK / test successful, with conflicting `staging-admin.restartorg.com` warnings on ports 80 and 443. The dump explicitly includes `/etc/nginx/sites-enabled/staging-admin.save` after `/etc/nginx/sites-enabled/staging-admin`; the duplicate definitions remain unchanged. Nginx reports the conflicting server names as ignored. This is effective-config evidence, not live HTTPS evidence.
+- MarketlyAI routing: the previously captured target vhost has HTTP/80 and HTTPS/443 listeners, a `location /` returning 404, and a MarketlyAI certificate reference, with no explicit `root`, `proxy_pass`, or `fastcgi_pass` in the target directives. The R02 search across `/etc/nginx`, `/etc/apache2`, `/etc/systemd/system`, `/opt`, `/srv`, and `/var/www` for the specified deployment/config file types and terms returned no matching paths. Intended application routing therefore remains **NOT VERIFIED**; the bounded search does not prove no application exists elsewhere.
+- Cutover readiness: **BLOCKED** until authoritative MarketlyAI deployment/routing evidence is supplied and public HTTPS can be revalidated after a separately authorized infrastructure action. No such action is authorized by R02.
+- Safety: Apache/Nginx/systemd/config/listener/DNS/firewall/certificate/package mutations = 0; service actions = 0; receiver/tunnel = 0; Provider/Zernio/auth/Accounts/Analytics/Delta/webhook/post/contact calls = 0; F11 execution = NO; F11 authorization consumed = NO.
+- Canonical product state remains: F11 **UNCONSUMED / BLOCKED PRE-PROVIDER**; one-run authorization **AUTHORIZED / UNCONSUMED**; parent P1-T08 **UNRESOLVED / NOT DONE**; Analytics Webhook **SPIKE_PENDING**; Next Task **NOT_STARTED**.
+- Current Phase = **PHASE 1 - Provider Feasibility & Basic Cost Safety**. Current Task = **P1-T08-F11-F09-R02 - Resolve Remaining Pre-Cutover Evidence Gaps**, awaiting Team Leader review of this incomplete result.
