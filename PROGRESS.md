@@ -1543,8 +1543,15 @@ Documentation finalization scope: `PROGRESS.md` only. No new investigation evide
 
 ### DOC-MIGRATION-02 — DECISIONS canonical-source migration finalization
 
-Status: **COMPLETED / AWAITING TEAM LEADER REVIEW**.
+Status: **DONE / ACCEPTED**.
 
+DOC-MIGRATION-02 = **DONE / ACCEPTED**.
+
+Team Leader disposition for `DOC-MIGRATION-02` = **ACCEPTED**.
+
+Accepted migration merge commit = `11c03113b9f63929dd3553a6814eb69501f75402`.
+
+Accepted documentation finalization commit = `f6a5a8cb58815a3e621234f7457694114e5bb141`.
 Team Leader disposition for `DOC-MIGRATION-01`: **ACCEPTED**.
 
 Approved migration PR: `#1 — docs: migrate canonical decisions into repository root`.
@@ -1553,7 +1560,7 @@ Migration PR final state: **MERGED**.
 
 Migration merge commit: `11c03113b9f63929dd3553a6814eb69501f75402`.
 
-Canonical decision-source policy: root `DECISIONS.md` on the active GitHub repository branch is now the **SOLE CANONICAL DECISION SOURCE**. The ChatGPT Project-backed `DECISIONS.md` copy is a **STALE / REFERENCE SNAPSHOT ONLY** and must not be treated as an alternative authority. Deleting the Project attachment, if desired, is a separate Owner action and was not performed by this task.
+Canonical decision-source policy: root `DECISIONS.md` on the active GitHub repository branch is now the **SOLE CANONICAL DECISION SOURCE**. The previous ChatGPT Project-backed `DECISIONS.md` copy is a **STALE / REFERENCE SNAPSHOT ONLY** and must not be treated as an alternative authority; it may be removed by the Owner. Deleting the Project attachment was not performed by this task.
 
 Migration content verification: **PASS** — root `DECISIONS.md` contains exactly D-001 through D-039 in the approved order; D-039 remains last; D-040 is not present; the merged blob remains the approved migration blob.
 
