@@ -97,7 +97,15 @@ R03 closure scope = **INVESTIGATION / EVIDENCE / DOCUMENTATION QUALITY ONLY**; t
 
 F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**.
 
-Last Closed Subtask ID = `P1-T08-F11-F10-R01`
+Last Closed Subtask ID = `P1-T08-F11-F10-R02-F01`
+
+P1-T08-F11-F10-R02-F01 = **DONE / ACCEPTED**
+
+F01 Team Leader disposition = **ACCEPTED**; accepted F01 evidence HEAD = `f3b982f9b6044ee640581fb5f5d9b21adcc9ac7e`.
+
+P1-T08-F11-F10-R02 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
+
+R02 Team Leader disposition = **ACCEPTED WITH NON-BLOCKING NOTES**. Acceptance is limited to temporary loopback receiver preparation, deterministic receiver validation, bounded evidence-growth behavior, staged exact MarketlyAI Nginx route, and rollback/readiness evidence. It does not approve Public Cutover or Provider execution.
 
 Task activation commit is separate from evidence/documentation commit; no VPS evidence collection began before activation push.
 
@@ -1709,3 +1717,39 @@ Safety boundary evidence for F01: Public Cutover = **NO**; Nginx start/restart/r
 Execution-state preservation: Current Phase = **PHASE 1 - Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
 
 F01 is not marked `DONE` or `ACCEPTED`. Stop at this review boundary; do not perform Public Cutover, create the Zernio webhook, execute F11, consume its authorization, or start another task before Team Leader review.
+
+
+### P1-T08-F11-F10-R02-CLOSEOUT-01 - documentation-only Team Leader acceptance closeout (2026-10-19)
+
+`P1-T08-F11-F10-R02-CLOSEOUT-01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Starting repository HEAD = `f3b982f9b6044ee640581fb5f5d9b21adcc9ac7e`; local, tracking, and live remote matched and the working tree was clean before this documentation-only closeout.
+
+Canonical accepted dispositions recorded by this closeout:
+- `P1-T08-F11-F10-R02-F01 = DONE / ACCEPTED`.
+- F01 Team Leader disposition = **ACCEPTED**.
+- Accepted F01 evidence HEAD = `f3b982f9b6044ee640581fb5f5d9b21adcc9ac7e`.
+- `P1-T08-F11-F10-R02 = DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
+- R02 Team Leader disposition = **ACCEPTED WITH NON-BLOCKING NOTES**.
+
+Acceptance scope is limited to: temporary loopback receiver preparation; deterministic receiver validation; bounded evidence-growth behavior; staged exact MarketlyAI Nginx route; and rollback/readiness evidence. This acceptance does **not** approve Public Cutover or Provider execution.
+
+Accepted evidence summary:
+- Receiver = `/opt/marketly-r02/receiver.py`; SHA-256 = `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`.
+- Receiver listener = `127.0.0.1:8765` only; receiver service = `active`; boot state = `disabled`.
+- Real F11 evidence directory had `0` files at the accepted handoff.
+- Total temporary capture bound = `16` accepted events / `32` `event-*` files; capacity rejection = HTTP `507`.
+- Per-request body maximum = `1 MiB`; oversized rejection = HTTP `413`.
+- Systemd unit SHA-256 = `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`.
+- Accepted staged MarketlyAI config SHA-256 = `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`.
+- Verified rollback SHA-256 = `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`.
+- Accepted routing boundary = `marketlyai.restartorg.com`; exact HTTPS path only = `/p1-t08-f11/analytics-synced`.
+- Generic MarketlyAI `/` remains configured as safe `404` inside staged Nginx.
+
+Non-blocking note: the temporary file-count evidence bound is accepted only for this bounded Phase-1 Provider Behavior experiment. It is not a production webhook durability/storage design and creates no production architecture precedent.
+
+Execution-state preservation after this closeout: Current Phase = **PHASE 1 - Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**; Next operational task = **NOT_STARTED**.
+
+Safety boundary: repository modification = `PROGRESS.md` only. `DECISIONS.md`, `PROVIDER_SPIKE_RESULTS.md`, receiver files, systemd unit, Nginx, Apache, DNS/TLS/firewall, Docker/Waha were not modified. VPS commands/actions = `0`; Provider/Zernio calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**; Public Cutover = **NO**; Zernio webhook creation = **NO**.
+
+Stop after commit/push and Git evidence verification. Do not start Public Cutover, create the Zernio webhook, execute F11, consume its authorization, or start a successor operational task.
