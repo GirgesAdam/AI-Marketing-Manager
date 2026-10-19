@@ -1753,3 +1753,16 @@ Execution-state preservation after this closeout: Current Phase = **PHASE 1 - Pr
 Safety boundary: repository modification = `PROGRESS.md` only. `DECISIONS.md`, `PROVIDER_SPIKE_RESULTS.md`, receiver files, systemd unit, Nginx, Apache, DNS/TLS/firewall, Docker/Waha were not modified. VPS commands/actions = `0`; Provider/Zernio calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**; Public Cutover = **NO**; Zernio webhook creation = **NO**.
 
 Stop after commit/push and Git evidence verification. Do not start Public Cutover, create the Zernio webhook, execute F11, consume its authorization, or start a successor operational task.
+
+
+### P1-T08-F11-F10-R03 - bounded MarketlyAI public ingress Cutover activation (2026-10-19)
+
+`P1-T08-F11-F10-R03 = ACTIVATED / NOT EXECUTED`.
+
+Activation scope = bounded public ingress Cutover only for the Phase-1 test VPS. D-038 and D-040 govern the Cutover. Provider/Zernio = **NOT AUTHORIZED**. F11 = **NOT AUTHORIZED FOR EXECUTION**. F11 authorization remains **AUTHORIZED / UNCONSUMED**. No Provider behavior conclusion may result from this task.
+
+Activation-time execution state: Current Phase = **PHASE 1 - Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED / R03 ACTIVATED**; F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization remains **AUTHORIZED / UNCONSUMED**; Next operational task = **NOT_STARTED**.
+
+Starting repository HEAD = `0a83b1b986b7d708d8ff3a5c040354a0dc559b07`; local, tracking, and live remote were equal and the working tree was clean. Canonical D-038 and D-040 were re-read and remained **Accepted** before activation.
+
+This activation authorizes no Provider/Zernio action and no F11 execution. Activation must be committed and pushed before the first VPS mutation.
