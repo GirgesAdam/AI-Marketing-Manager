@@ -1634,3 +1634,23 @@ Public Cutover = **NOT AUTHORIZED**. Provider/Zernio calls = **NOT AUTHORIZED**.
 Implementation has not yet been verified at activation time. No claim is made here that the receiver is running or the MarketlyAI route is staged.
 
 Execution-state preservation: Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
+
+### P1-T08-F11-F10-R02 — safe-stop execution attempt (2026-10-19)
+
+Task status: **BLOCKED — RECEIVER PREPARATION FAILED / SAFE STOP**.
+
+Access gate = **PASS** in the authorized interactive SSH session. Privilege evidence: `sudo -n true` exit `0`; `sudo -n id -u` returned `0`; `sudo -n -l` exit `0` and showed `(ALL : ALL) ALL` for `marktuser`. No VPS mutation occurred before that gate passed.
+
+Fresh pre-mutation baseline remained consistent with the accepted R01 evidence: `127.0.0.1:8765` was free; MarketlyAI source config path resolved to `/etc/nginx/sites-available/marketlyai.restartorg.com`; source SHA-256 = `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`; `sudo nginx -t` passed with only the pre-existing unrelated `staging-admin.restartorg.com` conflicting-server-name warnings; Nginx remained `failed`; Apache remained the public TCP/80 owner; no public TCP/443 listener was present. Fresh public MarketlyAI baseline immediately before mutation was HTTP `500` from Apache and HTTPS timeout.
+
+Rollback preparation succeeded before receiver creation. Root-owned rollback copy = `/root/p1-t08-f11-f10-r02-backups/marketlyai.restartorg.com.20261019T132127Z.before-r02`, permissions `root:root 0600`, SHA-256 = `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`, exactly matching the source config hash.
+
+Stage B1 created the dedicated non-login service account `marketly-r02` (`uid=997`, `gid=997`, home `/var/lib/marketly-r02`, shell `/usr/sbin/nologin`) and `/var/lib/marketly-r02/f11-evidence` with owner `marketly-r02:marketly-r02` and mode `0700`. Receiver file creation then failed because `/usr/local/libexec` did not exist: `tee: /usr/local/libexec/marketly-r02-receiver.py: No such file or directory`. Execution stopped under `set -e` before receiver validation, deterministic tests, systemd-unit creation, receiver start, or Nginx staging.
+
+Safe-stop verification after the failure: receiver file = **ABSENT**; systemd unit = **ABSENT**; receiver process = **NONE**; `127.0.0.1:8765` = **FREE**; real F11 evidence directory file count = `0`; source config SHA-256 remained identical to the verified rollback copy; Nginx remained `failed`; Apache remained the only observed public TCP/80 listener and no public TCP/443 listener appeared. Post-failure public MarketlyAI behavior remained HTTP `500` from Apache and HTTPS timeout, matching the fresh pre-change baseline.
+
+No Nginx start/restart/reload occurred. Apache actions = `0`. Public listener topology changes = `0`. DNS/TLS/firewall changes = `0`. Docker/Waha changes = `0`. Provider/Zernio calls = `0`. F11 execution = **NO**. F11 authorization consumed = **NO**. Other-project hostname probes = `0`.
+
+Partial task-created account/directory state is preserved for Team Leader review. No opportunistic fix such as creating `/usr/local/libexec` was performed. R02 is **not** `EXECUTED`, `DONE`, or `ACCEPTED`; a reviewed continuation/fix is required before any further VPS mutation because the account and evidence directory now pre-exist.
+
+Execution-state preservation: Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
