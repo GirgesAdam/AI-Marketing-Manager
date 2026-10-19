@@ -1585,3 +1585,36 @@ D-040 itself does **not** authorize Cutover, receiver creation, infrastructure m
 Execution-state preservation: Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
 
 Closeout safety boundary: documentation-only. No `DECISIONS.md` change, VPS/Nginx/Apache/DNS/TLS change, receiver creation, Cutover, deployment, Provider/Zernio call, F11 execution, authorization consumption/expansion, or successor-task activation is authorized or performed by this closeout.
+
+### P1-T08-F11-F10-R01 — privileged read-only VPS ingress and receiver readiness preflight
+
+Task status: **DONE / ACCEPTED WITH NON-BLOCKING NOTES**.
+
+Team Leader disposition: **ACCEPTED WITH NON-BLOCKING NOTES**.
+
+Final evidence classification: **READINESS_EVIDENCE_COMPLETE**. This confirms completion of the accepted read-only evidence collection only; it does **not** establish operational cutover readiness or authorize infrastructure mutation.
+
+Evidence scope: **marketlyai.restartorg.com only**.
+
+- Nginx configuration validation: **PASS WITH WARNINGS**. The Nginx startup root cause was proven to be a collision with Apache owning public TCP/80.
+- Public TCP/80 owner: **Apache**. Public TCP/443 listener: **ABSENT** in the captured preflight.
+- Captured host firewall evidence: UFW inactive; iptables INPUT policy ACCEPT; no host-level inbound TCP/443 block identified in the captured rules. This finding is limited to the captured host-level rules.
+- TCP/8001 workload identity: Docker-published `/waha`, image `devlikeapro/waha`. This workload was not modified.
+- MarketlyAI certificate material: the configured certificate exists; hostname SAN coverage for `marketlyai.restartorg.com` and certificate validity were confirmed in Owner-provided evidence. No private key was read or recorded.
+- Temporary receiver runtime: Python 3.8.10 is available.
+- Candidate loopback ports `127.0.0.1:8080` and `127.0.0.1:8765`: **FREE AT OBSERVATION TIME ONLY**; neither port is reserved.
+- A duplicate Nginx server-block configuration was observed in `staging-admin.save`. It was not modified or cleaned up.
+
+MarketlyAI-only public baseline:
+- Hostname: `marketlyai.restartorg.com`.
+- DNS target observed: `82.29.177.121`.
+- HTTP `/`: returned unrelated WordPress content with `200 OK`, rather than the intended safe `404` behavior.
+- HTTPS `/`: connection timed out in the captured baseline.
+- Configured TLS certificate material exists, is valid for `marketlyai.restartorg.com`, and was verified from Owner-provided output.
+- No server configuration was changed during the preflight.
+
+Readiness interpretation: evidence collection is accepted, but Cutover remains **BLOCKED**. The unexpected HTTP response, absent public TCP/443 listener, and warning-bearing Nginx configuration remain operational readiness concerns. This record does not authorize repair, receiver creation, service actions, or cutover.
+
+Execution state remains unchanged: Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next operational task = **NOT_STARTED**.
+
+Safety: this closeout records the accepted read-only evidence only. No VPS/Nginx/Apache/Docker/firewall/DNS/TLS/systemd/package mutation, service transition, receiver creation, public HTTPS cutover, Provider/Zernio call, F11 execution, or F11 authorization consumption occurred as part of this documentation update.
