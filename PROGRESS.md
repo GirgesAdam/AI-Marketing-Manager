@@ -97,7 +97,7 @@ R03 closure scope = **INVESTIGATION / EVIDENCE / DOCUMENTATION QUALITY ONLY**; t
 
 F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**.
 
-Last Closed Subtask ID = `P1-T08-F11-F09-R04`
+Last Closed Subtask ID = `P1-T08-F11-F10-R01`
 
 Task activation commit is separate from evidence/documentation commit; no VPS evidence collection began before activation push.
 
