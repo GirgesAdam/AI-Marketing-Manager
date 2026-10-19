@@ -1766,3 +1766,36 @@ Activation-time execution state: Current Phase = **PHASE 1 - Provider Feasibilit
 Starting repository HEAD = `0a83b1b986b7d708d8ff3a5c040354a0dc559b07`; local, tracking, and live remote were equal and the working tree was clean. Canonical D-038 and D-040 were re-read and remained **Accepted** before activation.
 
 This activation authorizes no Provider/Zernio action and no F11 execution. Activation must be committed and pushed before the first VPS mutation.
+
+### P1-T08-F11-F10-R03 - pre-cutover privilege-gate stop (2026-10-19)
+
+`P1-T08-F11-F10-R03 = BLOCKED - PRE-CUTOVER OPERATOR PRIVILEGE UNAVAILABLE / NO CUTOVER MUTATION`.
+
+Activation was completed and pushed before any attempted VPS mutation. Activation commit = `418f279eef03ac2c09b17f36f107c518dde0a7e8`.
+
+Fresh read-only evidence before the privilege gate confirmed the expected high-level starting topology: Nginx = `failed/enabled`; Apache = `active/enabled`; receiver service = `active/disabled`; public TCP/80 remained owned by the existing Apache position; no TCP/443 listener was observed; TCP/8080 was free; receiver TCP/8765 remained loopback-only at `127.0.0.1:8765`.
+
+Readable accepted/config artifacts were unchanged both before and after the failed privilege gate:
+- Apache ports config SHA-256 = `9d2d53be30cbb4c42af6b25458077db5b5ad1be4f5810fa2fee4a1d53ac604a2`.
+- Apache existing-workload vhost SHA-256 = `85ce3df3c888430cbdd528c7cacded9fe6aa6fcf4c2ec18b99ae8a9580996b59`.
+- Nginx existing-workload vhost SHA-256 = `239a36f957928ec534ac79f06a6516ef495b789c803c43d5944acb5f4b880be6`.
+- MarketlyAI staged config SHA-256 = `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`.
+- Receiver systemd unit SHA-256 = `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`.
+
+The receiver artifact hash and real F11 evidence-directory count require privileged read access and therefore were not freshly re-read after the privilege gate failed. No synthetic/public POST was sent, no Provider/Zernio call occurred, and the privileged transaction script never started.
+
+Privilege evidence: `sudo -n true` returned `sudo: a password is required`. Two subsequent human-local hidden-input sudo authentication attempts failed before `/bin/bash /home/marktuser/r03_cutover_remote.sh` could start. The failed sudo attempts produced no privileged command execution. Root SSH with the approved key was also unavailable. No credential was sent through chat or recorded in repository documentation.
+
+Because privileged pre-cutover evidence and validation could not be completed, no R03 rollback set was created under `/root`, no Apache/Nginx config was edited, `mod_remoteip` was not enabled, Apache was not restarted, Nginx was not started/restarted/reloaded, and the transactional Cutover window was never entered. Public MarketlyAI/Elite post-Cutover validation was therefore not run.
+
+Temporary non-privileged execution-helper files created in the `marktuser` home were removed after the stop. No production/application file was deployed.
+
+Final visible topology remained unchanged after cleanup: Nginx = `failed`; Apache = `active`; receiver = `active/disabled`; TCP/80 remained in the pre-Cutover public position; TCP/443 = no listener observed; TCP/8080 = no listener observed; TCP/8765 = `127.0.0.1:8765` only.
+
+Cutover = **BLOCKED**. Do not retry automatically. A future continuation requires an explicit Team Leader Task Contract and an available authorized privileged execution path.
+
+Execution-state preservation: Current Phase = **PHASE 1 - Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**; Next operational task = **NOT_STARTED**.
+
+Safety counters: Provider/Zernio calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**; receiver public exposure = **NO**; DNS changes = `0`; TLS/certificate changes = `0`; firewall changes = `0`; Docker/Waha changes = `0`; application deployment = `0`; unrelated site config modifications = `0`; Public Cutover = **NO**.
+
+Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. Stop after documentation commit/push and await Team Leader review.
