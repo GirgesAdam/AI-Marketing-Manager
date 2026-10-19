@@ -1618,3 +1618,19 @@ Readiness interpretation: evidence collection is accepted, but Cutover remains *
 Execution state remains unchanged: Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next operational task = **NOT_STARTED**.
 
 Safety: this closeout records the accepted read-only evidence only. No VPS/Nginx/Apache/Docker/firewall/DNS/TLS/systemd/package mutation, service transition, receiver creation, public HTTPS cutover, Provider/Zernio call, F11 execution, or F11 authorization consumption occurred as part of this documentation update.
+
+### P1-T08-F11-F10-R02 — Prepare Isolated Receiver and MarketlyAI Exact Route
+
+Task status: **ACTIVATED — IMPLEMENTATION NOT YET VERIFIED**.
+
+Activation baseline = `b81cfe7f9590822591e291c33b5e2b543245c767`.
+
+Scope: prepare only the temporary loopback-only `analytics.synced` receiver and stage the exact MarketlyAI route defined by canonical D-040. This task does **not** authorize public Nginx/Apache ingress Cutover.
+
+Authorized hostname = `marketlyai.restartorg.com`; eligible path = `/p1-t08-f11/analytics-synced` only.
+
+Public Cutover = **NOT AUTHORIZED**. Provider/Zernio calls = **NOT AUTHORIZED**. F11 execution = **NOT AUTHORIZED**; F11 one-run authorization remains **AUTHORIZED / UNCONSUMED**.
+
+Implementation has not yet been verified at activation time. No claim is made here that the receiver is running or the MarketlyAI route is staged.
+
+Execution-state preservation: Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
