@@ -1682,3 +1682,30 @@ Safety evidence: Nginx start/restart/reload = `0`; Apache actions = `0`; public 
 Execution-state preservation: Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
 
 R02 is not marked `DONE`, `ACCEPTED`, or `SPIKE_PASS`. Stop at this review boundary; do not perform public Cutover, create the Zernio webhook, execute F11, or start another task before Team Leader review.
+
+
+### P1-T08-F11-F10-R02-F01 — Evidence closure and bounded-growth review (2026-10-19)
+
+`P1-T08-F11-F10-R02-F01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Starting repository HEAD = `8e413376d73df44e2971d6d2dac6afe8cd5590b5`; local, tracking, and live remote were equal and the working tree was clean before F01 execution. R02 remained `EXECUTED / AWAITING TEAM LEADER REVIEW`; Parent P1-T08 remained **UNRESOLVED / NOT DONE**; Cutover remained **BLOCKED**; F11 one-run authorization remained **AUTHORIZED / UNCONSUMED**.
+
+Read-only artifact evidence was captured for the complete deployed receiver `/opt/marketly-r02/receiver.py`, complete systemd unit `/etc/systemd/system/marketly-r02-receiver.service`, exact MarketlyAI source diff against the verified rollback, receiver/unit hashes and ownership/modes, service state, TCP/8765 listener, real evidence-directory ownership/mode/count, exact `nginx -t` output, and the filtered effective MarketlyAI HTTP/HTTPS block. No secrets, certificate private-key contents, credentials, or unrelated site configuration were exposed.
+
+Receiver artifact remained unchanged: `/opt/marketly-r02/receiver.py` = `root:marketly-r02` mode `0640`, SHA-256 `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`. Systemd unit remained `root:root` mode `0644`, SHA-256 `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`; receiver service = `active`, boot-enabled state = `disabled`, listener = `127.0.0.1:8765` only. Real evidence directory `/var/lib/marketly-r02/f11-evidence` remained `marketly-r02:marketly-r02` mode `0700` with file count `0`.
+
+Total evidence-growth review found an existing explicit finite bound; no receiver-code fix was required and no receiver service restart was performed. `MAX_EVENTS` defaults to `16`, is validated to the finite range `1..100`, and the deployed systemd unit explicitly sets `R02_MAX_EVENTS=16`. Before capture, the receiver counts retained `event-*` files and rejects once `len(evidence_files) >= MAX_EVENTS * 2`; with the deployed one-body-plus-one-metadata-file format, this bounds the experiment to 16 accepted events / 32 evidence files. Capacity rejection raises before writing a new body or metadata file and is mapped to HTTP `507`; historical evidence is neither overwritten nor automatically deleted. The independent per-request body limit remains 1 MiB with HTTP `413` rejection above that limit.
+
+Deterministic F01 regression used only `/var/lib/marketly-r02/f01-synthetic-test/evidence` and a byte-equivalent receiver copy differing only by test port `18765`; production service/port `8765` remained untouched. Exact GET = `200`; HEAD = `200`; normal POST = `204`; wrong path = `404`; unsupported exact-path method = `405`; >1 MiB request = `413`; accepted synthetic events `1..16` all returned `204`; event `17` at the total bound returned `507`.
+
+At the bound, retained evidence count was exactly `32` files. A complete SHA-256 manifest was captured before a second capacity attempt; the repeat request also returned `507`, evidence count remained `32`, and before/after manifests were identical, proving no new evidence file was created and existing evidence was not overwritten. Raw body, body SHA-256, and byte length validation passed. Authorization/Cookie/webhook-signature raw canaries were absent; rejected-bound body canaries were absent. Synthetic evidence directory mode `0700` and all evidence files mode `0600` owned by uid/gid `997/997` passed. Synthetic process/listener/test area were removed after testing.
+
+Final production receiver safety remained unchanged: service `active`, boot state `disabled`, listener `127.0.0.1:8765` only, real F11 evidence file count `0`. Receiver old hash = new hash = `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9` because no code change was necessary.
+
+MarketlyAI Nginx staging was review-only and unchanged during F01. Current staged source SHA-256 remains `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`; verified rollback SHA-256 remains `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`. `nginx -t` remained successful with only the pre-existing unrelated `staging-admin.restartorg.com` conflicting-server-name warnings. Effective MarketlyAI config still shows HTTP generic `404`, HTTPS exact `/p1-t08-f11/analytics-synced` proxy to `127.0.0.1:8765`, and HTTPS generic `404`.
+
+Safety boundary evidence for F01: Public Cutover = **NO**; Nginx start/restart/reload = `0`; Apache actions/config changes = `0`; DNS/TLS/firewall changes = `0`; Docker/Waha changes = `0`; other-project hostname probes = `0`; Provider/Zernio calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**; `DECISIONS.md` changes = `0`; `PROVIDER_SPIKE_RESULTS.md` changes = `0`.
+
+Execution-state preservation: Current Phase = **PHASE 1 - Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
+
+F01 is not marked `DONE` or `ACCEPTED`. Stop at this review boundary; do not perform Public Cutover, create the Zernio webhook, execute F11, consume its authorization, or start another task before Team Leader review.
