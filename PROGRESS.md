@@ -1654,3 +1654,31 @@ No Nginx start/restart/reload occurred. Apache actions = `0`. Public listener to
 Partial task-created account/directory state is preserved for Team Leader review. No opportunistic fix such as creating `/usr/local/libexec` was performed. R02 is **not** `EXECUTED`, `DONE`, or `ACCEPTED`; a reviewed continuation/fix is required before any further VPS mutation because the account and evidence directory now pre-exist.
 
 Execution-state preservation: Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
+
+### P1-T08-F11-F10-R02 — Continuation A1 execution handoff (2026-10-19)
+
+`P1-T08-F11-F10-R02 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Continuation authorization A1 resumed the same R02 from the verified safe-stop partial state; this was not a successor task and no second activation commit was created. Starting repository HEAD = `95a0fa396c55a307d794bfa46eca31654061a370`; local, tracking, and live remote were equal and the working tree was clean before continuation mutation.
+
+Partial-state reconciliation = **PASS**. `marketly-r02` remained uid/gid `997/997`, home `/var/lib/marketly-r02`, shell `/usr/sbin/nologin`; `/var/lib/marketly-r02/f11-evidence` remained `marketly-r02:marketly-r02` mode `0700` with file count `0`; the prior failed receiver path, receiver unit, receiver process, and TCP/8765 listener were absent. MarketlyAI source and verified rollback copy both remained SHA-256 `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6` before continuation mutation.
+
+Receiver installation used the authorized corrected path only: `/opt/marketly-r02` = `root:marketly-r02` mode `0750`; `/opt/marketly-r02/receiver.py` = `root:marketly-r02` mode `0640`, SHA-256 `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`. No Python packages were installed; the receiver uses installed Python 3.8 standard library only.
+
+Deterministic synthetic receiver validation = **PASS** using a separate temporary test evidence directory. Exact GET = `200`; exact HEAD = `200`; exact POST = `204`; wrong path = `404`; unsupported exact-path method = `405`; request larger than 1 MiB = `413`; captured raw body matched; SHA-256 matched; byte length matched; raw Authorization/Cookie/webhook-signature canary values were absent from persisted evidence; evidence permissions passed; listener was loopback-only `127.0.0.1:8765`; synthetic process and synthetic evidence were removed after validation. Real F11 evidence remained file count `0` throughout.
+
+Dedicated systemd unit `/etc/systemd/system/marketly-r02-receiver.service` = `root:root` mode `0644`, SHA-256 `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`. `systemctl daemon-reload` and start of this new receiver service were performed as authorized. Service state = `active`; boot enable state = `disabled`; user/group = `marketly-r02`; `UMask=0077`; `ProtectSystem=strict`; `NoNewPrivileges=yes`; write access is restricted to `/var/lib/marketly-r02/f11-evidence`. Privileged socket evidence proved the receiver listens only on `127.0.0.1:8765`. Systemd-managed readiness GET/HEAD both returned `200`; no synthetic POST was sent to the real F11 directory; final real F11 evidence file count = `0`.
+
+MarketlyAI Nginx staging modified only `/etc/nginx/sites-available/marketlyai.restartorg.com`. Pre-staging SHA-256 = `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`; staged SHA-256 = `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`. The verified rollback artifact remains `/root/p1-t08-f11-f10-r02-backups/marketlyai.restartorg.com.20261019T132127Z.before-r02`, `root:root` mode `0600`, SHA-256 equal to the original source hash.
+
+Exact staged Nginx behavior: HTTP MarketlyAI remains a direct generic `404` with no receiver route; HTTPS is a separate MarketlyAI server block preserving the existing certificate references and adds exactly one `location = /p1-t08-f11/analytics-synced` proxy to `http://127.0.0.1:8765`, with `client_max_body_size 1m`, `proxy_connect_timeout 2s`, `proxy_send_timeout 5s`, and `proxy_read_timeout 5s`; HTTPS generic `/` remains direct `404`; no prefix/regex/wildcard/catch-all/generic application proxy exists.
+
+Nginx validation = **PASS** before and after staging. `nginx -t` succeeded with only the pre-existing unrelated `staging-admin.restartorg.com` conflicting-server-name warnings. Effective config review proved exact receiver route count `1` and upstream count `1`. Other Nginx site configuration integrity comparison = **UNCHANGED**.
+
+Public ingress Cutover was not performed. Nginx remained `failed`; no Nginx start/restart/reload occurred. Apache remained the public TCP/80 owner and no public TCP/443 listener appeared. Fresh pre-staging public MarketlyAI baseline was HTTP `/` = Apache `500`, HTTPS `/` = timeout; post-staging public regression remained HTTP `/` = Apache `500`, HTTPS `/` = timeout. Therefore R02 staging caused no observed public behavior or listener-topology change.
+
+Safety evidence: Nginx start/restart/reload = `0`; Apache actions = `0`; public topology changes = `0`; DNS/TLS/firewall changes = `0`; Docker/Waha changes = `0`; other-project hostname probes = `0`; Provider/Zernio calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**.
+
+Execution-state preservation: Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 one-run authorization = **AUTHORIZED / UNCONSUMED**; Next Task = **NOT_STARTED**.
+
+R02 is not marked `DONE`, `ACCEPTED`, or `SPIKE_PASS`. Stop at this review boundary; do not perform public Cutover, create the Zernio webhook, execute F11, or start another task before Team Leader review.
