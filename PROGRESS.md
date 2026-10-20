@@ -2002,3 +2002,13 @@ Canonical execution state remains: `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED
 C02 remains **NOT AUTHORIZED**. This closeout authorizes no VPS commands, Elite/WordPress changes, Apache/Nginx actions, Provider/Zernio calls, or F11 execution.
 
 Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. STOP after closeout commit/push and final Git verification.
+
+### P1-T08-F11-F10-R03-V01 - fresh Elite preservation baseline revalidation activation (2026-10-20)
+
+`P1-T08-F11-F10-R03-V01 = ACTIVATED — READ-ONLY FRESH PRESERVATION BASELINE REVALIDATION`.
+
+Execution boundary: read-only only; Elite repair = **NOT AUTHORIZED**; Apache/Nginx config mutation = `0`; service restart/reload/start/stop = `0`; Public Cutover = **NO**; C02 authorization = **NO**; Provider/Zernio = **NOT AUTHORIZED**; F11 execution = **NOT AUTHORIZED**.
+
+Starting repository HEAD = `4c86899647c5061be2db81077e2a8414c31f1027`; local HEAD, tracking HEAD, and live remote HEAD matched and the working tree was clean before activation. Canonical state remained: B01 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**; B01 classification = `ELITE_HEALTHY_BASELINE_RESTORED`; `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Cutover = **BLOCKED**; C02 / next Cutover retry = **NOT AUTHORIZED**; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**.
+
+Commit/push this activation and verify the live remote before any VPS evidence collection.
