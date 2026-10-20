@@ -1813,9 +1813,9 @@ Classification: `CRITICAL_AUDIT_FINDINGS_NOT_RUNTIME_REACHABLE_FOR_F11`.
 |---|---|---|
 | H01 prerequisite | PASS | `DONE / ACCEPTED WITH BLOCKING SECURITY NOTE`; `HARNESS_GATE_RESTORED` |
 | H02 activation before audit | PASS | `2ca2ff594a85cef35891db1d1f9c931afb4144b6` pushed before audit |
-| Audit command | PASS / findings present | exact `npm audit --json`; exit `1`; total `3`: moderate `1`, critical `2` |
+| Audit command | PASS / findings present | exact `npm audit --json`; exit `1`; npm package-level totals: total `3`, critical `2`, moderate `1`; these package-result counts are distinct from individual GHSA advisory severities |
 | Critical dependency chain | REVIEWED | root -> `vitest@3.2.7` -> `tinypool@1.1.1`; Vitest direct devDependency, Tinypool transitive |
-| Critical advisories | REVIEWED | `GHSA-5gmw-xhrv-c9v3`; `GHSA-85c8-ppgw-ccpr` |
+| Advisory severities | CORRECTED | Critical: `GHSA-85c8-ppgw-ccpr`; High: `GHSA-5gmw-xhrv-c9v3`; Moderate: `GHSA-82fw-gwwq-j7x9` |
 | Tinypool runtime reachability | NOT REFERENCED | compiled F11 runtime trace has no Vitest/Tinypool imports; no worker-pool API path |
 | Vitest package-level critical reachability | BUILD_TEST_ONLY | direct dev test runner; absent from F11 source/dist runtime import graph |
 | Moderate finding | REVIEWED | `@vitest/mocker@3.2.7`, `GHSA-82fw-gwwq-j7x9`, root -> Vitest -> mocker; dev-server/mock path not exposed by F11 |
@@ -1833,3 +1833,20 @@ Classification: `CRITICAL_AUDIT_FINDINGS_NOT_RUNTIME_REACHABLE_FOR_F11`.
 | F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
 
 Security triage conclusion: critical audit findings are outside the accepted F11 live runtime dependency/import attack surface. This gate does not self-authorize F11; live resume remains blocked pending Team Leader security review.
+
+## P1-T08-F11-H02-F01 - Advisory Severity Documentation Correction
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `ADVISORY_SEVERITY_DOCUMENTATION_CORRECTED`.
+
+| Correction | Result | Evidence |
+|---|---|---|
+| npm audit totals semantics | CORRECTED | package-level findings remain total `3`: critical `2`, moderate `1`; not a count of Critical GHSA advisories |
+| `GHSA-85c8-ppgw-ccpr` | CORRECTED | severity `Critical`; Tinypool `1.1.1`; affected `<2.1.2`; patched `2.1.2`; reachability `NOT_REFERENCED_BY_F11_RUNTIME / BUILD_TEST_ONLY` |
+| `GHSA-5gmw-xhrv-c9v3` | CORRECTED | severity `High`; Tinypool `1.1.1`; affected `<=2.1.0`; patched `2.1.1`; reachability `NOT_REFERENCED_BY_F11_RUNTIME / BUILD_TEST_ONLY` |
+| `GHSA-82fw-gwwq-j7x9` | PRESERVED / CLARIFIED | severity `Moderate`; F11 does not start affected Vitest/Vite dev-server/mock path; runtime reachability `NO` |
+| H02 technical classification | PRESERVED | `CRITICAL_AUDIT_FINDINGS_NOT_RUNTIME_REACHABLE_FOR_F11`, where critical audit findings means npm package-level critical findings |
+| H02 acceptance state | PENDING | `P1-T08-F11-H02 = NOT ACCEPTED YET — PENDING TEAM LEADER RE-REVIEW` |
+| F11 live resume | BLOCKED | no authorization change |
+| Audit/dependency/Provider/runtime mutation | ZERO | documentation-only correction |

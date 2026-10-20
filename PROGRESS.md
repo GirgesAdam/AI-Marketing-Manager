@@ -2322,19 +2322,19 @@ Activation commit = `2ca2ff594a85cef35891db1d1f9c931afb4144b6`.
 
 Integrity baseline and post-triage integrity matched: `package.json` SHA-256 = `4a2f08bfbc1f3ed55eb029cc6f81c3d8c05da6707357becb3ba66d3d47f9b18d`; `package-lock.json` SHA-256 = `33d3de57ba95cf296a4b23f2341f4178b5cf436ee818d06b146d021fdbd37675`. `node_modules`, local Vitest, and local TypeScript remained present. Node = `v24.21.0`; npm = `11.19.0`; Vitest = `3.2.7`; TypeScript = `5.9.3`. No reinstall or dependency mutation occurred.
 
-Authorized audit command `npm audit --json` returned exit code `1` with totals: total `3`; moderate `1`; critical `2`; high/low/info `0`. The non-zero exit reflects reported findings and was treated as evidence.
+Authorized audit command `npm audit --json` returned exit code `1` with npm audit **package-level** totals: total `3`; critical package-level findings `2`; moderate package-level findings `1`; high/low/info `0`. These package-result counts do **NOT** mean that two independent Critical-severity GHSA advisories were reported. The non-zero exit reflects reported findings and was treated as evidence.
 
 Audit package findings and dependency chains:
 - `@vitest/mocker@3.2.7`: moderate, transitive, root -> `vitest@3.2.7` -> `@vitest/mocker@3.2.7`; affected audit range `2.1.0 - 4.1.10`; advisory `GHSA-82fw-gwwq-j7x9` (`Vitest: Path Traversal / Arbitrary File Read via @vitest/mocker Redirect Mock`); fixAvailable = `vitest@5.0.5`, semver-major.
-- `tinypool@1.1.1`: critical, transitive, root -> `vitest@3.2.7` -> `tinypool@1.1.1`; affected audit range `<=2.1.1`; critical advisories `GHSA-5gmw-xhrv-c9v3` and `GHSA-85c8-ppgw-ccpr`; fixAvailable = `vitest@5.0.5`, semver-major.
+- `tinypool@1.1.1`: critical **package-level npm audit finding**, transitive, root -> `vitest@3.2.7` -> `tinypool@1.1.1`; this package result aggregates advisory evidence of different severities. Individual advisories: Critical `GHSA-85c8-ppgw-ccpr` (affected `<2.1.2`, patched `2.1.2`) and High `GHSA-5gmw-xhrv-c9v3` (affected `<=2.1.0`, patched `2.1.1`). fixAvailable at the root audit result = `vitest@5.0.5`, semver-major.
 - `vitest@3.2.7`: critical package-level finding, direct devDependency from root; audit range `0.0.95 - 4.1.10`; its critical severity is inherited through vulnerable `tinypool` (with the moderate mocker advisory also present); fixAvailable = `vitest@5.0.5`, semver-major.
 
-Critical advisory reachability:
-- `GHSA-5gmw-xhrv-c9v3`: documented impact is arbitrary code execution in Tinypool workers when a prototype-pollution primitive controls inherited worker options such as `execArgv`/`env` and Tinypool spawns a worker. F11 exposure = **NO**: the accepted compiled F11 data-bearing runner does not import/require Tinypool or Vitest and does not start a Tinypool worker pool. Reachability = `NOT_REFERENCED_BY_F11_RUNTIME` / `BUILD_TEST_ONLY` through Vitest tooling.
-- `GHSA-85c8-ppgw-ccpr`: documented impact is arbitrary JavaScript execution/data exfiltration when prototype pollution controls `Object.prototype.filename` and application code calls `pool.run(task, options)` with an options object. F11 exposure = **NO**: F11 does not import Tinypool and has no `pool.run` path. Reachability = `NOT_REFERENCED_BY_F11_RUNTIME` / `BUILD_TEST_ONLY`.
+Tinypool advisory reachability (individual GHSA severity distinguished from npm package-level severity):
+- `GHSA-5gmw-xhrv-c9v3`: severity = **High** (not Critical); installed affected Tinypool = `1.1.1`; documented affected range = `<=2.1.0`; patched = `2.1.1`. Documented impact is arbitrary code execution in Tinypool workers when a prototype-pollution primitive controls inherited worker options such as `execArgv`/`env` and Tinypool spawns a worker. F11 exposure = **NO**: the accepted compiled F11 data-bearing runner does not import/require Tinypool or Vitest and does not start a Tinypool worker pool. Reachability = `NOT_REFERENCED_BY_F11_RUNTIME` / `BUILD_TEST_ONLY` through Vitest tooling.
+- `GHSA-85c8-ppgw-ccpr`: severity = **Critical**; installed affected Tinypool = `1.1.1`; documented affected range = `<2.1.2`; patched = `2.1.2`. Documented impact is arbitrary JavaScript execution/data exfiltration when prototype pollution controls `Object.prototype.filename` and application code calls `pool.run(task, options)` with an options object. F11 exposure = **NO**: F11 does not import Tinypool and has no `pool.run` path. Reachability = `NOT_REFERENCED_BY_F11_RUNTIME` / `BUILD_TEST_ONLY`.
 - Direct `vitest@3.2.7` package-level critical result is likewise `BUILD_TEST_ONLY` / `NOT_REFERENCED_BY_F11_RUNTIME`; no unique additional critical advisory was returned directly for Vitest beyond its vulnerable transitive Tinypool chain.
 
-Moderate advisory `GHSA-82fw-gwwq-j7x9`: affected package `@vitest/mocker@3.2.7`; documented risk is path traversal/arbitrary local-file read through redirect-mock registration on a reachable Vitest/Vite development-server WebSocket/plugin path. F11 does not start Vitest/Vite dev-server/browser mocking and neither source nor compiled runtime references `@vitest/mocker`; runtime reachability = **NO**.
+Moderate advisory `GHSA-82fw-gwwq-j7x9`: severity = **Moderate**; affected package `@vitest/mocker@3.2.7`; documented risk is path traversal/arbitrary local-file read through redirect-mock registration on a reachable Vitest/Vite development-server WebSocket/plugin path. F11 does not start the affected Vitest/Vite development-server/mock path and the vulnerable package is not in the accepted F11 runtime import graph; runtime reachability = **NO**.
 
 Compiled/runtime trace evidence: `dist/provider-spike/p1-t08-f10-runner.js` recursively reaches 9 local provider-spike modules and Node built-ins only; bare npm-package imports = `[]`; vulnerable-package imports = `[]`. Defensive parent trace of `dist/provider-spike/p1-t08-runner.js` recursively reaches 8 local modules and Node built-ins only with the same empty vulnerable-package import set. Global read-only search of `src` and `dist` found no `vitest`, `tinypool`, or `@vitest/mocker` references. `tsconfig.build.json` includes `src/**/*.ts` and excludes `tests/**/*.ts`; the build path uses TypeScript, while Vitest is the test runner.
 
@@ -2345,3 +2345,23 @@ Remediation performed = **NO**. Dependency installs/updates/audit fixes = `0`; s
 Canonical state preserved: Parent P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11` = **NOT DONE**; F11 authorization = `AUTHORIZED / UNCONSUMED`.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because H02 produced no Provider Behavior evidence. STOP after documentation commit/push and final Git verification; await Team Leader security review.
+
+### P1-T08-F11-H02-F01 - Correct Advisory Severity Semantics (2026-10-21)
+
+`P1-T08-F11-H02-F01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `ADVISORY_SEVERITY_DOCUMENTATION_CORRECTED`.
+
+Correction scope is documentation-only. The observed npm audit result remains exactly: total package-level findings = `3`; critical package-level findings = `2`; moderate package-level findings = `1`. These are npm audit/package-result counts and are not a count of independent Critical GHSA advisories.
+
+Final corrected individual advisory severities: Critical = `GHSA-85c8-ppgw-ccpr`; High = `GHSA-5gmw-xhrv-c9v3`; Moderate = `GHSA-82fw-gwwq-j7x9`. No independent additional Critical advisory is fabricated for Vitest; the direct `vitest@3.2.7` critical package-level result remains understood as a package-result severity inherited through its vulnerable dependency chain.
+
+The H02 technical classification remains `CRITICAL_AUDIT_FINDINGS_NOT_RUNTIME_REACHABLE_FOR_F11`; in that classification, "critical audit findings" refers to npm audit critical **package-level findings**, not to two Critical-severity GHSA advisories. Runtime evidence remains unchanged: the compiled F11 runner imports no Vitest, Tinypool, or `@vitest/mocker`; no Tinypool worker-pool path is used; no Vitest/Vite development server is started.
+
+`P1-T08-F11-H02 = NOT ACCEPTED YET — PENDING TEAM LEADER RE-REVIEW`.
+
+Canonical state preserved: Parent P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11` = **NOT DONE**; F11 authorization = `AUTHORIZED / UNCONSUMED`; F11 live resume = **BLOCKED**; Provider request count = `0`.
+
+Safety boundary for F01: npm audit reruns = `0`; npm install = `0`; npm ci = `0`; npm update = `0`; npm audit fix = `0`; dependency changes = `0`; source/test/config changes = `0`; Provider/Zernio calls = `0`; credentials loaded = `NO`; publish attempts = `0`; webhook operations = `0`; Analytics/Delta calls = `0`; VPS/infrastructure changes = `0`.
+
+Do not resume F11 in this execution. STOP after correction commit/push and final Git verification.
