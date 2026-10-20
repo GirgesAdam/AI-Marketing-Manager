@@ -1854,3 +1854,13 @@ Safety counters: DNS changes = `0`; TLS/certificate changes = `0`; firewall chan
 Execution-state preservation: Current Phase = **PHASE 1 - Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**; Next operational task = **NOT_STARTED**.
 
 Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. Stop after documentation commit/push and await Team Leader review.
+
+### P1-T08-F11-F10-R03-F01 - authoritative preservation-signal investigation activation (2026-10-20)
+
+`P1-T08-F11-F10-R03-F01 = ACTIVATED - READ-ONLY PRESERVATION INVESTIGATION`.
+
+Scope boundary: no Cutover retry is authorized; Apache/Nginx configuration changes = `0`; service restart/reload/start/stop = `0`; application fixes = `0`; Provider/Zernio = **NOT AUTHORIZED**; F11 execution = **NOT AUTHORIZED**. This investigation exists only to establish an authoritative existing-workload preservation criterion required by D-038.
+
+Starting repository HEAD = `69995a02c7a7dd211a7d6f81e1019bc7480e2f41`; local HEAD, tracking HEAD, and live remote HEAD matched and the working tree was clean before activation. D-038 and D-040 remained **Accepted**. Canonical state remained: R03 = **NOT DONE / NOT ACCEPTED**; C01 = **BLOCKED - CUTOVER FAILED / ROLLED BACK**; Cutover = **BLOCKED**; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**.
+
+Commit/push this activation before any VPS investigation. Do not retry the Cutover under F01.
