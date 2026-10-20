@@ -1769,3 +1769,36 @@ Classification: `TECHNICAL_BLOCKER — PRE_PROVIDER`.
 | Infrastructure mutation under F11 | PASS / ZERO | `0` |
 
 Per the F11 Harness Gate, no dependency installation or harness/production/spike fix was performed inside F11 after validation failed to start. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 one-run authorization remains `AUTHORIZED / UNCONSUMED` pending Team Leader review.
+
+## P1-T08-F11-H01 - Harness Dependency Restoration / Pre-Provider Revalidation
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `HARNESS_GATE_RESTORED`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Starting HEAD / clean canonical gate | PASS | `aaffeb7c1a050cc405a7e26608f2ba2d8bedc201`; Local=Tracking=Live Remote; clean tree |
+| Activation before install | PASS | `971e87eb9005c4ec7461d9e177123d755f8b70bb` pushed before `npm ci` |
+| Package contract | PASS | package + lock exist; lockfileVersion `3`; Vitest test script; TypeScript typecheck script; devDependencies already declared |
+| Node / npm | INFO | Node `v24.21.0`; npm `11.19.0` |
+| package.json SHA before/after | PASS / unchanged | `4a2f08bfbc1f3ed55eb029cc6f81c3d8c05da6707357becb3ba66d3d47f9b18d` |
+| package-lock.json SHA before/after | PASS / unchanged | `33d3de57ba95cf296a4b23f2341f4178b5cf436ee818d06b146d021fdbd37675` |
+| Authorized install command | PASS | exactly `npm ci`; exit `0`; 54 packages added / 55 audited; no other install command |
+| Local dependency binaries | PASS | node_modules exists; Vitest `3.2.7`; TypeScript `5.9.3` |
+| Tracked workspace drift after install | PASS / ZERO | clean tracked tree; node_modules untracked/ignored; package/lock unchanged |
+| Focused F10/P1-T08 command | PASS | `npm test -- tests/provider-spike/p1-t08-f10.test.ts tests/provider-spike/p1-t08.test.ts`; `88 / 88` tests; 2 files; exit `0` |
+| Typecheck | PASS | `npm run typecheck -- --pretty false`; exit `0` |
+| Build | PASS | `npm run build -- --pretty false`; exit `0` |
+| Full deterministic suite | PASS | `npm test`; `418 / 418` tests across 16 files; exit `0` |
+| Unexpected live Provider transport in suite | NONE | deterministic/offline suite only |
+| Git integrity pre-docs | PASS | status empty; diff-check `0`; cached-check `0`; package/lock diff empty |
+| Source/test/package/lock fixes | PASS / ZERO | no such edits |
+| Provider/Zernio calls | PASS / ZERO | `0` |
+| Analytics / Delta | PASS / ZERO | `0 / 0` |
+| Webhook operations | PASS / ZERO | create/read/delete all `0` |
+| Publish attempts / posts | PASS / ZERO | `0 / 0` |
+| F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+| VPS/infrastructure mutation | PASS / ZERO | `0` |
+
+The local harness environment is restored and the accepted pre-Provider Harness Gate is green. `P1-T08-F11` remains **NOT DONE** and is not authorized to resume live execution by H01. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`.

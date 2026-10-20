@@ -2229,3 +2229,36 @@ Starting repository HEAD = `aaffeb7c1a050cc405a7e26608f2ba2d8bedc201`; local HEA
 C02/R03 remain accepted. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`.
 
 H01 authorizes local harness dependency restoration and deterministic validation only. H01 authorizes **NO Provider/Zernio execution**, no live F11 run, no publish, no webhook operation, no Analytics/Delta call, and no VPS/infrastructure mutation.
+### P1-T08-F11-H01 - restore harness dependencies and revalidate pre-Provider gate result (2026-10-21)
+
+`P1-T08-F11-H01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `HARNESS_GATE_RESTORED`.
+
+Activation commit = `971e87eb9005c4ec7461d9e177123d755f8b70bb`.
+
+Package contract verification passed before restoration: `package.json` and `package-lock.json` existed; `package-lock.json` lockfileVersion = `3`; test script = `vitest run --reporter=verbose`; typecheck script = `tsc --noEmit -p tsconfig.json`; Vitest devDependency = `^3.2.0`; TypeScript devDependency = `^5.9.0`. Node = `v24.21.0`; npm = `11.19.0`.
+
+Pre-install SHA-256: `package.json` = `4a2f08bfbc1f3ed55eb029cc6f81c3d8c05da6707357becb3ba66d3d47f9b18d`; `package-lock.json` = `33d3de57ba95cf296a4b23f2341f4178b5cf436ee818d06b146d021fdbd37675`.
+
+Authorized dependency restoration used exactly `npm ci`; exit code = `0`. Safe npm result: `54` packages added, `55` packages audited. npm reported `3` vulnerability notices (`1 moderate`, `2 critical`) and an install-script warning for `esbuild@0.28.2`; no `npm audit fix`, `npm install`, package upgrade, lock regeneration, global install, or other dependency-install command was run.
+
+Immediate post-install integrity passed: `node_modules` exists; local Vitest binary exists; local TypeScript compiler exists; local Vitest version = `3.2.7`; local TypeScript version = `5.9.3`. Post-install/final SHA-256 remained exactly unchanged for `package.json` and `package-lock.json`. `node_modules` is not tracked and installation produced no tracked source/config/package/lock drift.
+
+Focused accepted validation command `npm test -- tests/provider-spike/p1-t08-f10.test.ts tests/provider-spike/p1-t08.test.ts` = PASS / exit `0`; `2` test files passed; `88 / 88` tests passed; `0` failed.
+
+Typecheck command `npm run typecheck -- --pretty false` = PASS / exit `0`.
+
+Build command `npm run build -- --pretty false` = PASS / exit `0`. Build output did not authorize or execute any runner.
+
+Full deterministic regression command `npm test` = PASS / exit `0`; `16` test files passed; `418 / 418` tests passed; `0` failed. No unexpected real Provider transport occurred.
+
+Post-validation Git integrity before documentation: `git status --short` empty; `git diff --check` exit `0`; `git diff --cached --check` exit `0`; package/lock diff empty; no source/test/package/lock change was made.
+
+F11 pre-Provider harness environment = `READY / AWAITING TEAM LEADER AUTHORIZATION TO RESUME LIVE RUN`.
+
+Canonical state preserved: Parent P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11` = **NOT DONE**; F11 one-run authorization = `AUTHORIZED / UNCONSUMED`; Provider request count = `0`; F11 post published = **NO**; F11 authorization consumed = **NO**.
+
+H01 safety boundary: `/v1/auth/verify` = `0`; Zernio Provider requests = `0`; Analytics calls = `0`; Delta calls = `0`; webhook creates/reads/deletes = `0`; publish attempts = `0`; posts published = `0`; manufactured engagement = `0`; VPS/infrastructure mutations = `0`. No live Provider credentials were loaded or used.
+
+H01 does **NOT** authorize F11 execution or any successor task. `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because H01 produced no Provider Behavior evidence. STOP after documentation commit/push and final Git verification.
