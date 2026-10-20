@@ -2365,3 +2365,50 @@ Canonical state preserved: Parent P1-T08 = `UNRESOLVED / NOT DONE`; Analytics We
 Safety boundary for F01: npm audit reruns = `0`; npm install = `0`; npm ci = `0`; npm update = `0`; npm audit fix = `0`; dependency changes = `0`; source/test/config changes = `0`; Provider/Zernio calls = `0`; credentials loaded = `NO`; publish attempts = `0`; webhook operations = `0`; Analytics/Delta calls = `0`; VPS/infrastructure changes = `0`.
 
 Do not resume F11 in this execution. STOP after correction commit/push and final Git verification.
+
+### P1-T08-F11-H02-CLOSEOUT-01 - Team Leader security acceptance (2026-10-21)
+
+`P1-T08-F11-H02-F01 = DONE / ACCEPTED`.
+
+Classification = `ADVISORY_SEVERITY_DOCUMENTATION_CORRECTED`.
+
+`P1-T08-F11-H02 = DONE / ACCEPTED`.
+
+Team Leader security disposition = `ACCEPTED`.
+
+Accepted H02 evidence HEAD = `0a5057b0d1eb024e6de48aa32d1a223e238e7b89`.
+
+Accepted correction HEAD = `562980318c8e5fcb7bfd5236bed84ab68865e7c1`.
+
+Accepted technical classification = `CRITICAL_AUDIT_FINDINGS_NOT_RUNTIME_REACHABLE_FOR_F11`.
+
+Accepted severity semantics:
+- npm audit reported total package-level findings = `3`;
+- critical package-level findings = `2`;
+- moderate package-level findings = `1`;
+- these package-level counts are distinct from individual GHSA severity counts;
+- `GHSA-85c8-ppgw-ccpr` = **Critical**;
+- `GHSA-5gmw-xhrv-c9v3` = **High**;
+- `GHSA-82fw-gwwq-j7x9` = **Moderate**.
+
+Accepted F11 runtime evidence:
+- accepted F11 compiled runtime imports no Vitest;
+- imports no Tinypool;
+- imports no `@vitest/mocker`;
+- no Tinypool worker-pool API path is used;
+- no affected Vitest/Vite development-server/mock path is started;
+- critical npm package findings are therefore outside the authorized F11 live runtime attack surface.
+
+`F11 LIVE RESUME SECURITY BLOCKER = CLEARED BY ACCEPTED H02 SECURITY REVIEW`.
+
+`F11 LIVE EXECUTION = NOT AUTHORIZED BY THIS CLOSEOUT`.
+
+A separate Team Leader live-resume authorization is still required before any F11 live execution.
+
+Canonical state preserved: P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11` = `NOT DONE`; F11 authorization = `AUTHORIZED / UNCONSUMED`; F11 authorization consumed = `NO`; Provider request count = `0`; F11 post published = `NO`.
+
+Security scope note: acceptance is scoped to the authorized F11 runtime path. It is **not** a general declaration that the repository dependency tree has zero vulnerabilities and does **not** authorize dependency upgrades under this closeout.
+
+Closeout safety boundary: npm audit reruns = `0`; dependency installs/updates/fixes = `0`; package/lock changes = `0`; source/test/config changes = `0`; Provider/Zernio calls = `0`; credentials loaded = `NO`; publish attempts = `0`; webhook operations = `0`; Analytics/Delta calls = `0`; VPS/infrastructure actions = `0`; F11 live execution = `NO`.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, `package.json`, `package-lock.json`, source/tests/config remain unchanged. Do not resume F11 in this execution. STOP after closeout commit/push and final Git verification.
