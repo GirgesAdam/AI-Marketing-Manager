@@ -2076,3 +2076,54 @@ C02 authorization = `AUTHORIZED`. Authorization applies to this bounded Cutover 
 Starting repository HEAD = `774357975b1944fc314f57ff442dc9bd951b596c`; local HEAD, tracking HEAD, and live remote HEAD matched and the working tree was clean before activation. V01 = **DONE / ACCEPTED** with classification `PRESERVATION_BASELINE_REVALIDATED`; B01 remains accepted; `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 authorization = **AUTHORIZED / UNCONSUMED**; F11 has not executed.
 
 No VPS mutation is authorized before this activation marker is committed/pushed and the live remote HEAD is verified.
+
+
+### P1-T08-F11-F10-R03-C02 - bounded public ingress Cutover retry result (2026-10-20)
+
+`P1-T08-F11-F10-R03-C02 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Technical classification = `CUTOVER_COMPLETED — PRESERVATION AND ROUTING VERIFIED`.
+
+Starting repository HEAD = `774357975b1944fc314f57ff442dc9bd951b596c`. Activation commit = `8a5f4956c766a08b83070513267bbd045116fc5f`. Immediately before result documentation, local HEAD, tracking HEAD, and live remote HEAD remained equal to the activation commit and the working tree was clean.
+
+Privilege and infrastructure preflight passed through the previously approved interactive sudo mechanism: effective privileged UID = `0`; Apache = `active`; Nginx = `failed` / not public; receiver = `active`; receiver boot = `disabled`; listeners were Apache public `*:80`, no TCP/443, no TCP/8080, and receiver exactly `127.0.0.1:8765`; real F11 evidence files = `0`.
+
+Accepted pre-Cutover hashes matched exactly: MarketlyAI staged Nginx = `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`; receiver = `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`; receiver unit = `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`; Apache ports = `9d2d53be30cbb4c42af6b25458077db5b5ad1be4f5810fa2fee4a1d53ac604a2`; Apache Elite vhost = `85ce3df3c888430cbdd528c7cacded9fe6aa6fcf4c2ec18b99ae8a9580996b59`; Nginx Elite vhost = `239a36f957928ec534ac79f06a6516ef495b789c803c43d5944acb5f4b880be6`.
+
+Collateral-service gate passed. `apache2ctl -S` showed only the Elite Apache vhost on public `*:80`; no newly discovered unrelated Apache workload depended on public Apache 80/443. Existing unrelated Nginx sites were inspected but untouched. Pre-Cutover `apache2ctl configtest` returned `Syntax OK`; `nginx -t` passed with only the previously known unchanged `staging-admin.restartorg.com` duplicate server-name warnings.
+
+MarketlyAI TLS preflight passed without mutation: configured certificate subject/SAN covered `marketlyai.restartorg.com`, issuer = Let's Encrypt YR2, validity = `2026-10-13T15:50:57Z` through `2027-01-11T15:50:56Z`.
+
+Fresh pre-Cutover preservation evidence was collected twice before any mutation. The bounded read-only prebaseline at `2026-10-20T16:39:39Z` captured selected safe Apache/WordPress headers, HTTP `200`, redirects `0`, public/local Elite identity, body bytes `124708`, body SHA-256 `f1512f1efc9d30be93cab56b9b211f615fce455bacc4544931501e5a46e28977`, and fatal count `24 -> 24`. The transactional immediately-pre-Cutover snapshot at `2026-10-20T16:47:18Z` revalidated public `200|0|http://elite.restartorg.com/` and local Host-aware `200|0|http://127.0.0.1:80/`, both `124708` bytes with the same SHA-256 and correct Elite identity; immediately-pre-Cutover fatal count = `24`, error-log line position = `53`.
+
+Receiver readiness passed before mutation: service = `active`, boot state = `disabled`, listener = `127.0.0.1:8765`, safe loopback HEAD to `/p1-t08-f11/analytics-synced` returned HTTP `200` from `Server: r02`, and F11 evidence files remained `0`. No synthetic webhook POST was issued.
+
+Before any ingress edit, a fresh restricted rollback set was created at `/root/marketly-r03-c02-rollback-20261020T164718Z` (`root:root`, mode `0700`). Backup files were `root:root`, mode `0600`: `ports.conf` SHA-256 `9d2d53be30cbb4c42af6b25458077db5b5ad1be4f5810fa2fee4a1d53ac604a2`; `elite.apache.conf` SHA-256 `85ce3df3c888430cbdd528c7cacded9fe6aa6fcf4c2ec18b99ae8a9580996b59`; `elite.nginx.conf` SHA-256 `239a36f957928ec534ac79f06a6516ef495b789c803c43d5944acb5f4b880be6`. Rollback procedure was recorded before mutation: restore all three files, stop Nginx if started, validate Apache config, restart Apache, then verify original hashes/listeners/Elite/F11.
+
+Exactly the three authorized ingress files were changed. Apache ports moved to `Listen 127.0.0.1:8080`; the Elite Apache vhost moved to `127.0.0.1:8080` and maps `X-Forwarded-Proto=https` to Apache HTTPS semantics; the Elite Nginx vhost became public HTTP/HTTPS reverse proxy to `127.0.0.1:8080` preserving Host, real/client forwarding, forwarded host/port, and forwarded protocol. MarketlyAI Nginx configuration was not modified. Staged hashes: Apache ports = `bf6614f4d83153d90db06df1b442e78306acd8796839eb298b2ff58e6cb6fd43`; Apache Elite = `47f36ab99314df3819b58faf71bdbc2da43783c06da446715a998cceaafc4d0a`; Nginx Elite = `1f8daf5192e5c1f923ae3d5a44337eea38784ca4b0f1598c9a7495683e4706e2`.
+
+Post-staging configuration validation passed: Apache = `Syntax OK`; Nginx configuration syntax/test = successful with only the same two known staging-admin warnings.
+
+Apache was restarted exactly once into the loopback topology. Listener evidence then showed Apache only on `127.0.0.1:8080`, no Apache public 80/443, and receiver unchanged on `127.0.0.1:8765`.
+
+Mandatory transitional backend preservation passed before Nginx start: authoritative Host-aware backend request to `127.0.0.1:8080` returned HTTP `200`, redirects `0`, body bytes `124708`, SHA-256 `f1512f1efc9d30be93cab56b9b211f615fce455bacc4544931501e5a46e28977`, Elite identity = **YES**, matching Apache/WordPress semantics, and correlated fatal count remained `24 -> 24`. Nginx was not started until this gate passed.
+
+Nginx was then started exactly once and remained `active` with its pre-existing enablement state `enabled`. Final listener ownership passed: Nginx owns public IPv4/IPv6 TCP/80 and TCP/443; Apache owns loopback-only `127.0.0.1:8080`; receiver owns loopback-only `127.0.0.1:8765`; Apache owns no public 80/443.
+
+Elite post-Cutover preservation passed. Public HTTP returned `200`, redirects `0`, final URL `http://elite.restartorg.com/`, body bytes `124708`, SHA-256 `f1512f1efc9d30be93cab56b9b211f615fce455bacc4544931501e5a46e28977`, correct Elite identity, and expected WordPress semantics through `Server: nginx/1.18.0 (Ubuntu)`. Public HTTPS returned `200`, redirects `0`, final URL `https://elite.restartorg.com/`, body bytes `124764`, SHA-256 `c565550178c384d246ef7f554642ebe1ecb3cb0bebf99389388fcb9f25ef1827`, and correct Elite identity. The HTTP snapshot remained byte-identical to the immediately-pre-Cutover public baseline. Correlated Presto fatal count remained `24 -> 24`; no newly correlated fatal was generated.
+
+MarketlyAI public routing validation passed without Provider execution: HTTP generic `/` = `404`; HTTPS generic `/` = `404`; exact HTTPS `HEAD /p1-t08-f11/analytics-synced` = `200` with `Content-Length: 0`; bounded near-miss `/p1-t08-f11/analytics-synced-near-miss` = `404`. No POST occurred and real F11 evidence files remained `0`.
+
+Presented MarketlyAI TLS validation passed after Cutover: certificate subject/SAN = `marketlyai.restartorg.com`, issuer = Let's Encrypt YR2, validity remained `2026-10-13` through `2027-01-11`, and OpenSSL hostname validation reported `Hostname marketlyai.restartorg.com does match certificate`. TLS/certificate changes = `0`.
+
+Independent public verification from the authorized Windows workstation after the transaction matched VPS evidence: Elite HTTP `200|0|http://elite.restartorg.com/` with `124708` bytes and SHA `f1512f1efc9d30be93cab56b9b211f615fce455bacc4544931501e5a46e28977`; Elite HTTPS `200|0|https://elite.restartorg.com/` with Elite identity; MarketlyAI HTTP root `404`, HTTPS root `404`, exact HTTPS HEAD `200`, and near-miss `404`.
+
+Final infrastructure state: Apache = `active`; Nginx = `active`; receiver = `active`; receiver boot = `disabled`; MarketlyAI config SHA remains `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`; receiver SHA remains `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`; receiver unit SHA remains `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`; final authorized ingress hashes are ports `bf6614f4d83153d90db06df1b442e78306acd8796839eb298b2ff58e6cb6fd43`, Apache Elite `47f36ab99314df3819b58faf71bdbc2da43783c06da446715a998cceaafc4d0a`, Nginx Elite `1f8daf5192e5c1f923ae3d5a44337eea38784ca4b0f1598c9a7495683e4706e2`; F11 evidence files = `0`.
+
+Control-script preparation/delivery errors encountered before the verified transaction stopped before rollback creation, configuration mutation, or service transition and therefore did not constitute additional Cutover attempts. The verified transaction that reached ingress mutation was exactly one bounded Cutover attempt.
+
+Safety counters for the successful bounded attempt: Apache config edits = `2`; Nginx config edits = `1`; Apache service actions = `1`; Nginx service actions = `1`; receiver changes = `0`; Elite application changes = `0`; DNS changes = `0`; TLS/certificate changes = `0`; firewall changes = `0`; Docker/Waha changes = `0`; MarketlyAI application changes = `0`; Provider/Zernio calls = `0`; Analytics calls = `0`; Delta calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**; synthetic/webhook POSTs = `0`.
+
+Cutover is **OPERATIONALLY COMPLETED / AWAITING TEAM LEADER ACCEPTANCE**. `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER** pending Team Leader review; F11 authorization remains **AUTHORIZED / UNCONSUMED**. C02 success does **NOT** authorize F11 or any Provider/Zernio execution.
+
+Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. Do not mark C02 accepted and do not mark R03 done/accepted. STOP after documentation commit/push and final Git verification.
