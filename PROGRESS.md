@@ -1799,3 +1799,17 @@ Execution-state preservation: Current Phase = **PHASE 1 - Provider Feasibility &
 Safety counters: Provider/Zernio calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**; receiver public exposure = **NO**; DNS changes = `0`; TLS/certificate changes = `0`; firewall changes = `0`; Docker/Waha changes = `0`; application deployment = `0`; unrelated site config modifications = `0`; Public Cutover = **NO**.
 
 Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. Stop after documentation commit/push and await Team Leader review.
+
+### P1-T08-F11-F10-R03-C01 - R03 continuation authorization after accepted access gate (2026-10-20)
+
+`P1-T08-F11-F10-R03-A01 = DONE / ACCEPTED`.
+
+`P1-T08-F11-F10-R03-C01 = ACTIVATED - R03 CONTINUATION AUTHORIZED`.
+
+Privileged access gate = **PASS**. Continuation scope = original `P1-T08-F11-F10-R03` bounded public-ingress Cutover only. Provider/Zernio = **NOT AUTHORIZED**. F11 execution = **NOT AUTHORIZED**. F11 authorization remains **AUTHORIZED / UNCONSUMED**.
+
+Execution-state preservation at continuation activation: Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover remains **BLOCKED** until the C01 transactional gates pass; F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization remains **AUTHORIZED / UNCONSUMED**.
+
+Starting repository HEAD = `ed1acf98329aa20b940ef3b55de39ceb951a9a6c`; local, tracking, and live remote were equal and the working tree was clean before this continuation marker. D-038 and D-040 were re-read and remained **Accepted**. This is not a second activation of R03 itself.
+
+No VPS mutation is authorized before this continuation marker is committed/pushed and the live remote HEAD is verified.
