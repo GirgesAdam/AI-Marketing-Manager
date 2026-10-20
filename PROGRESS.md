@@ -1864,3 +1864,49 @@ Scope boundary: no Cutover retry is authorized; Apache/Nginx configuration chang
 Starting repository HEAD = `69995a02c7a7dd211a7d6f81e1019bc7480e2f41`; local HEAD, tracking HEAD, and live remote HEAD matched and the working tree was clean before activation. D-038 and D-040 remained **Accepted**. Canonical state remained: R03 = **NOT DONE / NOT ACCEPTED**; C01 = **BLOCKED - CUTOVER FAILED / ROLLED BACK**; Cutover = **BLOCKED**; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**.
 
 Commit/push this activation before any VPS investigation. Do not retry the Cutover under F01.
+
+
+### P1-T08-F11-F10-R03-F01 - read-only preservation investigation result (2026-10-20)
+
+`P1-T08-F11-F10-R03-F01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Technical classification = `PRE_EXISTING_WORKLOAD_FAILURE — PRESERVATION CANNOT BE CERTIFIED`.
+
+The investigation remained read-only. No Cutover retry occurred. No Apache/Nginx configuration was edited; no Apache/Nginx/receiver service was started, stopped, restarted, or reloaded; no WordPress/PHP/database/application repair was performed; Provider/Zernio calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**; Public Cutover = **NO**.
+
+Activation commit = `cc0c6086a18d32f96cdb13fb4c31b79f1caca01a`. Before investigation, local HEAD, tracking HEAD, and live remote HEAD were equal and the working tree was clean.
+
+Fresh post-C01 rollback-state evidence in the authorized sudo session:
+- privileged UID gate: `sudo -n id -u` -> `0`, exit `0`;
+- Apache = `active`;
+- Nginx = `failed` / not public;
+- receiver = `active`; boot state = `disabled`;
+- listeners: Apache on public `*:80`; no TCP/443 listener observed; no TCP/8080 listener observed; receiver on `127.0.0.1:8765` only;
+- receiver SHA-256 = `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`;
+- receiver unit SHA-256 = `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`;
+- MarketlyAI staged config SHA-256 = `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`;
+- Apache ports SHA-256 = `9d2d53be30cbb4c42af6b25458077db5b5ad1be4f5810fa2fee4a1d53ac604a2`;
+- Apache Elite vhost SHA-256 = `85ce3df3c888430cbdd528c7cacded9fe6aa6fcf4c2ec18b99ae8a9580996b59`;
+- Nginx Elite vhost SHA-256 = `239a36f957928ec534ac79f06a6516ef495b789c803c43d5944acb5f4b880be6`;
+- real F11 evidence file count = `0`.
+
+Bounded preservation probe matrix for existing Elite root `/`:
+- Probe A, public HTTP `http://elite.restartorg.com/`: status `500`, redirects `0`, final URL unchanged, body bytes `2912`, body SHA-256 `d3f7244b302a39f8b95bb08afba2970cd85f3d530533edfb8032e2e8c50c7f8f`, server header `Apache/2.4.41 (Ubuntu)`, content type `text/html; charset=UTF-8`;
+- Probe B, local `127.0.0.1:80` with `Host: elite.restartorg.com`: status `500`, body bytes `2912`, identical body SHA-256 `d3f7244b302a39f8b95bb08afba2970cd85f3d530533edfb8032e2e8c50c7f8f`, same selected Apache/WordPress headers;
+- Probe C, local `127.0.0.1:80` with authoritative Host plus `X-Forwarded-Proto: https`: status `500`, body bytes `2912`, identical body SHA-256 `d3f7244b302a39f8b95bb08afba2970cd85f3d530533edfb8032e2e8c50c7f8f`, same selected headers.
+
+The HTTP `500` is therefore not public-vs-local probe-specific and is not changed by the tested forwarded-scheme context. Public and local response fingerprints are identical for the bounded root request.
+
+Correlated read-only error evidence at `2026-10-20T12:17:23Z` showed a new line in the existing Elite Apache error log for the bounded local probe. Sanitized error class: PHP fatal `TypeError` inside the existing WordPress/Presto Player execution path: `wp_register_script_module()` received a boolean where an array was required, called from the Presto Player plugin script-registration path. The Apache main error log added no corresponding new line. No secret, credential, cookie, token, authorization header, database credential, or personal/customer data was included in the evidence report.
+
+Conclusion: the existing Elite root workload is materially unhealthy before any future Cutover. The same application-level `500` and deterministic body fingerprint are observable publicly and directly through Apache. Matching this broken `500` after a future ingress change would not be a defensible proof that the existing workload was preserved correctly; it would only prove reproduction of a pre-existing failure. Under F01, no application repair is authorized.
+
+Authoritative preservation signal is therefore **not currently available for the application root**. The factual blocker is the pre-existing PHP fatal in the existing workload. Before another R03 Cutover attempt can use an application-preservation gate, an owner-authorized task outside F01 must first restore or otherwise establish a meaningful healthy existing-workload behavior; after that, a fresh pre-Cutover baseline should be captured and replayed post-Cutover using the same authoritative Host/path, redirect behavior, selected stable headers, body fingerprint/tolerance as appropriate, and explicit absence of proxy `502/503/504` or redirect loops. Do not use the current `500` as a success criterion.
+
+Final read-only handoff remained unchanged: Apache = `active` on public `*:80`; Nginx = `failed`; receiver = `active/disabled` on `127.0.0.1:8765`; real F11 evidence files = `0`.
+
+Mutation counters: Apache config edits = `0`; Apache restart/reload/stop/start = `0`; Nginx config edits = `0`; Nginx start/restart/reload = `0`; receiver edits/restart = `0`; application changes = `0`; database changes = `0`; DNS changes = `0`; TLS/certificate changes = `0`; firewall changes = `0`; Docker/Waha changes = `0`; Provider/Zernio calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**; Public Cutover = **NO**.
+
+Canonical execution state remains: R03 = **NOT DONE / NOT ACCEPTED**; Cutover = **BLOCKED**; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**.
+
+Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. Stop after final documentation commit/push and await Team Leader review.
