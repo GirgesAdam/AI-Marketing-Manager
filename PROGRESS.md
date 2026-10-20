@@ -2298,3 +2298,16 @@ This closeout makes the H01 acceptance prerequisite canonical for later H02 revi
 Closeout safety boundary: dependency commands = `0`; npm audit = `0`; Provider/Zernio calls = `0`; credentials loaded = `NO`; publish attempts = `0`; webhook operations = `0`; Analytics/Delta calls = `0`; VPS/infrastructure actions = `0`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, `package.json`, `package-lock.json`, source/tests/config remain unchanged. Do not start H02 in this execution. STOP after closeout commit/push and final Git verification.
+### P1-T08-F11-H02 - read-only dependency vulnerability triage activation (2026-10-21)
+
+`P1-T08-F11-H02 = ACTIVATED — READ-ONLY DEPENDENCY VULNERABILITY TRIAGE`.
+
+H01 = **DONE / ACCEPTED WITH BLOCKING SECURITY NOTE**; accepted technical classification = `HARNESS_GATE_RESTORED`; harness functional readiness = **PASS**.
+
+F11 live resume remains **BLOCKED PENDING H02 SECURITY TRIAGE**. Provider/Zernio = **NOT AUTHORIZED**. Dependency changes = **NOT AUTHORIZED**. F11 one-run authorization remains `AUTHORIZED / UNCONSUMED`.
+
+Starting repository HEAD = `9006b4a9c53dd553b93d34b76d9921ee6de5808b`; local HEAD, tracking HEAD, and live remote HEAD matched and the working tree was clean before activation.
+
+Canonical state preserved: Parent P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11` = **NOT DONE**; Provider request count = `0`; F11 post published = **NO**.
+
+No security/audit command is authorized before this activation marker is committed/pushed and live remote HEAD is verified.
