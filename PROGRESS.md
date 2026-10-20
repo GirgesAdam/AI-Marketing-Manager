@@ -2412,3 +2412,15 @@ Security scope note: acceptance is scoped to the authorized F11 runtime path. It
 Closeout safety boundary: npm audit reruns = `0`; dependency installs/updates/fixes = `0`; package/lock changes = `0`; source/test/config changes = `0`; Provider/Zernio calls = `0`; credentials loaded = `NO`; publish attempts = `0`; webhook operations = `0`; Analytics/Delta calls = `0`; VPS/infrastructure actions = `0`; F11 live execution = `NO`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, `package.json`, `package-lock.json`, source/tests/config remain unchanged. Do not resume F11 in this execution. STOP after closeout commit/push and final Git verification.
+
+### P1-T08-F11-RCV01 - live receiver / harness compatibility preflight activation (2026-10-21)
+
+`P1-T08-F11-RCV01 = ACTIVATED — READ-ONLY LIVE RECEIVER/HARNESS COMPATIBILITY PREFLIGHT`.
+
+Starting repository HEAD = `3d981153081a5bc11cd5c99a2f808745fba8b782`; local HEAD, tracking HEAD, and live remote HEAD matched and the working tree was clean before activation.
+
+Canonical prerequisites: H01 = accepted; H02 = accepted; H02-F01 = accepted; `F11 LIVE RESUME SECURITY BLOCKER = CLEARED BY ACCEPTED H02 SECURITY REVIEW`; `P1-T08-F11` = `NOT DONE`; F11 authorization = `AUTHORIZED / UNCONSUMED`; F11 authorization consumed = `NO`; Provider request count = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`.
+
+RCV01 safety boundary: Provider/Zernio = **NOT AUTHORIZED**; F11 live execution = **NOT AUTHORIZED**; service actions = **NOT AUTHORIZED**; tunnel creation = **NOT AUTHORIZED**; Nginx/Apache config mutation = **NOT AUTHORIZED**; webhook POST = **NOT AUTHORIZED**.
+
+No VPS or receiver inspection is authorized before this activation marker is committed/pushed and live remote HEAD is verified.
