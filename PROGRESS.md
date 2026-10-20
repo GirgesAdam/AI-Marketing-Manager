@@ -2065,3 +2065,14 @@ Canonical execution state remains: `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED
 This closeout does **NOT** authorize C02. Closeout safety boundary: VPS commands = `0`; Elite/WordPress actions = `0`; Apache/Nginx actions = `0`; Provider/Zernio calls = `0`; F11 execution = **NO**.
 
 Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. STOP after closeout commit/push and final Git verification.
+
+
+### P1-T08-F11-F10-R03-C02 - bounded public ingress Cutover retry activation (2026-10-20)
+
+`P1-T08-F11-F10-R03-C02 = ACTIVATED — TEAM LEADER AUTHORIZED BOUNDED PUBLIC INGRESS CUTOVER RETRY`.
+
+C02 authorization = `AUTHORIZED`. Authorization applies to this bounded Cutover attempt only. Provider/Zernio remains **NOT AUTHORIZED**. F11 remains **NOT AUTHORIZED FOR EXECUTION**. No Elite/application repair is authorized. No unrelated infrastructure repair is authorized.
+
+Starting repository HEAD = `774357975b1944fc314f57ff442dc9bd951b596c`; local HEAD, tracking HEAD, and live remote HEAD matched and the working tree was clean before activation. V01 = **DONE / ACCEPTED** with classification `PRESERVATION_BASELINE_REVALIDATED`; B01 remains accepted; `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 authorization = **AUTHORIZED / UNCONSUMED**; F11 has not executed.
+
+No VPS mutation is authorized before this activation marker is committed/pushed and the live remote HEAD is verified.
