@@ -2173,3 +2173,19 @@ This closeout does **NOT** execute F11 and does **NOT** itself authorize any Pro
 Closeout safety boundary: VPS commands = `0`; Apache/Nginx actions = `0`; receiver actions = `0`; Elite/WordPress actions = `0`; Provider/Zernio calls = `0`; Analytics/Delta calls = `0`; webhook POSTs = `0`; F11 execution = **NO**.
 
 Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. Do not start F11 or any successor task. STOP after closeout commit/push and final Git verification.
+
+### P1-T08-F11 - authorized one-run live data-bearing experiment activation (2026-10-20)
+
+`P1-T08-F11 = ACTIVATED — AUTHORIZED ONE-RUN LIVE DATA-BEARING EXPERIMENT`.
+
+Starting repository HEAD = `b9b21b8b59424cc673ba7f9261fb30f52d7a7f2e`; local HEAD, tracking HEAD, and live remote HEAD matched and the working tree was clean before activation.
+
+One-run authorization = `AUTHORIZED / UNCONSUMED`.
+
+Infrastructure prerequisite = accepted C02/R03 (`P1-T08-F11-F10-R03-C02 = DONE / ACCEPTED`; `P1-T08-F11-F10-R03 = DONE / ACCEPTED`; Cutover = `COMPLETED / ACCEPTED`).
+
+Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`.
+
+Provider request count = `0`; published posts = `0`; real F11 evidence files = `0`; F11 post has not been published.
+
+No Provider request is authorized before this activation marker is committed/pushed and live remote HEAD is verified. The one-run authorization becomes consumed at the first trusted Zernio Provider request.
