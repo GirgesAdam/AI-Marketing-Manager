@@ -1813,3 +1813,44 @@ Execution-state preservation at continuation activation: Parent P1-T08 = **UNRES
 Starting repository HEAD = `ed1acf98329aa20b940ef3b55de39ceb951a9a6c`; local, tracking, and live remote were equal and the working tree was clean before this continuation marker. D-038 and D-040 were re-read and remained **Accepted**. This is not a second activation of R03 itself.
 
 No VPS mutation is authorized before this continuation marker is committed/pushed and the live remote HEAD is verified.
+
+
+### P1-T08-F11-F10-R03-C01 - Cutover attempt result and rollback (2026-10-20)
+
+`P1-T08-F11-F10-R03-C01 = BLOCKED - CUTOVER FAILED / ROLLED BACK`.
+
+Cutover = **BLOCKED**. R03 remains **NOT DONE / NOT ACCEPTED**. No second Cutover attempt was made after the rollback-triggering failure.
+
+C01 continuation marker commit = `b1ec0a37de2a57d34f8fd9a9caf4f73fb696804c`. Before VPS mutation, local HEAD, tracking HEAD, and live remote HEAD were equal and the working tree was clean. `P1-T08-F11-F10-R03-A01 = DONE / ACCEPTED`; D-038 and D-040 remained **Accepted**; Parent P1-T08 remained **UNRESOLVED / NOT DONE**; F11 authorization remained **AUTHORIZED / UNCONSUMED**.
+
+Fresh privileged execution-session gate passed immediately before preflight: `sudo -n id -u` returned `0`.
+
+Fresh privileged R03 preflight passed the required accepted-state gates before ingress edits:
+- receiver `/opt/marketly-r02/receiver.py` SHA-256 = `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`;
+- receiver systemd unit SHA-256 = `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`;
+- receiver service = `active`, boot state = `disabled`, listener = `127.0.0.1:8765` only, real F11 evidence files = `0`;
+- MarketlyAI staged Nginx SHA-256 = `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`;
+- verified MarketlyAI rollback artifact included `/root/p1-t08-f11-f10-r02-backups/marketlyai.restartorg.com.20261019T132224Z.before-r02`, SHA-256 = `f4416d9dfbb60ff10ff40cf5dede082dc81aa13868da4299cd5972139ff339d6`;
+- pre-Cutover Nginx state = `failed`, Apache = `active`, Apache owned public TCP/80, no TCP/443 listener was observed, TCP/8080 was free, receiver remained loopback-only;
+- authoritative source hashes matched the prior safe-stop baseline: `/etc/apache2/ports.conf` = `9d2d53be30cbb4c42af6b25458077db5b5ad1be4f5810fa2fee4a1d53ac604a2`; Apache Elite vhost = `85ce3df3c888430cbdd528c7cacded9fe6aa6fcf4c2ec18b99ae8a9580996b59`; Nginx Elite vhost = `239a36f957928ec534ac79f06a6516ef495b789c803c43d5944acb5f4b880be6`;
+- fresh `nginx -t` = PASS with only the already-known unrelated `staging-admin.restartorg.com` conflicting-server-name warnings; fresh `apache2ctl configtest` = `Syntax OK`.
+
+A pre-Cutover Host-aware local request to the existing Apache workload returned HTTP `500`. This was recorded before ingress mutation and is material context for the later backend validation result; no application fix was attempted.
+
+Before any ingress edit, a complete restricted rollback set was created and hash-verified at `/root/marketly-r03-c01-rollback-20261020T114505Z` (`root:root`, mode `0700`). Rollback files were `root:root` mode `0600` and matched their source hashes: `ports.conf` = `9d2d53be30cbb4c42af6b25458077db5b5ad1be4f5810fa2fee4a1d53ac604a2`; `elite.apache.conf` = `85ce3df3c888430cbdd528c7cacded9fe6aa6fcf4c2ec18b99ae8a9580996b59`; `elite.nginx.conf` = `239a36f957928ec534ac79f06a6516ef495b789c803c43d5944acb5f4b880be6`.
+
+Only the three authorized ingress files were staged: Apache listener moved from public `80` to `127.0.0.1:8080` with Apache `443` listeners disabled; the Elite Apache vhost moved from `*:80` to `127.0.0.1:8080` and mapped `X-Forwarded-Proto=https` to Apache HTTPS semantics; the existing Elite Nginx vhost was changed from direct PHP-FPM serving to a minimal proxy to `127.0.0.1:8080` preserving Host, client-forwarding, and forwarded-protocol headers. The accepted MarketlyAI config was not modified. Staged Apache validation and `nginx -t` both passed before service transition.
+
+Transactional service transition entered Apache step only. Apache restarted successfully into the loopback configuration and listener evidence showed Apache at `127.0.0.1:8080` with no Apache public TCP/80 or TCP/443. The receiver remained `127.0.0.1:8765`. The required Host-aware local backend request to `127.0.0.1:8080` returned HTTP `500`; because workload preservation could not be proven, this triggered immediate rollback. The same Host-aware request had already returned HTTP `500` before mutation, so this evidence does not establish that the Cutover caused the application error; it establishes that the backend validation gate could not pass safely.
+
+Nginx was **NOT STARTED**. Therefore MarketlyAI public HTTP/HTTPS/TLS validation and post-Cutover existing-workload-through-Nginx validation were not run.
+
+Rollback completed in the same execution: task-modified Apache/Nginx files were restored from the verified rollback set, restored Apache configuration validated `Syntax OK`, Apache restarted into the original public configuration, Nginx returned/remained `failed`, receiver remained active and loopback-only, and real F11 evidence files remained `0`.
+
+Post-rollback read-only verification confirmed original source hashes byte-for-byte: Apache ports = `9d2d53be30cbb4c42af6b25458077db5b5ad1be4f5810fa2fee4a1d53ac604a2`; Apache Elite vhost = `85ce3df3c888430cbdd528c7cacded9fe6aa6fcf4c2ec18b99ae8a9580996b59`; Nginx Elite vhost = `239a36f957928ec534ac79f06a6516ef495b789c803c43d5944acb5f4b880be6`; MarketlyAI staged config = `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`; receiver unit = `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`. Final visible service/listener state: Apache = `active` on original public `*:80`; Nginx = `failed`; receiver = `active/disabled` on `127.0.0.1:8765`; no TCP/443 or TCP/8080 listener observed.
+
+Safety counters: DNS changes = `0`; TLS/certificate changes = `0`; firewall changes = `0`; Docker/Waha changes = `0`; Provider/Zernio calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**; real F11 evidence files = `0`; unrelated-project fixes = `0`; Nginx starts = `0`; no second Cutover attempt after rollback.
+
+Execution-state preservation: Current Phase = **PHASE 1 - Provider Feasibility & Basic Cost Safety**; Current Task = `P1-T08 - Verify Zernio analytics.synced Webhook Behavior`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; Cutover = **BLOCKED**; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**; Next operational task = **NOT_STARTED**.
+
+Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. Stop after documentation commit/push and await Team Leader review.
