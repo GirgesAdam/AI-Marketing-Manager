@@ -2127,3 +2127,49 @@ Safety counters for the successful bounded attempt: Apache config edits = `2`; N
 Cutover is **OPERATIONALLY COMPLETED / AWAITING TEAM LEADER ACCEPTANCE**. `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 remains **UNCONSUMED / BLOCKED PRE-PROVIDER** pending Team Leader review; F11 authorization remains **AUTHORIZED / UNCONSUMED**. C02 success does **NOT** authorize F11 or any Provider/Zernio execution.
 
 Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. Do not mark C02 accepted and do not mark R03 done/accepted. STOP after documentation commit/push and final Git verification.
+
+### P1-T08-F11-F10-R03-C02-CLOSEOUT-01 - Team Leader acceptance (2026-10-20)
+
+`P1-T08-F11-F10-R03-C02 = DONE / ACCEPTED`.
+
+Team Leader disposition = `ACCEPTED`.
+
+Accepted evidence HEAD = `38c985756c4341a0979a11f01dce57f472d0f238`.
+
+Accepted technical classification = `CUTOVER_COMPLETED — PRESERVATION AND ROUTING VERIFIED`.
+
+Parent operational task is also closed: `P1-T08-F11-F10-R03 = DONE / ACCEPTED`.
+
+Cutover = **COMPLETED / ACCEPTED**.
+
+Accepted final topology and preservation evidence:
+- Nginx owns public TCP/80 and TCP/443.
+- Apache is active on loopback-only `127.0.0.1:8080`.
+- Apache owns no public TCP/80 or TCP/443.
+- Receiver remains loopback-only `127.0.0.1:8765`.
+- Receiver boot state remains `disabled`.
+- Elite HTTP/HTTPS preservation passed.
+- No newly correlated Presto/WordPress fatal was generated.
+- MarketlyAI HTTP generic `/` = `404`.
+- MarketlyAI HTTPS generic `/` = `404`.
+- Exact HTTPS `HEAD /p1-t08-f11/analytics-synced` = `200`.
+- Near-miss route = `404`.
+- TLS hostname validation passed.
+- F11 evidence files remained `0`.
+
+Accepted rollback evidence = `/root/marketly-r03-c02-rollback-20261020T164718Z`, with restricted permissions and the accepted pre-Cutover artifacts/hashes already recorded in the C02 evidence.
+
+Accepted final ingress hashes:
+- Apache ports = `bf6614f4d83153d90db06df1b442e78306acd8796839eb298b2ff58e6cb6fd43`.
+- Apache Elite = `47f36ab99314df3819b58faf71bdbc2da43783c06da446715a998cceaafc4d0a`.
+- Nginx Elite = `1f8daf5192e5c1f923ae3d5a44337eea38784ca4b0f1598c9a7495683e4706e2`.
+
+The infrastructure/Cutover blocker preventing F11 public receiver readiness is cleared by accepted C02/R03 evidence.
+
+Execution state preserved after this closeout: Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 authorization = **AUTHORIZED / UNCONSUMED**; F11 execution = **NO**; F11 authorization consumed = **NO**.
+
+This closeout does **NOT** execute F11 and does **NOT** itself authorize any Provider/Zernio call.
+
+Closeout safety boundary: VPS commands = `0`; Apache/Nginx actions = `0`; receiver actions = `0`; Elite/WordPress actions = `0`; Provider/Zernio calls = `0`; Analytics/Delta calls = `0`; webhook POSTs = `0`; F11 execution = **NO**.
+
+Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. Do not start F11 or any successor task. STOP after closeout commit/push and final Git verification.
