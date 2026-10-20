@@ -1977,3 +1977,28 @@ Safety counters: Apache config edits = `0`; Nginx config edits = `0`; Apache res
 Canonical execution state remains: `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Cutover = **BLOCKED**; Next Cutover retry = **NOT AUTHORIZED**; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**.
 
 Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. Do not mark B01 accepted and do not authorize C02. STOP after documentation commit/push and final Git verification.
+
+
+### P1-T08-F11-F10-R03-B01-CLOSEOUT-01 - Team Leader acceptance (2026-10-20)
+
+`P1-T08-F11-F10-R03-B01 = DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
+
+Team Leader disposition = `ACCEPTED WITH NON-BLOCKING NOTES`.
+
+Accepted evidence HEAD = `898ad558ae259630655e81922b60005fb08b8344`.
+
+Accepted technical classification = `ELITE_HEALTHY_BASELINE_RESTORED`.
+
+Accepted result: the pre-existing Elite PHP/Presto failure was restored through the bounded targeted Presto Player `4.0.2 -> 4.5.4` update. Complete plugin + database rollback evidence existed before mutation. Public and local authoritative root probes returned HTTP `200`. No new correlated Presto fatal was generated. MarketlyAI/receiver/ingress configuration remained unchanged. Provider/Zernio calls = `0`. F11 remained unconsumed.
+
+Non-blocking notes:
+1. The WP-CLI cache permission warning requires no remediation under this task.
+2. Temporary helper BOM/preparation warnings establish no production issue.
+3. The healthy body SHA-256 is a snapshot candidate only, not a permanent preservation invariant. A future Cutover task must capture a fresh immediately-pre-Cutover baseline and compare it post-Cutover.
+4. Future preservation acceptance must primarily require healthy HTTP behavior, Elite identity, expected redirects, absence of `500/502/503/504` and redirect loops, and absence of a newly correlated fatal.
+
+Canonical execution state remains: `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Cutover = **BLOCKED**; Next Cutover retry = **NOT AUTHORIZED**; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**.
+
+C02 remains **NOT AUTHORIZED**. This closeout authorizes no VPS commands, Elite/WordPress changes, Apache/Nginx actions, Provider/Zernio calls, or F11 execution.
+
+Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. STOP after closeout commit/push and final Git verification.
