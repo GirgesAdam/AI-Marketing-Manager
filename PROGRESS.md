@@ -1930,3 +1930,16 @@ Canonical execution state remains: `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED
 Closeout safety boundary: VPS commands/actions = `0`; Apache/Nginx actions = `0`; application changes = `0`; Provider/Zernio calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**; Public Cutover = **NO**.
 
 Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. STOP after closeout commit/push and final Git verification.
+
+
+### P1-T08-F11-F10-R03-B01 - owner-authorized Elite blocker removal activation (2026-10-20)
+
+`P1-T08-F11-F10-R03-B01 = ACTIVATED — OWNER-AUTHORIZED ELITE BLOCKER REMOVAL`.
+
+Owner authorization = **APPROVED**. Repair scope = existing Elite PHP/WordPress failure only. Goal = establish a meaningful healthy preservation baseline for the existing Elite workload.
+
+R03 Cutover retry remains **NOT AUTHORIZED**. MarketlyAI infrastructure mutation = **NOT AUTHORIZED**. Provider/Zernio = **NOT AUTHORIZED**. F11 = **NOT AUTHORIZED FOR EXECUTION**.
+
+Starting repository HEAD = `8a35fded2a547c54dce276367e60d307088ba224`; local, tracking, and live remote matched and the working tree was clean before activation. Canonical state remained: `P1-T08-F11-F10-R03-F01 = DONE / ACCEPTED`; accepted classification = `PRE_EXISTING_WORKLOAD_FAILURE — PRESERVATION CANNOT BE CERTIFIED`; `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Cutover = **BLOCKED**; Next operational Cutover retry = **NOT AUTHORIZED**; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**.
+
+No VPS mutation is authorized before this activation marker is committed/pushed and the live remote HEAD is verified.
