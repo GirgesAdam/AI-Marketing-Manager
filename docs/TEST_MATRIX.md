@@ -1802,3 +1802,34 @@ Classification: `HARNESS_GATE_RESTORED`.
 | VPS/infrastructure mutation | PASS / ZERO | `0` |
 
 The local harness environment is restored and the accepted pre-Provider Harness Gate is green. `P1-T08-F11` remains **NOT DONE** and is not authorized to resume live execution by H01. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`.
+
+## P1-T08-F11-H02 - Dependency Vulnerability Security / Readiness Gate
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `CRITICAL_AUDIT_FINDINGS_NOT_RUNTIME_REACHABLE_FOR_F11`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| H01 prerequisite | PASS | `DONE / ACCEPTED WITH BLOCKING SECURITY NOTE`; `HARNESS_GATE_RESTORED` |
+| H02 activation before audit | PASS | `2ca2ff594a85cef35891db1d1f9c931afb4144b6` pushed before audit |
+| Audit command | PASS / findings present | exact `npm audit --json`; exit `1`; total `3`: moderate `1`, critical `2` |
+| Critical dependency chain | REVIEWED | root -> `vitest@3.2.7` -> `tinypool@1.1.1`; Vitest direct devDependency, Tinypool transitive |
+| Critical advisories | REVIEWED | `GHSA-5gmw-xhrv-c9v3`; `GHSA-85c8-ppgw-ccpr` |
+| Tinypool runtime reachability | NOT REFERENCED | compiled F11 runtime trace has no Vitest/Tinypool imports; no worker-pool API path |
+| Vitest package-level critical reachability | BUILD_TEST_ONLY | direct dev test runner; absent from F11 source/dist runtime import graph |
+| Moderate finding | REVIEWED | `@vitest/mocker@3.2.7`, `GHSA-82fw-gwwq-j7x9`, root -> Vitest -> mocker; dev-server/mock path not exposed by F11 |
+| F10 compiled runner trace | PASS | 9 local modules + Node built-ins only; bare npm imports `[]`; vulnerable imports `[]` |
+| Parent P1-T08 compiled runner trace | PASS | 8 local modules + Node built-ins only; vulnerable imports `[]` |
+| Source/dist vulnerable-package search | PASS / ZERO | no `vitest`, `tinypool`, or `@vitest/mocker` references in `src` or `dist` |
+| Build boundary | PASS | `tsconfig.build.json` includes source and excludes tests; build uses TypeScript |
+| package.json SHA | PASS / unchanged | `4a2f08bfbc1f3ed55eb029cc6f81c3d8c05da6707357becb3ba66d3d47f9b18d` |
+| package-lock.json SHA | PASS / unchanged | `33d3de57ba95cf296a4b23f2341f4178b5cf436ee818d06b146d021fdbd37675` |
+| Dependency/source/test/config remediation | ZERO | none performed |
+| Provider/Zernio calls | ZERO | `0` |
+| Credentials loaded | NO | no live Provider credentials used |
+| Publish / webhook / Analytics / Delta | ZERO | all `0` |
+| VPS/infrastructure mutation | ZERO | `0` |
+| F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+
+Security triage conclusion: critical audit findings are outside the accepted F11 live runtime dependency/import attack surface. This gate does not self-authorize F11; live resume remains blocked pending Team Leader security review.
