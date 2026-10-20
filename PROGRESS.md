@@ -2012,3 +2012,36 @@ Execution boundary: read-only only; Elite repair = **NOT AUTHORIZED**; Apache/Ng
 Starting repository HEAD = `4c86899647c5061be2db81077e2a8414c31f1027`; local HEAD, tracking HEAD, and live remote HEAD matched and the working tree was clean before activation. Canonical state remained: B01 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**; B01 classification = `ELITE_HEALTHY_BASELINE_RESTORED`; `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Cutover = **BLOCKED**; C02 / next Cutover retry = **NOT AUTHORIZED**; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**.
 
 Commit/push this activation and verify the live remote before any VPS evidence collection.
+
+
+### P1-T08-F11-F10-R03-V01 - fresh Elite preservation baseline revalidation result (2026-10-20)
+
+`P1-T08-F11-F10-R03-V01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Technical classification = `PRESERVATION_BASELINE_REVALIDATED`.
+
+Activation commit = `607b68651ba10c9deb859ae221163dd07cb839b6`. Immediately before final documentation, local HEAD, tracking HEAD, and live remote HEAD remained equal to the activation commit and the working tree was clean.
+
+Fresh infrastructure non-drift gate passed. Apache = `active`; Nginx = `failed` / not public; receiver = `active`; receiver boot state = `disabled`. Listener topology remained Apache on public `*:80`, no TCP/443 listener, no TCP/8080 listener, and receiver exactly on `127.0.0.1:8765`. Real F11 evidence files = `0`.
+
+Accepted infrastructure hashes remained unchanged: MarketlyAI staged Nginx = `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`; receiver = `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`; receiver unit = `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`; Apache ports = `9d2d53be30cbb4c42af6b25458077db5b5ad1be4f5810fa2fee4a1d53ac604a2`; Apache Elite vhost = `85ce3df3c888430cbdd528c7cacded9fe6aa6fcf4c2ec18b99ae8a9580996b59`; Nginx Elite vhost = `239a36f957928ec534ac79f06a6516ef495b789c803c43d5944acb5f4b880be6`.
+
+Accepted B01 repair state remained intact: PHP = `7.4.3-4ubuntu2.29`; WordPress = `7.1.3`; Presto Player = `4.5.4`; Presto status = `active`. No update, repair, or application mutation occurred under V01.
+
+Fresh bounded request window = `2026-10-20T15:56:08Z` through `2026-10-20T15:56:08Z`.
+
+Public authoritative baseline for `GET http://elite.restartorg.com/`: HTTP `200`; redirects = `0`; final URL = `http://elite.restartorg.com/`; body bytes = `124708`; fresh V01 body SHA-256 = `f1512f1efc9d30be93cab56b9b211f615fce455bacc4544931501e5a46e28977`; Elite identity marker = **YES**; selected safe headers showed `Apache/2.4.41 (Ubuntu)`, `text/html; charset=UTF-8`, and the expected WordPress Link semantics. No `500/502/503/504` and no redirect loop occurred.
+
+Local authoritative baseline for `GET http://127.0.0.1:80/` with `Host: elite.restartorg.com`: HTTP `200`; redirects = `0`; final URL = `http://127.0.0.1:80/`; body bytes = `124708`; SHA-256 = `f1512f1efc9d30be93cab56b9b211f615fce455bacc4544931501e5a46e28977`; Elite identity marker = **YES**; selected safe headers matched the public Apache/WordPress HTML semantics. Public/local body SHA match = **YES** and behavior was semantically consistent.
+
+Correlated fatal check passed: Elite error log line count remained `53 -> 53`; historical `wp_register_script_module()` fatal match count remained `24 -> 24`; the bounded V01 requests generated no new relevant log lines and no newly correlated Presto/WordPress PHP fatal.
+
+Candidate preservation assertion for a future separately authorized C02: immediately before Cutover capture the same authoritative public root and local Host-aware root semantics, including status, redirects/final URL, selected safe headers, body length, body SHA snapshot, Elite identity, and correlated fatal window/count; immediately after Cutover replay the same requests. Preservation success must require healthy application behavior, correct Elite identity, valid redirect semantics, absence of `500/502/503/504`, absence of redirect loops, no newly correlated Presto fatal, and semantic consistency with the immediately-pre-Cutover baseline. Body SHA may be a strong comparison when unchanged but is not a permanent long-term invariant.
+
+Final read-only state remained Apache = `active`; Nginx = `failed`; receiver = `active/disabled`; real F11 evidence files = `0`.
+
+Safety counters: Elite/WordPress changes = `0`; Apache config changes = `0`; Nginx config changes = `0`; Apache restart/reload/start/stop = `0`; Nginx start/restart/reload = `0`; receiver changes = `0`; DNS changes = `0`; TLS/certificate changes = `0`; firewall changes = `0`; Docker/Waha changes = `0`; MarketlyAI changes = `0`; Provider/Zernio calls = `0`; Analytics calls = `0`; Delta calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**; Public Cutover = **NO**.
+
+Canonical execution state remains: `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Cutover = **BLOCKED**; C02 / next Cutover retry = **NOT AUTHORIZED**; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**.
+
+Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. Do not mark V01 accepted and do not authorize C02. STOP after final documentation commit/push and Git verification.
