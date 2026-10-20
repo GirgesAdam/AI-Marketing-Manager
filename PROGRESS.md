@@ -2045,3 +2045,23 @@ Safety counters: Elite/WordPress changes = `0`; Apache config changes = `0`; Ngi
 Canonical execution state remains: `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Cutover = **BLOCKED**; C02 / next Cutover retry = **NOT AUTHORIZED**; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**.
 
 Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. Do not mark V01 accepted and do not authorize C02. STOP after final documentation commit/push and Git verification.
+
+### P1-T08-F11-F10-R03-V01-CLOSEOUT-01 - Team Leader acceptance (2026-10-20)
+
+`P1-T08-F11-F10-R03-V01 = DONE / ACCEPTED`.
+
+Team Leader disposition = `ACCEPTED`.
+
+Accepted evidence HEAD = `5176a2cb9e0d28a31a989cc28bf93868d3a23cc7`.
+
+Accepted technical classification = `PRESERVATION_BASELINE_REVALIDATED`.
+
+Accepted evidence: infrastructure non-drift gate passed. Apache remained active on public TCP/80. Nginx remained failed/not-public. Receiver remained active/disabled on `127.0.0.1:8765`. Real F11 evidence files remained `0`. Accepted infrastructure hashes remained unchanged. Presto Player remained `4.5.4`, active. Fresh public Elite root returned HTTP `200`, redirects `0`, and the correct Elite identity. Fresh local Host-aware root returned HTTP `200`, redirects `0`, and remained semantically consistent with public behavior. Public/local body fingerprints matched for the V01 snapshot. No newly correlated Presto/WordPress fatal was generated.
+
+Accepted future preservation rule: a future separately authorized C02 must take a fresh immediately-pre-Cutover baseline and replay the same authoritative probes post-Cutover. Preservation success must require healthy HTTP application behavior; correct Elite identity; valid redirect semantics; no `500/502/503/504`; no redirect loop; no newly correlated Presto fatal; and semantic consistency with the immediately-pre-Cutover baseline. Body SHA-256 is a strong snapshot comparison when stable but is **NOT** a permanent invariant.
+
+Canonical execution state remains: `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Cutover = **BLOCKED**; C02 / next Cutover retry = **NOT AUTHORIZED**; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**.
+
+This closeout does **NOT** authorize C02. Closeout safety boundary: VPS commands = `0`; Elite/WordPress actions = `0`; Apache/Nginx actions = `0`; Provider/Zernio calls = `0`; F11 execution = **NO**.
+
+Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. STOP after closeout commit/push and final Git verification.
