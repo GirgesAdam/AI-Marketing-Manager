@@ -2215,3 +2215,17 @@ Safety: posts published = `0`; duplicate publish attempts = `0`; media = `0`; li
 Parent P1-T08 remains **UNRESOLVED / NOT DONE**. Analytics Webhook remains `SPIKE_PENDING`. C02/R03 accepted infrastructure state remains unchanged. Do not mark F11 accepted, do not run F11 again, and do not begin a successor P1-T08 task without Team Leader review.
 
 Documentation scope for this blocked attempt: `PROGRESS.md` and `docs/TEST_MATRIX.md` only. `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no actual Provider Behavior evidence was produced.
+
+### P1-T08-F11-H01 - restore harness dependencies and revalidate pre-Provider gate activation (2026-10-21)
+
+`P1-T08-F11-H01 = ACTIVATED — RESTORE HARNESS DEPENDENCIES AND REVALIDATE PRE-PROVIDER GATE`.
+
+Team Leader disposition recorded: Previous F11 attempt = `ACCEPTED AS SAFE PRE-PROVIDER STOP` with accepted blocker `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Starting repository HEAD = `aaffeb7c1a050cc405a7e26608f2ba2d8bedc201`; local HEAD, tracking HEAD, and live remote HEAD matched and the working tree was clean before activation.
+
+`P1-T08-F11` itself remains **NOT DONE**. F11 one-run authorization remains `AUTHORIZED / UNCONSUMED`. Provider calls remain `0`. F11 post published = **NO**. Real F11 evidence files = `0`.
+
+C02/R03 remain accepted. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`.
+
+H01 authorizes local harness dependency restoration and deterministic validation only. H01 authorizes **NO Provider/Zernio execution**, no live F11 run, no publish, no webhook operation, no Analytics/Delta call, and no VPS/infrastructure mutation.
