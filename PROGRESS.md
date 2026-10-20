@@ -1943,3 +1943,37 @@ R03 Cutover retry remains **NOT AUTHORIZED**. MarketlyAI infrastructure mutation
 Starting repository HEAD = `8a35fded2a547c54dce276367e60d307088ba224`; local, tracking, and live remote matched and the working tree was clean before activation. Canonical state remained: `P1-T08-F11-F10-R03-F01 = DONE / ACCEPTED`; accepted classification = `PRE_EXISTING_WORKLOAD_FAILURE — PRESERVATION CANNOT BE CERTIFIED`; `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Cutover = **BLOCKED**; Next operational Cutover retry = **NOT AUTHORIZED**; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**.
 
 No VPS mutation is authorized before this activation marker is committed/pushed and the live remote HEAD is verified.
+
+### P1-T08-F11-F10-R03-B01 - owner-authorized Elite blocker removal result (2026-10-20)
+
+`P1-T08-F11-F10-R03-B01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Technical classification = `ELITE_HEALTHY_BASELINE_RESTORED`.
+
+Activation commit = `f0703ebbdf82a45c7dfeb5a989a14f7167497635`. Immediately before documentation closeout, local HEAD, tracking HEAD, and live remote HEAD were equal to the activation commit and the working tree was clean.
+
+Fresh pre-repair infrastructure state matched the accepted post-C01 baseline: Apache = `active` and owned public TCP/80; Nginx = `failed` / not public; no TCP/443 or TCP/8080 listener was observed; receiver = `active`, boot state = `disabled`, listener = `127.0.0.1:8765`; MarketlyAI staged Nginx SHA-256 = `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`; receiver SHA-256 = `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`; receiver unit SHA-256 = `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`; Apache ports/vhost and Nginx Elite hashes remained at their accepted baseline values; real F11 evidence files = `0`.
+
+Fresh root-cause confirmation before mutation: PHP = `7.4.3-4ubuntu2.29`; WordPress = `7.1.3`; Presto Player = `4.0.2`, status = `active`; WP-CLI reported a targeted update available to `4.5.4`. Public `http://elite.restartorg.com/` and local `127.0.0.1:80` with `Host: elite.restartorg.com` both reproduced HTTP `500`, redirects `0`, body bytes `2912`, body SHA-256 `d3f7244b302a39f8b95bb08afba2970cd85f3d530533edfb8032e2e8c50c7f8f`, and the expected Elite site marker. A newly generated correlated error-log entry again showed the accepted Presto/WordPress PHP fatal `TypeError` in the `wp_register_script_module()` execution path.
+
+The first repair helper attempt stopped before mutation at the mandatory DB-backup gate because `mariadb-dump` was not installed. An already-installed compatible database dump client, `/usr/bin/mysqldump`, and restore client `/usr/bin/mysql` were then confirmed; no package installation or scope expansion occurred. No application/plugin mutation had occurred before the complete backup succeeded.
+
+Mandatory restricted backup completed before the targeted update at `/var/backups/marketly-b01-20261020T145338Z` (`root:root`, mode `0700`). Backup files were `root:root`, mode `0600`: `elite-db.sql` SHA-256 `dd4a8e011e1c45d84efe1b5d42f41f2a8d0bd11fe63d555c13929352551b6bd3`; `presto-player-4.0.2.tar.gz` SHA-256 `a16f7328a2ff47f731c2443b0199b74bd815594c6dd7af7182bb0d14d5faf5a9`; `presto-player.before.sha256` SHA-256 `b7ce564c948b67a1831437145ba54286230ee57c1e60561cc19ebba85068ae3b`. Restoration procedure: restore the saved plugin directory archive, restore `elite-db.sql` with the existing MySQL client using WordPress DB constants without exposing credentials, then replay the public/local root and fatal-log checks.
+
+Selected remediation was the smallest permitted Preferred-A repair: targeted update of the conclusively affected `presto-player` plugin only, using the existing trusted WordPress/WP-CLI update path. No WordPress core upgrade, PHP/runtime upgrade, OS package change, theme change, broad plugin update, plugin replacement, or bespoke PHP source patch was performed.
+
+Targeted update result: Presto Player `4.0.2 -> 4.5.4`, status remained `active`, WP-CLI reported `Updated`, and WordPress.org plugin checksum verification succeeded (`CHECKSUM_EXIT=0`). A non-blocking WP-CLI cache warning reported that `/var/www/.wp-cli/cache/plugin` could not be created due to permissions; the update itself completed successfully and no permission change was made.
+
+Post-repair health validation succeeded without service restart/reload: public root returned HTTP `200`, redirects `0`, final URL `http://elite.restartorg.com/`, body bytes `124708`, body SHA-256 `f1512f1efc9d30be93cab56b9b211f615fce455bacc4544931501e5a46e28977`, expected Elite marker present; local authoritative Host probe returned HTTP `200`, redirects `0`, body bytes `124708`, and the identical SHA-256 `f1512f1efc9d30be93cab56b9b211f615fce455bacc4544931501e5a46e28977`. No proxy `502/503/504`, redirect loop, blank page, or obvious fatal page was observed.
+
+Correlated post-repair fatal validation succeeded: Presto fatal match count remained unchanged at `24 -> 24` across the healthy validation requests, so the previously established PHP fatal was not generated after the update.
+
+Fresh candidate preservation baseline for Team Leader review only: authoritative path `/`; Host `elite.restartorg.com`; expected application status `200`; redirects `0`; public final URL `http://elite.restartorg.com/`; local authoritative Host probe expected `200`; selected stable server/content headers remain Apache/WordPress HTML semantics; current healthy body fingerprint = `124708` bytes and SHA-256 `f1512f1efc9d30be93cab56b9b211f615fce455bacc4544931501e5a46e28977`; safe body marker = Elite site identity; explicit rejection of `500/502/503/504` and redirect loops. This evidence does **NOT** authorize C02 or any R03 Cutover retry.
+
+Final infrastructure non-regression checks passed: Apache remained active on public `*:80`; Nginx remained failed/not public; receiver remained active/disabled on `127.0.0.1:8765`; accepted MarketlyAI/receiver/Apache/Nginx hashes remained unchanged; real F11 evidence files remained `0`.
+
+Safety counters: Apache config edits = `0`; Nginx config edits = `0`; Apache restart/reload/stop/start = `0`; Nginx start/restart/reload = `0`; receiver changes/restart = `0`; DNS changes = `0`; TLS/certificate changes = `0`; firewall changes = `0`; Docker/Waha changes = `0`; MarketlyAI changes = `0`; Provider/Zernio calls = `0`; Zernio webhook creation = **NO**; Analytics calls = `0`; Delta calls = `0`; F11 execution = **NO**; F11 authorization consumed = **NO**; Public Cutover = **NO**. Elite application change was limited to the targeted Presto Player plugin update and any narrowly associated WordPress plugin-update metadata/state; no other Elite repair strategy was attempted.
+
+Canonical execution state remains: `P1-T08-F11-F10-R03 = NOT DONE / NOT ACCEPTED`; Cutover = **BLOCKED**; Next Cutover retry = **NOT AUTHORIZED**; Parent P1-T08 = **UNRESOLVED / NOT DONE**; Analytics Webhook = `SPIKE_PENDING`; F11 = **UNCONSUMED / BLOCKED PRE-PROVIDER**; F11 authorization = **AUTHORIZED / UNCONSUMED**.
+
+Documentation scope = `PROGRESS.md` only. `DECISIONS.md` and `PROVIDER_SPIKE_RESULTS.md` remain unchanged. Do not mark B01 accepted and do not authorize C02. STOP after documentation commit/push and final Git verification.
