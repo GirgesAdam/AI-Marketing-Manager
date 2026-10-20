@@ -2189,3 +2189,29 @@ Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_
 Provider request count = `0`; published posts = `0`; real F11 evidence files = `0`; F11 post has not been published.
 
 No Provider request is authorized before this activation marker is committed/pushed and live remote HEAD is verified. The one-run authorization becomes consumed at the first trusted Zernio Provider request.
+
+### P1-T08-F11 - authorized one-run live data-bearing experiment result (2026-10-20)
+
+`P1-T08-F11 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Exact classification = `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Activation commit = `05f5f1bea03838054162201a2a62a6a4ef8b77fc`. Immediately before final evidence documentation, local HEAD, tracking HEAD, and live remote HEAD matched the activation commit and the working tree was clean.
+
+Pre-Provider infrastructure gate passed without mutation: Nginx = `active` and owns public TCP/80 and TCP/443; Apache = `active` on loopback-only `127.0.0.1:8080`; Apache owns no public TCP/80 or TCP/443; receiver = `active`, boot state = `disabled`, listener = `127.0.0.1:8765`; real F11 evidence files = `0`. Fresh public route verification returned HTTPS generic `/` = `404`, exact HTTPS `HEAD /p1-t08-f11/analytics-synced` = `200`, and bounded near-miss = `404`. No synthetic webhook POST was issued.
+
+The accepted F10/P1-T08 harness validation gate did not execute because the repository workspace had no installed Node dependencies. Exact attempted command: `npm test -- tests/provider-spike/p1-t08-f10.test.ts tests/provider-spike/p1-t08.test.ts`. npm reached the configured Vitest command, then failed before test execution with `'vitest' is not recognized as an internal or external command, operable program or batch file.` Read-only diagnosis: `node_modules` absent; `node_modules/.bin/vitest.cmd` absent; `node_modules/.bin/tsc.cmd` absent; `package-lock.json` present; npm `11.19.0`; Node `v24.21.0`.
+
+Per the F11 Harness Gate stop rule, no dependency install, harness repair, production/spike implementation fix, or Provider execution was attempted inside F11. `npm run typecheck` and `npm run build` were therefore **NOT RUN** after the harness validation blocker. Pre-documentation `git diff --check` = PASS / exit `0`.
+
+One-run authorization = `AUTHORIZED / UNCONSUMED`. Authorization consumption boundary was never crossed because no trusted Zernio Provider request was sent.
+
+Provider request counts: normal = `0`; cleanup = `0`; total = `0`. `/v1/auth/verify` = `0`; Analytics calls = `0`; Delta calls = `0`; webhook create/read/delete calls = `0`; publish attempts = `0`; published posts = `0`; webhook deliveries observed = `0`; Provider behavior evidence produced = **NONE**.
+
+Publish result = **NOT RUN**. Analytics baseline = **NOT RUN**. Webhook observation = **NOT RUN**. Follow-up Analytics = **NOT RUN**. Cleanup result = **NOT APPLICABLE** because no Provider artifact was created. Retention status = **NOT APPLICABLE** because no F11 post was published. Critical Provider/target/cleanup failure = **NONE OBSERVED**; execution stopped before Provider transport.
+
+Safety: posts published = `0`; duplicate publish attempts = `0`; media = `0`; links = `0`; hashtags = `0`; Ads = `0`; manufactured engagement = `0`; comments/DMs = `0`; infrastructure mutations under F11 = `0`; Provider/Zernio calls = `0`; F11 authorization consumed = **NO**.
+
+Parent P1-T08 remains **UNRESOLVED / NOT DONE**. Analytics Webhook remains `SPIKE_PENDING`. C02/R03 accepted infrastructure state remains unchanged. Do not mark F11 accepted, do not run F11 again, and do not begin a successor P1-T08 task without Team Leader review.
+
+Documentation scope for this blocked attempt: `PROGRESS.md` and `docs/TEST_MATRIX.md` only. `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no actual Provider Behavior evidence was produced.

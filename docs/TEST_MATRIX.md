@@ -1739,3 +1739,33 @@ The finalization commit and post-push verification results are recorded in the t
 Interpretation: `NO_AUTHORITATIVE_MARKETLYAI_DEPLOYMENT_FOUND_WITHIN_ACCESSIBLE_SOURCES` is bounded to the connected/accessible sources inspected. It is not a global non-existence claim. No specific inaccessible MarketlyAI source was discovered; if another private/unconnected repository or deployment control plane exists, it must be supplied or connected to continue.
 
 Required canonical state remains: Parent P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`; Cutover `BLOCKED`; F11 `UNCONSUMED / BLOCKED PRE-PROVIDER`; one-run authorization `AUTHORIZED / UNCONSUMED`; Next Task `NOT_STARTED`.
+
+## P1-T08-F11 - One-Run Data-Bearing Experiment Pre-Provider Result
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Activation committed/pushed before Provider call | PASS | activation `05f5f1bea03838054162201a2a62a6a4ef8b77fc`; Provider requests remained `0` |
+| Accepted ingress topology | PASS | Nginx active on public TCP/80+443; Apache active on loopback-only `127.0.0.1:8080`; receiver active/disabled on `127.0.0.1:8765`; Apache no public 80/443 |
+| Public MarketlyAI root | PASS | HTTPS `/` = `404`, no redirect |
+| Exact F11 receiver route | PASS | HTTPS `HEAD /p1-t08-f11/analytics-synced` = `200` |
+| Near-miss route | PASS | `404` |
+| Real F11 evidence files before Provider | PASS | `0` |
+| Synthetic webhook POST | PASS / ZERO | none issued |
+| Accepted F10/P1-T08 deterministic validation command | BLOCKED BEFORE TEST EXECUTION | `npm test -- tests/provider-spike/p1-t08-f10.test.ts tests/provider-spike/p1-t08.test.ts` reached npm script but `vitest` executable was unavailable |
+| Workspace dependency state | BLOCKER CONFIRMED | `node_modules` absent; Vitest binary absent; TSC binary absent; `package-lock.json` present |
+| Typecheck | NOT RUN | F11 stop rule applied after harness validation blocker |
+| Build | NOT RUN | F11 stop rule applied after harness validation blocker |
+| Pre-documentation git diff check | PASS | `git diff --check` exit `0` |
+| Provider authorization consumption | NOT CONSUMED | no trusted Zernio request sent |
+| Provider requests | PASS / ZERO | `0 normal / 0 cleanup / 0 total` |
+| Analytics / Delta | NOT RUN | `0 / 0` calls |
+| Webhook create/read/delete | NOT RUN | `0` Provider calls |
+| Publish | NOT RUN | `0` attempts; `0` posts |
+| Cleanup | N/A | no Provider artifact created |
+| Infrastructure mutation under F11 | PASS / ZERO | `0` |
+
+Per the F11 Harness Gate, no dependency installation or harness/production/spike fix was performed inside F11 after validation failed to start. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 one-run authorization remains `AUTHORIZED / UNCONSUMED` pending Team Leader review.
