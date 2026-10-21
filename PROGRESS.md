@@ -2850,3 +2850,36 @@ Safety boundary remained intact: Provider/Zernio = `0`; `/v1/auth/verify` = `0`;
 ES02 does **not** self-clear the parent blocker. Canonical state remains pending Team Leader review: P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; blocker remains `REMOTE_EXECUTION_SURFACE_INTERMITTENT_AT_TEAM_LEADER_REVIEW`; credential-source blocker remains `CLEARED`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider request count remains `0`; F11 post published = `NO`.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because ES02 produced no Provider Behavior evidence. STOP after documentation commit/push and evidence handoff; do not load credentials, access historical `.env`, touch VPS/receiver/tunnel infrastructure, perform readiness, run `--live`, contact Zernio, or start F11 retry.
+
+
+### P1-T08-F11-ES02-CLOSEOUT-01 - Team Leader documentation-only closeout (2026-10-22)
+
+`P1-T08-F11-ES02 = DONE / ACCEPTED WITH NON-BLOCKING NOTE`.
+
+Team Leader disposition = `ACCEPTED WITH NON-BLOCKING NOTE`.
+
+Accepted evidence HEAD = `6058f9cdeea688193bcca46f2417ebf7729c4ab2`.
+
+Accepted classification = `PERSISTENT_CONTROLLER_PATH_READY`.
+
+Accepted bounded ES02 evidence: controller establishment = PASS on first authorized attempt; one persistent PowerShell controller was reused; baseline from the same controller = PASS; the accepted offline F10 runner launched from the same controller with no separate remote process creation required; runner result = `liveEnabled=false`, `result=BLOCKED`, `errorCategory=LIVE_OPT_IN_REQUIRED`, `providerCalls=0`, exit `2`; controller remained responsive after runner; sentinel lifecycle completed; controller longevity = PASS; intentional shutdown = PASS; final ES02-created residue = `0`; credentials/Provider/infrastructure remained zero.
+
+Non-blocking lifecycle note retained: Cycle 1 used hidden-window child launch and observed child inventory count `1`; the child identity was not captured before termination. Cycle 2 used the preferred no-new-window approach and observed `child inventory = 0`. Both cycles ended with exact sentinel PID absent, marker residue `0`, and unrelated Node processes preserved. Team Leader operational preference for future live execution = `Prefer no-new-window + exact PID lifecycle control.` This is non-blocking and does not authorize source changes.
+
+Separate post-ES02 Team Leader evidence: initial independent review used a stale Remote Desktop Commander device ID and returned `Resource not found` before process creation. Fresh device rediscovery then showed the same authorized machine `DESKTOP-RL942A5` online under a different current device ID. Using that current device identity, Team Leader independently established a fresh persistent PowerShell controller and reproduced the accepted F11 workspace, Git HEAD `6058f9cdeea688193bcca46f2417ebf7729c4ab2`, repo-root `.env` absent, `ZERNIO_API_KEY` absent, `ZERNIO_EXPECTED_USER_EMAIL` absent, and the accepted offline F10 runner from the same persistent controller. The runner returned `liveEnabled=false`, `result=BLOCKED`, `errorCategory=LIVE_OPT_IN_REQUIRED`, `providerCalls=0`, exit `2`; the controller remained responsive after the runner and intentional controller exit completed.
+
+`Team Leader independent persistent-controller reproduction = PASS`.
+
+Interpretation: the prior Team Leader review-time `Resource not found` observations are attributable to stale Remote Desktop device selection during review, not to an independently reproduced F10 runner failure. LR02 historical blocker/root cause is **not** retroactively rewritten and remains accepted exactly as recorded.
+
+`REMOTE_EXECUTION_SURFACE_INTERMITTENT_AT_TEAM_LEADER_REVIEW = CLEARED BY ACCEPTED ES02 + TEAM LEADER INDEPENDENT CURRENT-DEVICE REPRODUCTION`.
+
+`P1-T08-F11 = NOT DONE / READY FOR SEPARATELY AUTHORIZED LIVE RETRY`.
+
+Canonical state preserved: credential-source blocker = `CLEARED`; F11 authorization = `AUTHORIZED / UNCONSUMED`; F11 authorization consumed = `NO`; Provider request count = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`. This closeout does **NOT** itself authorize the retry.
+
+Mandatory future execution ordering for any separately authorized F11 live retry: (1) rediscover the currently online Remote Desktop device identity immediately before execution; (2) do not reuse a stale cached device ID; (3) establish one persistent controller using the current device identity; (4) from that same controller verify accepted workspace, expected Git HEAD, no current repo `.env`, and credential variables not yet loaded; (5) execute the exact offline F10 fail-closed probe from that same controller; (6) require `LIVE_OPT_IN_REQUIRED` and `providerCalls=0`; (7) keep that exact controller alive; (8) only after these gates may the future separately authorized task load the accepted historical credentials; (9) only after credential readiness may receiver handoff begin; (10) use the same persistent controller for subsequent local runner/process lifecycle; (11) the first trusted Zernio request remains the authorization-consumption boundary.
+
+Safety boundary for this closeout: process probes = `0`; credentials loaded = `NO`; Provider/Zernio = `0`; receiver actions = `0`; tunnel creation = `0`; readiness = `0`; VPS actions = `0`; Analytics/webhook/publish = `0`; infrastructure mutations = `0`; source/test/package mutation = `0`; F11 authorization consumed = `NO`.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not perform more controller testing, load credentials, touch VPS/receiver/tunnel, perform readiness, contact Zernio, execute F11 live, or start the next task.
