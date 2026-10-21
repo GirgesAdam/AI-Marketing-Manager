@@ -2597,3 +2597,9 @@ Canonical state after closeout: P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webh
 This closeout does **NOT** authorize credential discovery outside previously authorized sources, creation/rotation of Zernio credentials, loading Provider credentials, receiver service actions, SSH tunnel creation, readiness POST, Provider/Zernio calls, Analytics, webhook operations, publish, or another F11 handoff/live attempt.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, and package files remain unchanged. Commit/push and STOP. Do not start credential recovery or another F11 attempt in this execution.
+
+### P1-T08-F11-CR01 - credential source readiness / recovery mapping activation (2026-10-21)
+
+`P1-T08-F11-CR01 = ACTIVATED — CREDENTIAL SOURCE READINESS / RECOVERY MAPPING`.
+
+No Provider/Zernio calls are authorized. No credential values may be printed, read into evidence, or persisted. Credential creation/rotation is not authorized. No F11 receiver handoff, readiness POST, runner live execution, or Provider transport is authorized in CR01.
