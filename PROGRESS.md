@@ -2960,3 +2960,9 @@ Future gate: before another F11 live authorization, a separately authorized cred
 Safety boundary for this closeout: process probes = `0`; credential loading = `0`; Provider/Zernio = `0`; receiver actions = `0`; tunnel creation = `0`; readiness = `0`; VPS actions = `0`; Analytics/webhook/publish = `0`; infrastructure mutations = `0`; source/test/package mutation = `0`; F11 authorization consumed = `NO`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not attempt credential loading, inspect secret values, attempt an env-file workaround, run the live runner, touch VPS/receiver/tunnel, contact Zernio, execute F11, or start the credential-delivery successor task.
+
+### P1-T08-F11-CD01 - tool-safe local credential delivery feasibility activation (2026-10-22)
+
+`P1-T08-F11-CD01 = ACTIVATED — TOOL-SAFE CREDENTIAL DELIVERY FEASIBILITY`.
+
+Activation boundary: Provider = `0`; live runner = `NOT AUTHORIZED`; infrastructure = `0`; actual credential value disclosure = `FORBIDDEN`.
