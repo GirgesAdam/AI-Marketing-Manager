@@ -2457,3 +2457,56 @@ Safety boundary: Provider/Zernio calls = `0`; `/v1/auth/verify` = `0`; Analytics
 Canonical state preserved: P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11` = `NOT DONE`; F11 authorization = `AUTHORIZED / UNCONSUMED`.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because RCV01 produced no Provider Behavior evidence. STOP after documentation commit/push and final Git verification; await Team Leader review.
+
+### P1-T08-F11-RCV01-CLOSEOUT-01 - Team Leader acceptance with sequencing note (2026-10-21)
+
+`P1-T08-F11-RCV01 = DONE / ACCEPTED WITH NON-BLOCKING NOTE`.
+
+Team Leader disposition = `ACCEPTED WITH NON-BLOCKING NOTE`.
+
+Accepted evidence HEAD = `287a299780ef3b30e1658b56ce7b5761644608d6`.
+
+Accepted classification = `TEMPORARY_NODE_RECEIVER_HANDOFF_REQUIRED`.
+
+Accepted findings:
+- current static VPS receiver is **NOT** compatible unchanged with the accepted F10 live harness;
+- accepted F10 harness requires its own per-run Node receiver;
+- public exact F11 route must temporarily reach that same Node receiver instance;
+- static Python receiver remains the accepted durable idle-state evidence collector;
+- Nginx configuration does not need modification for the temporary handoff;
+- SSH reverse forwarding is feasible;
+- remote forward must remain loopback-only on the VPS;
+- accepted static receiver source SHA-256 remains `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`;
+- accepted receiver unit SHA-256 remains `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`;
+- accepted MarketlyAI Nginx config SHA-256 remains `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`;
+- infrastructure non-drift passed;
+- F11 evidence files remained `0`;
+- Provider/Zernio calls remained `0`;
+- F11 authorization remained `AUTHORIZED / UNCONSUMED`.
+
+Team Leader sequencing note for a future separately authorized live task: because the accepted runner owns the Node receiver lifecycle and performs public readiness immediately after starting it, the future live execution must **NOT** depend on manually creating the reverse tunnel after runner startup.
+
+Required future sequencing:
+1. choose one free approved local loopback port for the F10 Node receiver;
+2. configure both the future reverse-tunnel destination and runner `P1_T08_F10_LISTEN_PORT` to that exact same port;
+3. stop the static VPS receiver only after all pre-handoff gates pass;
+4. establish exactly one VPS loopback reverse forward: `127.0.0.1:8765 -> local 127.0.0.1:<approved-port>`;
+5. require deterministic remote-forward bind success before runner launch;
+6. then launch the accepted unchanged F10 runner;
+7. runner starts the Node receiver on `<approved-port>`;
+8. accepted two-step public readiness handshake must `PASS`;
+9. only after readiness `PASS` may the first trusted Zernio Provider request be sent.
+
+The reverse tunnel may be established before the local Node listener exists, provided the remote bind is proven active and the same local destination port is used by the runner immediately afterward.
+
+This sequencing note does **NOT** authorize the handoff or F11 execution in this closeout.
+
+Deterministic pre-Provider rollback preserved: if static-receiver stop, remote-forward bind, runner receiver bind, or readiness fails before the first trusted Zernio Provider request, terminate the tunnel if present; ensure the local Node receiver/runner is stopped; restore/start the accepted static receiver; confirm boot state remains `disabled`; confirm accepted receiver source/unit hashes unchanged; confirm static receiver owns `127.0.0.1:8765`; confirm Nginx config/hash unchanged; confirm generic root `404`; confirm exact HEAD `200`; confirm near-miss `404`; preserve all evidence; preserve F11 authorization as `AUTHORIZED / UNCONSUMED`; and `STOP`.
+
+Canonical state preserved: P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11` = `NOT DONE`; F11 authorization = `AUTHORIZED / UNCONSUMED`; F11 authorization consumed = `NO`; Provider request count = `0`; F11 post published = `NO`.
+
+This closeout does **NOT** authorize receiver service actions, SSH tunnel creation, readiness POST, Provider credentials, Zernio calls, Analytics, webhook operations, publish, or F11 live execution.
+
+Closeout safety boundary: receiver service actions = `0`; SSH tunnels created = `0`; readiness POSTs = `0`; Provider credentials loaded = `NO`; Provider/Zernio calls = `0`; Analytics calls = `0`; webhook operations = `0`; publish attempts = `0`; F11 live execution = `NO`.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, and package files remain unchanged. Commit/push and STOP; do not execute F11 in this task.
