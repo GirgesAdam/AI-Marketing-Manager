@@ -3028,3 +3028,9 @@ Mandatory future credential pattern for any separately authorized F11 live task:
 Safety boundary for this closeout: process probes = `0`; credential probes = `0`; Provider/Zernio = `0`; `/v1/auth/verify = 0`; live runner = `0`; VPS = `0`; receiver = `0`; tunnel = `0`; readiness = `0`; Analytics/webhook/publish = `0`; credential exposure = `NO`; source/test/package mutation = `0`; F11 authorization consumed = `NO`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not repeat credential delivery, launch F10 live, contact Zernio, touch receiver/tunnel/VPS, execute readiness, start F11 retry, or start another task.
+
+### P1-T08-F11-LR04 - authorized child-env live retry activation (2026-10-22)
+
+`P1-T08-F11-LR04 = ACTIVATED — AUTHORIZED CHILD-ENV LIVE RETRY`.
+
+Activation boundary: credential values not yet used; receiver/tunnel/readiness not yet touched; Provider/Zernio calls = `0`; F11 authorization remains `AUTHORIZED / UNCONSUMED` until the first trusted Zernio Provider request is actually sent.
