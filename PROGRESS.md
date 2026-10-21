@@ -2563,3 +2563,37 @@ Publish outcome = **NOT RUN**. Webhook outcome = **NOT RUN**. Analytics baseline
 Parent P1-T08 remains `UNRESOLVED / NOT DONE`. Analytics Webhook remains `SPIKE_PENDING`. Do not self-accept F11, do not rerun LR01/F11, do not create a second handoff experiment, and do not start a successor task without Team Leader review.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because LR01 produced no Provider Behavior evidence. Documentation scope for this pre-Provider stop is `PROGRESS.md` and `docs/TEST_MATRIX.md` only.
+
+### P1-T08-F11-LR01-CLOSEOUT-01 - Team Leader acceptance of safe pre-Provider stop (2026-10-21)
+
+`P1-T08-F11-LR01 = DONE / ACCEPTED WITH NON-BLOCKING NOTE`.
+
+Team Leader disposition = `ACCEPTED WITH NON-BLOCKING NOTE`.
+
+Accepted evidence HEAD = `f00de16981546421c8bb0699f09038a83e4b24e6`.
+
+Accepted technical classification = `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Accepted blocker stage = `LIVE_CREDENTIAL_SOURCE_UNAVAILABLE_AFTER_HANDOFF_BEFORE_RUNNER`.
+
+LR01 is accepted as a **safe pre-Provider stop only**. It is **not** successful completion of the F11 Provider experiment and does not establish any new Provider Behavior evidence.
+
+`P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`.
+
+Current blocker = `LIVE_CREDENTIAL_SOURCE_UNAVAILABLE`.
+
+Accepted evidence: focused deterministic validation = `88 / 88 PASS`; typecheck = `PASS`; build = `PASS`; diff check = `PASS`; pre-handoff infrastructure = `PASS`; accepted receiver/unit/Nginx hashes matched; F11 evidence files before handoff = `0`; selected local port = `18765`; one authorized static-receiver stop occurred; exactly one reverse tunnel was created; VPS `127.0.0.1:8765` was successfully bound loopback-only by the tunnel; Nginx remained unchanged; runner launches = `0`; Node receiver starts = `0`; readiness POSTs = `0`; first trusted Zernio request = `0`.
+
+Credential blocker evidence: repository `.env` = absent; required Zernio API-key environment value = unavailable through the previously authorized mechanism; expected-user identity environment value = unavailable through the previously authorized mechanism; process/user/machine authorized environment sources checked = no required values found; Provider credentials loaded = `NO`; no alternative credential source/workaround was attempted.
+
+F11 authorization = `AUTHORIZED / UNCONSUMED`; F11 authorization consumed = `NO`; Provider normal requests = `0`; Provider cleanup requests = `0`; Provider total requests = `0`; `/v1/auth/verify` = `0`; Analytics reads = `0`; Delta reads = `0`; webhook operations = `0`; publish attempts = `0`; posts created = `0`.
+
+Accepted rollback/restoration: the exact tunnel child was ultimately terminated; second tunnel attempts = `0`; static receiver restored active; static receiver boot state remained `disabled`; static receiver again owns `127.0.0.1:8765`; receiver source hash unchanged; receiver unit hash unchanged; Nginx hash unchanged; Nginx public ownership of TCP/80 and TCP/443 preserved; Apache loopback `127.0.0.1:8080` preserved; final F11 evidence files = `0`; generic root = `404`; exact HEAD = `200`; near-miss = `404`.
+
+Non-blocking operational note: command-wrapper termination initially left the exact `ssh.exe` reverse-forward child alive. Listener ownership exposed this condition; the exact child was identified by its reverse-forward command line and terminated safely before final static-receiver restoration. For any future authorized handoff, prefer lifecycle control that tracks/terminates the actual SSH process directly rather than relying only on a wrapper process. This is an operational note, not authorization for source or infrastructure modification.
+
+Canonical state after closeout: P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; blocker = `LIVE_CREDENTIAL_SOURCE_UNAVAILABLE`; F11 authorization = `AUTHORIZED / UNCONSUMED`; Provider request count = `0`; F11 post published = `NO`.
+
+This closeout does **NOT** authorize credential discovery outside previously authorized sources, creation/rotation of Zernio credentials, loading Provider credentials, receiver service actions, SSH tunnel creation, readiness POST, Provider/Zernio calls, Analytics, webhook operations, publish, or another F11 handoff/live attempt.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, and package files remain unchanged. Commit/push and STOP. Do not start credential recovery or another F11 attempt in this execution.
