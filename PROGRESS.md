@@ -2817,3 +2817,36 @@ Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_
 `P1-T08-F11-ES02 = ACTIVATED — PERSISTENT LOCAL CONTROLLER SESSION PREFLIGHT`.
 
 Scope boundary: Provider/Zernio = `0`; credentials = `NOT AUTHORIZED`; `.env` loading = `NOT AUTHORIZED`; VPS actions = `0`; receiver actions = `0`; SSH tunnels = `0`; readiness = `0`; live runner = `NOT AUTHORIZED`.
+
+
+### P1-T08-F11-ES02 - persistent local controller session preflight result (2026-10-22)
+
+`P1-T08-F11-ES02 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `PERSISTENT_CONTROLLER_PATH_READY`.
+
+Starting HEAD = `3e9a8c5d94cfecd1da6902eea7477702eec796fa`; activation commit = `df4bbe940997076a417f377ef4ae1d7ef3929d04`.
+
+Initial controller-establishment gate = PASS on the single authorized attempt. Remote tool session identifier = `5760`; actual persistent PowerShell shell PID = `7708`; initial `Resource not found` occurrences = `0`. The controller was established in `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean` and remained the only remote process session used for ES02 child/runner execution.
+
+Controller baseline = PASS from the established session: CWD = accepted F11 workspace; Git HEAD = `df4bbe940997076a417f377ef4ae1d7ef3929d04`; Node = `v24.21.0`; repo-root `.env` = absent; `ZERNIO_API_KEY` present = false; `ZERNIO_EXPECTED_USER_EMAIL` present = false. Historical credential `.env` was not inspected or loaded.
+
+Sentinel cycle 1 = lifecycle PASS: exact Node sentinel PID `16852` started; controller remained responsive while it was alive; safe CWD/arithmetic commands executed from the same controller; exact PID termination succeeded; sentinel marker residue = `0`; unrelated Node processes were preserved. Operational note: a child-process inventory returned count `1` while this sentinel was launched with `-WindowStyle Hidden`; the sentinel JavaScript itself contained no child-spawn operation, but the child identity was not captured before termination. This bounded observation is retained rather than silently discarded.
+
+Offline accepted F10 runner from the same controller = PASS: no separate remote process creation was used; `node dist/provider-spike/p1-t08-f10-runner.js` started without `--live` and returned `liveEnabled=false`, `result=BLOCKED`, `errorCategory=LIVE_OPT_IN_REQUIRED`, `providerCalls=0`, exit code `2`. The controller remained responsive afterward and Git HEAD remained unchanged.
+
+Sentinel cycle 2 = PASS with no-new-window launch: exact Node sentinel PID `20512` started; controller remained responsive while alive; safe CWD/arithmetic commands executed from the same controller; child-process inventory = `0`; exact PID termination succeeded; marker residue = `0`; unrelated Node processes were preserved.
+
+Controller longevity = PASS after both lifecycle cycles and the runner: same controller returned Git HEAD `df4bbe940997076a417f377ef4ae1d7ef3929d04`, arithmetic result `579`, a safe UTC timestamp, and actual shell PID `7708`.
+
+Controller shutdown = PASS: before exit, sentinel PIDs `16852` and `20512` were absent; sentinel marker residue = `0`; offline F10 runner residue = `0`; credential environment remained absent; remaining Node PIDs were unrelated `6364,11952,20300`. The controller was intentionally exited; remote session `5760` disappeared and shell PID `7708` was absent from the subsequent process inventory.
+
+Important scope distinction: ES02 proves session persistence and exact local child/runner control **once the persistent controller is successfully established**. It does not prove that the remote execution service is globally or continuously available.
+
+Future live-gate design finding only: before any future F11 live mutation, a separately authorized task must first establish the persistent controller, pass an immediate local baseline, pass the exact offline F10 fail-closed probe through that same controller, and keep that controller alive. Only afterward may that separately authorized live task load credentials, and the same established controller should be reused for local runner/process control throughout handoff/execution. ES02 does not authorize any live step.
+
+Safety boundary remained intact: Provider/Zernio = `0`; `/v1/auth/verify` = `0`; Analytics = `0`; webhook = `0`; publish = `0`; credentials loaded = `NO`; credential values exposed = `NO`; historical `.env` read = `NO`; receiver actions = `0`; SSH tunnels = `0`; readiness POSTs = `0`; VPS actions = `0`; public HTTP = `0`; infrastructure changes = `0`; source/test/package edits = `0`; dependency installs/updates = `0`; F11 authorization consumed = `NO`.
+
+ES02 does **not** self-clear the parent blocker. Canonical state remains pending Team Leader review: P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; blocker remains `REMOTE_EXECUTION_SURFACE_INTERMITTENT_AT_TEAM_LEADER_REVIEW`; credential-source blocker remains `CLEARED`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider request count remains `0`; F11 post published = `NO`.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because ES02 produced no Provider Behavior evidence. STOP after documentation commit/push and evidence handoff; do not load credentials, access historical `.env`, touch VPS/receiver/tunnel infrastructure, perform readiness, run `--live`, contact Zernio, or start F11 retry.

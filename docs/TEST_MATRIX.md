@@ -2029,3 +2029,29 @@ Classification: `EXECUTION_SURFACE_READY_FOR_F11_RUNNER`.
 | F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
 
 Classification A threshold is satisfied: baseline PASS; direct offline runner `3/3`; concurrent launches `2/2`; sentinel lifecycle `2/2`; residual sentinel count `0`; Provider calls `0`; credentials loaded `NO`; infrastructure actions `0`; no `Resource not found` occurred. ES01 does not self-clear the parent F11 blocker and does not authorize a live retry.
+
+## P1-T08-F11-ES02 - Persistent Local Controller Session Reliability Preflight
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `PERSISTENT_CONTROLLER_PATH_READY`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Canonical starting state | PASS | start HEAD `3e9a8c5d94cfecd1da6902eea7477702eec796fa`; Local=Tracking=Live Remote; clean tree; ES01 accepted; F11 blocked pre-Provider; authorization unconsumed; Provider requests `0` |
+| ES02 activation | PASS | activation commit `df4bbe940997076a417f377ef4ae1d7ef3929d04` pushed and remote verified |
+| Initial controller establishment | PASS | exactly one establishment attempt; tool session `5760`; shell PID `7708`; initial `Resource not found=0` |
+| Controller baseline | PASS | accepted workspace; activation HEAD; Node `v24.21.0`; repo `.env` absent; both credential names absent |
+| Sentinel cycle 1 lifecycle | PASS with retained note | PID `16852`; controller responsive; exact PID termination; residue `0`; unrelated Node preserved; hidden-window launch child inventory count `1` retained as bounded observation |
+| Offline F10 runner from same controller | PASS | no new remote process creation; exit `2`; `liveEnabled=false`; `result=BLOCKED`; `LIVE_OPT_IN_REQUIRED`; `providerCalls=0` |
+| Sentinel cycle 2 lifecycle | PASS | PID `20512`; no-new-window; controller responsive; child count `0`; exact termination; residue `0`; unrelated Node preserved |
+| Controller longevity | PASS | same controller returned activation HEAD, arithmetic `579`, UTC timestamp, shell PID `7708` after both cycles + runner |
+| Pre-shutdown residue | PASS | C1/C2 PIDs absent; sentinel residue `0`; runner residue `0`; credential env absent; only unrelated Node PIDs `6364,11952,20300` remained |
+| Controller shutdown | PASS | intentional `exit`; remote session `5760` closed; shell PID `7708` absent afterward |
+| Provider/Zernio | ZERO | `0`; `/v1/auth/verify=0`; Analytics/webhook/publish `0` |
+| Credentials | SAFE / ZERO | loaded `NO`; exposed `NO`; historical `.env` read `NO` |
+| Remote/infrastructure | ZERO | VPS `0`; receiver `0`; SSH tunnel `0`; readiness `0`; public HTTP `0`; infrastructure changes `0` |
+| Source/test/package mutation | ZERO | `0`; dependency installs/updates `0` |
+| F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+
+Scope distinction: ES02 proves persistent-session reuse and child/runner control once the controller has been established; it does not prove global continuous availability of the remote execution service. The parent F11 blocker remains unchanged pending Team Leader review.
