@@ -2779,3 +2779,35 @@ Safety boundary remained intact: Provider/Zernio calls = `0`; `/v1/auth/verify` 
 ES01 does **not** self-clear the parent blocker. Canonical state remains pending Team Leader review: P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; blocker remains `REMOTE_EXECUTION_SURFACE_UNAVAILABLE_FOR_RUNNER_LAUNCH`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider request count remains `0`; F11 post published = `NO`.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because ES01 produced no Provider Behavior evidence. STOP after documentation commit/push and evidence handoff; do not load credentials, touch receiver/tunnel infrastructure, perform readiness, run with `--live`, contact Zernio, start F11 retry, or start another task.
+
+### P1-T08-F11-ES01-CLOSEOUT-01 - Team Leader documentation-only closeout (2026-10-22)
+
+`P1-T08-F11-ES01 = DONE / ACCEPTED`.
+
+Team Leader disposition = `ACCEPTED`.
+
+Accepted evidence HEAD = `9d13baa6b63fb36c0814268772b30b09e07e5374`.
+
+Accepted ES01 bounded-run classification = `EXECUTION_SURFACE_READY_FOR_F11_RUNNER`.
+
+This classification is accepted as the result of the bounded ES01 execution window. During ES01: baseline commands passed; direct offline runner launches = `3 / 3 PASS`; concurrent runner launches = `2 / 2 PASS`; sentinel lifecycle = `2 / 2 PASS`; residual sentinel count = `0`; `Resource not found` during ES01 required probes = `0`; Provider/Zernio calls = `0`; credentials loaded = `NO`; infrastructure actions = `0`; F11 authorization consumed = `NO`.
+
+Separate Team Leader review-time evidence: after ES01 completed, the same Remote Desktop process-execution capability was independently rediscovered and then invoked for a bounded one-shot offline process probe. Two independent invocation attempts returned `Resource not found` before any requested local process started. `Team Leader independent post-ES01 process reproduction = NOT REPRODUCED`. `Review-time tool-level Resource not found occurrences = 2`. `Requested process starts during those review attempts = 0`. This is new review-time evidence and does not retroactively change the historical ES01 bounded-run results.
+
+The review-time attempts are **not** characterized as runner failure, Zernio failure, Provider failure, credential failure, or VPS failure. No requested process started and no Provider activity occurred.
+
+Canonical parent state: `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`.
+
+Current blocker = `REMOTE_EXECUTION_SURFACE_INTERMITTENT_AT_TEAM_LEADER_REVIEW`.
+
+Reason: ES01 proved successful bounded execution, but immediate independent Team Leader review observed the execution surface unavailable again. Current reliability is therefore not established strongly enough to authorize another infrastructure handoff/live attempt.
+
+`ES01 acceptance does NOT authorize F11 live retry.`
+
+Canonical state preserved: P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; credential-source blocker = `CLEARED`; F11 authorization = `AUTHORIZED / UNCONSUMED`; F11 authorization consumed = `NO`; Provider request count = `0`; F11 post published = `NO`.
+
+Future gate: before another F11 live authorization, a separately authorized follow-up must establish a process-launch path whose availability is proven immediately before any credential loading, receiver stop, or tunnel creation. That future task is **NOT AUTHORIZED** by this closeout. This closeout does not prescribe or implement any production architecture change, and no source changes are authorized.
+
+Safety boundary for this closeout: execution-surface process probes = `0`; Provider/Zernio calls = `0`; credentials loaded = `NO`; receiver service actions = `0`; tunnels = `0`; readiness POSTs = `0`; VPS actions = `0`; Analytics/webhook/publish = `0`; infrastructure mutations = `0`; source/test/package mutations = `0`; F11 authorization consumed = `NO`.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source, tests, config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not rerun ES01, investigate the execution surface, load credentials, touch receiver/tunnel infrastructure, perform readiness, run F11 live, or start a successor task.
