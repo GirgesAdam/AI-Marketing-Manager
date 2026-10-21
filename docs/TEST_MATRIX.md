@@ -2055,3 +2055,36 @@ Classification: `PERSISTENT_CONTROLLER_PATH_READY`.
 | F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
 
 Scope distinction: ES02 proves persistent-session reuse and child/runner control once the controller has been established; it does not prove global continuous availability of the remote execution service. The parent F11 blocker remains unchanged pending Team Leader review.
+
+
+## P1-T08-F11-LR03 - Persistent-Controller Authorized Live Retry
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Exact blocker stage: `PERSISTENT_CONTROLLER_CREDENTIAL_LOAD_BLOCKED_BY_TOOL_SAFETY_LAYER`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Canonical starting state | PASS | start HEAD `e1c051a8d7988dd82a5ff9e1874b1f214c3d8a99`; Local=Tracking=Live Remote; clean tree; ES02 accepted; F11 ready; authorization unconsumed; Provider requests `0` |
+| LR03 activation | PASS | activation commit `13f6c42476a6bed87449345ac5526b2e6517a439` pushed before credential/infra/Provider action |
+| Fresh device rediscovery | PASS | authorized `DESKTOP-RL942A5` rediscovered immediately before controller establishment; run-scoped current identity used |
+| Persistent controller | PASS | single establishment attempt; session `20376`; shell PID `11672`; accepted workspace/activation HEAD; Node available |
+| Pre-credential isolation | PASS | repo `.env` absent; API-key env absent; expected-user env absent |
+| Offline F10 fail-closed probe | PASS | same controller; exit `2`; `liveEnabled=false`; `result=BLOCKED`; `LIVE_OPT_IN_REQUIRED`; `providerCalls=0` |
+| Historical credential source | ACCEPTED SOURCE IDENTITY ONLY | CR01 source `AI-Marketing-Manager-P1T01/.env`; no value exposed |
+| Credential load into existing controller | BLOCKED PRE_PROVIDER | tool safety layer rejected the process-memory credential-loading command before execution; controller population remained `NO/NO` |
+| Secret handling | SAFE | values printed/logged/fingerprinted/copied/persisted/committed = `NO`; create/rotate = `0` |
+| Deterministic harness gate | NOT STARTED | credential readiness precondition did not pass |
+| Infrastructure gate | NOT STARTED | no VPS/receiver mutation was entered |
+| Receiver actions | ZERO | `0` |
+| Reverse tunnels | ZERO | `0` |
+| Readiness POSTs | ZERO | `0` |
+| Provider/Zernio | ZERO | normal `0`; cleanup `0`; total `0`; `/v1/auth/verify=0` |
+| Analytics / Delta / webhook / publish | ZERO | all `0`; posts created `0` |
+| Controller shutdown | PASS | final credential env absent; intentional exit; session closed; no LR03 live runner/tunnel residue |
+| Source/test/package/infrastructure mutation | ZERO | `0`; dependency installs/updates/audit/fixes `0` |
+| F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+
+No Provider Behavior evidence was generated, so `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged. No second LR03 attempt or alternative credential-loading workaround is authorized inside this run. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 remains `NOT DONE` pending Team Leader review.
