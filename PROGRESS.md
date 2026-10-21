@@ -2743,3 +2743,10 @@ This closeout does **NOT** authorize that execution-surface preflight itself, an
 Safety boundary remains: Provider/Zernio calls = `0`; credential values exposed = `NO`; Provider authorization consumed = `NO`; new receiver actions = `0`; new tunnels = `0`; readiness POSTs = `0`; Analytics/webhook/publish = `0`; infrastructure mutations = `0`; source/test/package mutations = `0`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not start execution-surface investigation or another F11 retry in this execution.
+
+
+### P1-T08-F11-ES01 - local execution surface reliability preflight activation (2026-10-22)
+
+`P1-T08-F11-ES01 = ACTIVATED — LOCAL EXECUTION SURFACE RELIABILITY PREFLIGHT`.
+
+Scope boundary: Provider/Zernio calls = `0`; credentials = `NOT AUTHORIZED`; historical `.env` loading = `NOT AUTHORIZED`; receiver service actions = `0`; SSH tunnels = `0`; readiness HTTP requests = `0`; infrastructure mutations = `0`; F11 live execution = `NOT AUTHORIZED`.
