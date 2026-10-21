@@ -2997,3 +2997,34 @@ Safety boundary remained intact: Provider/Zernio = `0`; `/v1/auth/verify` = `0`;
 CD01 does **not** self-clear the parent blocker. Canonical state remains pending Team Leader review: `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; blocker remains `TOOL_SAFE_CREDENTIAL_DELIVERY_PATH_NOT_YET_ESTABLISHED`; credential source remains `IDENTIFIED / AVAILABLE`; persistent-controller execution path remains `ACCEPTED`; P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider request count remains `0`; F11 post published = `NO`.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because CD01 tested no Provider Behavior. STOP after documentation commit/push and evidence handoff; do not launch F10 live, contact Zernio, touch VPS/receiver/tunnel/readiness, start F11 retry, or start a successor task.
+
+
+### P1-T08-F11-CD01-CLOSEOUT-01 - Team Leader documentation-only closeout (2026-10-22)
+
+`P1-T08-F11-CD01 = DONE / ACCEPTED WITH NON-BLOCKING NOTE`.
+
+Team Leader disposition = `ACCEPTED WITH NON-BLOCKING NOTE`.
+
+Accepted evidence HEAD = `1f0f49b620db9dbc1a6bda3df36916f7dad8e5f3`.
+
+Accepted classification = `TOOL_SAFE_CHILD_ENV_DELIVERY_READY`.
+
+Accepted findings: Node runtime = `v24.21.0`; installed runtime supports `--env-file=...` and `--env-file-if-exists=...`; synthetic non-secret child env delivery = PASS after bounded BOM fixture correction; historical credential source identity = PASS; historical `.env` remained local, existing, Git-ignored, and uncopied; actual child-only credential-delivery attempt = PASS; `ZERNIO_API_KEY` present/populated in child = `YES`; `ZERNIO_EXPECTED_USER_EMAIL` present/populated in child = `YES`; child network calls = `0`; child exit = `0`; parent controller retained neither credential after child exit; no credential value was printed, logged, fingerprinted, copied, persisted, or committed; credential creation/rotation = `0`.
+
+Accepted runner compatibility conclusion: the accepted F10 runner consumes credentials through `process.env`. Therefore a Node child launched with `node --env-file=<accepted-historical-env-path> ...` receives the required values before application startup and is mechanically compatible with the accepted runner credential contract. This does **NOT** establish Zernio credential validity, successful authentication, a Provider feasibility result, or live F11 completion.
+
+Non-blocking fixture note: the first synthetic PowerShell-written UTF-8 fixture contained a BOM, causing the first fake key not to be recognized. A corrected UTF-8-without-BOM synthetic fixture passed fully. Classification = `NON-BLOCKING SYNTHETIC FIXTURE ENCODING NOTE`. This does not invalidate the historical credential-source delivery result.
+
+Team Leader independent verification: `Team Leader Git/live-branch verification = PASS`. `Team Leader installed-runtime env-file capability verification = PASS`. Independent review confirmed live branch at accepted CD01 evidence HEAD, Node `v24.21.0`, and installed runtime exposure of `--env-file=...` and `--env-file-if-exists=...`. Team Leader did **NOT** repeat the real historical-secret child probe during review, avoiding unnecessary duplicate secret handling; this is non-blocking because accepted CD01 already produced bounded Boolean-only delivery evidence with zero disclosure.
+
+`TOOL_SAFE_CREDENTIAL_DELIVERY_PATH_NOT_YET_ESTABLISHED = CLEARED BY ACCEPTED CD01`.
+
+`P1-T08-F11 = NOT DONE / READY FOR SEPARATELY AUTHORIZED LIVE RETRY`.
+
+Canonical state preserved: credential source = `IDENTIFIED / AVAILABLE`; persistent-controller execution path = `ACCEPTED`; tool-safe child credential-delivery path = `ACCEPTED`; F11 authorization = `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`; Provider request count = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`. This closeout does **NOT** authorize a live retry.
+
+Mandatory future credential pattern for any separately authorized F11 live task: (1) rediscover current Remote Desktop device identity; (2) establish persistent controller; (3) run offline F10 fail-closed probe from that controller; (4) keep controller alive; (5) do **NOT** load Zernio secrets into controller environment; (6) launch the future F10 live runner child using the accepted historical `.env` directly through Node `--env-file=<path>`; (7) secret values must never appear in command line or assistant-visible output; (8) the long-lived controller must remain credential-free; (9) the credential file must not be copied; (10) the first trusted Zernio Provider request remains the authorization-consumption boundary. Do not use repo-local `.env` copying as the delivery method.
+
+Safety boundary for this closeout: process probes = `0`; credential probes = `0`; Provider/Zernio = `0`; `/v1/auth/verify = 0`; live runner = `0`; VPS = `0`; receiver = `0`; tunnel = `0`; readiness = `0`; Analytics/webhook/publish = `0`; credential exposure = `NO`; source/test/package mutation = `0`; F11 authorization consumed = `NO`.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not repeat credential delivery, launch F10 live, contact Zernio, touch receiver/tunnel/VPS, execute readiness, start F11 retry, or start another task.
