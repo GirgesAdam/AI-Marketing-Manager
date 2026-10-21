@@ -2525,3 +2525,41 @@ Receiver handoff gate = accepted (`P1-T08-F11-RCV01 = DONE / ACCEPTED WITH NON-B
 Provider request count = `0`; published F11 posts = `0`; F11 evidence files = `0`.
 
 No static-receiver stop, tunnel creation, credential loading, readiness POST, or Provider/Zernio request is authorized before this activation commit is pushed and live remote HEAD is verified.
+
+### P1-T08-F11-LR01 - authorized one-run live resume result (2026-10-21)
+
+`P1-T08-F11-LR01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+`P1-T08-F11 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Exact blocker stage = `LIVE_CREDENTIAL_SOURCE_UNAVAILABLE_AFTER_HANDOFF_BEFORE_RUNNER`.
+
+Activation commit = `5cdfa43c4418c89be52e67175c07bfe11907df59`.
+
+Final offline harness gate before handoff = PASS: `npm test -- tests/provider-spike/p1-t08-f10.test.ts tests/provider-spike/p1-t08.test.ts` = `88 / 88 PASS`; `npm run typecheck -- --pretty false` = PASS; `npm run build -- --pretty false` = PASS; `git diff --check` = PASS. No dependency install/update/audit command was run.
+
+Fresh pre-handoff infrastructure gate = PASS: Nginx active on public TCP/80+443; Apache active on loopback `127.0.0.1:8080` only; static receiver active and boot `disabled`; static receiver owned `127.0.0.1:8765`; receiver source SHA = `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`; receiver unit SHA = `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`; MarketlyAI Nginx SHA = `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`; F11 evidence files = `0`; public generic root = `404`; exact HEAD = `200`; near-miss = `404`.
+
+Selected local Node receiver port = `18765`; it was proven free before handoff and was never changed.
+
+Authorized handoff attempt: static receiver hashes/evidence were reconfirmed; `marketly-r02-receiver` was stopped once, leaving boot state `disabled`; VPS `127.0.0.1:8765` was proven free; exactly one SSH reverse forward was established with fail-fast semantics from VPS loopback `127.0.0.1:8765` to local loopback `127.0.0.1:18765`; remote listener proof showed loopback-only `127.0.0.1:8765` owned by `sshd`; Nginx hash remained unchanged.
+
+Before runner launch, the previously authorized credential source/mechanism was checked without exposing values. Repository `.env` was absent; required `ZERNIO_API_KEY` and `ZERNIO_EXPECTED_USER_EMAIL` were absent from process, user, and machine environment sources. No credential value was loaded, printed, copied, or inferred. Because the accepted runner could not be launched safely with the previously authorized credential mechanism, execution stopped before runner launch/readiness/Provider transport. No alternate credential source or workaround was attempted.
+
+Readiness result = **NOT RUN**. Public readiness POSTs = `0`. Accepted runner launches = `0`. Node receiver starts = `0`. First trusted Zernio request was never sent.
+
+Authorization consumption = **NO**. F11 one-run authorization remains `AUTHORIZED / UNCONSUMED`. Provider normal requests = `0`; Provider cleanup requests = `0`; Provider total = `0`; `/v1/auth/verify` = `0`; Analytics reads = `0`; Delta reads = `0`; webhook creates/reads/deletes = `0`; publish attempts = `0`; posts created = `0`; duplicate publish attempts = `0`; media = `0`; links = `0`; hashtags = `0`; Ads = `0`; engagement manipulation = `0`.
+
+Deterministic pre-Provider rollback was executed. The tunnel wrapper termination left its child `ssh.exe` alive; this was detected by remote listener ownership and local process command-line inspection. Only the exact reverse-forward child process was then terminated. No second tunnel was created. After the tunnel endpoint was actually gone, the accepted static receiver was restarted/restored and verified active with boot state still `disabled`, unchanged accepted receiver/unit/Nginx hashes, F11 evidence count still `0`, static Python receiver again owning `127.0.0.1:8765`, Nginx still public on 80/443, and Apache still loopback-only on `127.0.0.1:8080`.
+
+Receiver service actions during authorized handoff/rollback: stop = `1`; initial restore/start attempt while the tunnel child still owned `8765` = `1`; final restart after exact tunnel-child termination = `1`. SSH reverse tunnels created = `1`; second handoff/tunnel attempts = `0`. Nginx edits/reloads = `0`; Apache edits/reloads = `0`; sshd edits = `0`; DNS/TLS/firewall changes = `0`.
+
+Final infrastructure restoration = PASS: local tunnel process absent; static receiver active; boot state `disabled`; receiver source/unit/Nginx hashes unchanged; evidence files `0`; public generic root `404`; exact HEAD `200`; near-miss `404`.
+
+Publish outcome = **NOT RUN**. Webhook outcome = **NOT RUN**. Analytics baseline/follow-up = **NOT RUN**. Provider cleanup = **NOT APPLICABLE**. Post retention = **NOT APPLICABLE** because no F11 post was created. Critical Provider/target/webhook/publish outcome = **NONE OBSERVED** because Provider transport never began.
+
+Parent P1-T08 remains `UNRESOLVED / NOT DONE`. Analytics Webhook remains `SPIKE_PENDING`. Do not self-accept F11, do not rerun LR01/F11, do not create a second handoff experiment, and do not start a successor task without Team Leader review.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because LR01 produced no Provider Behavior evidence. Documentation scope for this pre-Provider stop is `PROGRESS.md` and `docs/TEST_MATRIX.md` only.

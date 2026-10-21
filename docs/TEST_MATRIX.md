@@ -1888,3 +1888,45 @@ Classification: `TEMPORARY_NODE_RECEIVER_HANDOFF_REQUIRED`.
 | F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
 
 Future handoff plan is proposal-only: capture pre-state and evidence count, preserve static receiver hashes/state, stop static receiver only if required to free VPS loopback `8765`, bind one reverse tunnel from VPS loopback `8765` to the accepted local Node receiver, prove listener ownership and readiness, allow Provider transport only after readiness PASS under separate authorization, then close tunnel and restore/reverify the static receiver with Nginx unchanged. Pre-Provider tunnel/readiness failure must deterministically roll back to the accepted static receiver and preserve evidence without deletion.
+
+## P1-T08-F11-LR01 - One-Run Live Resume Pre-Provider Stop
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Exact blocker stage: `LIVE_CREDENTIAL_SOURCE_UNAVAILABLE_AFTER_HANDOFF_BEFORE_RUNNER`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Canonical starting state | PASS | starting HEAD `1891a8c59fb10a15950ebd01ccdef7b6e6ffca8a`; Local=Tracking=Live Remote; clean tree; H01/H02/H02-F01/RCV01 accepted; F11 authorization `AUTHORIZED / UNCONSUMED`; Provider requests `0` |
+| LR01 activation before live/infra action | PASS | activation `5cdfa43c4418c89be52e67175c07bfe11907df59` pushed and live remote verified |
+| Focused deterministic validation | PASS | `npm test -- tests/provider-spike/p1-t08-f10.test.ts tests/provider-spike/p1-t08.test.ts`; `88 / 88`; exit `0` |
+| Typecheck | PASS | `npm run typecheck -- --pretty false`; exit `0` |
+| Build | PASS | `npm run build -- --pretty false`; exit `0` |
+| Git diff check pre-handoff | PASS | exit `0` |
+| Pre-handoff hashes | PASS | receiver `f2851e...dcb9`; unit `c0d3c9...f1d7`; Nginx `7a54f3...1a06` |
+| Pre-handoff topology | PASS | Nginx public 80/443; Apache loopback `127.0.0.1:8080`; static receiver `127.0.0.1:8765`, active, boot disabled |
+| Pre-handoff public routes | PASS | root `404`; exact HEAD `200`; near-miss `404` |
+| Pre-handoff evidence files | PASS / ZERO | `0` |
+| Selected local port | PASS | `18765`; free before use; loopback-only destination |
+| Static receiver stop | PASS | one authorized stop; boot remained `disabled`; VPS `8765` proven free |
+| Reverse tunnel bind | PASS | exactly one fail-fast reverse forward; VPS loopback `127.0.0.1:8765` owned by `sshd`; local destination `127.0.0.1:18765` |
+| Nginx unchanged after bind | PASS | accepted SHA unchanged; no edit/reload |
+| Authorized credential mechanism | BLOCKED | repo `.env` absent; required Zernio credential/identity keys absent from process/user/machine env; values never loaded or printed |
+| Runner launch | NOT RUN | stopped before launch because previously authorized credential source unavailable |
+| Readiness handshake | NOT RUN / ZERO | readiness POSTs `0` |
+| Provider authorization consumption | NO | first trusted Zernio request never sent; remains `AUTHORIZED / UNCONSUMED` |
+| Provider normal/cleanup/total requests | ZERO | `0 / 0 / 0` |
+| Analytics / Delta | ZERO | `0 / 0` |
+| Webhook operations | ZERO | create/read/delete all `0` |
+| Publish attempts / posts | ZERO | `0 / 0` |
+| Tunnel cleanup | PASS | wrapper termination left exact child `ssh.exe`; exact reverse-forward child identified and terminated; no second tunnel created |
+| Static receiver restoration | PASS | active; boot disabled; `127.0.0.1:8765` owned by Python static receiver |
+| Final hashes | PASS / unchanged | receiver/unit/Nginx all accepted hashes |
+| Final evidence files | PASS / ZERO | `0` |
+| Final public routes | PASS | root `404`; exact HEAD `200`; near-miss `404` |
+| Nginx/Apache/sshd config mutation | ZERO | `0` edits/reloads/config changes |
+| DNS/TLS/firewall changes | ZERO | `0` |
+
+No Provider Behavior evidence was generated, so `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged. No second handoff attempt is authorized inside LR01. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`.
