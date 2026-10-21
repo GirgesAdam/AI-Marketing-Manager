@@ -2811,3 +2811,9 @@ Future gate: before another F11 live authorization, a separately authorized foll
 Safety boundary for this closeout: execution-surface process probes = `0`; Provider/Zernio calls = `0`; credentials loaded = `NO`; receiver service actions = `0`; tunnels = `0`; readiness POSTs = `0`; VPS actions = `0`; Analytics/webhook/publish = `0`; infrastructure mutations = `0`; source/test/package mutations = `0`; F11 authorization consumed = `NO`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source, tests, config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not rerun ES01, investigate the execution surface, load credentials, touch receiver/tunnel infrastructure, perform readiness, run F11 live, or start a successor task.
+
+### P1-T08-F11-ES02 - persistent local controller session preflight activation (2026-10-22)
+
+`P1-T08-F11-ES02 = ACTIVATED — PERSISTENT LOCAL CONTROLLER SESSION PREFLIGHT`.
+
+Scope boundary: Provider/Zernio = `0`; credentials = `NOT AUTHORIZED`; `.env` loading = `NOT AUTHORIZED`; VPS actions = `0`; receiver actions = `0`; SSH tunnels = `0`; readiness = `0`; live runner = `NOT AUTHORIZED`.
