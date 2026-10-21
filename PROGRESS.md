@@ -2510,3 +2510,18 @@ This closeout does **NOT** authorize receiver service actions, SSH tunnel creati
 Closeout safety boundary: receiver service actions = `0`; SSH tunnels created = `0`; readiness POSTs = `0`; Provider credentials loaded = `NO`; Provider/Zernio calls = `0`; Analytics calls = `0`; webhook operations = `0`; publish attempts = `0`; F11 live execution = `NO`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, and package files remain unchanged. Commit/push and STOP; do not execute F11 in this task.
+### P1-T08-F11-LR01 - authorized one-run live F11 resume activation (2026-10-21)
+
+`P1-T08-F11-LR01 = ACTIVATED — TEAM LEADER AUTHORIZED ONE-RUN LIVE F11 RESUME`.
+
+Starting repository HEAD = `1891a8c59fb10a15950ebd01ccdef7b6e6ffca8a`.
+
+One-run authorization = `AUTHORIZED / UNCONSUMED`.
+
+Security gate = accepted (`P1-T08-F11-H02 = DONE / ACCEPTED`; `P1-T08-F11-H02-F01 = DONE / ACCEPTED`; security blocker cleared).
+
+Receiver handoff gate = accepted (`P1-T08-F11-RCV01 = DONE / ACCEPTED WITH NON-BLOCKING NOTE`; classification `TEMPORARY_NODE_RECEIVER_HANDOFF_REQUIRED`).
+
+Provider request count = `0`; published F11 posts = `0`; F11 evidence files = `0`.
+
+No static-receiver stop, tunnel creation, credential loading, readiness POST, or Provider/Zernio request is authorized before this activation commit is pushed and live remote HEAD is verified.
