@@ -2883,3 +2883,10 @@ Mandatory future execution ordering for any separately authorized F11 live retry
 Safety boundary for this closeout: process probes = `0`; credentials loaded = `NO`; Provider/Zernio = `0`; receiver actions = `0`; tunnel creation = `0`; readiness = `0`; VPS actions = `0`; Analytics/webhook/publish = `0`; infrastructure mutations = `0`; source/test/package mutation = `0`; F11 authorization consumed = `NO`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not perform more controller testing, load credentials, touch VPS/receiver/tunnel, perform readiness, contact Zernio, execute F11 live, or start the next task.
+
+
+### P1-T08-F11-LR03 - authorized persistent-controller live retry activation (2026-10-22)
+
+`P1-T08-F11-LR03 = ACTIVATED — AUTHORIZED PERSISTENT-CONTROLLER LIVE RETRY`.
+
+Activation boundary: credentials not yet loaded; VPS/receiver/tunnel/readiness not yet touched; Provider/Zernio calls = `0`; F11 authorization remains `AUTHORIZED / UNCONSUMED` until the first trusted Zernio Provider request is actually sent.
