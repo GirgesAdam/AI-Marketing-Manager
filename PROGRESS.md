@@ -3034,3 +3034,36 @@ Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_
 `P1-T08-F11-LR04 = ACTIVATED — AUTHORIZED CHILD-ENV LIVE RETRY`.
 
 Activation boundary: credential values not yet used; receiver/tunnel/readiness not yet touched; Provider/Zernio calls = `0`; F11 authorization remains `AUTHORIZED / UNCONSUMED` until the first trusted Zernio Provider request is actually sent.
+
+
+### P1-T08-F11-LR04 - authorized child-env live retry result (2026-10-22)
+
+`P1-T08-F11-LR04 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Exact blocker stage = `PERSISTENT_CONTROLLER_INTERACTION_SURFACE_UNAVAILABLE_PRE_OFFLINE_GATE`.
+
+Starting HEAD = `abeb933a4bda3ec514b6823ed4359374b191e883`; activation commit = `c8c041b73e8f14ea85b62ac25a0744906966fa3f`.
+
+Canonical start = PASS: Local=Tracking=Live Remote; clean tree; CD01 accepted; credential source `IDENTIFIED / AVAILABLE`; persistent-controller execution path `ACCEPTED`; tool-safe child credential-delivery path `ACCEPTED`; F11 `NOT DONE / READY FOR SEPARATELY AUTHORIZED LIVE RETRY`; F11 authorization `AUTHORIZED / UNCONSUMED`; authorization consumed `NO`; Provider requests `0`; F11 post published `NO`; P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`.
+
+Activation = PASS and pushed before credential/service/tunnel/readiness/Provider action.
+
+Fresh current-device rediscovery = PASS for authorized machine `DESKTOP-RL942A5`; current device identity was rediscovered immediately before controller establishment.
+
+Persistent controller establishment = PASS on the single authorized LR04 controller attempt. Remote controller session PID = `21384`. No second/replacement controller was created.
+
+Controller interaction gate = BLOCKED PRE_PROVIDER. Two attempts to send the required baseline input to the already-established controller through `interact_with_process` returned tool-level `Resource not found` before any requested controller command executed. Therefore expected activation HEAD, repo-root `.env` absence, controller credential absence, Node availability, and the offline F10 fail-closed probe were not executed inside that controller.
+
+Because the controller could not be interacted with, deterministic harness tests, historical credential metadata gate, child `--env-file` delivery, fresh infrastructure gate, receiver stop, reverse tunnel, live runner, readiness POSTs, and Provider transport were `NOT STARTED`.
+
+Pre-Provider cleanup = PASS: exact controller session PID `21384` was terminated explicitly. No LR04 credential load occurred; no runner/tunnel/receiver artifact required rollback.
+
+Authorization consumption = `NO`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider normal requests = `0`; Provider cleanup requests = `0`; Provider total requests = `0`; `/v1/auth/verify` = `0`; Analytics = `0`; Delta = `0`; webhook operations = `0`; publish attempts = `0`; posts created = `0`.
+
+`P1-T08-F11 = NOT DONE`. Current LR04 blocker = `PERSISTENT_CONTROLLER_INTERACTION_SURFACE_UNAVAILABLE_PRE_OFFLINE_GATE`. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 post published = `NO`.
+
+Safety boundary remained intact: credential values exposed = `NO`; credentials loaded = `NO`; historical `.env` not accessed by LR04; receiver actions = `0`; SSH tunnels = `0`; readiness POSTs = `0`; VPS actions = `0`; public HTTP readiness actions = `0`; infrastructure changes = `0`; source/test/package changes = `0`; dependency installs/updates/audit/fixes = `0`; F11 authorization consumed = `NO`.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because LR04 produced no Provider Behavior evidence. STOP after docs commit/push and evidence handoff. Do not retry LR04, rerun F11, create a replacement controller, load credentials, touch receiver/tunnel/VPS, contact Zernio, republish, execute Delta, or start a successor task without Team Leader review.

@@ -2116,3 +2116,37 @@ Classification: `TOOL_SAFE_CHILD_ENV_DELIVERY_READY`.
 | F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
 
 Classification A threshold is satisfied. CD01 establishes only that a supported local child-process path can place the accepted credentials into child `process.env` without exposing their values through the assistant/tool surface. It does not verify Zernio authentication, authorize F11 live, or self-clear the parent blocker.
+
+
+## P1-T08-F11-LR04 - Persistent Controller + Child-Env Authorized Live Retry
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Exact blocker stage: `PERSISTENT_CONTROLLER_INTERACTION_SURFACE_UNAVAILABLE_PRE_OFFLINE_GATE`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Canonical starting state | PASS | start HEAD `abeb933a4bda3ec514b6823ed4359374b191e883`; Local=Tracking=Live Remote; clean tree; CD01 accepted; F11 ready; authorization unconsumed; Provider requests `0` |
+| LR04 activation | PASS | activation commit `c8c041b73e8f14ea85b62ac25a0744906966fa3f` pushed before credential/infra/Provider action |
+| Fresh device rediscovery | PASS | authorized machine `DESKTOP-RL942A5` rediscovered immediately before controller establishment |
+| Persistent controller establishment | PASS | exactly one authorized controller attempt; remote session PID `21384`; no replacement controller created |
+| Controller interaction | BLOCKED PRE_PROVIDER | two `interact_with_process` attempts returned tool-level `Resource not found` before requested baseline input executed |
+| Controller baseline | NOT STARTED | interaction surface unavailable before baseline command execution |
+| Offline F10 fail-closed probe | NOT STARTED | controller interaction precondition failed |
+| Deterministic harness gate | NOT STARTED | pre-offline controller gate failed |
+| Historical credential source gate | NOT STARTED | no historical `.env` access by LR04 |
+| Child `--env-file` delivery | NOT STARTED | credentials loaded `NO` |
+| Infrastructure gate | NOT STARTED | no VPS action |
+| Receiver actions | ZERO | `0` |
+| Reverse tunnels | ZERO | `0` |
+| Readiness POSTs | ZERO | `0` |
+| Provider/Zernio | ZERO | normal `0`; cleanup `0`; total `0`; `/v1/auth/verify=0` |
+| Analytics / Delta / webhook / publish | ZERO | all `0`; posts created `0` |
+| Pre-Provider cleanup | PASS | exact controller session PID `21384` terminated; no runner/tunnel/receiver rollback required |
+| Secret handling | SAFE | values exposed `NO`; credentials loaded `NO`; historical `.env` not accessed |
+| Source/test/package/infrastructure mutation | ZERO | `0`; dependency installs/updates/audit/fixes `0` |
+| F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+
+No Provider Behavior evidence was generated, so `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged. LR04 permits no replacement controller or second LR04 attempt after this bounded pre-Provider failure. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 remains `NOT DONE` pending Team Leader review.
