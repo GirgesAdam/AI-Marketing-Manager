@@ -2088,3 +2088,31 @@ Exact blocker stage: `PERSISTENT_CONTROLLER_CREDENTIAL_LOAD_BLOCKED_BY_TOOL_SAFE
 | F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
 
 No Provider Behavior evidence was generated, so `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged. No second LR03 attempt or alternative credential-loading workaround is authorized inside this run. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 remains `NOT DONE` pending Team Leader review.
+
+
+## P1-T08-F11-CD01 - Tool-Safe Local Credential Delivery Feasibility
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `TOOL_SAFE_CHILD_ENV_DELIVERY_READY`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Canonical starting state | PASS | start HEAD `cde08b06a32a15103719b3dc101c68ed6f6687ef`; Local=Tracking=Live Remote; clean tree; LR03 accepted; F11 blocked pre-Provider; authorization unconsumed; Provider requests `0` |
+| CD01 activation | PASS | activation commit `9cd161aa095151a765c6ff669ed06421291f9677` pushed before feasibility probes |
+| Fresh device + persistent controller | PASS | authorized `DESKTOP-RL942A5`; accepted workspace/activation HEAD; controller shell PID `16456`; repo `.env` absent; both credential vars absent |
+| Node env-file capability | PASS | Node `v24.21.0`; `--env-file=...` supported by installed runtime |
+| Synthetic proof first fixture | NON-BLOCKING FIXTURE NOTE | PowerShell UTF-8 BOM caused first fake key to be unrecognized; second fake key passed; parent isolation/cleanup passed |
+| Synthetic proof corrected fixture | PASS | UTF-8 without BOM; both fake vars present/matched in child; parent stayed clean; child exit `0`; temp file deleted; residue `0` |
+| Historical source identity | PASS | `AI-Marketing-Manager-P1T01`; expected Git origin; branch `p1-t02-zernio-profiles`; `.env` exists and ignored; contents not displayed/copied |
+| Actual child delivery | PASS | one authorized child; `node --env-file=<historical-path> -e <boolean-only-probe>`; API key populated YES; expected user populated YES; network `0`; exit `0` |
+| Parent environment isolation | PASS | API key absent after child; expected user absent after child |
+| Runner compatibility review | PASS / CODE-INTERFACE ONLY | accepted F10 runner reads `process.env` and has live-mode `loadEnvFile('.env')` support; no Zernio validity claim |
+| Controller shutdown | PASS | final credential vars absent; activation HEAD unchanged; clean tree; intentional exit; controller residue `0` |
+| Provider/Zernio | ZERO | `0`; `/v1/auth/verify=0`; Analytics/webhook/publish `0` |
+| Live runner / remote infrastructure | ZERO | F10 live `0`; public HTTP `0`; VPS `0`; receiver `0`; SSH tunnel `0`; readiness `0` |
+| Secret safety | PASS | values exposed `NO`; copied `NO`; persisted elsewhere `NO`; creation `0`; rotation `0` |
+| Source/test/package mutation | ZERO | `0`; dependency install/update `0` |
+| F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+
+Classification A threshold is satisfied. CD01 establishes only that a supported local child-process path can place the accepted credentials into child `process.env` without exposing their values through the assistant/tool surface. It does not verify Zernio authentication, authorize F11 live, or self-clear the parent blocker.

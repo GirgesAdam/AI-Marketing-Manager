@@ -2966,3 +2966,34 @@ Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_
 `P1-T08-F11-CD01 = ACTIVATED — TOOL-SAFE CREDENTIAL DELIVERY FEASIBILITY`.
 
 Activation boundary: Provider = `0`; live runner = `NOT AUTHORIZED`; infrastructure = `0`; actual credential value disclosure = `FORBIDDEN`.
+
+
+### P1-T08-F11-CD01 - tool-safe local credential delivery feasibility result (2026-10-22)
+
+`P1-T08-F11-CD01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `TOOL_SAFE_CHILD_ENV_DELIVERY_READY`.
+
+Starting HEAD = `cde08b06a32a15103719b3dc101c68ed6f6687ef`; activation commit = `9cd161aa095151a765c6ff669ed06421291f9677`.
+
+Fresh authorized device rediscovery = PASS for `DESKTOP-RL942A5`; one persistent PowerShell controller was established in the accepted F11 workspace. Controller shell PID = `16456`; activation HEAD verified; repo-root `.env` absent; `ZERNIO_API_KEY` absent; `ZERNIO_EXPECTED_USER_EMAIL` absent.
+
+Installed runtime capability = PASS: Node `v24.21.0` reports support for `--env-file=...` and `--env-file-if-exists=...`. No historical secret source was accessed during capability discovery.
+
+Synthetic non-secret proof = PASS after bounded fixture-encoding correction. The first synthetic file written with Windows PowerShell UTF-8 included a BOM and the first fake variable was therefore not recognized while the second was; parent isolation and cleanup still passed. A second synthetic fixture written as UTF-8 without BOM delivered both fake variables correctly to the child, parent remained free of both variables, child exit = `0`, and the synthetic file was deleted with residue `0`. This is a test-fixture encoding artifact, not a secret-delivery failure.
+
+Historical source identity gate = PASS: accepted workspace `AI-Marketing-Manager-P1T01`; origin `https://github.com/GirgesAdam/AI-Marketing-Manager.git`; branch `p1-t02-zernio-profiles`; repo-root `.env` exists and is Git-ignored. Contents were not displayed, parsed in PowerShell, or copied.
+
+Actual secret-delivery probe = PASS on the single authorized child attempt. Command structure was `node --env-file=<accepted-historical-env-path> -e <boolean-only-probe>`; no secret value appeared in the command or output. Child reported `ZERNIO_API_KEY` present/populated = `YES`; `ZERNIO_EXPECTED_USER_EMAIL` present/populated = `YES`; child network calls = `0`; child exit = `0`.
+
+Parent-environment isolation = PASS: after the actual child exited, persistent controller `ZERNIO_API_KEY` present = `NO`; `ZERNIO_EXPECTED_USER_EMAIL` present = `NO`. No credential value was promoted into the long-lived controller environment.
+
+Accepted runner compatibility review = PASS as code/interface evidence only: `src/provider-spike/p1-t08-f10-runner.ts` consumes credentials through `process.env`; in live mode it also supports repo-local `.env` through Node `loadEnvFile('.env')` when required values are missing. A child process whose environment is populated by Node before application startup is mechanically compatible with the accepted runner credential contract. This does **not** verify Zernio authentication and no live runner was executed.
+
+Controller final state = PASS: final credential variables absent; Git HEAD remained activation commit; working tree remained clean; controller exited intentionally; CD01 controller session residue = `0`.
+
+Safety boundary remained intact: Provider/Zernio = `0`; `/v1/auth/verify` = `0`; Analytics = `0`; webhook = `0`; publish = `0`; F10 live runner executions = `0`; public HTTP = `0`; VPS actions = `0`; receiver actions = `0`; SSH tunnels = `0`; readiness POSTs = `0`; credential values exposed = `NO`; credential values copied = `NO`; credential values persisted elsewhere = `NO`; credential creation = `0`; credential rotation = `0`; source/test/package changes = `0`; dependency install/update = `0`; F11 authorization consumed = `NO`.
+
+CD01 does **not** self-clear the parent blocker. Canonical state remains pending Team Leader review: `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; blocker remains `TOOL_SAFE_CREDENTIAL_DELIVERY_PATH_NOT_YET_ESTABLISHED`; credential source remains `IDENTIFIED / AVAILABLE`; persistent-controller execution path remains `ACCEPTED`; P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider request count remains `0`; F11 post published = `NO`.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because CD01 tested no Provider Behavior. STOP after documentation commit/push and evidence handoff; do not launch F10 live, contact Zernio, touch VPS/receiver/tunnel/readiness, start F11 retry, or start a successor task.
