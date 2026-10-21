@@ -2627,3 +2627,37 @@ Canonical blocker is not self-cleared by CR01: P1-T08 = `UNRESOLVED / NOT DONE`;
 Safety boundary: Provider/Zernio calls = `0`; `/v1/auth/verify` = `0`; Analytics = `0`; webhook operations = `0`; publish = `0`; Provider credentials used = `NO`; credential values exposed = `NO`; credential creation = `0`; credential rotation = `0`; receiver service actions = `0`; SSH tunnels = `0`; readiness POSTs = `0`; Nginx/Apache/sshd/DNS/TLS/firewall mutations = `0`; source/test/package changes = `0`; F11 authorization consumed = `NO`.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because CR01 produced no Provider Behavior evidence. STOP after docs commit/push and evidence handoff; await Team Leader review.
+
+### P1-T08-F11-CR01-CLOSEOUT-01 - Team Leader acceptance of credential-source readiness (2026-10-21)
+
+`P1-T08-F11-CR01 = DONE / ACCEPTED WITH NON-BLOCKING NOTE`.
+
+Team Leader disposition = `ACCEPTED WITH NON-BLOCKING NOTE`.
+
+Accepted evidence HEAD = `7a4b494fb3898c7308d60d450c89b0c10867f960`.
+
+Accepted classification = `AUTHORIZED_CREDENTIAL_SOURCE_READY`.
+
+Historical source mapping = `PREVIOUS_SOURCE_IDENTIFIED`.
+
+Accepted findings: the accepted runner supports already-populated `process.env`; the accepted runner can also auto-load repo-root `.env` in live mode when required Zernio values are absent; required names are `ZERNIO_API_KEY` and `ZERNIO_EXPECTED_USER_EMAIL`; missing API key fails closed before Provider transport; current F11 workspace has no repo-root `.env`; current process/user/machine environment scopes were not populated with the required values during CR01; the historical authorized source is the ignored local `.env` in the prior Provider-spike workspace; that historical source was previously used for accepted live Zernio work; current safe CR01 evidence reports both required names still present and populated in that historical ignored source; no credential value was printed, logged, persisted, fingerprinted, committed, or copied; credential creation = `0`; credential rotation = `0`.
+
+Independent historical corroboration: accepted P1-T02 Provider evidence explicitly records that the authorized internal Zernio team credential was sourced from a local ignored `.env` secret file and that real Provider preflight succeeded.
+
+Team Leader non-blocking verification note: `Independent Git/Provider-history corroboration = PASS`. `Independent re-discovery of the historical local workspace on the currently connected device = NOT REPROVEN within the bounded Team Leader device search window`. This does **NOT** invalidate the accepted CR01 safe local evidence; it remains explicitly distinguished from independently reproduced evidence.
+
+`LIVE_CREDENTIAL_SOURCE_UNAVAILABLE = CLEARED BY ACCEPTED CR01`.
+
+`P1-T08-F11 = NOT DONE / READY FOR SEPARATELY AUTHORIZED LIVE RETRY`.
+
+Canonical state after closeout: P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; F11 authorization = `AUTHORIZED / UNCONSUMED`; F11 authorization consumed = `NO`; Provider request count = `0`; F11 post published = `NO`.
+
+Mandatory future ordering before any receiver service action or reverse tunnel: (1) use the already-authorized historical local credential source only; (2) load required values into the future runner process using the previously accepted process-memory-only pattern; (3) verify both required names are present/populated without printing their values; (4) only then may the separately authorized live task proceed to receiver handoff; (5) handoff readiness must pass before the first Provider request; (6) the first trusted Zernio Provider request remains the authorization-consumption boundary.
+
+Do **NOT** copy the historical `.env` into source control. Do **NOT** create a new repo-root secret file during this closeout. Do **NOT** create or rotate Zernio credentials.
+
+This closeout does **NOT** authorize credential loading into a live runner, `/v1/auth/verify`, Provider/Zernio calls, receiver stop/start, SSH tunnel creation, readiness POST, Analytics, webhook operations, publish, or F11 live retry.
+
+Safety boundary: Provider/Zernio = `0`; credentials used = `NO`; secret values exposed = `NO`; credential creation/rotation = `0`; receiver actions = `0`; tunnels = `0`; readiness POSTs = `0`; Analytics/webhook/publish = `0`; infrastructure changes = `0`; source/test/package changes = `0`; F11 authorization consumed = `NO`.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not start the F11 live retry in this execution.
