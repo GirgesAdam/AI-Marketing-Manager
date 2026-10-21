@@ -1930,3 +1930,29 @@ Exact blocker stage: `LIVE_CREDENTIAL_SOURCE_UNAVAILABLE_AFTER_HANDOFF_BEFORE_RU
 | DNS/TLS/firewall changes | ZERO | `0` |
 
 No Provider Behavior evidence was generated, so `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged. No second handoff attempt is authorized inside LR01. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`.
+## P1-T08-F11-CR01 - Credential Source Readiness / Recovery Mapping
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `AUTHORIZED_CREDENTIAL_SOURCE_READY`.
+
+| Gate | Result | Safe evidence |
+|---|---|---|
+| Canonical starting state | PASS | starting HEAD `43111e2d773a068add1be8a191207a3d04cfadf0`; Local=Tracking=Live Remote; clean tree; LR01 accepted; F11 `NOT DONE / BLOCKED PRE_PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; Provider requests `0` |
+| Runner source contract | PASS | runner SHA `e9b5cba967cccbda4f8f06c6070dbc536e88efaf08f6358ae059202aff299eab`; accepted mechanisms = process env or repo-root `.env` auto-load in live mode when required values absent |
+| Provider transport source | PASS | F10 transport SHA `957ffe6a0042c4bf32e0865ab9f57c598d3451e9a4708a4e822f9576044db593`; missing API key fails closed before Provider request |
+| Current repo-root `.env` | ABSENT | `.env` intentionally ignored; no `.env.example`; Git history shows real `.env` never tracked |
+| Current process env | NOT READY | both required names present/populated = NO/NO |
+| Current user env | NOT READY | both required names present/populated = NO/NO |
+| Current machine env | NOT READY | both required names present/populated = NO/NO |
+| PowerShell profiles / bounded history | NO SOURCE FOUND | no references to either required variable name |
+| Previous source type | PROVEN | accepted P1-T02 evidence: authorized team credential sourced from local ignored `.env`; accepted P1-T05-F03 evidence: original ignored local `.env` injected into process memory, identity HTTP 200 |
+| Historical local source availability | READY | `AI-Marketing-Manager-P1T01/.env` exists, is ignored, and both required names are present/populated; workspace branch `p1-t02-zernio-profiles`; no values exposed |
+| Credential creation/rotation | ZERO | `0 / 0` |
+| Provider credential use | NO | CR01 did not load/use credential for runner or Provider validation |
+| Provider/Zernio calls | ZERO | `0`; `/v1/auth/verify` = `0` |
+| Receiver/tunnel/readiness | ZERO | service actions `0`; tunnels `0`; readiness POSTs `0` |
+| Source/test/package mutation | ZERO | documentation only after read-only investigation |
+| F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+
+Future ordering requirement: a separately authorized live retry must prove both required credential names are safely available to the accepted runner process **before** static receiver stop, reverse-tunnel creation, or readiness. CR01 does not clear the parent blocker or authorize credential loading, Provider calls, handoff, or F11 retry.

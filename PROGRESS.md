@@ -2603,3 +2603,27 @@ Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_
 `P1-T08-F11-CR01 = ACTIVATED — CREDENTIAL SOURCE READINESS / RECOVERY MAPPING`.
 
 No Provider/Zernio calls are authorized. No credential values may be printed, read into evidence, or persisted. Credential creation/rotation is not authorized. No F11 receiver handoff, readiness POST, runner live execution, or Provider transport is authorized in CR01.
+
+### P1-T08-F11-CR01 - credential source readiness / recovery mapping result (2026-10-21)
+
+`P1-T08-F11-CR01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `AUTHORIZED_CREDENTIAL_SOURCE_READY`.
+
+Accepted runner contract inspection: `src/provider-spike/p1-t08-f10-runner.ts` SHA-256 = `e9b5cba967cccbda4f8f06c6070dbc536e88efaf08f6358ae059202aff299eab`; it reads `process.env` and, only in live mode when required Zernio values are absent and repo-root `.env` exists, may load that `.env`. Provider transport `src/provider-spike/p1-t08-f10-zernio.ts` SHA-256 = `957ffe6a0042c4bf32e0865ab9f57c598d3451e9a4708a4e822f9576044db593`; without `ZERNIO_API_KEY` it fails closed as `MISSING_LIVE_CREDENTIAL` before Provider transport. Required variable names are `ZERNIO_API_KEY` and `ZERNIO_EXPECTED_USER_EMAIL`. No source change was made.
+
+Current accepted workspace source mapping: repo-root `.env` exists = `NO`; `.env` is intentionally ignored by `.gitignore`; `.env.example` exists = `NO`; Git history shows real repo-root `.env` tracked = `NO`. Current process, user, and machine environment scopes each report both required variable names present/populated = `NO/NO`. PowerShell profiles and bounded command-history pattern checks contain no references to either required variable name. No credential value was printed, logged, persisted, fingerprinted, or copied.
+
+Historical source mapping = `PREVIOUS_SOURCE_IDENTIFIED`. Accepted P1-T02 Provider evidence records that the authorized team credential was sourced from a local ignored `.env` secret file and was never printed/logged/committed. Accepted P1-T05-F03 evidence records one authorized live invocation where credentials were injected from the original ignored local `.env` into process memory only and trusted identity preflight returned HTTP `200`.
+
+The original local Provider-spike workspace remains available as `AI-Marketing-Manager-P1T01`; safe Git metadata shows branch `p1-t02-zernio-profiles`, origin `GirgesAdam/AI-Marketing-Manager`, and commits `69d5ab6b5f48dfdae5b8615993ca95d0cefe37b8` (`feat: prepare P1-T02 Zernio profile spike`) and `844aed5f317cb4e5102c5ad1ba90d629bc5b872d` (`chore: support safe P1-T02 live env loading`). Its repo-root `.env` currently exists, is Git-ignored, and safe name-only parsing confirms both `ZERNIO_API_KEY` and `ZERNIO_EXPECTED_USER_EMAIL` are present and populated. Values were not emitted or recorded. This source is therefore the existing authorized historical local credential source; no credential creation/rotation or source-control copy is required.
+
+Future safe usage contract only: the accepted F10/F11 runner must continue to receive credentials through an accepted mechanism. Because the current accepted workspace has no repo-root `.env`, a future separately authorized live task may populate the runner process environment from the existing historical ignored local source using a local-only secret-safe loading step, matching the previously accepted process-memory pattern. The future task must verify both required variable names are present/populated before any receiver stop, SSH reverse tunnel, or readiness handshake. CR01 does not authorize loading/using the credential, copying values, runner execution, or Provider validation.
+
+Required future ordering finding: credential-source readiness must be proven before stopping the static receiver, creating the SSH reverse tunnel, or performing readiness. The prior LR01 handoff-before-credential-check ordering must not be repeated.
+
+Canonical blocker is not self-cleared by CR01: P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; blocker remains `LIVE_CREDENTIAL_SOURCE_UNAVAILABLE` pending Team Leader review/acceptance; F11 authorization remains `AUTHORIZED / UNCONSUMED`.
+
+Safety boundary: Provider/Zernio calls = `0`; `/v1/auth/verify` = `0`; Analytics = `0`; webhook operations = `0`; publish = `0`; Provider credentials used = `NO`; credential values exposed = `NO`; credential creation = `0`; credential rotation = `0`; receiver service actions = `0`; SSH tunnels = `0`; readiness POSTs = `0`; Nginx/Apache/sshd/DNS/TLS/firewall mutations = `0`; source/test/package changes = `0`; F11 authorization consumed = `NO`.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because CR01 produced no Provider Behavior evidence. STOP after docs commit/push and evidence handoff; await Team Leader review.
