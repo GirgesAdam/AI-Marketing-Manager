@@ -1992,3 +1992,40 @@ Exact blocker stage: `RUNNER_LAUNCH_BLOCKED_BY_REMOTE_EXECUTION_SURFACE_AFTER_HA
 | Config/source/package mutation | ZERO | no Nginx/Apache/sshd/DNS/TLS/firewall/source/test/package changes |
 
 No Provider Behavior evidence was generated, so `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged. LR02 permits no second handoff/readiness attempt after this pre-Provider failed attempt. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 remains `NOT DONE`; authorization remains `AUTHORIZED / UNCONSUMED`.
+
+## P1-T08-F11-ES01 - Local Execution Surface Reliability Preflight
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `EXECUTION_SURFACE_READY_FOR_F11_RUNNER`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Canonical starting state | PASS | starting HEAD `a748825316503ed9fdadf3ed179138b9ff34d273`; Local=Tracking=Live Remote; clean tree; LR02 accepted; F11 blocked pre-Provider; authorization `AUTHORIZED / UNCONSUMED`; Provider requests `0` |
+| ES01 activation | PASS | activation commit `198e449a78fc468121ceb06086bb6378c503207d` pushed before process tests |
+| Current repo-root `.env` | ABSENT | no local F11 workspace `.env` |
+| ES01 credential isolation | PASS | `ZERNIO_API_KEY` unavailable; `ZERNIO_EXPECTED_USER_EMAIL` unavailable; historical credential `.env` not inspected/loaded |
+| Runner source integrity | PASS | SHA-256 `e9b5cba967cccbda4f8f06c6070dbc536e88efaf08f6358ae059202aff299eab` |
+| Built runner artifact | PASS | `dist/provider-spike/p1-t08-f10-runner.js` exists and is not older than accepted source; no build required |
+| One-shot CWD | PASS | accepted workspace; exit `0`; `Resource not found=NO` |
+| One-shot Git root | PASS | accepted workspace; exit `0`; `Resource not found=NO` |
+| One-shot Node version | PASS | `v24.21.0`; exit `0`; `Resource not found=NO` |
+| One-shot npm version | PASS | `11.19.0`; exit `0`; `Resource not found=NO` |
+| One-shot Git HEAD | PASS | activation HEAD; exit `0`; `Resource not found=NO` |
+| Offline runner attempt 1 | PASS | started; exit `2`; `liveEnabled=false`; `result=BLOCKED`; `errorCategory=LIVE_OPT_IN_REQUIRED`; `providerCalls=0`; `Resource not found=NO` |
+| Offline runner attempt 2 | PASS | started; exit `2`; same accepted fail-closed result; `providerCalls=0`; `Resource not found=NO` |
+| Offline runner attempt 3 | PASS | started; exit `2`; same accepted fail-closed result; `providerCalls=0`; `Resource not found=NO` |
+| Concurrent cycle 1 | PASS | sentinel PID `18388` alive before/after runner; runner exit `2` with accepted fail-closed result; child count `0`; exact PID terminated; marker residue `0`; unrelated Node PIDs preserved |
+| Concurrent cycle 2 | PASS | sentinel PID `18128` alive before/after runner; runner exit `2` with accepted fail-closed result; child count `0`; exact PID terminated; marker residue `0`; unrelated Node PIDs preserved |
+| Direct runner repetition | PASS | `3 / 3` |
+| Concurrent runner launches | PASS | `2 / 2` |
+| Sentinel lifecycle | PASS | `2 / 2` exact PID lifecycle |
+| Residual sentinel count | PASS | `0` |
+| Tool-level `Resource not found` | ZERO | `0` during required ES01 execution |
+| Provider/Zernio | ZERO | `0`; `/v1/auth/verify=0`; Analytics/webhook/publish all `0` |
+| Credentials | SAFE / ZERO | loaded `NO`; values exposed `NO`; historical `.env` values read `NO` |
+| Remote/infrastructure | ZERO | receiver actions `0`; SSH tunnels `0`; readiness POSTs `0`; VPS commands/actions `0`; Nginx/Apache/sshd/DNS/TLS/firewall actions `0` |
+| Source/test/package mutation | ZERO | `0`; dependency installs/updates `0`; working tree clean after bounded tests |
+| F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+
+Classification A threshold is satisfied: baseline PASS; direct offline runner `3/3`; concurrent launches `2/2`; sentinel lifecycle `2/2`; residual sentinel count `0`; Provider calls `0`; credentials loaded `NO`; infrastructure actions `0`; no `Resource not found` occurred. ES01 does not self-clear the parent F11 blocker and does not authorize a live retry.

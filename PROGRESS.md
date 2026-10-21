@@ -2750,3 +2750,32 @@ Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_
 `P1-T08-F11-ES01 = ACTIVATED — LOCAL EXECUTION SURFACE RELIABILITY PREFLIGHT`.
 
 Scope boundary: Provider/Zernio calls = `0`; credentials = `NOT AUTHORIZED`; historical `.env` loading = `NOT AUTHORIZED`; receiver service actions = `0`; SSH tunnels = `0`; readiness HTTP requests = `0`; infrastructure mutations = `0`; F11 live execution = `NOT AUTHORIZED`.
+
+
+### P1-T08-F11-ES01 - local execution surface reliability preflight result (2026-10-22)
+
+`P1-T08-F11-ES01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `EXECUTION_SURFACE_READY_FOR_F11_RUNNER`.
+
+Starting HEAD = `a748825316503ed9fdadf3ed179138b9ff34d273`; activation commit = `198e449a78fc468121ceb06086bb6378c503207d`.
+
+Secret/environment isolation = PASS: current F11 workspace repo-root `.env` = `ABSENT`; `ZERNIO_API_KEY` unavailable to ES01 probe processes; `ZERNIO_EXPECTED_USER_EMAIL` unavailable to ES01 probe processes; historical credential `.env` was not inspected or loaded; no credential-bearing process from CR01/LR02 was reused.
+
+Runner/build artifact gate = PASS: accepted runner source `src/provider-spike/p1-t08-f10-runner.ts` SHA-256 = `e9b5cba967cccbda4f8f06c6070dbc536e88efaf08f6358ae059202aff299eab`; built executable `dist/provider-spike/p1-t08-f10-runner.js` exists and is not older than the accepted source; no build was required; no source/package mutation occurred.
+
+Execution baseline = PASS `5 / 5`, all through the same Desktop Commander process-execution surface and with `Resource not found = NO`: current working directory resolved to `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean` exit `0`; Git repository root resolved to the accepted workspace exit `0`; `node --version` = `v24.21.0` exit `0`; `npm --version` = `11.19.0` exit `0`; `git rev-parse HEAD` = `198e449a78fc468121ceb06086bb6378c503207d` exit `0`.
+
+Offline runner direct repetition = PASS `3 / 3`. Each separate launch of `node dist/provider-spike/p1-t08-f10-runner.js` started successfully and returned the accepted fail-closed result: `liveEnabled=false`; `result=BLOCKED`; `errorCategory=LIVE_OPT_IN_REQUIRED`; `providerCalls=0`; runner exit code `2`. Tool-level `Resource not found` occurrences = `0`; unexpected tool/process failures = `0`.
+
+Concurrent lifecycle cycle 1 = PASS: harmless local Node sentinel actual PID `18388`; sentinel alive immediately before runner launch = YES; concurrent offline runner started independently and returned `LIVE_OPT_IN_REQUIRED`, `providerCalls=0`, exit `2`; sentinel alive after runner exit = YES; sentinel child count before termination = `0`; exact PID `18388` terminated; exact PID alive afterward = NO; sentinel marker Node residue = `0`; unrelated Node PIDs `6364,11952,20300` remained alive.
+
+Concurrent lifecycle cycle 2 = PASS: harmless local Node sentinel actual PID `18128`; sentinel alive immediately before runner launch = YES; concurrent offline runner started independently and returned `LIVE_OPT_IN_REQUIRED`, `providerCalls=0`, exit `2`; sentinel alive after runner exit = YES; sentinel child count before termination = `0`; exact PID `18128` terminated; exact PID alive afterward = NO; sentinel marker Node residue = `0`; unrelated Node PIDs `6364,11952,20300` remained alive.
+
+Bounded totals: direct offline runner launch = `3 / 3 PASS`; concurrent runner launch = `2 / 2 PASS`; sentinel exact start/terminate lifecycle = `2 / 2 PASS`; residual sentinel count = `0`; tool-level `Resource not found` during required ES01 execution = `0`. No command/path error and no runner error was observed; each runner launch reached its own expected fail-closed result.
+
+Safety boundary remained intact: Provider/Zernio calls = `0`; `/v1/auth/verify` = `0`; Analytics = `0`; webhook operations = `0`; publish = `0`; credentials loaded = `NO`; credential values exposed = `NO`; historical `.env` read for values = `NO`; receiver service actions = `0`; SSH tunnels = `0`; readiness POSTs = `0`; VPS commands/actions = `0`; Nginx/Apache/sshd/DNS/TLS/firewall actions = `0`; source/test/package edits = `0`; dependency installs/updates = `0`; F11 authorization consumed = `NO`.
+
+ES01 does **not** self-clear the parent blocker. Canonical state remains pending Team Leader review: P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; blocker remains `REMOTE_EXECUTION_SURFACE_UNAVAILABLE_FOR_RUNNER_LAUNCH`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider request count remains `0`; F11 post published = `NO`.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because ES01 produced no Provider Behavior evidence. STOP after documentation commit/push and evidence handoff; do not load credentials, touch receiver/tunnel infrastructure, perform readiness, run with `--live`, contact Zernio, start F11 retry, or start another task.
