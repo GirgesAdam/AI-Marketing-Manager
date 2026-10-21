@@ -1850,3 +1850,41 @@ Classification: `ADVISORY_SEVERITY_DOCUMENTATION_CORRECTED`.
 | H02 acceptance state | PENDING | `P1-T08-F11-H02 = NOT ACCEPTED YET — PENDING TEAM LEADER RE-REVIEW` |
 | F11 live resume | BLOCKED | no authorization change |
 | Audit/dependency/Provider/runtime mutation | ZERO | documentation-only correction |
+
+
+## P1-T08-F11-RCV01 - Live Receiver / Harness Compatibility Gate
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `TEMPORARY_NODE_RECEIVER_HANDOFF_REQUIRED`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Canonical starting state | PASS | starting HEAD `3d981153081a5bc11cd5c99a2f808745fba8b782`; Local=Tracking=Live Remote; clean tree; H01/H02/H02-F01 accepted; F11 authorization `AUTHORIZED / UNCONSUMED`; Provider requests `0` |
+| Activation before inspection | PASS | `7aa2972eb2f99bdb03cc80532e9d4705a9cb6a2b` pushed before VPS/receiver inspection |
+| Accepted local Node receiver bind/path | REVIEWED | loopback `127.0.0.1`; approved configured local port; receiver path = public F11 URL pathname |
+| Public readiness handshake | INCOMPATIBLE WITH STATIC RECEIVER | accepted harness sends two HTTPS `POST`s with readiness/confirmation headers and requires `401` plus matching `x-aimm-p1-t08-receiver` marker from the same Node receiver instance |
+| Node receiver HMAC / event validation | REQUIRED | per-run HMAC-SHA256 secret; header/body ID + event equality; profile/account/platform target validation; duplicate tracking |
+| Node controller state | REQUIRED | `snapshot()`, `waitForAnalytics(...)`, readiness counters and structured in-memory delivery evidence feed F10 observation/classification |
+| Static receiver source | REVIEWED | `/opt/marketly-r02/receiver.py` SHA `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9` |
+| Static receiver unit | REVIEWED | SHA `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`; active; boot `disabled` |
+| Static receiver behavior | NOT HARNESS-COMPATIBLE | fixed `127.0.0.1:8765`; exact path; GET/HEAD `200`; POST persists body+metadata then `204`; no readiness protocol/HMAC/target validation/dedup/controller state |
+| MarketlyAI Nginx route | PASS / unchanged | config SHA `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`; exact route proxies to `127.0.0.1:8765` |
+| Public generic root | PASS | HTTPS `/` = `404` |
+| Public exact route | PASS / non-capturing | HTTPS `HEAD /p1-t08-f11/analytics-synced` = `200` |
+| Public near-miss | PASS | `404` |
+| F11 evidence files | PASS / ZERO | fresh privileged count `0` |
+| Nginx listener topology | PASS | public TCP/80 + TCP/443 |
+| Apache listener topology | PASS | loopback-only `127.0.0.1:8080`; no public 80/443 |
+| Receiver listener topology | PASS | `127.0.0.1:8765` owned by static Python receiver |
+| Direct static receiver compatibility (Question A) | NO | cannot satisfy accepted readiness/HMAC/validation/controller semantics unchanged |
+| Node handoff required (Question B) | YES | public route must temporarily reach same per-run Node receiver instance before F10 live run can proceed |
+| Reverse-tunnel feasibility | PROVEN READ-ONLY | SSHD: `allowtcpforwarding yes`, `disableforwarding no`, `permitopen any`, `gatewayports no`; Nginx can remain unchanged while remote loopback `8765` is handed to tunnel |
+| Synthetic/readiness POST in RCV01 | ZERO | none sent; static collector would persist POST evidence |
+| Receiver/service/tunnel mutation | ZERO | no restart/reload/start/stop and no SSH tunnel created |
+| Provider/Zernio / Analytics / Delta | ZERO | all `0` |
+| Webhook / publish | ZERO | create/read/delete and publish all `0` |
+| Provider credentials loaded | NO | no live credentials used |
+| F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+
+Future handoff plan is proposal-only: capture pre-state and evidence count, preserve static receiver hashes/state, stop static receiver only if required to free VPS loopback `8765`, bind one reverse tunnel from VPS loopback `8765` to the accepted local Node receiver, prove listener ownership and readiness, allow Provider transport only after readiness PASS under separate authorization, then close tunnel and restore/reverify the static receiver with Nginx unchanged. Pre-Provider tunnel/readiness failure must deterministically roll back to the accepted static receiver and preserve evidence without deletion.
