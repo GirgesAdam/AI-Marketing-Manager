@@ -2671,3 +2671,36 @@ Starting repository HEAD = `4e52af7b304644ceee1c5a0bcc953a68c537f9c0`.
 LR01 = accepted safe pre-Provider stop; CR01 credential blocker = cleared; F11 authorization = `AUTHORIZED / UNCONSUMED`; Provider requests = `0`; published F11 posts = `0`; F11 evidence files = `0`.
 
 No credential loading, receiver service action, SSH tunnel creation, readiness POST, or Provider/Zernio request is authorized before this activation commit is pushed and live remote HEAD is verified.
+
+
+### P1-T08-F11-LR02 - authorized live retry result (2026-10-22)
+
+`P1-T08-F11-LR02 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Exact blocker stage = `RUNNER_LAUNCH_BLOCKED_BY_REMOTE_EXECUTION_SURFACE_AFTER_HANDOFF`.
+
+Activation commit = `eb47d16eed076d94c006f633017d117a7053eb1c`.
+
+Offline harness gate = PASS: focused deterministic validation `88 / 88 PASS`; typecheck PASS; build PASS; `git diff --check` PASS. No dependency installation/update/audit/fix occurred.
+
+Historical credential-source identity gate = PASS: `AI-Marketing-Manager-P1T01` exists; Git origin corresponds to `GirgesAdam/AI-Marketing-Manager`; branch context = `p1-t02-zernio-profiles`; repo-root `.env` exists and is Git-ignored. Name-only readiness evidence reported `ZERNIO_API_KEY = PRESENT / POPULATED` and `ZERNIO_EXPECTED_USER_EMAIL = PRESENT / POPULATED`. No credential value was printed, logged, persisted, fingerprinted, committed, or copied.
+
+Credential process-memory readiness = PASS before handoff: a local Node process was started using the accepted historical ignored `.env` through Node `--env-file`; boolean/name-only evidence confirmed both required values present/populated. The credential-loaded process was terminated during rollback; credential values were never emitted.
+
+Fresh infrastructure gate = PASS after credential readiness: Nginx active and owned public TCP/80+443; Apache active at loopback `127.0.0.1:8080`; static receiver active and boot `disabled` on `127.0.0.1:8765`; receiver SHA = `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`; receiver unit SHA = `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`; MarketlyAI Nginx SHA = `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`; F11 evidence files = `0`; public root `404`; exact HEAD `200`; near-miss `404`.
+
+Selected local Node receiver port = `18765`; it was proven free and was not changed.
+
+Authorized handoff attempt: accepted hashes/evidence were reconfirmed; `marketly-r02-receiver` was stopped once with boot state remaining `disabled`; VPS `127.0.0.1:8765` was proven free; exactly one loopback-only reverse tunnel was created to local `127.0.0.1:18765` with fail-fast semantics. Actual forwarding process = local `ssh.exe` PID `9512`, parent wrapper PID `6900`; local SSH socket used local port `53867` to VPS TCP/22. VPS `127.0.0.1:8765` was owned by `sshd` PID `101673`, whose established TCP/22 peer was the same local port `53867`. Nginx hash remained unchanged.
+
+Runner launch = `0`. Node receiver starts = `0`. Public readiness POSTs = `0`. The accepted runner launch command could not be executed because the Remote Desktop Commander process execution surface returned `Resource not found` after the handoff. No runner process started and no readiness request or Provider transport occurred. Per LR02 one-handoff-attempt stop rule, no second handoff/readiness attempt was made.
+
+Authorization consumption = `NO`. F11 authorization remains `AUTHORIZED / UNCONSUMED`. Provider normal requests = `0`; Provider cleanup requests = `0`; Provider total requests = `0`; `/v1/auth/verify` = `0`; Accounts = `0`; Analytics reads = `0`; Delta = `0`; webhook operations = `0`; publish attempts = `0`; posts created = `0`.
+
+Deterministic pre-Provider rollback = PASS: exact tunnel child `ssh.exe` PID `9512` was terminated directly; VPS `127.0.0.1:8765` was then proven free before restoration; static receiver was started/restored active; boot state remained `disabled`; static receiver again owns `127.0.0.1:8765`; accepted receiver/unit/Nginx hashes remained unchanged; F11 evidence files remained `0`; Nginx public TCP/80+443 and Apache loopback `127.0.0.1:8080` were preserved. Final public root = `404`; exact HEAD = `200`; near-miss = `404`. Exact tunnel process absent = YES. Credential-loaded Node process absent = YES.
+
+`P1-T08-F11 = NOT DONE`. Current LR02 blocker = `RUNNER_LAUNCH_BLOCKED_BY_REMOTE_EXECUTION_SURFACE_AFTER_HANDOFF`. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider request count remains `0`; F11 post published = `NO`.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because LR02 produced no Provider Behavior evidence. Do not retry LR02, do not rerun F11, do not republish, and do not start a successor task without Team Leader review.

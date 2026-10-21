@@ -1956,3 +1956,39 @@ Classification: `AUTHORIZED_CREDENTIAL_SOURCE_READY`.
 | F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
 
 Future ordering requirement: a separately authorized live retry must prove both required credential names are safely available to the accepted runner process **before** static receiver stop, reverse-tunnel creation, or readiness. CR01 does not clear the parent blocker or authorize credential loading, Provider calls, handoff, or F11 retry.
+
+## P1-T08-F11-LR02 - Authorized Live Retry Pre-Provider Stop
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Exact blocker stage: `RUNNER_LAUNCH_BLOCKED_BY_REMOTE_EXECUTION_SURFACE_AFTER_HANDOFF`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Canonical starting state | PASS | starting HEAD `4e52af7b304644ceee1c5a0bcc953a68c537f9c0`; Local=Tracking=Live Remote; clean tree; LR01/CR01 accepted; blocker cleared; F11 ready; authorization `AUTHORIZED / UNCONSUMED`; Provider requests `0` |
+| LR02 activation | PASS | activation commit `eb47d16eed076d94c006f633017d117a7053eb1c` pushed and live remote verified |
+| Focused deterministic validation | PASS | `88 / 88 PASS` |
+| Typecheck / build / diff check | PASS | all exit `0` |
+| Historical source identity | PASS | workspace/origin/branch matched; ignored repo-root `.env` exists |
+| Required credential names | PASS / SAFE | API key and expected-user identity = present/populated; values not exposed |
+| Process-memory readiness before handoff | PASS | accepted historical source loaded into local Node process memory only; boolean/name-only verification |
+| Fresh infrastructure gate | PASS | Nginx public 80/443; Apache loopback 8080; static receiver active/disabled on 8765; accepted hashes matched; evidence files `0`; routes `404/200/404` |
+| Selected local port | PASS | `18765`, free before handoff |
+| Static receiver stop | PASS | one authorized stop; boot remained `disabled`; VPS 8765 proven free |
+| Reverse tunnel | PASS | exactly one loopback reverse forward; actual local `ssh.exe` PID `9512`; VPS listener correlated to `sshd` PID `101673`; Nginx hash unchanged |
+| Runner launch | BLOCKED / ZERO | `0`; Desktop Commander process execution surface returned `Resource not found` after handoff |
+| Node receiver / readiness | ZERO | starts `0`; readiness POSTs `0` |
+| Provider authorization consumption | NO | first trusted Zernio request never sent; remains `AUTHORIZED / UNCONSUMED` |
+| Provider requests | ZERO | normal `0`; cleanup `0`; total `0`; `/v1/auth/verify` `0` |
+| Analytics / Delta | ZERO | `0 / 0` |
+| Webhook / publish | ZERO | webhook operations `0`; publish attempts `0`; posts created `0` |
+| Exact tunnel cleanup | PASS | exact `ssh.exe` PID `9512` terminated directly; remote 8765 proven free before static restoration; no second tunnel/handoff attempt |
+| Credential-memory cleanup | PASS | credential-loaded Node process terminated; no values persisted/copied |
+| Static receiver restoration | PASS | active; boot disabled; Python receiver owns `127.0.0.1:8765` |
+| Final hashes/evidence | PASS | receiver/unit/Nginx unchanged; evidence files `0` |
+| Final public routes | PASS | root `404`; exact HEAD `200`; near-miss `404` |
+| Config/source/package mutation | ZERO | no Nginx/Apache/sshd/DNS/TLS/firewall/source/test/package changes |
+
+No Provider Behavior evidence was generated, so `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged. LR02 permits no second handoff/readiness attempt after this pre-Provider failed attempt. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 remains `NOT DONE`; authorization remains `AUTHORIZED / UNCONSUMED`.
