@@ -3294,3 +3294,30 @@ Safety boundary remained intact: real Provider/Zernio calls = `0`; real `/v1/aut
 OBS01 does **not** self-clear the parent blocker. Pending Team Leader review, canonical parent state remains `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; Current blocker = `F10_PROVIDER_REQUEST_TIMESTAMP_OBSERVABILITY_GAP`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider request count remains `0`; F11 post published = `NO`; P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because OBS01 tested no Provider Behavior. STOP after documentation commit/push and evidence handoff; do not clear the parent blocker, access credentials, contact Zernio, touch VPS/receiver/tunnel/readiness, run F11, or start a successor task.
+
+
+### P1-T08-F11-OBS01-CLOSEOUT-01 - Team Leader documentation-only closeout (2026-10-22)
+
+`P1-T08-F11-OBS01 = DONE / ACCEPTED`.
+
+Team Leader disposition = `ACCEPTED`.
+
+Accepted evidence HEAD = `df6787b9ba7bfdf76946fffcc7f88e8acd68d9ba`.
+
+Accepted classification = `F10_PROVIDER_REQUEST_TIMESTAMP_OBSERVABILITY_READY`.
+
+Accepted implementation evidence: request-attempt timestamp is captured before the corresponding `transport.send(...)`; deterministic `requestAttemptNow` is narrowly scoped and separate from existing `now()` semantics; successful attempts retain timestamp/status/requestId; thrown transport attempts retain exactly one timestamped evidence item with `status = null` and `requestId = null`; pre-transport ceiling rejection creates no fake attempt evidence; normal, cleanup, cleanup-only post, post-reconcile cleanup, and webhook-reconcile cleanup paths expose the required request evidence without added Provider calls or count/ceiling drift.
+
+Accepted verification evidence: focused F10/T08 suite = `97 / 97 PASS`; typecheck = `PASS`; build = `PASS`; full suite = `427 / 427 PASS`; `git diff --check = PASS`; Provider/Zernio calls during OBS01 = `0`; credentials accessed = `NO`; historical `.env` access = `NO`; F11 authorization consumed = `NO`.
+
+Current blocker `F10_PROVIDER_REQUEST_TIMESTAMP_OBSERVABILITY_GAP` = `CLEARED BY ACCEPTED P1-T08-F11-OBS01`.
+
+Canonical parent state after this documentation closeout: `P1-T08-F11 = NOT DONE / READY FOR SEPARATELY AUTHORIZED LIVE RETRY`.
+
+Canonical state preserved: F11 authorization = `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`; Provider request count = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`.
+
+This closeout does **NOT** itself authorize or start an F11 live retry. Any future live retry requires a separate explicit authorization/task contract and must follow the accepted live-gate ordering and safety controls already recorded in `PROGRESS.md`.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source, tests, config, package files, and all `.env` files remain unchanged. No Provider/Zernio, credential, VPS, receiver, SSH tunnel, readiness, publish, or live-runner action is authorized or performed by this closeout.
+
+STOP after commit/push and evidence handoff. Do not start F11 live retry or any successor task automatically.
