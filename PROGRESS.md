@@ -55,7 +55,7 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`
+Current Task = `P1-T10 — Verify Zernio Organic Comments with Controlled Test Fixture`
 
 P1-T09 = **DONE / ACCEPTED**
 
@@ -4196,3 +4196,28 @@ Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION
 Next-gate requirement only: a future separately reviewed task may determine whether acquiring a non-empty Analytics fixture is necessary, safe, cost-bounded, possible without contaminating Provider Behavior evidence, and preferable to advancing another still-pending Commercial V1 Provider capability. This closeout authorizes no fixture creation, publishing, engagement generation, sync-external, Delta, derived signals, or another account/Brand.
 
 Closeout safety boundary: Provider requests `0`; credentials accessed `0`; Analytics calls `0`; Delta `0`; publish `0`; webhook mutations `0`; sync triggers `0`; source/test changes `0`; infrastructure `0`.
+
+
+## P1-T10 — Verify Zernio Organic Comments with Controlled Test Fixture
+
+**Status: ACTIVATED**
+
+Activation date: `2026-10-22`.
+
+Starting HEAD: `6c83c33bf9364fb756fb60051e383afafc6432e9`.
+
+Branch: `p1-t10-zernio-organic-comments`.
+
+Current Phase = `PHASE 1 — Provider Feasibility & Basic Cost Safety`.
+
+Current Task = `P1-T10 — Verify Zernio Organic Comments with Controlled Test Fixture`.
+
+P1-T10 = **ACTIVATED**.
+
+Frozen target: Profile `6ac5a45a8e4ca44f355033ae`; Facebook account `6ac64f8740364f4695dd3077`; Page `1387424501114639`; platform `facebook`.
+
+Frozen content hashes: post `db58ab9f9a09803d402dfe975d204baaeec1f9dc828c0f3c541833a84fc03113`; top-level comment `2baf5c756fce2a8fc451157dee621ce647fbacc8e9377140cc6e886e1e61178f`; reply `318838b2be22a8d8bd10f6ef2e72132f33bf22a944e8531fdcc23a838bc44f3b`.
+
+Initial counters: Provider GETs `0`; Provider mutations `0`; posts created `0`; comments created `0`; replies created `0`; likes `0`; DMs `0`; webhooks `0`.
+
+Current Zernio documentation confirms the Organic Comments create/read/reply/delete contract needed for the controlled Facebook fixture. No Provider mutation has occurred at activation.
