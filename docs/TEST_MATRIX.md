@@ -2187,3 +2187,42 @@ Classification: `SINGLE_DISPATCH_EXECUTION_CONTROL_READY`.
 | F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
 
 Classification A threshold is satisfied: all 3 independent single dispatches started and passed; offline runner behavior was correct in every required use; exact child lifecycle passed; long-running read-only supervision passed; `interact_with_process=0`; residue `0`; safety boundary intact. EC01 does not self-clear the parent blocker and does not authorize F11 live.
+
+
+## P1-T08-F11-LR05 - Single-Dispatch + Child-Env Authorized One-Run Live Retry
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Exact blocker stage: `REQUIRED_PROVIDER_REQUEST_TIMESTAMP_EVIDENCE_UNAVAILABLE_IN_ACCEPTED_F10_HARNESS`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Canonical start | PASS | starting HEAD `a175577827e448ed1798ff079c555e3fab4edc46`; Local=Tracking=Live Remote; clean tree; EC01 accepted; F11 ready for separately authorized retry; authorization unconsumed; Provider `0` |
+| LR05 activation | PASS | activation commit `7ec4a04dbab8517ba48349236e5974b17265baf6` pushed before historical credential access/infra/readiness/Provider |
+| Fresh device rediscovery | PASS | authorized machine `DESKTOP-RL942A5`; current run-scoped device identity rediscovered immediately before primary dispatch |
+| Primary dispatch | STARTED | exactly `1`; PID `16944`; initial `Resource not found=NO`; no second primary dispatch |
+| Interactive dependency | ZERO | `interact_with_process=0`; later command/input injection `0` |
+| Read-only supervision | PASS | explicit process-output retrieval count `1` |
+| Local canonical gate | PASS | activation HEAD; clean tree; Node `v24.21.0`; repo `.env` absent; parent Zernio env names absent |
+| Offline F10 | PASS | `liveEnabled=false`; `result=BLOCKED`; `errorCategory=LIVE_OPT_IN_REQUIRED`; `providerCalls=0`; exit `2` |
+| Focused deterministic tests | PASS | `88 / 88 PASS` |
+| Typecheck | PASS | `npm run typecheck -- --pretty false` |
+| Build | PASS | `npm run build -- --pretty false` |
+| Diff check | PASS | `git diff --check` |
+| Accepted request-evidence schema | BLOCKER | `P1T08F10RequestEvidence` has phase/method/path/status/requestId but no request timestamp |
+| Accepted request evidence append | BLOCKER | accepted `requests.push(...)` records no request timestamp |
+| LR05 required per-request timestamp evidence | UNSATISFIED | contract requires timestamp for every Provider HTTP request; unchanged accepted harness cannot produce it without forbidden source/harness modification |
+| Historical credential `.env` | ZERO | access `NO`; metadata gate not started |
+| Credential delivery | ZERO | not started; credentials loaded `NO`; values exposed `NO` |
+| Infrastructure | ZERO | gate not started; receiver stops `0`; tunnels `0`; VPS actions `0`; public readiness `0` |
+| Live runner | ZERO | child launches `0` |
+| Provider/Zernio | ZERO | first trusted request `0`; `/v1/auth/verify=0`; normal `0`; cleanup `0`; total `0` |
+| Analytics/Delta/webhook/publish | ZERO | all `0`; posts created `0` |
+| Authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+| Cleanup recovery dispatch | ZERO | not required because no local/infra/Provider live artifacts were created |
+| Temporary orchestration cleanup | PASS | script self-deleted; primary process residue `0` |
+| Source/test/package mutation | ZERO | no source/test/package/dependency mutation; working tree clean before result documentation |
+
+LR05 stopped before Provider because its evidence contract requires an actual timestamp for every Provider HTTP request while the accepted unchanged F10 request-evidence contract does not record one. Executing the one-run Provider experiment anyway would consume authorization without satisfying required evidence, and modifying the harness is forbidden in LR05. No Provider Behavior evidence was generated, so `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 remains `NOT DONE / BLOCKED PRE_PROVIDER`; authorization remains `AUTHORIZED / UNCONSUMED`.
