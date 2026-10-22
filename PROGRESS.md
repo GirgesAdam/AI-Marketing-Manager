@@ -4004,3 +4004,15 @@ Bounded plan state: (1) safe receiver infrastructure = `COMPLETED`; (2) Provider
 Next gate requirement only: a separately authorized task may perform exactly one `P1-T08-F11-DIAG01 — Existing-Evidence Provider Diagnostic / Cross-Check`. It must create no post, create no experimental webhook, repeat no F11 live experiment, use no new human live authorization, and use only existing IDs/timestamps/request IDs/event evidence plus bounded Provider-side diagnostic evidence if necessary. It may determine whether existing Provider logs/evidence explain the early event and whether any later fixture-relevant sync occurred; otherwise it must conclude using the already registered documented-contract fallback. This closeout does **NOT** authorize DIAG01 execution.
 
 Closeout safety boundary: Provider/Zernio `0`; credentials `0`; Analytics/Delta `0`; publish `0`; webhook mutations `0`; VPS/lifecycle `0`; tunnel `0`. Documentation only. STOP after commit/push and Git verification; do not start DIAG01 or another P1 task.
+
+### P1-T08-F11-DIAG01 — Final existing-evidence Provider diagnostic activation (2026-10-22)
+
+`P1-T08-F11-DIAG01 = ACTIVATED — FINAL EXISTING-EVIDENCE PROVIDER DIAGNOSTIC`.
+
+Starting HEAD = `a4ec2e0f9d517c9bcbc6b16938dc97ac60a288b0`. Canonical start = PASS: Local = Tracking = Live Remote; working tree clean; LIVE01 closeout accepted; `P1-T08-F11 = DONE / ACCEPTED — EVENT OBSERVED, DATA-BEARING CORRELATION INCOMPLETE`; Analytics Webhook = `EVENT OBSERVED / DATA-BEARING CORRELATION INCOMPLETE — DIAGNOSTIC PENDING`; diagnostic round = `AVAILABLE / NOT STARTED` before this activation.
+
+Authorization state at activation: original F11 authorization = `CONSUMED`; live experiments remaining = `0`; posts authorized = `0`; webhook mutations authorized = `0`. DIAG01 grants only the bounded read-only diagnostic GETs defined by its Task Contract and does not create, renew, or reinterpret F11 live authorization.
+
+Diagnostic request ceiling: preferred `3`; hard maximum `4`; cleanup requests `0`; mutation requests `0`; diagnostic requests sent at activation = `0`.
+
+Activation safety boundary: Provider/Zernio requests `0`; credentials accessed `0`; publish `0`; webhook mutation `0`; Analytics/Delta `0`; receiver/VPS/tunnel lifecycle `0`. Commit/push and verify Live Remote before any diagnostic Provider GET.
