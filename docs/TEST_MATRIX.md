@@ -2672,3 +2672,41 @@ Observation-timestamp note: configured maximum window was `7200000ms`, but the v
 Operational note: a pre-existing stale read-only SSH child (`PID 11320`) was terminated locally before lifecycle work; the exact stop command's local SSH wrapper remained alive after the remote stop had completed and was terminated locally without retrying the stop; one post-tunnel read-only SSH check also hung and was terminated, after which `ssh -n` bounded checks exited cleanly. No extra receiver lifecycle action, tunnel, Provider request, publish, or VPS mutation resulted from these local process cleanups.
 
 LIVE01 is not self-accepted. P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; no diagnostic successor was started.
+
+## P1-T08-F11-LIVE01-CLOSEOUT-01 — Team Leader Acceptance (2026-10-22)
+
+Disposition: `ACCEPTED WITH NON-BLOCKING NOTES`
+
+| Acceptance item | Evidence | Result |
+| --- | --- | --- |
+| Accepted evidence HEAD | `6825311ee3346fedd6a86a302be77994bf7ba634` | ACCEPTED |
+| Activation | `bc8fb398eb37b11893c26080a51a79bfdc8cc694` | ACCEPTED |
+| LIVE01 status | `DONE / ACCEPTED WITH NON-BLOCKING NOTES` | ACCEPTED |
+| Provider Behavior classification | `EVENT_OBSERVED_CORRELATION_INCOMPLETE` | ACCEPTED |
+| Identity + exact target | identity PASS; frozen Profile/account/Page/platform attested | PASS |
+| Baseline Analytics | HTTP `200`; `overview.lastSync=2026-10-14T23:41:28.723Z` | OBSERVED |
+| Webhook create/readback | exactly one `analytics.synced` webhook; exact scope readback attested | PASS |
+| Publish behavior | exactly one publish request; ambiguous transport response; no retry; one exact authorized post reconciled | PASS |
+| Provider post | resource `6ada4024232859193e49217c`; platform `1387424501114639_122110895709502015`; createdAt `2026-10-22T16:56:11.713Z`; duplicate false | OBSERVED |
+| Valid logical event | exactly `1`; HMAC/ID/event/target PASS; facebook; duplicate/foreign/wrong-platform/unconfirmed/unexpected all false; response `204` | PASS |
+| Event timing | event `2026-10-22T16:56:04.998Z`; sync `2026-10-22T16:56:04.981Z`; postsUpdated `0`; received `2026-10-22T16:56:11.524Z` | OBSERVED |
+| Follow-up Analytics | HTTP `200`; access true; lastSync `2026-10-22T16:56:04.981Z`; rows `0`; `postIds=[]`; F11 post absent | OBSERVED |
+| Sync-signal interpretation | Analytics lastSync equals event sync.syncedAt; sync signal proven, fixture incorporation not proven | ACCEPTED |
+| Correlation rationale | sync/event precede Provider post createdAt; postsUpdated 0; follow-up contains no post; no direct fixture-incorporation evidence | ACCEPTED |
+| Verified classification rejected | `DATA_BEARING_ANALYTICS_SYNCED_VERIFIED` not established | PASS |
+| Observation-window limitation | two-hour max configured, but wait returned immediately on already-present valid event; no full two-hour post-fixture observation | ACCEPTED / NON-BLOCKING |
+| Authorization | consumed `2026-10-22T16:56:02.968Z` at `GET /v1/auth/verify`; no retry authorization | FINAL |
+| Additional live execution | second LIVE01 / second F11 publish / recreation = NOT AUTHORIZED | PASS |
+| Request accounting | normal `9`; cleanup `4`; total `13`; all accepted ceilings met | PASS |
+| Webhook cleanup | exact removal readback-confirmed | PASS |
+| Post cleanup | resource `6ada4024232859193e49217c` unpublished exactly once; readback no longer published | PASS |
+| Unrelated cleanup | no unrelated resource deleted | PASS |
+| Lifecycle accounting | stop `1`; start `1`; restart `0`; tunnel create `1`; terminate `1`; residue `0` | PASS |
+| Final infrastructure | active/running; boot disabled; `127.0.0.1:8765`; verifier PASS; hashes unchanged; `VALID_EMPTY / 0`; routes restored; Elite `200`; residue `0` | PASS |
+| SSH operational note | future Windows SSH observation wrappers require stdin-detached invocation, explicit timeout, deterministic owned-child cleanup | ACCEPTED / NON-BLOCKING |
+| P1-T08-F11 state | `DONE / ACCEPTED — EVENT OBSERVED, DATA-BEARING CORRELATION INCOMPLETE` | FINAL |
+| P1-T08 state | `UNRESOLVED / NOT DONE` | PRESERVED |
+| Analytics Webhook state | `EVENT OBSERVED / DATA-BEARING CORRELATION INCOMPLETE — DIAGNOSTIC PENDING` | FINAL |
+| Current blocker/question | `DATA_BEARING_ANALYTICS_SYNC_CORRELATION_NOT_ESTABLISHED` | OPEN |
+| Diagnostic round | `AVAILABLE / NOT STARTED`; closeout does not authorize DIAG01 | PRESERVED |
+| Closeout safety | Provider/Zernio `0`; credentials `0`; Analytics/Delta `0`; publish `0`; webhook mutation `0`; VPS/lifecycle `0`; tunnel `0` | PASS |

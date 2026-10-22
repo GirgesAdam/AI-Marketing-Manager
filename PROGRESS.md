@@ -3970,3 +3970,37 @@ Operational notes for Team Leader review: one pre-existing stale read-only SSH o
 Local ephemeral orchestration cleanup = PASS: LIVE01 parent script, credential-transport child script, and safe temporary result artifact were deleted after evidence was transferred into canonical docs; local artifact residue `0`.
 
 Authorization state = `CONSUMED`. `P1-T08-F11` remains **NOT DONE pending Team Leader review**; no second LIVE01 attempt or publish is authorized. Parent P1-T08 remains `UNRESOLVED / NOT DONE`. Analytics Webhook remains `SPIKE_PENDING` pending Team Leader/provider-result disposition. No diagnostic/cross-check successor was started.
+
+### P1-T08-F11-LIVE01-CLOSEOUT-01 — Documentation-only Team Leader acceptance closeout (2026-10-22)
+
+`P1-T08-F11-LIVE01 = DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
+
+Team Leader disposition = `ACCEPTED WITH NON-BLOCKING NOTES`. Accepted evidence HEAD = `6825311ee3346fedd6a86a302be77994bf7ba634`; activation commit = `bc8fb398eb37b11893c26080a51a79bfdc8cc694`. Accepted Provider Behavior classification = `EVENT_OBSERVED_CORRELATION_INCOMPLETE`.
+
+Accepted observed Provider Behavior: identity verification succeeded; exact frozen Profile/account/Page/platform attestation succeeded; baseline Analytics returned HTTP `200` with `overview.lastSync=2026-10-14T23:41:28.723Z`; exactly one `analytics.synced` webhook was created and exact readback attested; exactly one publish request was sent; the publish transport response was ambiguous; no publish retry occurred; bounded reconciliation found exactly one matching authorized post. Provider post resource = `6ada4024232859193e49217c`; platform post ID = `1387424501114639_122110895709502015`; Provider-returned `createdAt=2026-10-22T16:56:11.713Z`; duplicate confirmed = `false`.
+
+Accepted webhook evidence: exactly one valid logical `analytics.synced` event was observed. HMAC PASS; header/body ID PASS; header/event PASS; exact target PASS; platform `facebook`; duplicate `false`; foreign target `false`; wrong platform `false`; target unconfirmed `false`; unexpected event `false`; receiver response `204`. Event timestamp = `2026-10-22T16:56:04.998Z`; `sync.syncedAt=2026-10-22T16:56:04.981Z`; `sync.postsUpdated=0`; receiver `receivedAt=2026-10-22T16:56:11.524Z`.
+
+Accepted Analytics evidence: follow-up Analytics HTTP `200`; `hasAnalyticsAccess=true`; `overview.lastSync=2026-10-22T16:56:04.981Z`; usable rows `0`; `postIds=[]`; F11 experiment post not visible. The observed `overview.lastSync` equals the event's `sync.syncedAt`, proving an Analytics sync signal occurred. It does **not** prove the F11 post was incorporated into that sync.
+
+Accepted correlation finding: `DATA_BEARING_ANALYTICS_SYNCED_VERIFIED` is NOT established because `sync.syncedAt` precedes Provider-returned post `createdAt`; event timestamp precedes Provider-returned post `createdAt`; `sync.postsUpdated=0`; follow-up Analytics contains no experiment post; and no direct evidence ties the observed sync to incorporation of the F11 fixture. Therefore `EVENT_OBSERVED_CORRELATION_INCOMPLETE` is the accepted classification. No causal claim is made.
+
+Non-blocking observation-window limitation: configured observation maximum was two hours, but accepted `waitForAnalytics()` returned immediately because a valid event was already present in receiver state when post-observation waiting began. The observed event therefore did not establish a new post-fixture sync event, and LIVE01 does not provide a full two-hour post-fixture observation. This does not invalidate the observed webhook event, does not change the classification, does not authorize another live experiment, and must be considered when interpreting Provider suitability. No unpersisted observation start/end timestamps are invented.
+
+Authorization is permanently `CONSUMED`. Consumption occurred at `2026-10-22T16:56:02.968Z` on the first trusted Provider send `GET /v1/auth/verify`. Second LIVE01 = `NOT AUTHORIZED`; second F11 publish = `NOT AUTHORIZED`; recreation of the live experiment = `NOT AUTHORIZED`; no retry authorization remains.
+
+Accepted request accounting: normal `9`; cleanup `4`; total `13`. Preferred normal `<=9`, hard normal `<=10`, cleanup `<=4`, and absolute `<=14` were all met.
+
+Cleanup acceptance = PASS. Exact experiment webhook removal was readback-confirmed. Exact reconciled post `6ada4024232859193e49217c` was unpublished exactly once and cleanup readback confirmed it was no longer published. No unrelated resource was deleted.
+
+Infrastructure restoration acceptance = PASS: receiver stop `1`; receiver start `1`; restart `0`; tunnel created `1`; tunnel terminated `1`; residue `0`. Final static receiver `active/running`; boot `disabled`; listener `127.0.0.1:8765`; verifier PASS; accepted hashes unchanged; evidence `VALID_EMPTY / 0`; accepted routes restored; Elite `200`; Node/tunnel/local-port/LIVE01 residue `0`.
+
+Non-blocking operational note: read-only Windows SSH observation wrappers demonstrated avoidable hanging behavior. Future orchestration must use stdin-detached SSH invocation from first dispatch, explicit process timeout, and deterministic owned-child cleanup. LIVE01 exact lifecycle/provider counts were unaffected. This is operational tooling evidence, not Provider Behavior.
+
+Canonical state after closeout: `P1-T08-F11 = DONE / ACCEPTED — EVENT OBSERVED, DATA-BEARING CORRELATION INCOMPLETE`; `P1-T08 = UNRESOLVED / NOT DONE`; Analytics Webhook = `EVENT OBSERVED / DATA-BEARING CORRELATION INCOMPLETE — DIAGNOSTIC PENDING`; current blocker/question = `DATA_BEARING_ANALYTICS_SYNC_CORRELATION_NOT_ESTABLISHED`. The old VPS blocker is not restored.
+
+Bounded plan state: (1) safe receiver infrastructure = `COMPLETED`; (2) Provider-free rehearsal = `COMPLETED`; (3) one authorized F11 live experiment = `COMPLETED`; (4) one final diagnostic/cross-check round = `AVAILABLE / NOT STARTED`; (5) no additional live experiment is permitted.
+
+Next gate requirement only: a separately authorized task may perform exactly one `P1-T08-F11-DIAG01 — Existing-Evidence Provider Diagnostic / Cross-Check`. It must create no post, create no experimental webhook, repeat no F11 live experiment, use no new human live authorization, and use only existing IDs/timestamps/request IDs/event evidence plus bounded Provider-side diagnostic evidence if necessary. It may determine whether existing Provider logs/evidence explain the early event and whether any later fixture-relevant sync occurred; otherwise it must conclude using the already registered documented-contract fallback. This closeout does **NOT** authorize DIAG01 execution.
+
+Closeout safety boundary: Provider/Zernio `0`; credentials `0`; Analytics/Delta `0`; publish `0`; webhook mutations `0`; VPS/lifecycle `0`; tunnel `0`. Documentation only. STOP after commit/push and Git verification; do not start DIAG01 or another P1 task.
