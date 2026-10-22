@@ -2265,3 +2265,40 @@ Classification: `F10_PROVIDER_REQUEST_TIMESTAMP_OBSERVABILITY_READY`.
 | F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
 
 OBS01 adds timestamp observability only to the accepted provider-spike harness. It does not change F11 experiment behavior, request ceilings, idempotency/publish semantics, or production telemetry architecture. `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested. Parent blocker remains `F10_PROVIDER_REQUEST_TIMESTAMP_OBSERVABILITY_GAP` pending Team Leader review.
+
+
+## P1-T08-F11-LR06 - Timestamp-Complete Single-Dispatch Authorized One-Run Live Retry
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Exact blocker stage: `VPS_NONINTERACTIVE_PRIVILEGE_UNAVAILABLE_AT_LR06_INFRASTRUCTURE_GATE`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Canonical start / activation | PASS | starting HEAD `ec75b6cf64b1cef9b31dd40bbe615f75f64c1493`; activation HEAD `bd7dfa452522897b401e3ae97e20a010769954cf`; activation pushed before live side effects |
+| Fresh device rediscovery | PASS | current authorized machine `DESKTOP-RL942A5` rediscovered immediately before primary dispatch |
+| Primary dispatch | PASS / bounded | exactly `1`; PID `18024`; second primary dispatch `0`; `interact_with_process=0`; later injection `0`; read-only process-output retrieval `1`; exit `0` |
+| Orchestration residue | PASS | ephemeral non-secret script self-deleted; Temp search LR06 matches `0` |
+| Local canonical gate | PASS | activation HEAD; clean tree; Node `v24.21.0`; repo `.env` absent; parent Zernio credential env names absent |
+| Offline F10 | PASS | `liveEnabled=false`; `result=BLOCKED`; `errorCategory=LIVE_OPT_IN_REQUIRED`; `providerCalls=0`; exit `2` |
+| Focused deterministic tests | PASS | `97 / 97` |
+| Typecheck | PASS | `npm run typecheck -- --pretty false` |
+| Build | PASS | `npm run build -- --pretty false` |
+| Diff check | PASS | `git diff --check` |
+| Timestamp evidence gate | PASS | accepted phase/method/path/timestamp/status/requestId contract retained; attempt timestamp before send; thrown attempt retained; ordinal = array order + 1 |
+| Historical credential source | PASS / metadata only | `AI-Marketing-Manager-P1T01`; branch `p1-t02-zernio-profiles`; expected origin; `.env` exists + Git-ignored; values not read/copied/fingerprinted; parent credential-free |
+| Child credential delivery | NOT STARTED | no live runner child launched |
+| VPS privilege gate | BLOCKER | `sudo -n true` returned `sudo: a password is required`; no interactive/password bypass attempted |
+| Infrastructure state gate | NOT COMPLETED | stopped before privileged hash/listener/evidence verification; no mutation |
+| Receiver handoff | ZERO | receiver service actions `0`; local port not selected; tunnel `0` |
+| Readiness | ZERO | POSTs `0`; live runner `0` |
+| Provider/Zernio | ZERO | first trusted request `0`; `/v1/auth/verify=0`; normal `0`; cleanup `0`; total `0` |
+| Analytics/Delta/webhook/publish | ZERO | all `0`; posts created `0`; F11 post published `NO` |
+| Authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+| Infrastructure rollback | NOT REQUIRED | no infrastructure mutation began |
+| Cleanup-recovery dispatch | ZERO | `0` |
+| Provider Behavior results doc | UNCHANGED | no real Provider attempt occurred |
+
+LR06 stopped safely before Provider transport because the single-dispatch orchestration could not obtain the non-interactive privileged VPS access required to complete the accepted infrastructure gate. This does not establish any Provider/Zernio behavior. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 remains `NOT DONE / BLOCKED PRE_PROVIDER`; authorization remains `AUTHORIZED / UNCONSUMED`.
