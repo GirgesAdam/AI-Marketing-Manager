@@ -2610,3 +2610,65 @@ Authorization semantics accepted: the original single F11 live authorization rem
 Next gate requirement only: a separately issued task may execute the already-authorized single F11 data-bearing live experiment using the accepted preflight -> handoff -> readiness -> first trusted Provider request -> bounded Provider sequence -> evidence/cleanup -> restoration -> final verification ordering. Future orchestration must use deterministic Windows process signaling and explicit timeout/cleanup for every read-only SSH observation child. This closeout does not authorize execution.
 
 Bounded Provider plan remains unchanged: safe receiver infrastructure completed; Provider-free rehearsal completed/accepted; one authorized F11 live experiment next; at most one diagnostic/cross-check round if needed; then STOP Provider probing absent genuinely new evidence and explicit authorization.
+
+
+## P1-T08-F11-LIVE01 - Single Authorized Data-Bearing Provider Experiment (2026-10-22)
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`
+
+Provider Behavior classification: `EVENT_OBSERVED_CORRELATION_INCOMPLETE`
+
+| Gate / check | Evidence | Result |
+| --- | --- | --- |
+| Canonical start | HEAD `d8a13e9d7f24cd818d92c90a7b5cf8a5e4cc5897`; clean; Local=Tracking=Live Remote; RHR01 accepted; blocker NONE; F11 ready; auth unconsumed | PASS |
+| Activation | commit `bc8fb398eb37b11893c26080a51a79bfdc8cc694` pushed before Provider activity | PASS |
+| Fresh machine | `DESKTOP-RL942A5` | PASS |
+| Focused F10/F11 | `69 / 69 PASS` | PASS |
+| Full regression | `npm test` = `433 / 433 PASS` | PASS |
+| Typecheck / build / diff | PASS / PASS / `git diff --check=0` | PASS |
+| Frozen content | exact text SHA `66eec48e7935b5356e13f67f817018a1f2fc678863680b67303b2b26ea8f5dac` | PASS |
+| Frozen target | Profile `6ac5a45a8e4ca44f355033ae`; account `6ac64f8740364f4695dd3077`; Page `1387424501114639`; `facebook` | PASS |
+| Credential parent isolation | parent API key absent; parent expected-email absent; historical `.env` content not read/copied | PASS |
+| Preflight verifier | PASS; receiver/unit hashes accepted; `VALID_EMPTY / 0` | PASS |
+| Preflight runtime/routes | active/running; boot disabled; `127.0.0.1:8765`; local exact 200; root 404; public exact 200; near-miss 404; Elite 200 | PASS |
+| Static stop | exactly one remote stop; inactive/dead; MainPID 0; receiver absent; VPS 8765 free | PASS |
+| Reverse tunnel | exactly one owned PID `9148`; loopback-only VPS 8765 -> local 62269; ExitOnForwardFailure; ControlMaster=no | PASS |
+| Node receiver | owned PID `7220`; loopback `62269`; exact F11 path/frozen target; generated run secret/tag | PASS |
+| Readiness | HTTP 401; TLS true; marker match true; confirmation true; no redirect; pre-Provider deliveries 0 | PASS |
+| Final pre-Provider gate | `2026-10-22T16:56:02.910Z`; HEAD/clean/tunnel/static-stop/hash/target/provider0/auth-unconsumed all valid | PASS |
+| Credential child | launched after readiness via accepted `node --env-file=<historical path>`; Boolean credential presence only; parent remained credential-free | PASS |
+| First attempt evidence | `2026-10-22T16:56:02.968Z`; `GET /v1/auth/verify` | PASS |
+| Authorization consumption | `CONSUMED` at first trusted transport send `2026-10-22T16:56:02.968Z` | PASS |
+| Identity | Provider identity verified against accepted expected identity inside credential child; parent received sanitized Boolean-equivalent identity result | PASS |
+| Exact target attestation | Profile/account/Page/platform exact; page name `Clothing Brand` | PASS |
+| Baseline Analytics | HTTP 200; access true; rows 0; target absent; lastSync `2026-10-14T23:41:28.723Z` | PASS |
+| Webhook create/readback | exactly one create; HTTP 200; exact `analytics.synced` + URL + Profile readback attested | PASS |
+| Publish attempts | exactly one `POST /v1/posts`; transport outcome ambiguous; no retry | PASS |
+| Publish reconciliation | one exact matching authorized post found; content/target attested; duplicate false | PASS |
+| Platform post | `1387424501114639_122110895709502015`; Provider-returned createdAt `2026-10-22T16:56:11.713Z` | OBSERVED |
+| Valid webhook event | 1 valid / 1 logical unique; HMAC + ID/event + target/platform all PASS; response 204 | PASS |
+| Event timing | event `2026-10-22T16:56:04.998Z`; sync `2026-10-22T16:56:04.981Z`; received `2026-10-22T16:56:11.524Z`; postsUpdated 0 | OBSERVED |
+| Rejected/foreign/unexpected | foreign 0; wrong platform 0; target-unconfirmed 0; unexpected 0; duplicate 0 | PASS |
+| Follow-up Analytics | HTTP 200; access true; lastSync `2026-10-22T16:56:04.981Z`; rows 0; target post absent | OBSERVED |
+| Delta | no Delta read | PASS |
+| Classification | valid event observed but fixture/event/Analytics correlation insufficient | `EVENT_OBSERVED_CORRELATION_INCOMPLETE` |
+| Normal Provider requests | `9` | PASS (`<=9` preferred, `<=10` hard) |
+| Cleanup Provider requests | `4` | PASS (`<=4`) |
+| Total Provider requests | `13` | PASS (`<=14`) |
+| Webhook cleanup | exact experiment webhook deleted; cleanup readback confirmed | PASS |
+| Post cleanup | exact reconciled post `6ada4024232859193e49217c` unpublished; cleanup readback confirmed | PASS |
+| Node shutdown | Windows console `CTRL_C_EVENT`; `LIVE01_CLOSED`; Node absent; local port free | PASS |
+| Tunnel shutdown | exact PID `9148` terminated; absent; VPS 8765 free | PASS |
+| Static restore | exactly one start; active/running; boot disabled; restart 0 | PASS |
+| Final verifier | PASS; accepted hashes unchanged; evidence `VALID_EMPTY / 0` | PASS |
+| Final routes | local exact 200; root 404; public exact 200; near-miss 404; Elite 200 | PASS |
+| Final residue | Node 0; tunnel 0; local port 0; LIVE01 process residue 0 | PASS |
+| Local ephemeral artifacts | parent script 0; transport-child script 0; temporary result artifact 0 | PASS |
+| Ads / media / links / hashtags / manufactured engagement | all `0` | PASS |
+| Authorization final | `CONSUMED`; no live retry authorized | PASS |
+
+Observation-timestamp note: configured maximum window was `7200000ms`, but the valid event was already in the receiver snapshot by the time the F10 observation wait became active after publish reconciliation. The accepted F10 result does not persist separate observation-start/end fields. Exact timestamps are therefore not invented; evidence bounds are the publish-reconciliation request at `2026-10-22T16:56:11.623Z`, event receivedAt `2026-10-22T16:56:11.524Z`, and follow-up Analytics request at `2026-10-22T16:56:11.923Z`.
+
+Operational note: a pre-existing stale read-only SSH child (`PID 11320`) was terminated locally before lifecycle work; the exact stop command's local SSH wrapper remained alive after the remote stop had completed and was terminated locally without retrying the stop; one post-tunnel read-only SSH check also hung and was terminated, after which `ssh -n` bounded checks exited cleanly. No extra receiver lifecycle action, tunnel, Provider request, publish, or VPS mutation resulted from these local process cleanups.
+
+LIVE01 is not self-accepted. P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; no diagnostic successor was started.

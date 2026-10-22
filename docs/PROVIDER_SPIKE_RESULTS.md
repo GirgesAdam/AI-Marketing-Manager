@@ -2349,3 +2349,82 @@ Owner-confirmed hostname intent remains planning/ownership intent only; it does 
 - Cutover: BLOCKED.
 - F11: UNCONSUMED / BLOCKED PRE-PROVIDER; one-run authorization AUTHORIZED / UNCONSUMED.
 - Next Task: NOT_STARTED.
+
+
+### P1-T08-F11-LIVE01 — Data-Bearing `analytics.synced` Provider Behavior Experiment (2026-10-22)
+
+Status: **EXECUTED / AWAITING TEAM LEADER REVIEW**.
+
+Final Provider Behavior classification: **`EVENT_OBSERVED_CORRELATION_INCOMPLETE`**.
+
+This was the single authorized F11 live experiment. Authorization was consumed at the first trusted Zernio HTTP transport send and no second live attempt was made.
+
+#### Observed Provider behavior
+
+- Identity verification succeeded on the accepted `/v1/auth/verify` path. Exact expected identity comparison occurred inside the credential-bearing child; no email/credential value was exposed to the parent or docs.
+- Exact target attestation succeeded for Profile `6ac5a45a8e4ca44f355033ae`, Facebook account `6ac64f8740364f4695dd3077`, Page `1387424501114639` / `Clothing Brand`, platform `facebook`.
+- Baseline Analytics returned HTTP `200`, `hasAnalyticsAccess=true`, usable post rows `0`, target post absent, and `overview.lastSync=2026-10-14T23:41:28.723Z`.
+- Exactly one experiment webhook create request was sent for event `analytics.synced`, the exact F11 HTTPS route, and exact Profile scope. Create returned HTTP `200`; subsequent readback attested exact name/URL/event/Profile scope and active state. Successful cleanup later cleared the resource from the accepted result, so the webhook resource ID is not retained after cleanup.
+- Exactly one `POST /v1/posts` publish attempt was sent with approved text SHA `66eec48e7935b5356e13f67f817018a1f2fc678863680b67303b2b26ea8f5dac`, text-only Facebook target, no media/link/hashtag/Ads. The publish transport response was ambiguous (`status` and Provider request ID not observed) and no second publish request was sent.
+- Bounded publish reconciliation returned exactly one post matching approved text and frozen target. No duplicate was confirmed. Provider-returned platform post ID was `1387424501114639_122110895709502015`; Provider-returned post `createdAt` was `2026-10-22T16:56:11.713Z`.
+- Exactly one valid `analytics.synced` webhook delivery was accepted. HMAC verification, header/body ID match, header/event match, exact Profile/account/platform validation all passed. Event was non-duplicate, response status `204`, and no foreign-target, wrong-platform, target-unconfirmed, or unexpected-event condition was observed.
+- Observed event timestamp = `2026-10-22T16:56:04.998Z`; `sync.syncedAt=2026-10-22T16:56:04.981Z`; `sync.postsUpdated=0`; receiver `receivedAt=2026-10-22T16:56:11.524Z`. The payload shape exposed `account`, `event`, `id`, `profiles`, `sync`, `timestamp`; no `metrics` or cursor field was observed.
+- Follow-up Analytics returned HTTP `200`, `hasAnalyticsAccess=true`, usable post rows `0`, target post absent, and `overview.lastSync=2026-10-22T16:56:04.981Z`. This `lastSync` equals the webhook event's `sync.syncedAt` value.
+- No Delta request was performed.
+- Exact experiment webhook cleanup succeeded and was readback-confirmed.
+- The exact reconciled Provider post resource `6ada4024232859193e49217c` was unpublished once and cleanup readback confirmed it was no longer published.
+
+#### Correlation interpretation
+
+Observed evidence proves that Zernio delivered a correctly signed, exact-target `analytics.synced` event during the controlled F11 run and that Analytics `overview.lastSync` advanced to the event's `sync.syncedAt` value. It does **not** prove that the data-bearing F11 post caused or was included in that sync.
+
+The correlation is insufficient because:
+
+- the event `sync.syncedAt` (`16:56:04.981Z`) and event timestamp (`16:56:04.998Z`) precede the Provider-returned post `createdAt` (`16:56:11.713Z`);
+- the event reported `sync.postsUpdated=0`;
+- follow-up Analytics contained zero usable post rows and did not contain the experiment post;
+- the accepted result therefore cannot tie the observed event to reflection of the data-bearing fixture.
+
+Accordingly, `DATA_BEARING_ANALYTICS_SYNCED_VERIFIED` is **not** established. The defensible registered classification is **`EVENT_OBSERVED_CORRELATION_INCOMPLETE`**.
+
+This interpretation is deliberately narrower than a causal claim. The observed event/lastSync agreement is a signal that an Analytics sync occurred, not proof that the F11 post was incorporated into that sync.
+
+#### Request evidence
+
+First request-attempt evidence timestamp: `2026-10-22T16:56:02.968Z`.
+
+Authorization consumption timestamp: `2026-10-22T16:56:02.968Z` at the first trusted transport send (`GET /v1/auth/verify`). Final authorization state: `CONSUMED`.
+
+| # | Phase | Method / bounded path | Attempt timestamp | HTTP status | Provider request ID |
+| ---: | --- | --- | --- | ---: | --- |
+| 1 | normal | `GET /v1/auth/verify` | `2026-10-22T16:56:02.968Z` | 200 | `1ed64dc6-1a65-4c39-b5ba-09106d0c51e1` |
+| 2 | normal | `GET /v1/accounts` | `2026-10-22T16:56:03.489Z` | 200 | `c4846cc0-9b66-4861-a9a6-13177cd4c532` |
+| 3 | normal | `GET /v1/accounts/6ac64f8740364f4695dd3077/facebook-page` | `2026-10-22T16:56:03.668Z` | 200 | `d834376d-13ae-489f-9dc6-f294368c7675` |
+| 4 | normal | `GET /v1/analytics` | `2026-10-22T16:56:03.819Z` | 200 | `71499d18-882c-4b9a-a7ce-ae20a3596e44` |
+| 5 | normal | `POST /v1/webhooks/settings` | `2026-10-22T16:56:04.205Z` | 200 | `154ab8db-30af-41ed-9f10-791d4335c585` |
+| 6 | normal | `GET /v1/webhooks/settings` | `2026-10-22T16:56:04.409Z` | 200 | `3fb609b5-5b4f-496e-8ee9-067336f60fb4` |
+| 7 | normal | `POST /v1/posts` | `2026-10-22T16:56:04.614Z` | unknown | not observed |
+| 8 | normal | `GET /v1/posts` reconciliation | `2026-10-22T16:56:11.623Z` | 200 | `b64cb951-5544-47ea-b6d4-02fed6220f72` |
+| 9 | normal | `GET /v1/analytics` follow-up | `2026-10-22T16:56:11.923Z` | 200 | `7662d6a0-ab4f-40d7-b93c-405f836e0706` |
+| 10 | cleanup | `DELETE /v1/webhooks/settings` | `2026-10-22T16:56:12.398Z` | 200 | `c8f9dbc3-ba3f-4103-8dab-3ab4723957cb` |
+| 11 | cleanup | `GET /v1/webhooks/settings` | `2026-10-22T16:56:12.601Z` | 200 | `b98a45b0-7793-4855-8cb3-17074a6d1f88` |
+| 12 | cleanup | `POST /v1/posts/6ada4024232859193e49217c/unpublish` | `2026-10-22T16:56:12.806Z` | 200 | `7a60d661-2713-4b2f-944a-dcfa55db809c` |
+| 13 | cleanup | `GET /v1/posts/6ada4024232859193e49217c` | `2026-10-22T16:56:18.133Z` | 200 | `77ef5841-719b-46a8-baff-2fc7c61b383a` |
+
+Normal requests = `9`; cleanup requests = `4`; total requests = `13`. Preferred normal target `<=9`, hard experiment ceiling `10`, cleanup allowance `<=4`, and absolute total ceiling `14` were all respected.
+
+#### Local delivery / infrastructure evidence
+
+The public receiver readiness gate passed before credential delivery and before Provider transport: TLS success, exact route marker match, confirmation PASS, no redirect, and zero analytics deliveries before Provider sequence. The Node receiver accepted one valid event and counted readiness separately (`1/1`).
+
+Infrastructure restoration after Provider cleanup succeeded: owned Node closed by deterministic Windows `CTRL_C_EVENT`; local port free; exact reverse tunnel terminated; VPS `8765` proven free; static receiver started once; final service active/running with boot disabled and loopback listener; verifier PASS with accepted receiver/unit hashes; evidence directory `VALID_EMPTY / 0`; final local/public/near-miss/Elite routes restored. These are infrastructure observations, not Provider Behavior claims.
+
+#### Observation timing limitation
+
+The run configured a maximum observation window of `7200000ms`. The valid event was already present in the receiver snapshot when the post-publish observation wait became active, so the wait returned immediately rather than consuming the two-hour maximum. The accepted F10 result does not persist separate observation-start/end fields. Exact start/end timestamps are therefore not invented. The evidence bounds are: event receivedAt `2026-10-22T16:56:11.524Z`, publish reconciliation request at `2026-10-22T16:56:11.623Z`, and follow-up Analytics request at `2026-10-22T16:56:11.923Z`.
+
+#### Documentation-based expectation versus observed result
+
+The F11 task registered several possible result classes, including verified data-bearing sync, event-not-observed, fixture-not-reflected, incomplete correlation, and technical blocker. The experiment produced the incomplete-correlation case. No new Provider capability is inferred beyond the observations above.
+
+No assumption is recorded as a Provider Fact. No diagnostic/cross-check successor was started.
