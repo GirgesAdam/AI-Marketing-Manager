@@ -49,13 +49,13 @@ Closed definitions include:
 
 Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
-Parent Product Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
+Parent Product Task = `P1-T09 — Verify Existing Data-Bearing Historical Analytics Fixture`
 
 Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
+Current Task = `P1-T09 — Verify Existing Data-Bearing Historical Analytics Fixture`
 
 P1-T08-F11-F09-R02 = **CLOSED / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -4104,3 +4104,25 @@ Permanent P1-T08 probing cutoff: no second F11, no second diagnostic, no expande
 Closeout safety boundary: Provider requests `0`; credentials `0`; publish `0`; webhook mutation `0`; Analytics/Delta `0`; sync triggers `0`; VPS/lifecycle `0`; tunnel `0`; source/runtime changes `0`.
 
 No next Phase/Task is invented or started. Next-task selection remains subject to Team Leader review of `MASTER_IMPLEMENTATION_PLAN.md` and canonical `PROGRESS.md`.
+
+## P1-T09 — Verify Existing Data-Bearing Historical Analytics Fixture
+
+**Status: ACTIVATED**
+
+Activation date: `2026-10-22`.
+
+Starting HEAD: `7fe83fc8aec8fbb700fb21f35daba011feb8534b`.
+
+Branch: `p1-t09-zernio-historical-analytics`.
+
+Current Phase = `PHASE 1 — Provider Feasibility & Basic Cost Safety`.
+
+Current Task = `P1-T09 — Verify Existing Data-Bearing Historical Analytics Fixture`.
+
+P1-T08 remains historical completed work: `DONE / ACCEPTED WITH PROVIDER LIMITATION`; Analytics Webhook remains `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`; P1-T08 Provider probing remains `CLOSED`; F11 authorization remains permanently `CONSUMED`.
+
+Frozen target: Profile `6ac5a45a8e4ca44f355033ae`; Facebook account `6ac64f8740364f4695dd3077`; Page `1387424501114639`; platform `facebook`.
+
+Initial counters before Provider execution: Provider GETs `0`; Provider mutations `0`; Analytics writes/triggers `0`; publish `0`; webhook mutations `0`; Delta `0`.
+
+P1-T09 scope is minimal read-only Historical Analytics Provider Behavior verification only. No successor task is started.
