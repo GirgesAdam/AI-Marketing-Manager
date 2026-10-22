@@ -3171,3 +3171,10 @@ Mandatory future execution pattern for any separately authorized F11 live task: 
 Safety boundary for this closeout: process probes = `0`; historical credential access = `NO`; credentials loaded = `NO`; Provider/Zernio = `0`; `/v1/auth/verify = 0`; Analytics/webhook/publish = `0`; F10 live = `0`; public HTTP = `0`; VPS = `0`; receiver = `0`; SSH tunnel = `0`; readiness = `0`; infrastructure mutation = `0`; source/test/package mutation = `0`; F11 authorization consumed = `NO`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not repeat EC01, run an orchestration probe, access credentials, touch historical `.env`, launch F10 live, contact Zernio, touch VPS/receiver/tunnel, perform readiness, start F11 retry, or start another task.
+
+
+### P1-T08-F11-LR05 - authorized single-dispatch live retry activation (2026-10-22)
+
+`P1-T08-F11-LR05 = ACTIVATED — AUTHORIZED SINGLE-DISPATCH LIVE RETRY`.
+
+Activation boundary: credentials not accessed; Provider/Zernio = `0`; infrastructure untouched; F11 authorization remains `AUTHORIZED / UNCONSUMED` until the first trusted Zernio Provider request is actually sent.
