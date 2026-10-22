@@ -2520,3 +2520,50 @@ Non-blocking note: the POSIX FIFO/special-entry verifier test was skipped on the
 Next gate requirement only: one separately authorized Provider-free receiver handoff rehearsal may later prove static receiver -> exact stop -> inactive/8765-free -> reverse SSH tunnel -> local Node receiver -> public readiness -> close tunnel -> exact static receiver start -> verifier/post-state checks. That future rehearsal requires Provider/Zernio `0`, credentials `0`, posts `0`, and F11 authorization consumption `NO`; this closeout does not authorize it.
 
 Closeout safety counters: VPS commands `0`; sudo commands `0`; sudoers mutation `0`; systemd actions `0`; receiver lifecycle `0`; verifier changes `0`; tunnels `0`; readiness `0`; credentials `0`; Provider/Zernio `0`; F11 consumed `NO`.
+
+
+## P1-T08-F11-RHR01 — One Controlled Provider-Free Receiver Handoff Rehearsal (2026-10-22)
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`
+
+Classification: `PROVIDER_FREE_RECEIVER_HANDOFF_REHEARSAL_VERIFIED`
+
+| Gate | Evidence | Result |
+| --- | --- | --- |
+| Canonical start | HEAD `a09f74b09b07b0abb8da862fb7978f10cd27e6e1`; Local=Tracking=Live Remote; clean; LPI01 accepted; D-041 Accepted | PASS |
+| Activation | `bcd88fb6944708d59500c8d836f516e91c30db5b` pushed before operational work | PASS |
+| Minimal runner/test commit | `498aa4e73a80bbe47cedcec232a929b86177a9a0` | PASS |
+| Execution machine | Fresh discovery `DESKTOP-RL942A5` | PASS |
+| Selected local port | `62509`; loopback; >=1024; OS-selected; free after selection and immediately before receiver bind | PASS |
+| Credential absence | parent `ZERNIO_API_KEY` absent; `ZERNIO_EXPECTED_USER_EMAIL` absent; no `--env-file`; no historical `.env` read | PASS |
+| Runner boundary | `src/provider-spike/p1-t08-f11-rehearsal-runner.ts`; SHA `597cb236727771af571c4cf2412c86bb94fd78866b44650c321bf8d1b8cbb868`; receiver-helper import only; fixed host/URL; no Provider API path | PASS |
+| Focused tests | RHR01 runner tests `6 / 6 PASS` | PASS |
+| Full regression | `npm test` = `433 / 433 PASS` | PASS |
+| Typecheck | `npm run typecheck` | PASS |
+| Build | `npm run build` | PASS |
+| Pre-lifecycle diff check | `git diff --check` | PASS |
+| Pre-state verifier | noninteractive verifier exit `0`; result PASS; receiver/unit hashes accepted; `VALID_EMPTY / 0` | PASS |
+| Pre-state runtime | service active/running; boot disabled; `127.0.0.1:8765`; local exact `200` | PASS |
+| Pre-state public routes | root `404`; exact `200`; near-miss `404`; Elite `200` | PASS |
+| Exact stop | `sudo -n /usr/bin/systemctl stop marketly-r02-receiver.service`; attempt `1`; exit `0` | PASS |
+| Post-stop | inactive/dead; MainPID `0`; receiver process absent; VPS 8765 free | PASS |
+| Reverse tunnel | exactly one; local `ssh.exe` PID `5260`; VPS `127.0.0.1:8765 -> local 127.0.0.1:62509`; ExitOnForwardFailure; no ControlMaster | PASS |
+| Tunnel exposure | VPS listener only `127.0.0.1:8765`; no wildcard/public 8765 listener | PASS |
+| Node receiver | PID `17484`; listener `127.0.0.1:62509`; exact runner command; no `--env-file`; child count `0` | PASS |
+| Readiness | fixed public F11 route; HTTP `401`; TLS true; marker match true; confirmed true; redirected false; deliveries `[]`; readiness hits/confirmed `1/1` | PASS |
+| Active-handoff public state | root `404`; near-miss `404`; Elite `200`; exact route marker correlation reached Node; plain exact HEAD `404` under POST-only Node receiver | PASS |
+| No-Provider gate | auth verify `0`; Analytics `0`; Delta `0`; Provider webhook mutation `0`; publish `0`; posts `0`; credentials `0`; Provider/Zernio `0` | PASS |
+| Node graceful shutdown | owned Windows console CTRL_C_EVENT; runner emitted `RHR01_CLOSED` reason `signal`; Node absent; local port free | PASS |
+| Tunnel teardown | exact PID `5260` terminated; process absent; VPS 8765 free | PASS |
+| Teardown note | two owned read-only SSH listener-check children hung and were terminated locally; no reverse-forward args, VPS mutation, extra tunnel, or lifecycle action | NON-BLOCKING |
+| Exact start | `sudo -n /usr/bin/systemctl start marketly-r02-receiver.service`; attempt `1`; exit `0` | PASS |
+| Final runtime | active/running; boot disabled; static receiver PID `121611`; `127.0.0.1:8765`; Node/tunnel/local-port residue `0` | PASS |
+| Final verifier | PASS / exit `0`; accepted hashes unchanged; evidence `VALID_EMPTY / 0` | PASS |
+| Final routes | local exact `200`; public root `404`; public exact `200`; near-miss `404`; Elite `200` | PASS |
+| Lifecycle counters | stop `1`; start `1`; restart `0` | PASS |
+| Tunnel counters | created `1`; terminated `1`; residue `0` | PASS |
+| Provider counters | credentials `0`; Provider/Zernio `0`; publish `0`; posts `0`; authorization consumed `NO` | PASS |
+| Parent blocker | `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN` intentionally preserved pending Team Leader review | PRESERVED |
+| Provider results doc | `docs/PROVIDER_SPIKE_RESULTS.md` unchanged; no Provider Behavior tested | PASS |
+
+RHR01 validates only the controlled infrastructure handoff/restoration sequence. Readiness traffic is infrastructure test traffic, not a real Zernio webhook. Parent remains `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider requests `0`; post `NO`; P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`.

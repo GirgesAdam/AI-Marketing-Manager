@@ -3832,3 +3832,50 @@ Initial counters: receiver stop `0`; receiver start `0`; receiver restart `0`; t
 Parent state at activation: `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; blocker = `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN`; F11 authorization = `AUTHORIZED / UNCONSUMED`; Provider requests = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`.
 
 Activation authorizes only the bounded RHR01 Provider-free rehearsal contract. `p1-t08-f10-runner --live`, Provider/Zernio requests, Provider credentials, F11 publishing, Analytics/Delta, Provider webhook mutation, restart, blind lifecycle retries, and any successor task remain prohibited.
+
+
+### P1-T08-F11-RHR01 — One controlled Provider-free receiver handoff rehearsal result (2026-10-22)
+
+`P1-T08-F11-RHR01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `PROVIDER_FREE_RECEIVER_HANDOFF_REHEARSAL_VERIFIED`.
+
+Starting HEAD = `a09f74b09b07b0abb8da862fb7978f10cd27e6e1`. Activation commit = `bcd88fb6944708d59500c8d836f516e91c30db5b`. Minimal rehearsal-runner/test commit = `498aa4e73a80bbe47cedcec232a929b86177a9a0`.
+
+Fresh execution machine discovery = `DESKTOP-RL942A5`. Selected local loopback port = `62509`; it was OS-selected in the non-privileged range and proven free after selection and again immediately before the Node receiver bind.
+
+Credential-free gate = PASS: parent environment `ZERNIO_API_KEY` absent; `ZERNIO_EXPECTED_USER_EMAIL` absent; rehearsal runner accepts only `--listen-port`; no `--env-file`; no `.env` loading; historical credential source was not opened; no credential value was inspected or passed to the child.
+
+No existing equally safe receiver-only entrypoint existed: historical P1-T08/F07/F10 runners import Provider execution modules and/or load `.env`. Added `src/provider-spike/p1-t08-f11-rehearsal-runner.ts` only for RHR01; SHA-256 = `597cb236727771af571c4cf2412c86bb94fd78866b44650c321bf8d1b8cbb868`. It imports only the local receiver helper, fixes host to `127.0.0.1`, fixes public route to `https://marketlyai.restartorg.com/p1-t08-f11/analytics-synced`, accepts only the local listen port, contains no Provider execution import/API path, and has signal cleanup plus a bounded five-minute watchdog.
+
+Pre-lifecycle validation = PASS: focused rehearsal-runner suite `6 / 6 PASS`; full `npm test` = `433 / 433 PASS`; `npm run typecheck` = PASS; `npm run build` = PASS; pre-lifecycle `git diff --check` = PASS.
+
+VPS pre-state = PASS: noninteractive fixed verifier exit `0`, `result=PASS`; receiver SHA `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`; unit SHA `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`; evidence `VALID_EMPTY / 0`; service `active/running`; boot `disabled`; static receiver listening on `127.0.0.1:8765`; local exact route `200`; public root `404`; public exact route `200`; public near-miss `404`; Elite HEAD `200`.
+
+Exact stop command = `sudo -n /usr/bin/systemctl stop marketly-r02-receiver.service`; attempt count `1`; exit `0`. Post-stop proof = `ActiveState=inactive`, `SubState=dead`, `MainPID=0`, no `receiver.py` process, and VPS `127.0.0.1:8765` free. No restart and no stop retry occurred.
+
+Exactly one reverse SSH tunnel was created: local owned `ssh.exe` PID `5260`; mapping VPS `127.0.0.1:8765 -> execution-machine 127.0.0.1:62509`; `ExitOnForwardFailure=yes`; `ControlMaster=no`; command ownership matched the exact mapping. VPS listener proof during handoff showed only `127.0.0.1:8765`, with no public/wildcard 8765 bind.
+
+Provider-free Node rehearsal receiver started once from `dist/provider-spike/p1-t08-f11-rehearsal-runner.js`; Node PID `17484`; local listener `127.0.0.1:62509`; command line matched the RHR01 runner; `--env-file` absent; child-process count `0`.
+
+Accepted public readiness handshake = PASS through the fixed MarketlyAI F11 HTTPS route. Readiness evidence: HTTP `401`, TLS success, readiness-marker match = true, confirmation = true, no redirect, errorCategory = null; receiver snapshot had readinessHits `1`, readinessConfirmedHits `1`, deliveries `[]`, and zero analytics deliveries. This was infrastructure readiness traffic only and is not represented as a Zernio webhook.
+
+While Node + tunnel were active: public root remained `404`; public near-miss remained `404`; Elite remained `200`; VPS `8765` remained loopback-only. Exact-route reachability to the Node receiver was proven by the correlated two-step readiness marker. A plain HEAD to the exact route returned `404` during the Node handoff because the Node receiver intentionally handles only exact POST readiness/event traffic; this is not static-receiver route status and is not Provider Behavior evidence.
+
+No-Provider gate before restoration = PASS: `/v1/auth/verify` `0`; Analytics `0`; Delta `0`; Provider webhook mutations `0`; publish attempts `0`; posts created `0`; credentials loaded `0`; Provider/Zernio requests `0`. F11 authorization remained `AUTHORIZED / UNCONSUMED` and consumed = `NO`.
+
+Controlled teardown = PASS. The first raw Ctrl-C byte sent to stdin did not signal the Windows Node process and produced no state change. A Windows console `CTRL_C_EVENT` was then sent only to the owned Node console; the runner emitted `RHR01_CLOSED` with reason `signal`, Node PID `17484` exited, and local port `62509` became free. This is the platform-specific SIGINT-equivalent graceful shutdown evidence. No unknown process was signaled.
+
+The exact owned reverse-tunnel PID `5260` was then terminated; tunnel process absence was verified; VPS `127.0.0.1:8765` was proven free before restoration. Two owned read-only SSH listener-check children that had hung independently of the tunnel were terminated locally; they had no reverse-forward arguments and caused no VPS mutation, extra tunnel, or lifecycle action.
+
+Exact restore command = `sudo -n /usr/bin/systemctl start marketly-r02-receiver.service`; attempt count `1`; exit `0`. No restart and no start retry occurred.
+
+Restoration verification = PASS: service `active/running`; boot `disabled`; static receiver PID `121611`; listener restored at `127.0.0.1:8765`; no Node residue; no tunnel residue; local rehearsal port residue `0`. Final fixed verifier = PASS / exit `0`; accepted receiver/unit hashes unchanged; final evidence = `VALID_EMPTY / 0`.
+
+Final routes = PASS: local exact static receiver `200`; public root `404`; public exact F11 route `200`; public near-miss `404`; Elite `200`. No Nginx/Apache configuration mutation occurred.
+
+Successful rehearsal lifecycle counters: receiver stop `1`; receiver start `1`; receiver restart `0`; tunnel created `1`; tunnel terminated `1`; tunnel residue `0`; readiness handshake `1`; credentials `0`; Provider/Zernio `0`; `/v1/auth/verify` `0`; Analytics `0`; Delta `0`; Provider webhook mutation `0`; publish `0`; posts `0`; F11 authorization consumed `NO`.
+
+Parent state is intentionally NOT self-cleared before Team Leader review: `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; blocker remains `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN`; F11 authorization = `AUTHORIZED / UNCONSUMED`; Provider requests = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because RHR01 tested no Provider Behavior. `DECISIONS.md` and `PROVIDER_CAPABILITIES.md` remain unchanged. STOP after documentation commit/push and final Git verification; do not execute F11 or start a successor task.
