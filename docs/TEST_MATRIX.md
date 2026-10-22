@@ -2891,3 +2891,58 @@ The empty dataset does **not** satisfy non-empty Historical Analytics verificati
 Historical Analytics remains `SPIKE_PENDING`. P1-T08 remains closed and no Phase 2 or successor task is started.
 
 Closeout execution is documentation-only: Provider requests `0`; credentials `0`; Analytics/Delta `0`; publish `0`; webhook mutations `0`; sync triggers `0`; source/test changes `0`; infrastructure `0`.
+
+## P1-T10 — Controlled Organic Comments Provider Behavior
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+### Offline safety gates
+
+| Gate | Result |
+|---|---|
+| Focused P1-T10 suite | PASS — `27 / 27` |
+| Full `npm test` | PASS — `487 / 487`, 20 files |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| `git diff --check` | PASS |
+| Default live mode | OFF / zero Provider calls |
+| Frozen Profile/account/Page/content hashes | PASS |
+| One post/comment/reply maximum | PASS |
+| No caller-selected post/comment ID | PASS |
+| Ambiguous write blind retry | BLOCKED by regression coverage |
+| Likes / private reply / DM / Ads comments / webhook mutation | NOT CALLABLE by P1-T10 runner |
+| Cleanup target ownership | exact run-owned IDs only |
+| Request ceilings | normal 12 / cleanup 5 / absolute 17 enforced before N+1 transport |
+| Unrelated comment/author PII persistence | BLOCKED by safe projection regression |
+| Secret / expected identity persistence | BLOCKED by regression coverage |
+
+### Live Provider evidence
+
+| # | Operation | HTTP | Provider request ID | Accepted evidence |
+|---:|---|---:|---|---|
+| 1 | trusted identity | 200 | `00979d56-3671-45c0-9be0-067d2d58e83b` | exact trusted identity PASS |
+| 2 | Profile/account ownership | 200 | `a2df8ea8-2ad1-44f0-896b-f20a5bd6c792` | exact account + Profile + Facebook PASS |
+| 3 | Facebook Page ownership | 200 | `f4f586ee-a1e8-43df-b19b-7cbb0cf09d5b` | exact Page selected/available PASS |
+| 4 | account health | 200 | `d0a7e3e8-5ebe-480f-a4c8-254880711efe` | healthy, token valid, canPost=true |
+| 5 | temporary post create | 201 | `576ab75f-834d-4870-b591-bf4f95b7b9ff` | one create; Provider post `6ada5bc404775bbecc763501` |
+| 6 | post read-back | 200 | `5da5af2b-c948-47bb-8f18-c353146ecb36` | exact Page/account/platform/content attested; platform post `1387424501114639_122110940457502015` |
+| 7 | top-level comment create | 200 | `4f608e89-e400-4a18-bd83-ad84b86e2a36` | one create; comment `122110940457502015_1097949062827339` |
+| 8 | comment thread read | 200 | `05b496ef-5d6b-431a-afc7-9a0367b915f6` | one exact controlled comment; owner/from-self=true; duplicate=false |
+| 9 | organic Inbox list | 200 | `f6158d4b-9f53-4006-8d39-51521e21e9c6` | fixture visible once; cache=`VISIBLE`; ad flag not exposed |
+| 10 | controlled reply create | 200 | `384e12e8-aa1a-4316-9c15-9924111eaed2` | one exact reply; ID `122110940457502015_944970255025536` |
+| 11 | reply thread read | 200 | `50394aee-c840-4fd9-8e0b-a9e73a2cefb4` | one exact reply under exact parent; duplicate=false |
+| 12 | reply delete | 200 | `b5302bc3-e116-430e-8644-5d7fe4d72502` | exact owned reply cleanup attempt succeeded |
+| 13 | parent comment delete | 200 | `514b630a-afa6-46ec-ad7f-a3e0ce299f6d` | exact owned parent cleanup attempt succeeded |
+| 14 | thread cleanup verify | 200 | `1202cc83-fc60-4986-bf6a-d297f9d30647` | controlled parent/reply absent in bounded result |
+| 15 | temporary post unpublish | 500 | not exposed | cleanup attempt failed; no blind retry |
+| 16 | post cleanup verify | 200 | `368f3e3f-efcd-4b27-ae99-809812cd3a8b` | exact owned post still published |
+
+Classification: **`ORGANIC_COMMENTS_CREATE_READ_REPLY_VERIFIED`**.
+
+Recommendation: `Organic Comments → SPIKE_PASS — AWAITING TEAM LEADER REVIEW`; canonical capability remains `SPIKE_PENDING` until Team Leader acceptance.
+
+Cleanup status: comments/reply cleaned; temporary post cleanup **not completed**. Residual exact owned post: `6ada5bc404775bbecc763501` / `1387424501114639_122110940457502015`. Cleanup budget `5 / 5` exhausted; no second unpublish attempt.
+
+Safety totals: normal `11 / 12`; cleanup `5 / 5`; absolute `16 / 17`; Provider mutation attempts `6`; publish attempts `1`; posts proven `1`; comments created/proven `1`; replies created/proven `1`; Likes `0`; DMs `0`; Ads `0`; private replies `0`; webhook mutations `0`; unrelated-resource mutations `0`; PII leakage `0`; automatic retries `0`; secret exposure `0`.
+
+Future system integration coverage is still required for production ownership routing, tenant/brand authorization, durable state, worker/idempotency behavior, policy/emergency controls, and user-facing Community workflows. P1-T10 is Provider Behavior evidence only.

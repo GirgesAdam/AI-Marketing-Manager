@@ -2649,3 +2649,49 @@ Historical Analytics remains `SPIKE_PENDING`; no `SPIKE_PASS` promotion is made 
 P1-T08 remains closed; F11 correlation is not reopened; historical F11 identifiers were not selected as the fixture; D-042 and the accepted Analytics webhook conclusion remain unchanged.
 
 Closeout itself performed Provider requests `0`, credential access `0`, Analytics calls `0`, Delta `0`, publish `0`, webhook mutation `0`, sync trigger `0`, source/test changes `0`, and infrastructure actions `0`.
+
+## P1-T10 — Controlled Organic Facebook Comments Create → Read → Reply
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `ORGANIC_COMMENTS_CREATE_READ_REPLY_VERIFIED`.
+
+Recommendation: `Organic Comments → SPIKE_PASS — AWAITING TEAM LEADER REVIEW`; canonical `PROVIDER_CAPABILITIES.md` remains `SPIKE_PENDING` pending Team Leader acceptance.
+
+### Current documented contract used
+
+Before live mutation, current Zernio documentation supported the exact organic Facebook flow used by the spike: `POST /v1/inbox/comments/{postId}` with required `accountId` + `message` and optional `commentId` (omitted for the top-level controlled comment; exact owned comment ID supplied for the reply); bounded `GET /v1/inbox/comments`; thread read `GET /v1/inbox/comments/{postId}` including exact `commentId` for replies; and owned comment/reply deletion by exact `accountId` + `commentId`. No `metaads` or Ads comments endpoint was used.
+
+### Observed Provider Behavior
+
+- Trusted identity PASS — HTTP `200`, request `00979d56-3671-45c0-9be0-067d2d58e83b`.
+- Exact Profile/account ownership PASS — HTTP `200`, request `a2df8ea8-2ad1-44f0-896b-f20a5bd6c792`.
+- Exact Facebook Page ownership PASS — HTTP `200`, request `f4f586ee-a1e8-43df-b19b-7cbb0cf09d5b`.
+- Account health/canPost PASS — HTTP `200`, request `d0a7e3e8-5ebe-480f-a4c8-254880711efe`; health healthy; token valid; canPost=true. No recognized comment-specific permission boolean was exposed in the safe projection.
+- One exact temporary post was created — HTTP `201`, request `576ab75f-834d-4870-b591-bf4f95b7b9ff`; Provider ID `6ada5bc404775bbecc763501`; platform ID `1387424501114639_122110940457502015`. Exact target/Page/platform/content read-back then returned HTTP `200`, request `5da5af2b-c948-47bb-8f18-c353146ecb36`.
+- One exact top-level controlled comment was created — HTTP `200`, request `4f608e89-e400-4a18-bd83-ad84b86e2a36`; stable comment ID `122110940457502015_1097949062827339`.
+- Thread read returned HTTP `200`, request `05b496ef-5d6b-431a-afc7-9a0367b915f6`; exactly one matching controlled comment, Facebook scope, owner/from-self=true, duplicate=false.
+- Organic Inbox list returned HTTP `200`, request `f6158d4b-9f53-4006-8d39-51521e21e9c6`; the exact controlled fixture was visible once (`cacheObservation=VISIBLE`). The safe row did not expose an ad flag, so no `isAd=false` claim is made.
+- One exact controlled reply was created — HTTP `200`, request `384e12e8-aa1a-4316-9c15-9924111eaed2`; stable reply ID `122110940457502015_944970255025536`.
+- Reply/thread read returned HTTP `200`, request `50394aee-c840-4fd9-8e0b-a9e73a2cefb4`; exactly one matching controlled reply under the exact controlled parent, Facebook scope, duplicate=false.
+- No second post/comment/reply write occurred and no automatic retry occurred.
+
+### Cleanup / Residual Resource
+
+- Reply delete: HTTP `200`, request `b5302bc3-e116-430e-8644-5d7fe4d72502`.
+- Parent comment delete: HTTP `200`, request `514b630a-afa6-46ec-ad7f-a3e0ce299f6d`.
+- Bounded thread verification: HTTP `200`, request `1202cc83-fc60-4986-bf6a-d297f9d30647`; controlled parent/reply absent from the thread result.
+- Post unpublish attempt: HTTP `500`; Provider did not expose a request ID.
+- Exact post read-back after failed unpublish: HTTP `200`, request `368f3e3f-efcd-4b27-ae99-809812cd3a8b`; post remained published.
+
+Cleanup is incomplete but precisely bounded. Remaining owned synthetic resource: Provider post `6ada5bc404775bbecc763501`, platform post `1387424501114639_122110940457502015`. Its ownership/target/content were proven. Cleanup allowance was exhausted at `5 / 5`; no blind repeated unpublish/delete was attempted.
+
+### Safety / Limits
+
+Normal requests `11 / 12`; cleanup requests `5 / 5`; absolute requests `16 / 17`. The preferred normal target `<=10` was exceeded by one but the hard ceiling was not. Provider mutation attempts `6` including cleanup. Publish attempts `1`; controlled comments created/proven `1`; controlled replies created/proven `1`; Likes `0`; DMs `0`; Ads `0`; private replies `0`; webhook mutations `0`; unrelated-resource mutations `0`; PII leakage `0`; secret exposure `0`.
+
+Only the frozen synthetic fixture content and its stable owned IDs are retained. No unrelated comment/author content is retained.
+
+### Remaining limitation
+
+P1-T10 proves controlled Organic Facebook comment create/read/reply behavior on the frozen internal test target. It does not prove Likes, private replies, DMs, Ads comments, automation behavior, or general production Community architecture. Cleanup of the temporary post was not completed because the one authorized unpublish attempt returned HTTP `500` and the bounded post read-back showed it still published. That cleanup limitation is visible to Team Leader review and is not hidden by the capability recommendation.

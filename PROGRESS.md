@@ -57,6 +57,12 @@ Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ES
 
 Current Task = `P1-T10 — Verify Zernio Organic Comments with Controlled Test Fixture`
 
+P1-T10 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+
+Organic Comments = `SPIKE_PENDING`
+
+P1-T10 recommendation = `Organic Comments → SPIKE_PASS — AWAITING TEAM LEADER REVIEW`
+
 P1-T09 = **DONE / ACCEPTED**
 
 Historical Analytics = `SPIKE_PENDING`
@@ -4221,3 +4227,43 @@ Frozen content hashes: post `db58ab9f9a09803d402dfe975d204baaeec1f9dc828c0f3c541
 Initial counters: Provider GETs `0`; Provider mutations `0`; posts created `0`; comments created `0`; replies created `0`; likes `0`; DMs `0`; webhooks `0`.
 
 Current Zernio documentation confirms the Organic Comments create/read/reply/delete contract needed for the controlled Facebook fixture. No Provider mutation has occurred at activation.
+
+## P1-T10 execution result — Controlled Organic Comments Fixture (2026-10-22)
+
+`P1-T10 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Activation commit = `f8c5c363e6896ab1bc823e21f018bb6d48d2d23f`.
+
+Implementation/test checkpoint = `2e26ba83e5e4447f32f36442cfc2ba7949be1991`.
+
+Current Zernio documentation was checked before implementation/live mutation and supports the controlled Facebook contract used here: top-level/reply write via `POST /v1/inbox/comments/{postId}` with exact `accountId` + `message` and optional `commentId`; bounded list/thread reads; and owned comment/reply deletion with exact `accountId` + `commentId`. No Ads-comment path was used.
+
+Offline validation before Provider mutation: focused P1-T10 `27 / 27 PASS`; full suite `487 / 487 PASS` across `20` files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+Trusted identity, exact Profile/account ownership, exact selected Facebook Page, and account health/canPost all passed before mutation. Health response did not expose a recognized comment-specific capability flag (`commentCapability=NOT_EXPOSED`); actual controlled create/read/reply behavior below is the Provider Behavior evidence.
+
+Controlled fixture result:
+- temporary post create: HTTP `201`, request `576ab75f-834d-4870-b591-bf4f95b7b9ff`; Provider post `6ada5bc404775bbecc763501`; Facebook platform post `1387424501114639_122110940457502015`;
+- exact post read-back: HTTP `200`, request `5da5af2b-c948-47bb-8f18-c353146ecb36`; exact target/Page/platform/content attested;
+- top-level controlled comment create: HTTP `200`, request `4f608e89-e400-4a18-bd83-ad84b86e2a36`; stable comment ID `122110940457502015_1097949062827339`;
+- comment/thread read-back: HTTP `200`, request `05b496ef-5d6b-431a-afc7-9a0367b915f6`; exactly one controlled match; Facebook; owner/from-self=true; duplicate=false;
+- normal Inbox list: HTTP `200`, request `f6158d4b-9f53-4006-8d39-51521e21e9c6`; controlled fixture visible exactly once; cache observation=`VISIBLE`; ad marker was not exposed in the safe projection (`isAdObserved=null`);
+- controlled reply create: HTTP `200`, request `384e12e8-aa1a-4316-9c15-9924111eaed2`; stable reply ID `122110940457502015_944970255025536`;
+- reply read-back: HTTP `200`, request `50394aee-c840-4fd9-8e0b-a9e73a2cefb4`; exactly one controlled reply under the exact parent; Facebook; duplicate=false.
+
+Final classification = `ORGANIC_COMMENTS_CREATE_READ_REPLY_VERIFIED`.
+
+Recommendation only = `Organic Comments → SPIKE_PASS — AWAITING TEAM LEADER REVIEW`. Canonical capability state remains `SPIKE_PENDING`; the Senior Engineer does not self-promote `PROVIDER_CAPABILITIES.md`.
+
+Cleanup evidence:
+- exact controlled reply delete: HTTP `200`, request `b5302bc3-e116-430e-8644-5d7fe4d72502`;
+- exact controlled parent comment delete: HTTP `200`, request `514b630a-afa6-46ec-ad7f-a3e0ce299f6d`;
+- exact thread cleanup verification: HTTP `200`, request `1202cc83-fc60-4986-bf6a-d297f9d30647`; controlled parent absent and controlled reply absent in the bounded thread result;
+- exact owned post unpublish attempt: HTTP `500`, no Provider request ID exposed;
+- exact post cleanup read-back: HTTP `200`, request `368f3e3f-efcd-4b27-ae99-809812cd3a8b`; post still published.
+
+Cleanup is therefore **NOT fully completed**. Precisely bounded residual resource: owned synthetic Provider post `6ada5bc404775bbecc763501` / platform post `1387424501114639_122110940457502015`. Ownership/target/content were proven before cleanup. Cleanup allowance reached `5 / 5`; no repeated/blind unpublish or delete loop was attempted or authorized.
+
+Safety totals: normal requests `11 / 12` (preferred `<=10` exceeded by one because the required preflight/create/read/list/reply evidence path used 11; hard ceiling met); cleanup `5 / 5`; absolute `16 / 17`; publish attempts `1`; posts proven `1`; top-level comment create attempts `1`; comments proven `1`; reply create attempts `1`; replies proven `1`; Provider mutation attempts `6` including cleanup; Likes `0`; DMs `0`; Ads `0`; private replies `0`; webhook mutations `0`; unrelated-resource mutations `0`; PII leakage `0`; automatic retries `0`; secret exposure `0`.
+
+PHASE 1 remains **IN PROGRESS**. P1-T10 does not start DMs, Ad Comments, Native Automations, Phase 2, or any successor Provider capability.
