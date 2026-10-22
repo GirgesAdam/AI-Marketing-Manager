@@ -2302,3 +2302,37 @@ Exact blocker stage: `VPS_NONINTERACTIVE_PRIVILEGE_UNAVAILABLE_AT_LR06_INFRASTRU
 | Provider Behavior results doc | UNCHANGED | no real Provider attempt occurred |
 
 LR06 stopped safely before Provider transport because the single-dispatch orchestration could not obtain the non-interactive privileged VPS access required to complete the accepted infrastructure gate. This does not establish any Provider/Zernio behavior. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 remains `NOT DONE / BLOCKED PRE_PROVIDER`; authorization remains `AUTHORIZED / UNCONSUMED`.
+
+
+## P1-T08-F11-VP01 - Read-Only VPS Receiver Privilege-Path Feasibility
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `VPS_PRIVILEGE_PATH_INDETERMINATE`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Canonical start | PASS | starting HEAD `f41b7ca6f70d83310389a2eee98275af29d02c00`; Local=Tracking=Live Remote; clean tree; LR06 accepted; blocker `VPS_NONINTERACTIVE_PRIVILEGE_PATH_NOT_ESTABLISHED`; authorization unconsumed; Provider `0` |
+| Activation | PASS | commit `d0178235b520c16fb5793b65c50d69c99480e461` pushed before VPS commands |
+| VPS identity | PASS | `marktuser`, UID/GID `1005/1005`, groups `marktuser,sudo`, hostname `srv822206`, shell `/bin/rbash`, systemctl `/usr/bin/systemctl`, sudo `/usr/bin/sudo`, systemd 245 |
+| System receiver | PASS / read-only | loaded/active/running; boot disabled; MainPID `101806`; User/Group `marketly-r02`; Type simple; ExecStart fixed receiver; Restart=no; KillMode=control-group |
+| Unit hash | PASS | `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7` matches accepted |
+| Process ownership | PASS | EUID/EGID `997/997` = `marketly-r02`; not owned by `marktuser` |
+| Listener | PASS / partial correlation | `127.0.0.1:8765` listening; unprivileged `ss` did not expose owning PID |
+| Receiver source hash | INDETERMINATE | `marktuser` cannot traverse/read `/opt/marketly-r02/receiver.py`; no privileged read executed |
+| Path permissions | PASS | unit/root/system paths non-writable by `marktuser`; receiver dir `root:marketly-r02 0750`; evidence dir `marketly-r02 0700`; all tested write permissions NO |
+| Restart semantics | PASS | `Restart=no`; no kill test performed |
+| User systemd | NO EXISTING RELEVANT PATH FOUND | user manager running; `Linger=no`; relevant user-unit query returned none |
+| Direct read-only systemctl | PASS | is-active/show succeeded; is-enabled returned `disabled` |
+| Nginx/Apache state | PASS | both active without privilege; MarketlyAI Nginx hash matches accepted `7a54f...f1a06` |
+| Exact sudo policy query | NOT EXECUTED / TOOL-SAFETY BLOCKED | command-specific `sudo -n -l ...` blocked locally before SSH; no password prompt/bypass; existing narrow NOPASSWD status therefore indeterminate |
+| Required status/show verification | NO PRIVILEGE REQUIRED | proven read-only |
+| Required listener/port verification | NO PRIVILEGE REQUIRED | proven read-only |
+| Required reverse tunnel create/terminate | NO PRIVILEGE REQUIRED | accepted user-owned SSH/local-process design; not executed in VP01 |
+| Required receiver stop/start | INDETERMINATE | system service is not user-owned; exact sudo/polkit authorization not safely queryable from this tool surface |
+| Required source/evidence verification | INDETERMINATE / UNPRIVILEGED DENIED | receiver source/evidence paths inaccessible to `marktuser` |
+| Provider/Zernio | ZERO | `0`; no credentials/readiness/tunnel/live execution |
+| Infrastructure mutation | ZERO | receiver/service/files/config unchanged |
+| F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+
+Security finding: root/system unit, interpreter, and receiver parent paths are non-writable by `marktuser`; service account is distinct; no EnvironmentFile observed; WorkingDirectory empty; evidence/runtime paths non-writable. Exact start/stop grants could be low-risk if later policy evidence shows they are needed, but VP01 cannot classify READY while existing command-specific privilege remains unverified. `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged.
