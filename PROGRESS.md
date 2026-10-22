@@ -3106,3 +3106,10 @@ Future gate: before another F11 live retry, a separately authorized execution-co
 Safety boundary for this closeout: process probes = `0`; credentials accessed = `NO`; credential delivery = `0`; Provider/Zernio = `0`; VPS actions = `0`; receiver actions = `0`; SSH tunnels = `0`; readiness = `0`; public HTTP = `0`; Analytics/webhook/publish = `0`; infrastructure mutation = `0`; source/test/package mutation = `0`; F11 authorization consumed = `NO`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not rerun LR04, open a controller, test interaction, access credentials, launch F10 live, contact Zernio, touch VPS/receiver/tunnel, perform readiness, or start a successor task.
+
+
+### P1-T08-F11-EC01 - single-dispatch execution-control preflight activation (2026-10-22)
+
+`P1-T08-F11-EC01 = ACTIVATED — SINGLE-DISPATCH EXECUTION-CONTROL PREFLIGHT`.
+
+Activation boundary: Provider = `0`; credentials = `0`; VPS = `0`; receiver/tunnel/readiness = `0`; live runner = `0`.
