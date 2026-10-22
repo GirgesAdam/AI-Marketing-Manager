@@ -3491,3 +3491,10 @@ Least-privilege constraints preserved: any later bootstrap proposal must continu
 Safety boundary for this closeout: VPS commands = `0`; process probes = `0`; `sudo` queries = `0`; privileged commands = `0`; sudoers changes = `0`; receiver lifecycle actions = `0`; tunnels = `0`; credentials = `0`; Provider/Zernio = `0`; source/test mutation = `0`; F11 authorization consumed = `NO`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, `.env`, and VPS/systemd/sudoers/Nginx/SSH configuration remain unchanged. Commit/push and STOP. Do not rerun VP01, run `sudo -l`, execute receiver start/stop, edit sudoers, access credentials, contact Zernio, start F11, or start the policy-visibility successor task.
+
+
+### P1-T08-F11-PV01 - exact receiver lifecycle policy visibility activation (2026-10-22)
+
+`P1-T08-F11-PV01 = ACTIVATED — EXACT RECEIVER LIFECYCLE POLICY VISIBILITY`.
+
+Activation boundary: receiver lifecycle actions = `0`; privileged mutation commands = `0`; sudoers changes = `0`; Provider = `0`; credentials = `0`; F11 authorization remains `AUTHORIZED / UNCONSUMED`.
