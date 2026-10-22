@@ -3142,3 +3142,32 @@ Acceptance meaning: EC01 proves a bounded local orchestration path can be dispat
 EC01 does **not** self-clear the parent blocker. Canonical parent state remains pending Team Leader review: `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; current blocker remains `REMOTE_CONTROLLER_INTERACTION_SURFACE_INTERMITTENT`; credential source remains `IDENTIFIED / AVAILABLE`; persistent-controller execution path remains `ACCEPTED AS BOUNDED CAPABILITY`; tool-safe child credential-delivery path remains `ACCEPTED`; P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider request count remains `0`; F11 post published = `NO`.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because EC01 produced no Provider Behavior evidence. STOP after documentation commit/push and evidence handoff; do not repeat a failed cycle, access credentials or historical `.env`, contact Zernio, touch VPS/receiver/tunnel/readiness, run F10 live, start F11 retry, or start another task.
+
+
+### P1-T08-F11-EC01-CLOSEOUT-01 - Team Leader documentation-only closeout (2026-10-22)
+
+`P1-T08-F11-EC01 = DONE / ACCEPTED`.
+
+Team Leader disposition = `ACCEPTED`.
+
+Accepted evidence HEAD = `c6a7ad233d41dfc1b409fe776a6ec1e98f8b9f51`.
+
+Accepted classification = `SINGLE_DISPATCH_EXECUTION_CONTROL_READY`.
+
+Accepted evidence: required dispatches = `3 / 3 PASS`; initial `Resource not found` across required dispatches = `0`; required-cycle `interact_with_process = 0`; later command/input injection = `0`; Cycle 1 offline F10 = PASS; Cycle 2 sentinel exact-PID lifecycle = PASS; Cycle 2 unrelated Node processes preserved; Cycle 3 long-running orchestration = PASS; Cycle 3 bounded duration = `30s`; Cycle 3 safe progress markers = `3`; Cycle 3 read-only output retrieval = PASS; all temporary orchestration scripts removed; process residue = `0`; orchestration residue = `0`.
+
+Accepted offline F10 behavior: `liveEnabled=false`; `result=BLOCKED`; `errorCategory=LIVE_OPT_IN_REQUIRED`; `providerCalls=0`; runner exit `2`.
+
+Acceptance meaning: EC01 establishes a bounded local execution-control path that requires only one non-interactive remote dispatch; can manage local child lifecycle internally; can remain self-directed for long-running work; can be supervised through read-only output/status retrieval; and does not depend on `interact_with_process`. EC01 does **NOT** establish Zernio authentication, receiver handoff reliability, SSH tunnel reliability, public readiness, or live F11 success.
+
+`REMOTE_CONTROLLER_INTERACTION_SURFACE_INTERMITTENT = CLEARED BY ACCEPTED EC01`.
+
+`P1-T08-F11 = NOT DONE / READY FOR SEPARATELY AUTHORIZED LIVE RETRY`.
+
+Canonical state preserved: credential source = `IDENTIFIED / AVAILABLE`; persistent-controller capability = `ACCEPTED AS BOUNDED CAPABILITY`; tool-safe child credential-delivery path = `ACCEPTED`; single-dispatch execution-control path = `ACCEPTED`; F11 authorization = `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`; Provider request count = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`. This closeout does **NOT** authorize the live retry.
+
+Mandatory future execution pattern for any separately authorized F11 live task: (1) fresh current-device rediscovery; (2) exactly one non-interactive orchestration dispatch; (3) no reliance on `interact_with_process`; (4) initial local canonical-state checks inside that dispatch; (5) offline F10 fail-closed check inside that dispatch; (6) historical credential file supplied only to the future live runner child through accepted Node `--env-file=<path>`; (7) controller/orchestrator parent environment remains credential-free; (8) local child/process lifecycle managed internally by the orchestration; (9) long-running supervision uses read-only process-output/status retrieval only; (10) first trusted Zernio Provider request remains the authorization-consumption boundary. Do not prescribe source changes. The orchestration may remain an ephemeral non-secret runtime artifact outside the repository.
+
+Safety boundary for this closeout: process probes = `0`; historical credential access = `NO`; credentials loaded = `NO`; Provider/Zernio = `0`; `/v1/auth/verify = 0`; Analytics/webhook/publish = `0`; F10 live = `0`; public HTTP = `0`; VPS = `0`; receiver = `0`; SSH tunnel = `0`; readiness = `0`; infrastructure mutation = `0`; source/test/package mutation = `0`; F11 authorization consumed = `NO`.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not repeat EC01, run an orchestration probe, access credentials, touch historical `.env`, launch F10 live, contact Zernio, touch VPS/receiver/tunnel, perform readiness, start F11 retry, or start another task.
