@@ -2470,3 +2470,62 @@ Resulting state: `P1-T08-F11 = DONE / ACCEPTED — EVENT OBSERVED, DATA-BEARING 
 Bounded plan: safe receiver infrastructure `COMPLETED`; Provider-free rehearsal `COMPLETED`; one authorized F11 live experiment `COMPLETED`; one final diagnostic/cross-check round `AVAILABLE / NOT STARTED`; no additional live experiment permitted. A separately authorized `P1-T08-F11-DIAG01 — Existing-Evidence Provider Diagnostic / Cross-Check` may use existing IDs/timestamps/request IDs/event evidence plus bounded Provider-side diagnostics if necessary, but this closeout does **not** authorize DIAG01 execution.
 
 Closeout itself was documentation-only: Provider/Zernio `0`; credentials `0`; Analytics/Delta `0`; publish `0`; webhook mutations `0`; VPS/lifecycle `0`; tunnel `0`.
+
+### P1-T08-F11-DIAG01 — Final Existing-Evidence Provider Diagnostic (2026-10-22)
+
+Status: **`EXECUTED / AWAITING TEAM LEADER REVIEW`**.
+
+Final classification: **`DIAGNOSTIC_TECHNICAL_BLOCKER`**.
+
+This was the final bounded P1-T08 Provider probing round. It was not another F11 experiment. It created no content, no webhook, no Analytics sync, and no Provider mutation.
+
+#### Direct observed diagnostic evidence
+
+The diagnostic used the fixed window `2026-10-22T16:55:30Z` through `2026-10-22T16:57:30Z` and issued exactly three GET requests.
+
+**Query A — API request logs.** `GET /v1/logs` with `type=api_request`, exact from/to, and `limit=100` was attempted at `2026-10-22T17:26:21.233Z`. Provider returned HTTP `200`, request ID `ec03c626-afb7-42a0-ac85-8517df3daf12`, `13` log records, and pagination metadata. The safe allowlisted projection did not identify an exact `POST /v1/posts` record (`matchedRecordCount=0`). Raw log/request/response bodies were not retained, so no stronger publish-completion claim is made from Query A.
+
+**Query B — webhook logs.** `GET /v1/logs` with `type=webhooks`, `event=analytics.synced`, exact account `6ac64f8740364f4695dd3077`, exact from/to, and `limit=100` was attempted at `2026-10-22T17:26:21.860Z`. Provider returned HTTP `400`, request ID `d78725e8-c073-4b6d-a6a8-a2245e1ae867`, zero retained log records, and no pagination evidence. The required bounded webhook-log cross-check could therefore not be completed. No altered-filter retry was sent.
+
+**Query C — publishing logs.** `GET /v1/logs` with `type=publishing`, `platform=facebook`, exact account, exact from/to, and `limit=100` was attempted at `2026-10-22T17:26:22.095Z`. Provider returned HTTP `200`, request ID `09470997-88c9-430b-9c82-322862212458`, one log record, and pagination metadata. The single safe matched record contained the exact approved F11 fixture identifier and reported `action=post.published`, `status=success`, `platform=facebook`, with Provider log request/correlation ID `16c4ec20-651f-453c-914c-ec4d08eb6580`. The bounded safe projection did not expose a Provider timestamp or explicit post-ID field for that record; none is invented.
+
+Optional Query D was **not sent**. A/B/C did not identify one exact missing correlation key whose one additional read could resolve Analytics-fixture correlation. The Query C publishing correlation ID is direct publishing evidence but is not a direct key tying the `analytics.synced` event to fixture incorporation; using request 4 would therefore have been exploratory.
+
+#### Correlation interpretation
+
+**Proven by DIAG01:** Provider publishing logs contain a successful `post.published` record associated with the exact F11 fixture. This corroborates the existing LIVE01 evidence that the reconciled F11 post reached a successful publishing lifecycle state.
+
+**Not proven by DIAG01:** the publishing log caused, was included in, or directly correlates to the observed `analytics.synced` sync. Query B failed with HTTP `400`, and Query A did not yield a safely matched exact publish-request record. No direct changed-post set or exact F11 post identifier was observed in Analytics webhook-log evidence.
+
+The existing LIVE01 timing evidence remains direct historical evidence only: publish attempt `2026-10-22T16:56:04.614Z`; `sync.syncedAt=2026-10-22T16:56:04.981Z`; event timestamp `2026-10-22T16:56:04.998Z`; receiver `receivedAt=2026-10-22T16:56:11.524Z`; Provider-returned post `createdAt=2026-10-22T16:56:11.713Z`; follow-up Analytics request `2026-10-22T16:56:11.923Z`; webhook cleanup began `2026-10-22T16:56:12.398Z`. Timing adjacency/order is not treated as causality and does not by itself prove inclusion or exclusion of the fixture.
+
+Because the bounded required webhook-log diagnostic could not be completed, the result is **`DIAGNOSTIC_TECHNICAL_BLOCKER`**, not A, B, or C. Per the stop rule, this does not authorize further probing.
+
+#### Documented-contract fallback / defensive design direction
+
+Because final classification is D, the already-registered fallback is active for Team Leader disposition. This section distinguishes design direction from observed Provider Behavior.
+
+`analytics.synced` is treated as a **wake-up/change signal**, not as the sole durable analytics truth. The defensive production direction remains:
+
+```text
+verified webhook signal
+→ internal ownership validation
+→ dedupe
+→ enqueue reconciliation
+→ Analytics/Delta read from durable stored cursor
+→ validate target scope
+→ persist durable analytics state/cursor
+→ audit
+```
+
+A bounded periodic reconciliation path remains required independently of webhook delivery. The webhook can improve latency; it must not be the only correctness mechanism.
+
+Future production Delta constraint: a durable Delta consumer captures and stores its bootstrap cursor **before** loading its baseline, then resumes from that cursor. DIAG01 performed no Delta call and implemented no production subsystem.
+
+#### Safety / stop state
+
+Provider requests: `3`; GET: `3`; Provider mutations: `0`; publish: `0`; webhook mutation/test/redelivery: `0`; posts created: `0`; Analytics/Delta: `0`; sync triggers: `0`; receiver/VPS/tunnel actions: `0`; credentials exposed: `0`. Original F11 authorization remains permanently `CONSUMED`.
+
+**NO MORE P1-T08 PROVIDER PROBING.** No repeat diagnostic round, no expanded log exploration, no second live post, no experimental webhook, no Delta probe, and no sync trigger are authorized by this result.
+
+`P1-T08-F11-DIAG01 = EXECUTED / AWAITING TEAM LEADER REVIEW`. Parent `P1-T08 = UNRESOLVED / NOT DONE`; DIAG01 does not self-accept or self-close P1-T08.

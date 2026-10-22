@@ -2710,3 +2710,59 @@ Disposition: `ACCEPTED WITH NON-BLOCKING NOTES`
 | Current blocker/question | `DATA_BEARING_ANALYTICS_SYNC_CORRELATION_NOT_ESTABLISHED` | OPEN |
 | Diagnostic round | `AVAILABLE / NOT STARTED`; closeout does not authorize DIAG01 | PRESERVED |
 | Closeout safety | Provider/Zernio `0`; credentials `0`; Analytics/Delta `0`; publish `0`; webhook mutation `0`; VPS/lifecycle `0`; tunnel `0` | PASS |
+
+## P1-T08-F11-DIAG01 — Final Existing-Evidence Provider Diagnostic (2026-10-22)
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`
+
+Final classification: `DIAGNOSTIC_TECHNICAL_BLOCKER`
+
+### Deterministic pre-Provider gates
+
+| Gate | Result | Evidence |
+| --- | --- | --- |
+| Activation | PASS | commit `3daabadc90c6c2cd96b64ab2210a9f19106d30e0` pushed before Provider diagnostics |
+| Runner/test checkpoint | PASS | `b05da04a0f808cffa47c31911c7488bc1a4ddbfd` |
+| Focused DIAG01 | PASS | `12 / 12` |
+| Full suite | PASS | `445 / 445` across 18 files |
+| Typecheck | PASS | exit `0` |
+| Build | PASS | exit `0` |
+| Diff check | PASS | exit `0` |
+| GET-only allowlist | PASS | A/B/C all `/v1/logs`; mutation methods unavailable |
+| Fixed window | PASS | `2026-10-22T16:55:30Z` to `2026-10-22T16:57:30Z` |
+| No caller endpoint | PASS | unknown endpoint CLI args rejected |
+| Redaction | PASS | raw request/response bodies, secrets, email, IP, user-agent absent from result |
+| No Delta / sync trigger | PASS | counters `0 / 0` |
+| Credential-free parent | PASS | parent API key/email absent; child received accepted historical env through Node `--env-file` only |
+
+### Provider diagnostic requests
+
+| # | Purpose / fixed filters | Attempt | HTTP | Provider request ID | Logs | Pagination | Safe finding |
+| ---: | --- | --- | ---: | --- | ---: | --- | --- |
+| 1 | Query A: `GET /v1/logs`; `type=api_request`; exact from/to; `limit=100` | `2026-10-22T17:26:21.233Z` | 200 | `ec03c626-afb7-42a0-ac85-8517df3daf12` | 13 | YES | exact safely matched `POST /v1/posts` records `0`; raw bodies not retained |
+| 2 | Query B: `GET /v1/logs`; `type=webhooks`; `event=analytics.synced`; exact account; exact from/to; `limit=100` | `2026-10-22T17:26:21.860Z` | 400 | `d78725e8-c073-4b6d-a6a8-a2245e1ae867` | 0 | NO | bounded webhook-log query unavailable; no altered-filter retry |
+| 3 | Query C: `GET /v1/logs`; `type=publishing`; `platform=facebook`; exact account; exact from/to; `limit=100` | `2026-10-22T17:26:22.095Z` | 200 | `09470997-88c9-430b-9c82-322862212458` | 1 | YES | one exact fixture-associated log: `post.published`, `success`, facebook, correlation/request ID `16c4ec20-651f-453c-914c-ec4d08eb6580` |
+
+Optional Query D: `NOT SENT`. No A/B/C evidence identified one exact missing correlation key whose one permitted lookup could resolve Analytics-fixture correlation. Query C's publishing correlation ID cannot itself tie the observed Analytics sync to fixture incorporation.
+
+### Correlation / safety checks
+
+| Check | Result |
+| --- | --- |
+| Exact F11 publishing record exists in Provider publishing logs | OBSERVED |
+| Provider publishing action/status | `post.published` / `success` |
+| Provider publishing log directly tied to Analytics sync | NOT ESTABLISHED |
+| Required bounded webhook log cross-check | BLOCKED — HTTP `400` |
+| API-request log exact ambiguous publish completion record | NOT ESTABLISHED by safe matching |
+| Timing adjacency treated as causality | NO |
+| Fixture-relevant sync directly proven | NO |
+| Fixture-excluded/pre-fixture sync directly proven | NO |
+| Final DIAG01 classification | `DIAGNOSTIC_TECHNICAL_BLOCKER` |
+| Provider requests | `3` total / `3` GET |
+| Provider mutations / publish / webhook mutation / posts created | `0 / 0 / 0 / 0` |
+| Delta / sync triggers | `0 / 0` |
+| Credentials exposed | `0` |
+| F11 authorization | remains `CONSUMED` |
+| More P1-T08 Provider probing | STOPPED |
+
+Fallback for D is registered for Team Leader review: `analytics.synced` remains a wake-up/change signal rather than sole durable analytics truth; correctness direction is durable-cursor Analytics/Delta reconciliation plus periodic reconciliation. DIAG01 implements none of that production flow and does not self-close P1-T08.

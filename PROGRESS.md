@@ -4016,3 +4016,33 @@ Authorization state at activation: original F11 authorization = `CONSUMED`; live
 Diagnostic request ceiling: preferred `3`; hard maximum `4`; cleanup requests `0`; mutation requests `0`; diagnostic requests sent at activation = `0`.
 
 Activation safety boundary: Provider/Zernio requests `0`; credentials accessed `0`; publish `0`; webhook mutation `0`; Analytics/Delta `0`; receiver/VPS/tunnel lifecycle `0`. Commit/push and verify Live Remote before any diagnostic Provider GET.
+
+### P1-T08-F11-DIAG01 — Final existing-evidence Provider diagnostic result (2026-10-22)
+
+`P1-T08-F11-DIAG01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Final classification = `DIAGNOSTIC_TECHNICAL_BLOCKER`.
+
+Activation commit = `3daabadc90c6c2cd96b64ab2210a9f19106d30e0`. Runner/test commit = `b05da04a0f808cffa47c31911c7488bc1a4ddbfd`. Pre-Provider validation = PASS: focused DIAG01 `12 / 12`; full suite `445 / 445`; typecheck PASS; build PASS; diff-check PASS. Parent environment remained credential-free; accepted historical `.env` was supplied only to the Node child through `--env-file`; its contents were not opened/read/copied by the parent and no credential value was emitted.
+
+Diagnostic window remained fixed at `2026-10-22T16:55:30Z` through `2026-10-22T16:57:30Z`. Provider diagnostic requests = `3`, all GET, mutation requests = `0`, cleanup requests = `0`, Delta = `0`, sync triggers = `0`.
+
+Request 1 / Query A: purpose = API-request log cross-check for the ambiguous LIVE01 publish; `GET /v1/logs` filters `type=api_request`, exact from/to, `limit=100`; attempt `2026-10-22T17:26:21.233Z`; HTTP `200`; Provider request ID `ec03c626-afb7-42a0-ac85-8517df3daf12`; returned log count `13`; pagination metadata present = `YES`; safely matched exact `POST /v1/posts` record count = `0`. No raw bodies were persisted. The successful log query therefore did not provide a safe exact publish-request completion record usable for stronger correlation.
+
+Request 2 / Query B: purpose = webhook-log cross-check for observed `analytics.synced`; `GET /v1/logs` filters `type=webhooks`, `event=analytics.synced`, exact account `6ac64f8740364f4695dd3077`, exact from/to, `limit=100`; attempt `2026-10-22T17:26:21.860Z`; HTTP `400`; Provider request ID `d78725e8-c073-4b6d-a6a8-a2245e1ae867`; returned log count `0`; pagination = `NO`. The bounded contract query could not be completed. No retry with altered filters was performed.
+
+Request 3 / Query C: purpose = publishing-log cross-check for the exact F11 post; `GET /v1/logs` filters `type=publishing`, `platform=facebook`, exact account, exact from/to, `limit=100`; attempt `2026-10-22T17:26:22.095Z`; HTTP `200`; Provider request ID `09470997-88c9-430b-9c82-322862212458`; returned log count `1`; pagination metadata present = `YES`; exact fixture match count `1`. Safe matched evidence: action `post.published`; status `success`; platform `facebook`; log request/correlation ID `16c4ec20-651f-453c-914c-ec4d08eb6580`; exact F11 fixture identifier present = `true`. No Provider timestamp or explicit post ID field was available in the bounded safe projection, and no timestamp semantics are inferred.
+
+Optional Query D = `NOT SENT`. A/B/C did not identify one exact missing correlation key whose single lookup could resolve the failed Analytics-event correlation. The publishing log request ID is useful publishing evidence but does not directly link the `analytics.synced` sync to the fixture, so spending request 4 would have been exploratory rather than contract-justified.
+
+Correlation result: Query C directly corroborates that Provider publishing logs contain a successful publishing record associated with the exact F11 fixture. It does **not** tie that publishing record to the observed Analytics sync. Query B's HTTP `400` prevents completion of the required bounded webhook-log cross-check. Query A did not yield a safely matched exact publish-request record. Therefore no direct Provider evidence establishes that the observed sync included the F11 fixture or directly establishes that it excluded it. Timing proximity/order remains non-causal evidence only.
+
+Existing LIVE01 timeline remains unchanged: publish attempt `2026-10-22T16:56:04.614Z`; `sync.syncedAt=2026-10-22T16:56:04.981Z`; event timestamp `2026-10-22T16:56:04.998Z`; receiver `receivedAt=2026-10-22T16:56:11.524Z`; Provider-returned post `createdAt=2026-10-22T16:56:11.713Z`; follow-up Analytics request `2026-10-22T16:56:11.923Z`; webhook cleanup began `2026-10-22T16:56:12.398Z`. These values are not reinterpreted as causal ordering.
+
+Fallback status = `ACTIVE FOR TEAM LEADER REVIEW` because final classification is D. Registered defensive direction: `analytics.synced` is a wake-up/change signal, not sole durable analytics truth. Future production direction remains verified webhook signal -> internal ownership validation -> dedupe -> enqueue reconciliation -> Analytics/Delta read from durable stored cursor -> validate target scope -> persist durable analytics state/cursor -> audit, plus bounded periodic reconciliation independent of webhook delivery. DIAG01 does not implement this production flow.
+
+Future production Delta requirement recorded: a durable Delta consumer captures/stores its bootstrap cursor before loading baseline and resumes from that cursor. DIAG01 performed no Delta read and does not implement this requirement.
+
+Provider-probing stop rule is now active: **NO MORE P1-T08 PROVIDER PROBING**. No second diagnostic, no new post, no webhook recreation, no expanded log exploration, no Delta, and no sync trigger. F11 authorization remains permanently `CONSUMED`; live experiments remaining `0`.
+
+Canonical parent state remains pending Team Leader disposition: `P1-T08 = UNRESOLVED / NOT DONE`. DIAG01 does not self-accept P1-T08. Safety totals for DIAG01: Provider requests `3`; GET `3`; Provider mutations `0`; publish `0`; webhook mutations `0`; posts created `0`; Delta `0`; sync triggers `0`; credentials exposed `0`.
