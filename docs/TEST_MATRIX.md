@@ -2369,3 +2369,32 @@ Classification: `VPS_POLICY_VISIBILITY_STILL_INDETERMINATE`.
 Interpretation: both exact `sudo -l <command>` policy checks reached the VPS and returned the exact queried command as permitted by the policy-check interface. The returned output did not expose the matching sudoers rule/tag, so it does not establish `NOPASSWD` or distinguish exact narrow authorization from a broader rule. The first policy-view query requested human authentication; the second did not after the sudo authentication timestamp/session was established. Per PV01, policy-view authentication behavior is not target execution-policy evidence. Therefore A/B/C/E are not proven and classification D `VPS_POLICY_VISIBILITY_STILL_INDETERMINATE` is retained pending Team Leader review.
 
 Parent blocker remains `VPS_EXACT_NONINTERACTIVE_PRIVILEGE_POLICY_UNVERIFIED`; P1-T08-F11 remains `NOT DONE / BLOCKED PRE_PROVIDER`; authorization remains `AUTHORIZED / UNCONSUMED`; no Provider Behavior was tested and `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged.
+
+
+## P1-T08-F11-PV02 — Verbose Exact Receiver Lifecycle Policy Visibility
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`
+
+Classification: `VPS_POLICY_VISIBILITY_STILL_INDETERMINATE`
+
+| Gate | Evidence | Result |
+| --- | --- | --- |
+| Canonical start | Local = Tracking = Live Remote at `b3464c377b58783b3b5ad554a036bf176edf7bf3`; clean tree; PV01 accepted; parent blocker preserved | PASS |
+| Activation before evidence | `P1-T08-F11-PV02 = ACTIVATED — VERBOSE EXACT RECEIVER LIFECYCLE POLICY VISIBILITY`; activation commit `e8334bfc67a9b87430250c38122e8f9658f586c5` pushed before human policy evidence | PASS |
+| Installed sudo | Sudo `1.8.31`; sudoers policy plugin `1.8.31`; grammar `46`; I/O plugin `1.8.31` | PASS |
+| Stop exact verbose query | `sudo -ll /usr/bin/systemctl stop marketly-r02-receiver.service`; policy-view authentication requested YES; first password attempt rejected; subsequent authentication succeeded; returned exact command only | OBSERVED |
+| Stop exit | Not captured; not inferred | `NOT CAPTURED` |
+| Stop execution-auth semantics | No PASSWD/NOPASSWD or authenticate/!authenticate metadata emitted | `INDETERMINATE` |
+| Stop scope | No verbose matching-rule/source/RunAs/Options/Matched metadata emitted; narrow-vs-broad cannot be proven | `INDETERMINATE` |
+| Start exact verbose query | `sudo -ll /usr/bin/systemctl start marketly-r02-receiver.service`; no fresh policy-view authentication prompt because prior sudo timestamp/session was valid; returned exact command only | OBSERVED |
+| Start exit | `0` | PASS |
+| Start execution-auth semantics | No PASSWD/NOPASSWD or authenticate/!authenticate metadata emitted | `INDETERMINATE` |
+| Start scope | No verbose matching-rule/source/RunAs/Options/Matched metadata emitted; narrow-vs-broad cannot be proven | `INDETERMINATE` |
+| Version compatibility | Installed sudo 1.8.31 exact-command `-ll` output did not expose enough matching-rule/auth semantics; omission alone is not interpreted | PASS — indeterminate classification required |
+| No privilege execution test | Receiver stop/start/restart and mutation-based tests not executed | PASS |
+| Existing VP01 security context | Preserved; unrelated probes not rerun | PASS |
+| Remaining read-only gate | Receiver-source privileged SHA and evidence-directory privileged state not touched; remains separate unresolved gate | PRESERVED |
+| Parent state | `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; blocker `VPS_EXACT_NONINTERACTIVE_PRIVILEGE_POLICY_UNVERIFIED`; authorization `AUTHORIZED / UNCONSUMED`; Provider `0`; post `NO` | PRESERVED |
+| Provider results doc | `docs/PROVIDER_SPIKE_RESULTS.md` unchanged | PASS |
+
+Safety counters: receiver stop `0`; receiver start `0`; receiver restart `0`; process signals `0`; systemd reload `0`; sudoers mutation `0`; VPS file writes `0`; permission/ownership changes `0`; receiver-source privileged reads `0`; evidence-directory privileged reads `0`; tunnels `0`; readiness `0`; credentials `0`; Provider/Zernio `0`; F11 authorization consumed `NO`.
