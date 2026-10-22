@@ -1,0 +1,1 @@
+marktuser ALL=(root) NOPASSWD:NOSETENV: /usr/bin/systemctl stop marketly-r02-receiver.service, /usr/bin/systemctl start marketly-r02-receiver.service, /usr/local/sbin/marketly-f11-receiver-verify
