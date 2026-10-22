@@ -2628,3 +2628,24 @@ Historical Analytics capability remains **`SPIKE_PENDING`**. No `SPIKE_PASS` pro
 A future non-empty fixture-acquisition strategy, if desired, requires separate Team Leader review. P1-T09 itself does not authorize publishing, engagement manufacturing, `sync-external`, intentional sync triggering, another Brand/account, Delta, derived signals, or any successor Provider task.
 
 Safety totals: Provider GETs `4`; Provider mutations `0`; publish `0`; webhook operations `0`; Delta `0`; sync-external `0`; derived-signal calls `0`; Analytics writes/triggers `0`; Ads/media/community `0`; cross-Profile leakage `0`; secrets exposed `0`.
+
+
+## P1-T09-CLOSEOUT-01 — Team Leader Acceptance
+
+Status: `DONE / ACCEPTED`.
+
+Accepted classification: `AUTHORIZED_ANALYTICS_DATASET_STILL_EMPTY`.
+
+Accepted evidence HEAD: `ebcaf5cc7510881f477d0da610eab900bb45b6fd`.
+
+Observed and accepted: the authorized frozen target passed trusted identity verification, exact Profile/account ownership, and account health; Historical Analytics page 1 returned HTTP `200` for the exact bounded filters. The dataset was empty: `hasAnalyticsAccess=true`, `posts=[]`, rows `0`, usable rows `0`, qualifying non-F11 rows `0`, pagination total `0`, total pages `1`, and no additional page was required. No retry was performed.
+
+Not observed / not proven: any non-empty Historical Analytics row; reusable data-bearing fixture; stable analytics-row post identifier; row-level target attribution; metric field names/types/nullability; numeric metric sample; non-empty pagination; data-bearing Delta behavior; or derived Analytics signal behavior with sufficient data.
+
+Accepted interpretation: this is an empty authorized dataset, not Provider failure and not evidence that Historical Analytics is unsupported or that permissions are broken.
+
+Historical Analytics remains `SPIKE_PENDING`; no `SPIKE_PASS` promotion is made and `PROVIDER_CAPABILITIES.md` is unchanged.
+
+P1-T08 remains closed; F11 correlation is not reopened; historical F11 identifiers were not selected as the fixture; D-042 and the accepted Analytics webhook conclusion remain unchanged.
+
+Closeout itself performed Provider requests `0`, credential access `0`, Analytics calls `0`, Delta `0`, publish `0`, webhook mutation `0`, sync trigger `0`, source/test changes `0`, and infrastructure actions `0`.

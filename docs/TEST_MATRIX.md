@@ -2861,3 +2861,33 @@ Final P1-T09 classification: **`AUTHORIZED_ANALYTICS_DATASET_STILL_EMPTY`**.
 Historical Analytics remains `SPIKE_PENDING`; no capability promotion occurs before Team Leader review. The empty authorized dataset is not classified as Provider failure.
 
 Safety: Provider mutations `0`; publish `0`; webhooks `0`; Delta `0`; sync-external `0`; derived-signal calls `0`; Ads/media/community `0`; secrets exposed `0`. No Phase 2 or successor task was started.
+
+
+## P1-T09-CLOSEOUT-01 — Accepted Historical Analytics Empty-Dataset Result
+
+Status: `P1-T09 = DONE / ACCEPTED`.
+
+Accepted classification: `AUTHORIZED_ANALYTICS_DATASET_STILL_EMPTY`.
+
+| Accepted evidence | Result |
+|---|---|
+| Trusted identity verification | PASS |
+| Exact Profile/account ownership | PASS |
+| Account health | PASS |
+| Historical Analytics page 1 | PASS / HTTP `200` |
+| Exact bounded filters | PASS — Profile `6ac5a45a8e4ca44f355033ae`; account `6ac64f8740364f4695dd3077`; `facebook`; source `all`; `2026-07-25` → `2026-10-22`; limit `100`; page `1` |
+| Authorized Analytics access | `hasAnalyticsAccess=true` |
+| Historical rows | `0` |
+| Usable rows | `0` |
+| Qualifying non-F11 fixture | NONE |
+| Pagination | total `0`; pages `1`; safe `hasMore` not exposed; Page 2 correctly not requested |
+| Provider GET ceiling | PASS — `4 / 6` |
+| Provider mutations / Analytics writes / publish / webhooks / Delta / sync-external / derived signals | `0` |
+| Cross-Profile leakage / secrets exposed | `0` |
+| Retry | `0` |
+
+The empty dataset does **not** satisfy non-empty Historical Analytics verification. Future data-bearing coverage must still prove at minimum: non-empty row shape; stable post identifier; row-level target attribution; metric names/types/nullability; numeric metric samples; and non-empty pagination where applicable. Data-bearing Delta and sufficient-data derived-signal behavior also remain unverified.
+
+Historical Analytics remains `SPIKE_PENDING`. P1-T08 remains closed and no Phase 2 or successor task is started.
+
+Closeout execution is documentation-only: Provider requests `0`; credentials `0`; Analytics/Delta `0`; publish `0`; webhook mutations `0`; sync triggers `0`; source/test changes `0`; infrastructure `0`.

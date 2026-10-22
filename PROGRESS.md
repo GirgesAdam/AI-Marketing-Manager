@@ -55,9 +55,9 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `P1-T09 — Verify Existing Data-Bearing Historical Analytics Fixture`
+Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`
 
-P1-T09 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+P1-T09 = **DONE / ACCEPTED**
 
 Historical Analytics = `SPIKE_PENDING`
 
@@ -4161,3 +4161,38 @@ Historical Analytics recommendation = **remain `SPIKE_PENDING`**. No capability 
 Safety totals: Provider GETs `4`; Provider mutations `0`; Analytics writes/triggers `0`; publish `0`; webhook operations/mutations `0`; Delta `0`; sync-external `0`; derived-signal calls `0`; Ads/media/community `0`; cross-Profile leakage `0`; secrets exposed `0`.
 
 P1-T08 remains closed and is not reopened. The historical F11 identifiers were not selected as a P1-T09 fixture. PHASE 1 remains **IN PROGRESS**. No Phase 2 or successor task is started.
+
+
+## P1-T09-CLOSEOUT-01 — Team Leader Acceptance Closeout (2026-10-22)
+
+`P1-T09 = DONE / ACCEPTED`.
+
+Accepted classification = `AUTHORIZED_ANALYTICS_DATASET_STILL_EMPTY`.
+
+Accepted evidence HEAD = `ebcaf5cc7510881f477d0da610eab900bb45b6fd`.
+
+Activation commit = `a5f48793e25569d3d7209eb0b204d5085d732e05`.
+
+Implementation/test commit = `6ce913ccd68d5ab40712845cf9f8630b1b783dd6`.
+
+Accepted read-only Provider evidence: trusted identity verification PASS; exact Profile/account ownership PASS; account health PASS; Historical Analytics page 1 HTTP `200` with exact filters Profile `6ac5a45a8e4ca44f355033ae`, account `6ac64f8740364f4695dd3077`, platform `facebook`, source `all`, `fromDate=2026-07-25`, `toDate=2026-10-22`, `limit=100`, page `1`.
+
+Accepted empty-dataset finding: `hasAnalyticsAccess=true`; `posts=[]`; rows `0`; usable rows `0`; qualifying non-F11 rows `0`; prohibited-F11 rows observed `0`; pagination total `0`; total pages `1`; safe `hasMore` not exposed; additional pages `false`. Page 2 was correctly not requested.
+
+Accepted interpretation: the exact authorized target has working Analytics access, but the bounded Historical Analytics read returned no usable historical rows. This is not Provider failure, not proof Historical Analytics is unsupported, not proof Analytics permissions are broken, and not proof the account can never obtain Analytics data.
+
+Not proven: non-empty Historical Analytics row shape; stable analytics-row post identifier; row-level target attribution; metric field names/types/nullability; numeric metric samples; non-empty pagination; data-bearing Delta behavior; derived Analytics signal behavior with sufficient data.
+
+Historical Analytics remains `SPIKE_PENDING`. No `SPIKE_PASS` promotion is authorized because no qualifying non-empty Historical Analytics row was observed. `PROVIDER_CAPABILITIES.md` remains unchanged.
+
+Accepted P1-T09 safety evidence: Provider GETs `4 / 6`; Provider mutations `0`; Analytics writes/triggers `0`; publish `0`; webhooks `0`; Delta `0`; sync-external `0`; derived signals `0`; Ads/media/community `0`; cross-Profile leakage `0`; secrets exposed `0`; retries `0`.
+
+P1-T08 remains closed. P1-T09 did not reopen F11 correlation, and historical F11 post identifiers were not selected as an Analytics fixture. D-042 and the accepted Analytics webhook conclusion remain unchanged.
+
+Current Phase remains `PHASE 1 — Provider Feasibility & Basic Cost Safety`; Phase 1 remains `IN PROGRESS`; Phase 2 is not started.
+
+Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`. No successor identifier is invented or started.
+
+Next-gate requirement only: a future separately reviewed task may determine whether acquiring a non-empty Analytics fixture is necessary, safe, cost-bounded, possible without contaminating Provider Behavior evidence, and preferable to advancing another still-pending Commercial V1 Provider capability. This closeout authorizes no fixture creation, publishing, engagement generation, sync-external, Delta, derived signals, or another account/Brand.
+
+Closeout safety boundary: Provider requests `0`; credentials accessed `0`; Analytics calls `0`; Delta `0`; publish `0`; webhook mutations `0`; sync triggers `0`; source/test changes `0`; infrastructure `0`.
