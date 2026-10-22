@@ -3879,3 +3879,44 @@ Successful rehearsal lifecycle counters: receiver stop `1`; receiver start `1`; 
 Parent state is intentionally NOT self-cleared before Team Leader review: `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; blocker remains `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN`; F11 authorization = `AUTHORIZED / UNCONSUMED`; Provider requests = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because RHR01 tested no Provider Behavior. `DECISIONS.md` and `PROVIDER_CAPABILITIES.md` remain unchanged. STOP after documentation commit/push and final Git verification; do not execute F11 or start a successor task.
+
+
+### P1-T08-F11-RHR01-CLOSEOUT-01 — Documentation-only acceptance and infrastructure-blocker clearance (2026-10-22)
+
+`P1-T08-F11-RHR01 = DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
+
+Accepted classification = `PROVIDER_FREE_RECEIVER_HANDOFF_REHEARSAL_VERIFIED`.
+
+Accepted evidence HEAD = `e87e3b130c0b6dab58616ba0391b3e8f43c418fb`. Activation commit = `bcd88fb6944708d59500c8d836f516e91c30db5b`. Runner/test commit = `498aa4e73a80bbe47cedcec232a929b86177a9a0`.
+
+Accepted Provider-free handoff sequence: static receiver -> exact stop -> inactive/dead -> VPS `8765` free -> one loopback-only reverse tunnel -> local loopback Node receiver -> correlated public readiness -> local receiver shutdown -> tunnel shutdown -> VPS `8765` free -> exact static receiver start -> verifier PASS -> accepted routes restored.
+
+Accepted lifecycle counters: stop `1`; start `1`; restart `0`. Tunnel counters: created `1`; terminated `1`; residue `0`.
+
+Accepted integrity: receiver SHA `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`; unit SHA `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`; pre-state evidence `VALID_EMPTY / 0`; final evidence `VALID_EMPTY / 0`.
+
+Accepted final runtime: service `active/running`; boot `disabled`; listener `127.0.0.1:8765`; Node residue `0`; tunnel residue `0`; local rehearsal-port residue `0`.
+
+Accepted route evidence before rehearsal: local exact `200`; public root `404`; public exact `200`; near-miss `404`; Elite `200`. During Node handoff: readiness-marker correlation PASS; TLS PASS; root `404`; near-miss `404`; Elite `200`; VPS `8765` loopback-only. The Node receiver's plain exact-route HEAD `404` during handoff is accepted as expected because RHR01 proves the Node receiver through the exact POST readiness protocol; it is not Provider Behavior evidence. After restoration: local exact `200`; public root `404`; public exact `200`; near-miss `404`; Elite `200`.
+
+Accepted Provider-free boundary: credentials loaded `0`; `/v1/auth/verify` `0`; Analytics `0`; Delta `0`; Provider webhook mutation `0`; publish `0`; posts `0`; Provider/Zernio requests `0`; F11 authorization consumed `NO`. RHR01 is infrastructure evidence only; `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged.
+
+Non-blocking Windows signal note: a raw stdin Ctrl-C byte did not signal the owned Node process and changed no state. Deterministic shutdown used the Windows console `CTRL_C_EVENT`; the runner emitted `RHR01_CLOSED`, the owned Node exited, and the local port became free. Future Windows execution must use an actual process/console signal mechanism rather than assuming a raw stdin control byte is equivalent to SIGINT. No unknown process was signaled.
+
+Non-blocking read-only SSH note: two owned read-only SSH listener-check child processes hung and were terminated locally. They were not reverse tunnels, contained no reverse-forward arguments, performed no VPS mutation, created no additional lifecycle action, and did not affect successful restoration. Future live orchestration must bound read-only SSH checks with explicit timeout/termination behavior so observation children cannot outlive their intended window.
+
+Team Leader review clears the previous infrastructure blocker: `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN` = `CLEARED BY ACCEPTED RHR01 EVIDENCE`. LPI01 established and accepted the least-privilege lifecycle capability; RHR01 proved the actual stop/tunnel/readiness/restore behavior; safe restoration to the accepted static-receiver baseline was verified. This blocker is no longer current.
+
+Parent F11 state after closeout: `P1-T08-F11 = NOT DONE / READY FOR AUTHORIZED LIVE EXECUTION`. Current infrastructure blocker = `NONE — accepted receiver lifecycle/handoff prerequisite satisfied`.
+
+Preserved state: F11 authorization = `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`; Provider requests = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`. This acceptance does not mark F11 or P1-T08 done.
+
+Authorization semantics: the original single F11 live authorization remains valid and unconsumed. It becomes consumed exactly at the first trusted Zernio Provider HTTP attempt. RHR01 did not consume it; this closeout does not consume it. No authorization is created, expanded, renewed, duplicated, or reinterpreted here.
+
+Next gate requirement only: after this closeout, the next separately issued task may execute the already-authorized single F11 data-bearing live experiment using the accepted sequence: preflight/verifier -> stop static receiver -> establish loopback-only reverse tunnel -> launch accepted F11 Node receiver -> readiness -> first trusted Provider request -> bounded F11 Provider sequence -> observation/evidence -> authorized Provider cleanup -> tunnel teardown -> static receiver restoration -> verifier/final route checks. That future task must use deterministic Windows process signaling and explicit timeout/cleanup for every read-only SSH observation child. This closeout does NOT authorize execution.
+
+Bounded Provider plan remains: (1) safe receiver infrastructure completed; (2) Provider-free rehearsal completed and accepted; (3) one authorized F11 live experiment is the next gate; (4) at most one diagnostic/cross-check round if needed; (5) STOP Provider probing afterward unless genuinely new evidence justifies explicit authorization. Experiment count is not expanded.
+
+`D-041` remains sufficient. `DECISIONS.md`, `PROVIDER_CAPABILITIES.md`, and `docs/PROVIDER_SPIKE_RESULTS.md` remain unchanged.
+
+Closeout safety boundary: VPS commands `0`; sudo/systemd `0`; receiver lifecycle `0`; tunnels `0`; readiness `0`; credentials `0`; Provider/Zernio `0`; publish `0`; F11 consumed `NO`. Repository scope = documentation only (`PROGRESS.md`, `docs/TEST_MATRIX.md`). STOP after commit/push and final Git verification; do not execute F11 or start a successor task.

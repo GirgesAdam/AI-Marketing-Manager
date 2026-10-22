@@ -2567,3 +2567,46 @@ Classification: `PROVIDER_FREE_RECEIVER_HANDOFF_REHEARSAL_VERIFIED`
 | Provider results doc | `docs/PROVIDER_SPIKE_RESULTS.md` unchanged; no Provider Behavior tested | PASS |
 
 RHR01 validates only the controlled infrastructure handoff/restoration sequence. Readiness traffic is infrastructure test traffic, not a real Zernio webhook. Parent remains `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider requests `0`; post `NO`; P1-T08 `UNRESOLVED / NOT DONE`; Analytics Webhook `SPIKE_PENDING`.
+
+
+## P1-T08-F11-RHR01-CLOSEOUT-01 - Documentation-Only Acceptance Closeout (2026-10-22)
+
+Status: `DONE / ACCEPTED WITH NON-BLOCKING NOTES`
+
+Accepted classification: `PROVIDER_FREE_RECEIVER_HANDOFF_REHEARSAL_VERIFIED`
+
+Accepted evidence HEAD: `e87e3b130c0b6dab58616ba0391b3e8f43c418fb`
+
+| Closeout check | Accepted evidence | Result |
+| --- | --- | --- |
+| Activation commit | `bcd88fb6944708d59500c8d836f516e91c30db5b` | ACCEPTED |
+| Runner/test commit | `498aa4e73a80bbe47cedcec232a929b86177a9a0` | ACCEPTED |
+| Accepted sequence | static receiver -> exact stop -> inactive/dead -> VPS 8765 free -> one loopback-only reverse tunnel -> local loopback Node receiver -> correlated public readiness -> local receiver shutdown -> tunnel shutdown -> VPS 8765 free -> exact static receiver start -> verifier PASS -> accepted routes restored | ACCEPTED |
+| Lifecycle counters | stop `1`; start `1`; restart `0` | ACCEPTED |
+| Tunnel counters | created `1`; terminated `1`; residue `0` | ACCEPTED |
+| Receiver integrity | SHA `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9` | PASS |
+| Unit integrity | SHA `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7` | PASS |
+| Evidence integrity | pre `VALID_EMPTY / 0`; final `VALID_EMPTY / 0` | PASS |
+| Final runtime | service active/running; boot disabled; `127.0.0.1:8765`; Node residue `0`; tunnel residue `0`; local rehearsal-port residue `0` | PASS |
+| Pre-route evidence | local exact `200`; root `404`; public exact `200`; near-miss `404`; Elite `200` | PASS |
+| During handoff | readiness marker correlation PASS; TLS PASS; root `404`; near-miss `404`; Elite `200`; VPS 8765 loopback-only | PASS |
+| Node plain exact HEAD | `404` accepted under POST-only Node readiness contract; not Provider Behavior evidence | ACCEPTED |
+| Post-route evidence | local exact `200`; root `404`; public exact `200`; near-miss `404`; Elite `200` | PASS |
+| Provider-free boundary | credentials `0`; auth verify `0`; Analytics `0`; Delta `0`; Provider webhook mutation `0`; publish `0`; posts `0`; Provider/Zernio `0` | PASS |
+| Authorization consumption | `NO`; F11 authorization remains `AUTHORIZED / UNCONSUMED` | PASS |
+| Windows signal note | raw stdin Ctrl-C changed no state; owned Node closed deterministically with Windows console `CTRL_C_EVENT`; `RHR01_CLOSED`; local port free; no unknown process signaled | ACCEPTED / NON-BLOCKING |
+| Read-only SSH note | two owned listener-check children hung and were locally terminated; no reverse-forward args; no VPS mutation; no extra lifecycle action; future checks require explicit timeout/cleanup | ACCEPTED / NON-BLOCKING |
+| Infrastructure blocker | `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN` -> `CLEARED BY ACCEPTED RHR01 EVIDENCE` | CLEARED |
+| Capability chain | LPI01 accepted least-privilege lifecycle capability; RHR01 proved actual handoff/restoration; static baseline restoration verified | ACCEPTED |
+| Resulting F11 state | `P1-T08-F11 = NOT DONE / READY FOR AUTHORIZED LIVE EXECUTION` | READY |
+| Current infrastructure blocker | `NONE — accepted receiver lifecycle/handoff prerequisite satisfied` | NONE |
+| Parent/provider state | F11 auth `AUTHORIZED / UNCONSUMED`; consumed `NO`; Provider `0`; post `NO`; P1-T08 `UNRESOLVED / NOT DONE`; Analytics `SPIKE_PENDING` | PRESERVED |
+| Provider results doc | `docs/PROVIDER_SPIKE_RESULTS.md` unchanged; RHR01 is infrastructure evidence only | PASS |
+| Decisions/capabilities docs | D-041 sufficient; `DECISIONS.md` and `PROVIDER_CAPABILITIES.md` unchanged | PASS |
+| Closeout safety | VPS `0`; sudo/systemd `0`; lifecycle `0`; tunnels `0`; readiness `0`; credentials `0`; Provider/Zernio `0`; publish `0`; F11 consumed `NO` | PASS |
+
+Authorization semantics accepted: the original single F11 live authorization remains valid and unconsumed and becomes consumed exactly at the first trusted Zernio Provider HTTP attempt. RHR01 and this documentation-only closeout do not consume, create, expand, renew, duplicate, or reinterpret that authorization.
+
+Next gate requirement only: a separately issued task may execute the already-authorized single F11 data-bearing live experiment using the accepted preflight -> handoff -> readiness -> first trusted Provider request -> bounded Provider sequence -> evidence/cleanup -> restoration -> final verification ordering. Future orchestration must use deterministic Windows process signaling and explicit timeout/cleanup for every read-only SSH observation child. This closeout does not authorize execution.
+
+Bounded Provider plan remains unchanged: safe receiver infrastructure completed; Provider-free rehearsal completed/accepted; one authorized F11 live experiment next; at most one diagnostic/cross-check round if needed; then STOP Provider probing absent genuinely new evidence and explicit authorization.
