@@ -3731,3 +3731,12 @@ Bounded Provider plan remains registered and unchanged: safe receiver infrastruc
 Next gate requirement only: a later separately authorized implementation task must implement/install/protect the fixed verifier, establish only the exact three sudo capabilities, validate installed sudoers syntax, revalidate all ownership/writability invariants, test fail-closed verifier behavior, test the exact privilege surface, and perform zero Provider/Zernio requests. This closeout does NOT authorize implementation.
 
 Safety boundary for this closeout: VPS commands = `0`; sudo queries = `0`; sudoers mutation = `0`; systemd mutation = `0`; receiver lifecycle = `0`; verifier implementation = `0`; VPS writes = `0`; tunnels = `0`; readiness = `0`; credentials = `0`; Provider/Zernio = `0`; F11 authorization consumed = `NO`. Repository changes are documentation-only. `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested.
+
+
+### P1-T08-F11-LPI01 — Least-privilege receiver path implementation activation (2026-10-22)
+
+`P1-T08-F11-LPI01 = ACTIVATED — IMPLEMENT LEAST-PRIVILEGE RECEIVER PATH`.
+
+Activation counters: receiver stop/start/restart = `0`; tunnels = `0`; Provider/Zernio = `0`; credentials = `0`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`.
+
+Activation authorizes repository implementation/offline validation and the bounded human-authenticated bootstrap/read-only verification steps defined by the LPI01 contract only. It does not authorize receiver lifecycle execution, reverse tunnel creation, credentials, Provider/Zernio contact, F11 execution, rehearsal, or any successor task.
