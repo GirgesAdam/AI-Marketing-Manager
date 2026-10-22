@@ -3217,3 +3217,42 @@ No infrastructure rollback was required because infrastructure mutation never be
 This stop is an evidence-contract/harness-observability blocker, not a Zernio failure, Provider failure, credential failure, receiver/tunnel failure, or Provider Behavior result. No Provider request occurred and the original one-run authorization remains unconsumed.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because LR05 produced no Provider Behavior evidence. STOP after documentation commit/push and evidence handoff. Do not retry LR05, rerun F11, create a second primary dispatch, access historical credentials, modify the harness, contact Zernio, touch VPS/receiver/tunnel/readiness, republish, execute Delta, mark P1-T08 complete, or start a successor task without Team Leader review.
+
+
+### P1-T08-F11-LR05-CLOSEOUT-01 - Team Leader documentation-only closeout (2026-10-22)
+
+`P1-T08-F11-LR05 = DONE / ACCEPTED`.
+
+Team Leader disposition = `ACCEPTED`.
+
+Accepted evidence HEAD = `c77b6f643a2587fe69d9ce9ad5e57589a14a8aa6`.
+
+Accepted classification = `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Accepted failure stage = `REQUIRED_PROVIDER_REQUEST_TIMESTAMP_EVIDENCE_UNAVAILABLE_IN_ACCEPTED_F10_HARNESS`.
+
+LR05 is accepted as a **safe pre-Provider stop only**. It did **NOT** execute the F11 Provider experiment.
+
+Accepted pre-Provider evidence: canonical start = PASS; activation = PASS; fresh device rediscovery = PASS; primary single dispatch = `1`; second primary dispatch = `0`; `interact_with_process = 0`; later input injection = `0`; temporary orchestration residue = `0`; primary process residue = `0`. Local gates accepted: activation HEAD = PASS; working tree clean = PASS; Node = `v24.21.0`; repo-root `.env` absent; parent credential variables absent; offline F10 fail-closed gate = PASS; focused tests = `88 / 88 PASS`; typecheck = PASS; build = PASS; `git diff --check` = PASS.
+
+Team Leader independent source review finding: the accepted F10 source defines `P1T08F10RequestEvidence` with `phase`, `method`, `path`, `status`, and `requestId`, and with **no request timestamp field**. The accepted Provider request evidence append similarly records phase, method, path, status, and requestId with no per-request timestamp. Therefore LR05's required evidence contract `ordinal + operation/path + timestamp + status + Provider request ID` cannot be fully produced by the accepted unchanged harness. `LR05 per-request timestamp evidence contract = UNSATISFIED`. This is a harness observability/evidence-contract blocker.
+
+Historical meaning preserved: LR05 is **not** classified as a Zernio failure, Provider failure, authentication failure, credential failure, single-dispatch failure, receiver failure, SSH tunnel failure, readiness failure, or Provider Behavior evidence. Those stages were not reached.
+
+Canonical parent state: `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`.
+
+Current blocker = `F10_PROVIDER_REQUEST_TIMESTAMP_OBSERVABILITY_GAP`.
+
+Supersession mapping: `REQUIRED_PROVIDER_REQUEST_TIMESTAMP_EVIDENCE_UNAVAILABLE_IN_ACCEPTED_F10_HARNESS` = accepted LR05 failure stage. `F10_PROVIDER_REQUEST_TIMESTAMP_OBSERVABILITY_GAP` = current parent blocker.
+
+Canonical state preserved: credential source = `IDENTIFIED / AVAILABLE`; tool-safe child credential-delivery path = `ACCEPTED`; single-dispatch execution-control path = `ACCEPTED`; F11 authorization = `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`; Provider request count = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`. Do **NOT** set F11 ready for live retry yet.
+
+Provider/infrastructure zero state: first trusted Zernio request = `0`; `/v1/auth/verify = 0`; Provider normal requests = `0`; Provider cleanup requests = `0`; Analytics = `0`; Delta = `0`; webhook operations = `0`; publish attempts = `0`; posts created = `0`; historical credential `.env` access = `NO`; credential delivery = `NOT STARTED`; infrastructure gate = `NOT STARTED`; VPS actions = `0`; receiver stops = `0`; SSH tunnels = `0`; readiness = `0`; live runner children = `0`. No rollback was required.
+
+Future gate: before another F11 live retry, a separately authorized spike-harness observability task must add and verify deterministic per-request timestamp evidence to the F10 request-evidence contract. That future task may modify the **provider-spike harness and its tests only**, when separately authorized. It must not contact Zernio, consume F11 authorization, touch credentials, touch receiver/tunnel/VPS, perform readiness, or publish. This closeout does **NOT** authorize that implementation task.
+
+Required future timestamp semantics for that later implementation task: each actual Provider transport attempt must produce exactly one request-evidence timestamp that represents request attempt time; is ISO-8601 UTC; is generated through injectable/deterministic time semantics suitable for tests; appears in both normal and cleanup request evidence; does not leak credentials or request bodies; preserves existing request ceilings/counting behavior; and does not add Provider calls. This closeout records the requirement only and does not implement it.
+
+Safety boundary for this closeout: process probes = `0`; source changes = `0`; test changes = `0`; credential access = `0`; Provider/Zernio = `0`; infrastructure = `0`; F11 authorization consumed = `NO`.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source, tests, config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not modify F10 harness or tests, access credentials, run an orchestration probe, contact Zernio, touch VPS/receiver/tunnel/readiness, start another F11 live retry, or start the observability successor task.
