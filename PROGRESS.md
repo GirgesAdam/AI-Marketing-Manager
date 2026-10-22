@@ -3067,3 +3067,42 @@ Authorization consumption = `NO`; F11 authorization remains `AUTHORIZED / UNCONS
 Safety boundary remained intact: credential values exposed = `NO`; credentials loaded = `NO`; historical `.env` not accessed by LR04; receiver actions = `0`; SSH tunnels = `0`; readiness POSTs = `0`; VPS actions = `0`; public HTTP readiness actions = `0`; infrastructure changes = `0`; source/test/package changes = `0`; dependency installs/updates/audit/fixes = `0`; F11 authorization consumed = `NO`.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because LR04 produced no Provider Behavior evidence. STOP after docs commit/push and evidence handoff. Do not retry LR04, rerun F11, create a replacement controller, load credentials, touch receiver/tunnel/VPS, contact Zernio, republish, execute Delta, or start a successor task without Team Leader review.
+
+
+### P1-T08-F11-LR04-CLOSEOUT-01 - Team Leader documentation-only closeout (2026-10-22)
+
+`P1-T08-F11-LR04 = DONE / ACCEPTED`.
+
+Team Leader disposition = `ACCEPTED`.
+
+Accepted evidence HEAD = `7d9aceae56646b32c47b55a060959d8c3f0452c7`.
+
+Accepted classification = `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Accepted failure stage = `PERSISTENT_CONTROLLER_INTERACTION_SURFACE_UNAVAILABLE_PRE_OFFLINE_GATE`.
+
+LR04 is accepted as a **safe pre-Provider stop only**. It did **NOT** execute the F11 Provider experiment.
+
+Accepted LR04 evidence: canonical start = PASS; activation commit pushed before any live side effect; fresh device rediscovery = PASS; authorized machine = `DESKTOP-RL942A5`; exactly one controller establishment attempt = PASS; controller session PID = `21384`; replacement controller = `NO`; first controller baseline command execution = `0`; two interaction attempts returned tool-level `Resource not found`; offline F10 probe = `NOT STARTED`; deterministic harness tests = `NOT STARTED`; credential metadata/delivery = `NOT STARTED`; historical `.env` access = `NO`; receiver actions = `0`; tunnel = `0`; readiness = `0`; Provider = `0`; publish = `0`.
+
+Accepted pre-Provider cleanup: exact LR04 controller terminated; runner residue = `0`; credential rollback required = `NO`; infrastructure rollback required = `NO`.
+
+Authorization state preserved: F11 authorization = `AUTHORIZED / UNCONSUMED`; F11 authorization consumed = `NO`; Provider normal requests = `0`; Provider cleanup requests = `0`; Provider total requests = `0`; `/v1/auth/verify = 0`; Analytics = `0`; Delta = `0`; webhook = `0`; publish attempts = `0`; posts created = `0`; F11 post published = `NO`.
+
+Separate Team Leader post-LR04 review evidence: after LR04 stopped, one bounded local-only independent review on the currently connected authorized machine successfully established a fresh persistent PowerShell controller. From that controller, `interact_with_process` successfully executed a baseline command and confirmed repository HEAD = `7d9aceae56646b32c47b55a060959d8c3f0452c7`; Node = `v24.21.0`; current repo-root `.env` = absent. The review controller was intentionally closed. No credential access, Provider call, VPS action, receiver action, tunnel, readiness, or public HTTP occurred. `Team Leader post-LR04 controller interaction reproduction = PASS`.
+
+Interpretation: the Team Leader reproduction does **NOT** invalidate or rewrite LR04's historical failure. LR04 remains correctly classified as a safe pre-Provider stop because the required controller interaction failed during the bounded authorized LR04 execution. The successful post-LR04 reproduction establishes only that the execution capability is not proven permanently unavailable. The current problem is reliability/intermittency of controller interaction across execution windows. This is **not** classified as a Zernio failure, Provider failure, credential failure, child `--env-file` failure, or F10 harness logic failure.
+
+Canonical parent state: `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`.
+
+Current blocker = `REMOTE_CONTROLLER_INTERACTION_SURFACE_INTERMITTENT`.
+
+Supersession mapping: `PERSISTENT_CONTROLLER_INTERACTION_SURFACE_UNAVAILABLE_PRE_OFFLINE_GATE` = accepted LR04 failure stage. `REMOTE_CONTROLLER_INTERACTION_SURFACE_INTERMITTENT` = current parent blocker.
+
+Canonical state preserved: credential source = `IDENTIFIED / AVAILABLE`; persistent-controller execution path = `ACCEPTED AS BOUNDED CAPABILITY`; tool-safe child credential-delivery path = `ACCEPTED`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`; F11 authorization = `AUTHORIZED / UNCONSUMED`; Provider request count = `0`; F11 post published = `NO`. Do **NOT** set F11 ready for another live retry in this closeout.
+
+Future gate: before another F11 live retry, a separately authorized execution-control task must remove dependence on a fragile post-establishment interactive tool call, or otherwise establish a deterministic interaction method with sufficient bounded evidence. Preferred investigation direction: test whether one pre-established **single-dispatch/non-interactive local orchestration path** can perform the required local lifecycle without relying on repeated `interact_with_process` calls. This is an investigation direction only. This closeout does **NOT** authorize implementation/testing of that path and does not authorize a production architecture change.
+
+Safety boundary for this closeout: process probes = `0`; credentials accessed = `NO`; credential delivery = `0`; Provider/Zernio = `0`; VPS actions = `0`; receiver actions = `0`; SSH tunnels = `0`; readiness = `0`; public HTTP = `0`; Analytics/webhook/publish = `0`; infrastructure mutation = `0`; source/test/package mutation = `0`; F11 authorization consumed = `NO`.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not rerun LR04, open a controller, test interaction, access credentials, launch F10 live, contact Zernio, touch VPS/receiver/tunnel, perform readiness, or start a successor task.
