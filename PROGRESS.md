@@ -3402,3 +3402,10 @@ Future privilege gate requirement only: before another F11 live retry, a separat
 Safety boundary for this closeout: process probes = `0`; VPS commands = `0`; sudo commands = `0`; sudoers changes = `0`; credentials = `0`; Provider/Zernio = `0`; infrastructure mutation = `0`; source/test mutation = `0`; F11 authorization consumed = `NO`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, `.env`, VPS configuration, sudoers/systemd/Nginx/SSH configuration remain unchanged. Commit/push and STOP. Do not retry LR06, test sudo, ask for or inject a sudo password, edit sudoers, touch receiver/systemd/Nginx/SSH, access credentials, contact Zernio, start F11 live retry, or start the privilege-path successor task.
+
+
+### P1-T08-F11-VP01 - read-only VPS receiver privilege-path feasibility activation (2026-10-22)
+
+`P1-T08-F11-VP01 = ACTIVATED — READ-ONLY VPS PRIVILEGE-PATH FEASIBILITY`.
+
+Activation boundary: VPS mutations = `0`; sudo execution of privileged actions = `0`; sudoers changes = `0`; Provider = `0`; credentials = `0`; F11 authorization remains `AUTHORIZED / UNCONSUMED`.
