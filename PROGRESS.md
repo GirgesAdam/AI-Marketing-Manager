@@ -3263,3 +3263,34 @@ Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_
 `P1-T08-F11-OBS01 = ACTIVATED — F10 REQUEST TIMESTAMP OBSERVABILITY HARDENING`.
 
 Activation boundary: Provider/Zernio = `0`; credentials = `0`; infrastructure = `0`; F11 authorization remains `AUTHORIZED / UNCONSUMED`.
+
+
+### P1-T08-F11-OBS01 - F10 request timestamp observability hardening result (2026-10-22)
+
+`P1-T08-F11-OBS01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `F10_PROVIDER_REQUEST_TIMESTAMP_OBSERVABILITY_READY`.
+
+Starting HEAD = `92f649cfad427187ad38d389acc28914e7069a30`; activation commit = `0bedd6c6fa3e018b3cdaf1c727c2c827f84ea799`.
+
+Request-evidence contract hardened: `P1T08F10RequestEvidence` now contains existing safe fields `phase`, `method`, `path`, `status`, `requestId` plus `timestamp: string`. Ordinal remains authoritative as requestEvidence array index + 1; no duplicate ordinal field was added.
+
+Timestamp semantics = request-attempt time in ISO-8601 UTC. A narrowly scoped injectable clock `requestAttemptNow?: () => number` is separate from existing `now()` timing semantics. `sendWithRequestEvidence(...)` captures `timestamp` before the corresponding `transport.send(...)` call, then records response `status`/`requestId` on success. If `transport.send` throws, exactly one attempt evidence item is retained with `status = null` and `requestId = null`, and existing error behavior continues.
+
+Pre-transport ceiling behavior is preserved: normal/cleanup request ceilings and counters execute before `sendWithRequestEvidence`; a request rejected before `transport.send` creates no false attempt evidence and does not invoke the request-attempt clock.
+
+Normal + cleanup inventory was covered. Main F10 normal/cleanup attempts use the same timestamp helper. Cleanup/recovery exports `runP1T08F10PostCleanup`, `runP1T08F10PostReconcileCleanup`, and `runP1T08F10WebhookReconcileCleanup` now expose `requestEvidence` consistently and accept the same narrowly scoped `requestAttemptNow` test clock. No cleanup architecture redesign occurred.
+
+Behavioral invariants preserved: normal request counts, cleanup request counts, normal/cleanup ceilings, total request behavior, target/identity validation, idempotency/publish reconciliation semantics, Delta behavior, and cleanup safety rules are unchanged. Added Provider transport calls = `0`.
+
+Deterministic OBS01 regression coverage = PASS: success attempt timestamp before send; ordered multiple normal/cleanup timestamps; thrown normal attempt; thrown main-run cleanup attempt; pre-send ceiling rejection with zero fake evidence; cleanup-only success/count parity; thrown cleanup-only attempt; post reconcile cleanup evidence; webhook reconcile cleanup evidence; existing status/requestId semantics and secret-safe evidence shape preserved.
+
+Focused command `npm test -- tests/provider-spike/p1-t08-f10.test.ts tests/provider-spike/p1-t08.test.ts` = PASS, `97 / 97` tests across 2 files. Historical focused baseline was `88 / 88`; OBS01 added 9 deterministic regressions.
+
+`npm run typecheck -- --pretty false` = PASS. `npm run build -- --pretty false` = PASS. `git diff --check` = PASS. Full `npm test` = PASS, `427 / 427` tests across 16 files.
+
+Safety boundary remained intact: real Provider/Zernio calls = `0`; real `/v1/auth/verify = 0`; credentials accessed = `NO`; historical `.env` access = `NO`; F10 live executions = `0`; VPS = `0`; receiver = `0`; SSH tunnel = `0`; readiness = `0`; publish = `0`; F11 authorization consumed = `NO`. No installs, dependency changes, or package mutations occurred.
+
+OBS01 does **not** self-clear the parent blocker. Pending Team Leader review, canonical parent state remains `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; Current blocker = `F10_PROVIDER_REQUEST_TIMESTAMP_OBSERVABILITY_GAP`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider request count remains `0`; F11 post published = `NO`; P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because OBS01 tested no Provider Behavior. STOP after documentation commit/push and evidence handoff; do not clear the parent blocker, access credentials, contact Zernio, touch VPS/receiver/tunnel/readiness, run F11, or start a successor task.

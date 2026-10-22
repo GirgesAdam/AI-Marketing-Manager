@@ -2226,3 +2226,42 @@ Exact blocker stage: `REQUIRED_PROVIDER_REQUEST_TIMESTAMP_EVIDENCE_UNAVAILABLE_I
 | Source/test/package mutation | ZERO | no source/test/package/dependency mutation; working tree clean before result documentation |
 
 LR05 stopped before Provider because its evidence contract requires an actual timestamp for every Provider HTTP request while the accepted unchanged F10 request-evidence contract does not record one. Executing the one-run Provider experiment anyway would consume authorization without satisfying required evidence, and modifying the harness is forbidden in LR05. No Provider Behavior evidence was generated, so `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 remains `NOT DONE / BLOCKED PRE_PROVIDER`; authorization remains `AUTHORIZED / UNCONSUMED`.
+
+
+## P1-T08-F11-OBS01 - F10 Provider Request Timestamp Observability Hardening
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `F10_PROVIDER_REQUEST_TIMESTAMP_OBSERVABILITY_READY`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Request evidence shape | PASS | existing `phase/method/path/status/requestId` plus `timestamp`; ordinal remains array index + 1 |
+| Timestamp meaning | PASS | ISO-8601 UTC request-attempt time, captured before `transport.send(...)` |
+| Deterministic clock | PASS | narrowly scoped injectable `requestAttemptNow?: () => number`; existing `now()` semantics unchanged |
+| Successful attempt | PASS | exactly one evidence item with timestamp + response status + request ID |
+| Thrown normal attempt | PASS | exactly one evidence item; timestamp retained; `status=null`; `requestId=null`; existing error flow preserved |
+| Thrown cleanup attempt | PASS | main-run cleanup and cleanup-only regression coverage retain exactly one null-result timestamped evidence item |
+| Pre-transport ceiling rejection | PASS | ceiling check occurs before attempt clock/send; no false request evidence |
+| Multiple request ordering | PASS | deterministic timestamp sequence follows requestEvidence order; ordinal derived from array index |
+| Normal-phase coverage | PASS | accepted F10 normal transport path uses timestamped helper |
+| Cleanup-phase coverage | PASS | normal F10 cleanup uses same helper |
+| Cleanup-only post path | PASS | result now exposes timestamped `requestEvidence`; counts unchanged |
+| Post reconcile cleanup | PASS | result exposes complete timestamped normal/cleanup evidence |
+| Webhook reconcile cleanup | PASS | result exposes complete timestamped normal/cleanup evidence |
+| Status/requestId semantics | PASS | successful response semantics unchanged; thrown transport has safe nulls |
+| Request counts/ceilings | PASS | counters and ceilings remain before transport helper; no count drift |
+| Extra Provider calls | ZERO | implementation adds `0` transport calls |
+| Evidence security | PASS | no credentials, headers, bodies, expected-user email, approved post text, or credential fingerprints added |
+| Offline/non-live | PASS | existing zero-attempt behavior preserved |
+| Focused tests | PASS | `npm test -- tests/provider-spike/p1-t08-f10.test.ts tests/provider-spike/p1-t08.test.ts` => `97 / 97`; 2 files passed |
+| Typecheck | PASS | `npm run typecheck -- --pretty false` |
+| Build | PASS | `npm run build -- --pretty false` |
+| Diff check | PASS | `git diff --check` |
+| Full test suite | PASS | `npm test` => `427 / 427`; 16 files passed |
+| Provider/Zernio | ZERO | real Provider calls `0`; `/v1/auth/verify=0` |
+| Credentials | ZERO / SAFE | accessed `NO`; historical `.env` access `NO`; exposure `NO` |
+| Live/infrastructure | ZERO | F10 live `0`; VPS `0`; receiver `0`; SSH tunnel `0`; readiness `0`; publish `0` |
+| F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+
+OBS01 adds timestamp observability only to the accepted provider-spike harness. It does not change F11 experiment behavior, request ceilings, idempotency/publish semantics, or production telemetry architecture. `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested. Parent blocker remains `F10_PROVIDER_REQUEST_TIMESTAMP_OBSERVABILITY_GAP` pending Team Leader review.
