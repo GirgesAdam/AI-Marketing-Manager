@@ -3444,3 +3444,50 @@ VP01 does **not** self-clear `VPS_NONINTERACTIVE_PRIVILEGE_PATH_NOT_ESTABLISHED`
 Safety boundary preserved: receiver stop/start/restart = `0`; process signals = `0`; systemd reloads = `0`; user-systemd mutations = `0`; sudo privileged command executions = `0`; sudoers edits = `0`; linger changes = `0`; VPS file writes = `0`; permission/ownership changes = `0`; Nginx/Apache/SSH config changes = `0`; tunnels created = `0`; readiness POSTs = `0`; credentials = `0`; Provider/Zernio = `0`; F11 authorization consumed = `NO`.
 
 Recommended next step after Team Leader review: use a separately authorized policy-visibility/privilege-path task or human-reviewed VPS policy evidence to execute only the exact command-specific noninteractive privilege queries that this tool surface blocked. If no existing safe exact rule exists, separately review/authorize the minimal lifecycle/read-only bootstrap proposal before implementation. `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested. STOP after docs commit/push; do not implement privilege changes or start F11.
+
+
+### P1-T08-F11-VP01-CLOSEOUT-01 - Team Leader documentation-only closeout (2026-10-22)
+
+`P1-T08-F11-VP01 = DONE / ACCEPTED`.
+
+Team Leader disposition = `ACCEPTED`.
+
+Accepted evidence HEAD = `7029fc296b32195582419da205ecb0bef522b817`.
+
+Accepted classification = `VPS_PRIVILEGE_PATH_INDETERMINATE`.
+
+Accepted read-only receiver/identity evidence: VPS user = `marktuser`; UID/GID = `1005/1005`; shell = `/bin/rbash`; receiver system service = `marketly-r02-receiver.service`; service state = `active/running`; boot state = `disabled`; MainPID = `101806`; service User/Group = `marketly-r02/marketly-r02`; `RECEIVER_PROCESS_OWNED_BY_MARKTUSER = NO`; `ExecStart = /usr/bin/python3 /opt/marketly-r02/receiver.py`; `Restart=no`; `KillMode=control-group`; listener `127.0.0.1:8765` observed; direct fresh socket-to-PID correlation was not proven by unprivileged `ss`.
+
+Accepted unit SHA-256 = `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`. Accepted MarketlyAI Nginx SHA-256 = `7a54f35600a606b3e774c70a3bb03f3b01b4b2ec34851a79ea4daa51bc2f1a06`.
+
+Accepted permission/security evidence: systemd unit is root-owned and non-writable by `marktuser`; `/usr/bin/python3` is root-owned/non-writable; `/opt` is root-owned/non-writable; `/opt/marketly-r02` is not writable/traversable by `marktuser`; runtime/evidence paths are not writable by `marktuser`; `marktuser` is not the `marketly-r02` service account/group; no `EnvironmentFile=` was observed; WorkingDirectory is empty; no relevant existing user-owned receiver unit was found; user systemd manager is reachable; `Linger=no`.
+
+Fresh receiver-source SHA-256 = `UNVERIFIED IN VP01 DUE TO UNPRIVILEGED PATH ACCESS`. This is an access/evidence limitation and is **not** a hash mismatch.
+
+Accepted operation inventory — proven no privilege required: service status/show; service active-state verification; boot-disabled verification; listener/port verification; Nginx/Apache active-state verification; reverse-tunnel creation as `marktuser`; termination of the user-owned reverse tunnel.
+
+Accepted operation inventory — remains indeterminate: exact privilege path for stopping `marketly-r02-receiver.service`; exact privilege path for starting/restoring the service; privileged fresh receiver-source hash; privileged evidence-directory count/inspection.
+
+Accepted policy-visibility gap: the contract-authorized exact command-specific noninteractive policy query `sudo -n -l <exact-command>` was blocked by the local execution/tool safety surface before reaching the VPS. Sudo-policy request reached VPS = `NO`; password prompt = `NO`; password supplied/exposed = `NO`; bypass attempted = `NO`. Historical LR06 `sudo -n true` does not prove that command-specific `NOPASSWD` rules are absent. Existing exact narrow noninteractive privilege remains `UNVERIFIED`.
+
+Team Leader interpretation: VP01 rules out an already-observed user-owned receiver lifecycle path. VP01 does **not** establish whether exact command-specific noninteractive system-service privilege already exists. Therefore neither `VPS_EXISTING_NARROW_NONINTERACTIVE_PRIVILEGE_AVAILABLE` nor `VPS_MINIMAL_PRIVILEGE_BOOTSTRAP_REQUIRED` is justified yet. `VPS_PRIVILEGE_PATH_INDETERMINATE` is accepted.
+
+Canonical parent state remains `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`.
+
+Blocker entering VP01 = `VPS_NONINTERACTIVE_PRIVILEGE_PATH_NOT_ESTABLISHED`.
+
+Current blocker after accepted VP01 evidence = `VPS_EXACT_NONINTERACTIVE_PRIVILEGE_POLICY_UNVERIFIED`.
+
+Supersession mapping: `VPS_NONINTERACTIVE_PRIVILEGE_PATH_NOT_ESTABLISHED` = blocker entering VP01. `VPS_EXACT_NONINTERACTIVE_PRIVILEGE_POLICY_UNVERIFIED` = current parent blocker after accepted VP01 evidence.
+
+Canonical state preserved: credential source = `IDENTIFIED / AVAILABLE`; child credential-delivery path = `ACCEPTED`; single-dispatch execution-control path = `ACCEPTED`; request timestamp observability = `ACCEPTED`; F11 authorization = `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`; Provider requests = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`. Do **NOT** mark F11 ready for live retry.
+
+Future gate requirement only: before another live retry, a separately authorized policy-visibility task must obtain authoritative evidence for the exact receiver lifecycle privilege policy. Preferred evidence scope: exact absolute systemctl path; exact service name; exact stop command; exact start command; optionally exact read-only verifier command(s) required for source hash/evidence count. No broad sudo-policy dump is required.
+
+If the automation tool cannot safely perform the exact read-only policy query, the future task may define a **human-executed evidence handoff** for those exact commands only. Human-provided output must contain no sudo password or unrelated secrets, must not authorize or execute start/stop, and must distinguish policy visibility from privileged execution. Only after that evidence may the Team Leader decide between an existing narrow privilege path and a separately reviewed minimal privilege bootstrap. This closeout does **NOT** authorize either task.
+
+Least-privilege constraints preserved: any later bootstrap proposal must continue to forbid `NOPASSWD: ALL`, arbitrary shell/root, arbitrary `systemctl`, arbitrary file writes, arbitrary service management, and broad interpreter/tool root grants. Any exact start/stop grant must be reviewed against the established non-writability of the unit, interpreter, receiver parent path, and runtime configuration.
+
+Safety boundary for this closeout: VPS commands = `0`; process probes = `0`; `sudo` queries = `0`; privileged commands = `0`; sudoers changes = `0`; receiver lifecycle actions = `0`; tunnels = `0`; credentials = `0`; Provider/Zernio = `0`; source/test mutation = `0`; F11 authorization consumed = `NO`.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, `.env`, and VPS/systemd/sudoers/Nginx/SSH configuration remain unchanged. Commit/push and STOP. Do not rerun VP01, run `sudo -l`, execute receiver start/stop, edit sudoers, access credentials, contact Zernio, start F11, or start the policy-visibility successor task.
