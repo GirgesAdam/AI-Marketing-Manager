@@ -424,6 +424,7 @@ organization_id
 DOC_CONFIRMED
 SPIKE_PENDING
 SPIKE_PASS
+PARTIALLY_VERIFIED
 SPIKE_FAIL
 BLOCKED
 NOT_APPLICABLE
@@ -455,7 +456,7 @@ NOT_APPLICABLE
 | Best Times | Yes | SPIKE_PENDING | Sufficient data | Decision signal | Calculation |
 | Performance Decay | Yes | SPIKE_PENDING | Analytics | Strategy signal | Calculation |
 | Frequency Analysis | Yes | SPIKE_PENDING | History | Strategy signal | Calculation |
-| Analytics Webhook | Yes | SPIKE_PENDING | Webhooks | Processing | Event |
+| Analytics Webhook | Yes | PARTIALLY_VERIFIED | Webhooks + durable Analytics/Delta reconciliation | Signal validation + ownership + reconciliation | Change/wake-up signal |
 | Organic Comments | Yes | SPIKE_PENDING | Inbox support | AI/Human workflow | Fetch/reply |
 | Ad Comments | Yes | SPIKE_PENDING | Meta Ads | Unified workflow | Dark-post access |
 | DMs | Yes | SPIKE_PENDING | Inbox support | Agent/handoff | Messaging |
@@ -998,3 +999,32 @@ The purpose is to learn enough, early enough, to build a Commercial V1 integrati
 The spike is bounded.
 
 The production system must be defensive.
+
+
+# 37. P1-T08 Final Analytics Webhook Capability Conclusion
+
+Analytics Webhook capability status = **`PARTIALLY VERIFIED / DEFENSIVE INTEGRATION REQUIRED`**.
+
+### Observed
+
+- Zernio accepted configuration of an `analytics.synced` webhook scoped to the exact test Profile.
+- A valid signed `analytics.synced` event was delivered.
+- HMAC, header/body event identity, exact Profile/account/platform validation, non-duplicate handling, and receiver HTTP `204` all passed for the observed event.
+- Analytics `overview.lastSync` advanced to exactly the event's `sync.syncedAt`.
+- Provider publishing logs separately confirmed a successful `post.published` lifecycle record associated with the exact F11 fixture.
+
+### Limitation
+
+- Direct data-bearing fixture correlation was not established: the Phase-1 evidence does not prove that the F11 post caused or was incorporated into the observed Analytics sync.
+- The final bounded Provider webhook-log cross-check could not be completed because the approved `GET /v1/logs` webhook query returned HTTP `400`.
+- This limitation does not prove that `analytics.synced` is broken, absent, unreliable, or unrelated to the F11 post.
+
+### Commercial V1 integration rule
+
+Use `analytics.synced` as an authenticated/deduplicated **change/wake-up signal** that schedules trusted-scope Analytics/Delta reconciliation.
+
+Do **not** use webhook delivery as the sole durable analytics source of truth or sole correctness mechanism.
+
+Durable analytics state/cursor remains internal. Production must include bounded reconciliation independent of webhook arrival and preserve D-016 bootstrap order: `capture cursor → import baseline → consume Delta from captured cursor`.
+
+No further P1-T08 Provider probing is planned or authorized. Any future Provider test requires genuinely new evidence plus a separate explicit scope/authorization decision.

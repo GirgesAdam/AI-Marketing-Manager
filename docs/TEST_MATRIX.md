@@ -2766,3 +2766,53 @@ Optional Query D: `NOT SENT`. No A/B/C evidence identified one exact missing cor
 | More P1-T08 Provider probing | STOPPED |
 
 Fallback for D is registered for Team Leader review: `analytics.synced` remains a wake-up/change signal rather than sole durable analytics truth; correctness direction is durable-cursor Analytics/Delta reconciliation plus periodic reconciliation. DIAG01 implements none of that production flow and does not self-close P1-T08.
+
+
+## P1-T08 Final Acceptance — Provider Limitation and Future System-Test Requirements
+
+Final disposition: `P1-T08 = DONE / ACCEPTED WITH PROVIDER LIMITATION`.
+
+Accepted limitation: `DATA_BEARING_ANALYTICS_SYNC_CORRELATION_NOT_ESTABLISHED`.
+
+### Final accepted evidence chain
+
+| Evidence stage | Final accepted result |
+|---|---|
+| Safe receiver infrastructure | COMPLETED / ACCEPTED |
+| Provider-free receiver handoff rehearsal | COMPLETED / ACCEPTED |
+| One authorized F11 live experiment | COMPLETED / ACCEPTED WITH NON-BLOCKING NOTES |
+| F11 correlation result | `EVENT_OBSERVED_CORRELATION_INCOMPLETE` |
+| Final DIAG01 cross-check | DONE / ACCEPTED |
+| DIAG01 classification | `DIAGNOSTIC_TECHNICAL_BLOCKER` |
+| Analytics Webhook final status | `PARTIALLY VERIFIED — SIGNAL OBSERVED / DATA-BEARING CORRELATION NOT ESTABLISHED` |
+| F11 request ceilings | PASS — normal `9`, cleanup `4`, total `13`; all ceilings met |
+| DIAG01 request ceiling | PASS — `3` GET-only requests, no optional fourth request |
+| Unauthorized live retries | PASS — `0` second F11 / `0` second publish / `0` repeated DIAG01 |
+| F11 webhook/post cleanup | PASS |
+| Receiver/tunnel/static-service restoration | PASS |
+| P1-T08 Provider probing cutoff | ENFORCED / CLOSED |
+| F11 authorization | `CONSUMED` permanently |
+
+The accepted DIAG01 evidence includes Query A HTTP `200` with 13 logs and no safely exact-matched `POST /v1/posts`; Query B HTTP `400` with no usable webhook-log evidence and no altered-filter retry; Query C HTTP `200` with one exact fixture-associated `post.published` / `success` record and Provider correlation/request ID `16c4ec20-651f-453c-914c-ec4d08eb6580`. The Query B failure is why the final bounded diagnostic is accepted as `DIAGNOSTIC_TECHNICAL_BLOCKER`; it is not evidence that `analytics.synced` itself is broken.
+
+### Future production analytics integration test requirement
+
+When the production analytics integration is implemented, deterministic/system integration tests must prove correctness for at least these cases:
+
+| Future scenario | Required property |
+|---|---|
+| Webhook arrives once | Valid event wakes reconciliation exactly once logically; durable state converges |
+| Same webhook arrives twice | Duplicate/retry is idempotently deduplicated; no duplicate state/job/report effect |
+| Webhook arrives late | Reconciliation remains correct; late signal must not corrupt or rewind durable cursor/state |
+| Webhook does not arrive | Independent bounded reconciliation still converges analytics state |
+| Reconciliation finds changes | Exact trusted target scope is validated and changes + next cursor persist atomically |
+| Reconciliation finds no changes | No fabricated change/business outcome; cursor/state handling remains correct |
+| Cursor persistence fails | Analytics changes and next cursor must not commit inconsistently |
+| Processing crashes before cursor commit | Recovery resumes safely without skipping or duplicating durable change processing |
+| Wrong tenant/brand/account/profile event arrives | Event is rejected/fails closed before downstream analytics processing |
+
+The production consumer must preserve D-016 bootstrap semantics: `capture cursor → import baseline → consume Delta from captured cursor`.
+
+These are **future system integration requirements**, not implementation performed by P1-T08 and not additional Provider Behavior claims. Exact reconciliation cadence, cost controls, leases/retries, persistence schema, worker behavior, and failure policy belong to the separately authorized later production analytics task.
+
+Final P1-T08 closeout itself performs Provider/Zernio requests `0`, credentials `0`, publish `0`, webhook mutation `0`, Analytics/Delta `0`, sync triggers `0`, VPS/lifecycle `0`, tunnel `0`, and source/runtime changes `0`.

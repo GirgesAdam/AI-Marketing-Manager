@@ -51,9 +51,9 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Parent Product Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
-Parent P1-T08 = **UNRESOLVED / NOT DONE**
+Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
-Analytics Webhook = `SPIKE_PENDING`
+Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
 Current Task = `P1-T08 — Verify Zernio analytics.synced Webhook Behavior`
 
@@ -4046,3 +4046,61 @@ Future production Delta requirement recorded: a durable Delta consumer captures/
 Provider-probing stop rule is now active: **NO MORE P1-T08 PROVIDER PROBING**. No second diagnostic, no new post, no webhook recreation, no expanded log exploration, no Delta, and no sync trigger. F11 authorization remains permanently `CONSUMED`; live experiments remaining `0`.
 
 Canonical parent state remains pending Team Leader disposition: `P1-T08 = UNRESOLVED / NOT DONE`. DIAG01 does not self-accept P1-T08. Safety totals for DIAG01: Provider requests `3`; GET `3`; Provider mutations `0`; publish `0`; webhook mutations `0`; posts created `0`; Delta `0`; sync triggers `0`; credentials exposed `0`.
+
+
+## P1-T08-FINAL-CLOSEOUT-01 — Final Documentation-Only Closeout (2026-10-22)
+
+`P1-T08-F11-DIAG01 = DONE / ACCEPTED — DIAGNOSTIC_TECHNICAL_BLOCKER`.
+
+Accepted DIAG01 evidence HEAD = `41a182af81bcb3d51af0be7675e007dd02d3eb70`; activation = `3daabadc90c6c2cd96b64ab2210a9f19106d30e0`; runner/test checkpoint = `b05da04a0f808cffa47c31911c7488bc1a4ddbfd`.
+
+Accepted diagnostic evidence: Query A `GET /v1/logs` with `type=api_request` and fixed `2026-10-22T16:55:30Z → 2026-10-22T16:57:30Z` window returned HTTP `200`, `13` logs, pagination present, and zero safely exact-matched `POST /v1/posts` records; no raw-body interpretation is accepted. Query B `GET /v1/logs` with `type=webhooks`, `event=analytics.synced`, exact account, and the same fixed window returned HTTP `400`, no usable webhook-log evidence, and no altered-filter retry. Query C `GET /v1/logs` with `type=publishing`, `platform=facebook`, exact account, and the same fixed window returned one exact fixture-associated publishing record with `action=post.published`, `status=success`, platform `facebook`, correlation/request ID `16c4ec20-651f-453c-914c-ec4d08eb6580`, and exact F11 fixture identifier present. No Provider timestamp or explicit post-ID field was available in the bounded safe projection and neither is invented.
+
+DIAG01 final classification = `DIAGNOSTIC_TECHNICAL_BLOCKER` because the required bounded webhook-log cross-check could not be completed due to Provider API HTTP `400`. This is not proof that `analytics.synced` is broken, that a webhook log does not exist, or that the F11 event was unrelated.
+
+### Final proven Provider behavior
+
+1. Zernio accepted configuration of an `analytics.synced` webhook scoped to the exact test Profile.
+2. Zernio delivered a valid signed `analytics.synced` event.
+3. HMAC verification passed.
+4. Header/body event identity passed.
+5. Exact Profile/account/platform validation passed.
+6. The observed event was non-duplicate.
+7. Receiver response was HTTP `204`.
+8. Analytics `overview.lastSync` advanced to exactly the event's `sync.syncedAt`.
+9. Provider publishing logs separately confirmed a successful `post.published` lifecycle record associated with the exact F11 fixture.
+10. Cleanup/restoration succeeded.
+
+### Final not-proven Provider behavior
+
+The evidence does not prove that the F11 post caused the observed `analytics.synced` event, was included in that Analytics sync, or that the event represented a post-fixture sync. It does not prove `analytics.synced` alone is sufficient as durable analytics truth, webhook delivery is guaranteed/lossless, or any business outcome.
+
+Final Provider conclusion: `Analytics Webhook Provider Behavior = PARTIALLY VERIFIED`. Event existence/delivery/validation = VERIFIED; direct data-bearing fixture correlation = NOT VERIFIED; final bounded diagnostic = TECHNICAL BLOCKER; additional probing = STOPPED. `analytics.synced` is feasible as a change/wake-up signal, but Phase-1 evidence does not justify using webhook delivery as the sole analytics correctness mechanism.
+
+`P1-T08 = DONE / ACCEPTED WITH PROVIDER LIMITATION`.
+
+Accepted limitation = `DATA_BEARING_ANALYTICS_SYNC_CORRELATION_NOT_ESTABLISHED`. This limitation is not, by itself, declared a release blocker.
+
+`Analytics Webhook = PARTIALLY VERIFIED — SIGNAL OBSERVED / DATA-BEARING CORRELATION NOT ESTABLISHED`.
+
+`Provider probing = CLOSED / NO FURTHER P1-T08 PROBING AUTHORIZED`.
+
+`P1-T08-F11 = DONE / ACCEPTED — EVENT OBSERVED, DATA-BEARING CORRELATION INCOMPLETE`.
+
+`P1-T08-F11-DIAG01 = DONE / ACCEPTED — DIAGNOSTIC_TECHNICAL_BLOCKER`.
+
+F11 authorization remains permanently `CONSUMED`.
+
+Fallback = `ACCEPTED — WEBHOOK SIGNAL + DURABLE ANALYTICS/DELTA RECONCILIATION`.
+
+Accepted production direction: `analytics.synced webhook → verify signature/event → resolve trusted internal ownership → reject wrong tenant/brand/account/profile → dedupe → enqueue analytics reconciliation → read Analytics/Delta from durable stored cursor → validate returned target scope → atomically persist analytics state + next cursor → audit`.
+
+Analytics correctness must also have a bounded reconciliation mechanism independent of webhook arrival to recover from missed, delayed, duplicate, retried delivery and temporary consumer failure. Exact cadence/cost/failure handling remains for the later production analytics implementation task and is not designed or implemented here.
+
+D-016 remains unchanged: `capture cursor → import baseline → consume Delta from captured cursor`. DIAG01 performed no Delta request.
+
+Permanent P1-T08 probing cutoff: no second F11, no second diagnostic, no expanded log query, no new publish, no new test webhook, no historical-run Delta probe, and no manufactured engagement. Any future Provider test requires genuinely new evidence plus a separate explicit authorization/scope decision.
+
+Closeout safety boundary: Provider requests `0`; credentials `0`; publish `0`; webhook mutation `0`; Analytics/Delta `0`; sync triggers `0`; VPS/lifecycle `0`; tunnel `0`; source/runtime changes `0`.
+
+No next Phase/Task is invented or started. Next-task selection remains subject to Team Leader review of `MASTER_IMPLEMENTATION_PLAN.md` and canonical `PROGRESS.md`.

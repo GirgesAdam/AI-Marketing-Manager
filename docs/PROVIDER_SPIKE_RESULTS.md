@@ -2529,3 +2529,63 @@ Provider requests: `3`; GET: `3`; Provider mutations: `0`; publish: `0`; webhook
 **NO MORE P1-T08 PROVIDER PROBING.** No repeat diagnostic round, no expanded log exploration, no second live post, no experimental webhook, no Delta probe, and no sync trigger are authorized by this result.
 
 `P1-T08-F11-DIAG01 = EXECUTED / AWAITING TEAM LEADER REVIEW`. Parent `P1-T08 = UNRESOLVED / NOT DONE`; DIAG01 does not self-accept or self-close P1-T08.
+
+
+## P1-T08 Final Team Leader Conclusion — Analytics Webhook Provider Behavior
+
+Final P1-T08 disposition: `DONE / ACCEPTED WITH PROVIDER LIMITATION`.
+
+Accepted DIAG01 classification: `DIAGNOSTIC_TECHNICAL_BLOCKER` at evidence HEAD `41a182af81bcb3d51af0be7675e007dd02d3eb70`.
+
+### Observed Provider Facts
+
+- Zernio accepted configuration of an `analytics.synced` webhook scoped to the exact test Profile.
+- One valid signed exact-target `analytics.synced` event was delivered and accepted by the controlled receiver.
+- HMAC verification passed; header/body event identity passed; exact Profile/account/platform validation passed; duplicate=false; receiver response HTTP `204`.
+- Analytics `overview.lastSync` advanced to exactly the event's `sync.syncedAt`.
+- The F11 publish path reconciled exactly one authorized post after an ambiguous publish transport outcome, with no publish retry.
+- DIAG01 Query A (`type=api_request`, fixed window) returned HTTP `200`, `13` logs, pagination present, and zero safely exact-matched `POST /v1/posts` records. Raw request/response bodies were not interpreted.
+- DIAG01 Query B (`type=webhooks`, `event=analytics.synced`, exact account, fixed window) returned HTTP `400`; no usable webhook-log evidence was obtained and no altered-filter retry occurred.
+- DIAG01 Query C (`type=publishing`, `platform=facebook`, exact account, fixed window) returned one exact fixture-associated publishing record with `action=post.published`, `status=success`, platform `facebook`, correlation/request ID `16c4ec20-651f-453c-914c-ec4d08eb6580`, and an exact F11 fixture identifier present.
+- The bounded safe Query C projection did not expose a trustworthy Provider timestamp or explicit post-ID field; neither is inferred.
+- F11 cleanup and infrastructure restoration were completed and accepted.
+
+### Unresolved / Not Proven
+
+- The F11 post is not proven to have caused the observed `analytics.synced` event.
+- The F11 post is not proven to have been included in that Analytics sync.
+- The observed event is not proven to represent a new post-fixture sync event.
+- Query C's publishing lifecycle evidence does not directly tie the exact fixture to the Analytics sync; log adjacency/timing is not treated as causality.
+- The final bounded webhook-log cross-check could not be completed because the approved Query B returned HTTP `400`. This is a diagnostic limitation, not proof that the webhook log is absent or that `analytics.synced` is broken/unrelated.
+- `analytics.synced` alone is not proven sufficient as durable analytics truth or as the sole correctness mechanism.
+- Webhook delivery is not proven guaranteed/lossless.
+- No business outcome is proven.
+
+Therefore Analytics Webhook Provider Behavior is **`PARTIALLY VERIFIED`**: event existence/delivery/validation is verified; direct data-bearing fixture correlation is not verified; the final bounded diagnostic ended `DIAGNOSTIC_TECHNICAL_BLOCKER`; P1-T08 Provider probing is closed.
+
+### Product Integration Consequence
+
+Commercial V1 must treat `analytics.synced` as an authenticated/deduplicated **wake-up/change signal**, not durable analytics authority.
+
+Accepted defensive flow:
+
+```text
+analytics.synced webhook
+→ verify signature/event
+→ resolve trusted internal ownership
+→ reject wrong tenant/brand/account/profile
+→ dedupe
+→ enqueue analytics reconciliation
+→ read Analytics/Delta from durable stored cursor
+→ validate returned target scope
+→ atomically persist analytics state + next cursor
+→ audit
+```
+
+Durable analytics state and cursor belong in PostgreSQL. The production consumer preserves D-016 bootstrap order: `capture cursor → import baseline → consume Delta from captured cursor`.
+
+A bounded reconciliation safety net independent of webhook arrival is required so correctness can recover from missed, delayed, duplicate, retried webhook delivery or temporary consumer failure. Exact reconciliation cadence, cost controls, and production failure handling are not Provider facts and are not implemented by P1-T08.
+
+This integration consequence is a defensive product/system design choice grounded in the evidence above. It must not be re-labeled as observed Zernio behavior.
+
+Provider probing cutoff is final for P1-T08: no second F11, no second diagnostic, no expanded historical log exploration, no new test webhook/post, no historical Delta probe, and no manufactured engagement without genuinely new evidence plus separate explicit scope/authorization.

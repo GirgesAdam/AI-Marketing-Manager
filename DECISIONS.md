@@ -422,3 +422,35 @@ This decision is scoped only to the Phase-1 P1-T08/F11 test infrastructure. It d
 Implementation remains separately gated. Before activation, a separately authorized task must prove exact installed sudoers syntax, ownership/mode invariants, verifier path safety, fail-closed behavior, absence of a privilege-escalation path, exact privilege-surface behavior, and safe recovery/restoration behavior. That implementation task must make zero Provider/Zernio requests.
 
 This decision does not authorize F11 execution and does not consume F11 authorization.
+
+
+## D-042 — Analytics Webhook Is a Signal, Reconciliation Owns Correctness
+
+**Status:** Accepted
+
+For Commercial V1 analytics integration, `analytics.synced` may be used as an authenticated/deduplicated wake-up signal.
+
+It is not durable analytics authority and must not be the only correctness mechanism.
+
+After trusted tenant/brand/account ownership validation, the signal schedules reconciliation against the supported Analytics/Delta provider interface.
+
+Durable analytics state and cursor live in PostgreSQL.
+
+The production consumer follows D-016:
+
+`capture cursor → load baseline → resume Delta from captured cursor`.
+
+Webhook duplicates/retries are idempotently deduplicated.
+
+A bounded reconciliation safety net independent of webhook arrival is required.
+
+This decision is grounded in P1-T08 evidence:
+
+- valid exact-target `analytics.synced` event observed;
+- Analytics sync timestamp alignment observed;
+- direct F11 fixture correlation not established;
+- final bounded Provider diagnostic could not close the correlation gap.
+
+This does not claim Zernio webhook unreliability.
+
+It deliberately removes webhook delivery from being a single point of correctness failure.
