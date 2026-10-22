@@ -3819,3 +3819,16 @@ Next gate requirement only: a later separately authorized task may perform exact
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested.
 
 Closeout safety boundary: VPS commands `0`; sudo commands `0`; sudoers mutation `0`; systemd actions `0`; receiver lifecycle `0`; verifier changes `0`; tunnels `0`; readiness `0`; credentials `0`; Provider/Zernio `0`; F11 consumed `NO`. Repository scope = documentation only (`PROGRESS.md` and `docs/TEST_MATRIX.md`). STOP after commit/push and final Git verification; do not start the rehearsal or any successor task.
+
+
+### P1-T08-F11-RHR01 — One controlled Provider-free receiver handoff rehearsal activation (2026-10-22)
+
+`P1-T08-F11-RHR01 = ACTIVATED — ONE PROVIDER-FREE RECEIVER HANDOFF REHEARSAL`.
+
+Starting repository HEAD = `a09f74b09b07b0abb8da862fb7978f10cd27e6e1`; Local = Tracking = Live Remote; working tree clean; LPI01 = `DONE / ACCEPTED WITH NON-BLOCKING NOTE`; D-041 = Accepted.
+
+Initial counters: receiver stop `0`; receiver start `0`; receiver restart `0`; tunnel `0`; readiness `0`; credentials `0`; Provider/Zernio `0`; authorization consumed `NO`.
+
+Parent state at activation: `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; blocker = `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN`; F11 authorization = `AUTHORIZED / UNCONSUMED`; Provider requests = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`.
+
+Activation authorizes only the bounded RHR01 Provider-free rehearsal contract. `p1-t08-f10-runner --live`, Provider/Zernio requests, Provider credentials, F11 publishing, Analytics/Delta, Provider webhook mutation, restart, blind lifecycle retries, and any successor task remain prohibited.
