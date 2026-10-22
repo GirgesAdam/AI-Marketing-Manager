@@ -690,3 +690,311 @@ Policy Authority
 Marketing Brain
 Durable Product State
 ```
+
+
+---
+
+# 36. P1-T08 — Bounded Provider Probing and Documented-Contract Fallback Plan
+
+## Purpose
+
+The objective of P1-T08 is to determine, with reasonable direct evidence, whether Zernio `analytics.synced` behavior is suitable for the Commercial V1 analytics integration.
+
+P1-T08 must **not** become an open-ended provider investigation.
+
+The project will perform a bounded number of controlled attempts. If those attempts do not produce conclusive Provider Behavior evidence, the project will stop further probing and proceed using the documented Zernio contract with defensive reconciliation behavior.
+
+This section records an **operating plan**, not a proven Provider Behavior result.
+
+## Current-State Authority
+
+Current Phase / Current Task / blockers / authorization-consumption state remain declared only in `PROGRESS.md`. This section does not redefine or self-clear current execution state.
+
+## Bounded Investigation Plan
+
+The investigation is intentionally limited to the following stages.
+
+### Stage 1 — Establish Safe Receiver Infrastructure
+
+Complete and verify a deterministic least-privilege mechanism for:
+
+- stopping the static receiver;
+- restoring the static receiver;
+- verifying the accepted receiver source;
+- verifying F11 evidence state/count.
+
+The mechanism must not provide broad root, shell, arbitrary `systemctl`, or arbitrary filesystem access.
+
+No Provider request is required for this stage.
+
+### Stage 2 — Infrastructure Rehearsal Without Zernio
+
+Before consuming the F11 live authorization, perform one controlled rehearsal of the receiver handoff:
+
+```text
+static receiver
+→ stop
+→ reverse tunnel
+→ local F10/F11 Node receiver
+→ readiness verification
+→ close tunnel
+→ restore static receiver
+```
+
+The rehearsal must verify that:
+
+- the static receiver can be stopped safely;
+- `127.0.0.1:8765` becomes available;
+- the reverse tunnel can bind correctly;
+- the local Node receiver is reachable through the accepted public route;
+- readiness succeeds;
+- the tunnel can be removed;
+- the accepted static receiver can be restored;
+- the final VPS state matches the accepted baseline.
+
+No Zernio/Provider request is made during this rehearsal.
+
+If the rehearsal fails, stop and repair the infrastructure path before F11.
+
+### Stage 3 — One Authorized F11 Data-Bearing Live Experiment
+
+After infrastructure readiness is proven, execute the already-authorized single F11 experiment under its separately authorized task boundary.
+
+The experiment must preserve the existing one-run authorization constraints.
+
+Expected evidence chain:
+
+1. capture pre-experiment Analytics state/cursor;
+2. establish the exact F11 webhook receiver;
+3. publish the single authorized F11 post;
+4. observe for `analytics.synced`;
+5. capture webhook evidence if received;
+6. read follow-up Analytics / Delta state;
+7. correlate the Provider event, analytics change, target identity, and experiment timing;
+8. restore infrastructure;
+9. classify the result.
+
+No automatic second data-bearing post is authorized.
+
+## Evidence Cross-Check
+
+F11 must not classify the Provider solely from whether the local receiver observed a webhook.
+
+Where available, evaluate together:
+
+- local receiver evidence;
+- Zernio webhook/delivery evidence;
+- Analytics state;
+- Delta/cursor state;
+- exact profile/account/target identity;
+- event ID;
+- timestamps;
+- publish result/readback.
+
+This is required to distinguish Provider Behavior from local delivery/infrastructure failure.
+
+## Result Interpretation
+
+### Case 1 — Webhook and Analytics Confirmed
+
+If the expected analytics change is observed and the expected `analytics.synced` event is observed and correctly correlated, record the corresponding Provider Behavior as verified.
+
+### Case 2 — Analytics Changed and Provider Delivery Exists, but Local Receiver Missed It
+
+Treat this primarily as an integration/delivery-path issue.
+
+Do not classify Zernio webhook capability as absent solely because the local receiver failed to capture a Provider-side delivery.
+
+Repair the system integration path separately if required.
+
+### Case 3 — Analytics Changed but No Event Is Observed
+
+If analytics changes are confirmed but no correlated `analytics.synced` event can be established, perform only the bounded Provider-side diagnostic stage below.
+
+Do not automatically publish another F11 post.
+
+### Case 4 — Fixture Did Not Reach Analytics
+
+If the F11 post exists but the relevant analytics state never reflects the fixture within the accepted observation window, classify the result as fixture/analytics inconclusive rather than falsely concluding that the webhook does not exist.
+
+Do not create repeated engagement or repeated data-bearing posts merely to force analytics activity.
+
+## Stage 4 — One Final Provider-Side Diagnostic Round
+
+If F11 remains inconclusive, allow one final diagnostic round using existing evidence only.
+
+The diagnostic may include, where available:
+
+- webhook delivery logs;
+- event IDs;
+- request IDs;
+- timestamps;
+- profile/account/post IDs;
+- Analytics/Delta evidence;
+- provider documentation;
+- targeted Provider clarification/support.
+
+This stage must not automatically create a second live data-bearing experiment.
+
+After this diagnostic round:
+
+**STOP further P1-T08 Provider probing unless the Team Leader explicitly authorizes a new scope based on genuinely new evidence.**
+
+## Provider-Probing Cutoff
+
+The planned sequence is:
+
+1. safe infrastructure path;
+2. one infrastructure rehearsal without Provider;
+3. one authorized F11 live experiment;
+4. one evidence cross-check / Provider diagnostic round if necessary;
+5. STOP.
+
+Repeated materially equivalent live experiments are not part of the plan.
+
+The project must avoid spending unbounded Phase-1 time attempting to force a perfectly observable Provider event.
+
+## Documented-Contract Fallback
+
+If the bounded investigation does not produce conclusive Provider Behavior evidence, the project may proceed using the documented Zernio analytics contract as an **integration assumption**, clearly distinguished from proven spike behavior.
+
+The fallback must be designed defensively.
+
+The production system must not require `analytics.synced` delivery to be perfectly reliable for correctness.
+
+### Defensive Analytics Model
+
+Preferred fallback model:
+
+```text
+analytics.synced = wake-up / change signal
+```
+
+not:
+
+```text
+analytics.synced = durable source of truth
+```
+
+When the signal is received, the system should obtain authoritative analytics changes from the supported Analytics/Delta interface and persist durable state internally.
+
+Conceptual flow:
+
+```text
+Webhook
+→ authenticate/validate
+→ tenant/brand/target ownership validation
+→ deduplicate event
+→ enqueue reconciliation
+→ read Analytics/Delta from last durable cursor
+→ validate returned scope
+→ persist analytics state and next cursor
+→ audit outcome
+```
+
+### Reconciliation Safety Net
+
+Production design should include bounded reconciliation independent of webhook delivery.
+
+If the webhook is delayed, duplicated, retried, or temporarily missed, durable analytics state can still converge from the Provider Analytics/Delta interface.
+
+Webhook delivery improves freshness/latency but must not become the sole mechanism required for analytics correctness.
+
+Exact production reconciliation cadence, limits, failure behavior, and cost controls must be defined in the appropriate later production task.
+
+### Duplicate / Retry Handling
+
+The system must assume webhook delivery may occur more than once unless proven otherwise.
+
+Webhook handling must therefore be idempotent and support deduplication using Provider event identity and internal durable processing state.
+
+A duplicate webhook must not duplicate analytics state, jobs, reports, or downstream business actions.
+
+### Authority Boundary
+
+Provider webhook payloads are signals from an external integration.
+
+They do not become tenant authority, organization authority, brand authority, permission authority, or durable product state by themselves.
+
+Tenant/brand/resource ownership must be resolved through trusted internal mappings before any downstream processing.
+
+### Failure Philosophy
+
+The system must distinguish:
+
+```text
+Provider signal observed
+```
+
+from:
+
+```text
+Provider business fact confirmed
+```
+
+Likewise:
+
+```text
+webhook received
+```
+
+does not mean:
+
+```text
+analytics successfully reconciled
+```
+
+Analytics reconciliation must explicitly record success, failure, retryable state, or Unknown where applicable.
+
+## Decision After the Bounded Plan
+
+At the end of the bounded investigation, P1-T08 must reach one of these directions:
+
+### Direction A — Direct Provider Behavior Verified
+
+Record proven behavior in `docs/PROVIDER_SPIKE_RESULTS.md` and design the production integration around the verified behavior plus normal defensive controls.
+
+### Direction B — Documented Contract Used With Defensive Fallback
+
+Record clearly that direct behavior remained inconclusive after the bounded spike.
+
+Do not mislabel documentation as observed Provider Behavior.
+
+Proceed with:
+
+- documented contract;
+- webhook-as-signal semantics;
+- durable Delta/Analytics reconciliation;
+- deduplication;
+- periodic safety reconciliation;
+- monitoring/audit;
+- defensive failure handling.
+
+### Direction C — Explicit Provider Limitation Discovered
+
+If evidence contradicts required capability, record the limitation and adapt the system design before building dependent production subsystems.
+
+## Scope Discipline
+
+This plan does not authorize:
+
+- additional F11 posts;
+- repeated Provider experiments;
+- new social/analytics capabilities;
+- production Analytics implementation;
+- Provider SDK use outside adapters;
+- broad privilege/bootstrap changes;
+- bypassing tenant/brand authority;
+- treating Provider documentation as observed Provider Behavior.
+
+Any implementation remains subject to its own Task Contract and Team Leader review.
+
+## Working Principle
+
+The purpose of P1-T08 is not to prove that an external Provider is perfect.
+
+The purpose is to learn enough, early enough, to build a Commercial V1 integration that remains correct when the Provider is delayed, duplicated, retried, temporarily unavailable, or incompletely observable.
+
+The spike is bounded.
+
+The production system must be defensive.

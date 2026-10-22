@@ -3679,3 +3679,18 @@ Parent state is intentionally not self-cleared: current blocker remains `VPS_SAF
 Design decision state = **PROPOSED / AWAITING TEAM LEADER REVIEW**, not canonical architecture decision; `DECISIONS.md` remains unchanged. A later separately authorized implementation task would have to create/protect the verifier and explicit least-privilege rule, prove syntax/ownership/modes/security invariants, and test fail-closed behavior before the parent blocker could be reconsidered.
 
 Safety boundary preserved: VPS commands = `0`; sudo queries = `0`; sudoers mutation = `0`; systemd mutation = `0`; receiver lifecycle actions = `0`; verifier implementation = `0`; VPS file writes = `0`; source/runtime changes = `0`; tunnels = `0`; readiness = `0`; credentials = `0`; Provider/Zernio = `0`; F11 authorization consumed = `NO`. Repository changes are documentation-only. `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested.
+
+
+### P1-T08 bounded provider-probing / documented-contract fallback plan registration (2026-10-22)
+
+The bounded P1-T08 investigation/fallback operating plan is now documented in `PROVIDER_CAPABILITIES.md` under `# 36. P1-T08 — Bounded Provider Probing and Documented-Contract Fallback Plan`.
+
+Plan status = `REGISTERED AS OPERATING PLAN — NOT PROVIDER BEHAVIOR EVIDENCE`.
+
+The plan limits P1-T08 to: safe receiver infrastructure; one Provider-free handoff rehearsal; one separately authorized F11 data-bearing live experiment; at most one evidence cross-check / Provider diagnostic round if needed; then STOP unless genuinely new evidence causes a separately authorized scope decision. Repeated materially equivalent live experiments are not part of the plan.
+
+If direct behavior remains inconclusive after the bounded sequence, the documented-contract fallback is `analytics.synced = wake-up/change signal`, with durable Analytics/Delta reconciliation, deduplication, periodic safety reconciliation, audit/monitoring, trusted tenant/brand/resource mapping, and defensive failure handling. Documentation must remain explicitly distinguished from observed Provider Behavior.
+
+Current execution state is unchanged by this registration: `P1-T08-F11-LPD01 = EXECUTED / AWAITING TEAM LEADER REVIEW`; `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; current blocker remains `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider requests = `0`; F11 post published = `NO`; P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`.
+
+This documentation change does not authorize LPD01 implementation, receiver lifecycle/rehearsal, credentials, Provider/Zernio calls, F11 execution, production Analytics implementation, or any successor task.
