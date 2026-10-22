@@ -2475,3 +2475,48 @@ Classification: `LEAST_PRIVILEGE_RECEIVER_PATH_IMPLEMENTED_READY_FOR_REHEARSAL`
 Final safety counters: receiver stop `0`; receiver start `0`; receiver restart `0`; process signals `0`; tunnels `0`; readiness POSTs `0`; credentials loaded `0`; Provider/Zernio `0`; `/v1/auth/verify` `0`; Analytics/Delta `0`; publish attempts `0`; posts `0`; F11 authorization consumed `NO`.
 
 LPI01 is implementation/security-validation evidence only. It does not authorize or execute the later Provider-free rehearsal, lifecycle commands, tunnel creation, readiness, credentials, Provider transport, F11 live execution, or any successor task.
+
+
+## P1-T08-F11-LPI01-CLOSEOUT-01 - Documentation-Only Acceptance Closeout (2026-10-22)
+
+Status: `DONE / ACCEPTED WITH NON-BLOCKING NOTE`
+
+Accepted classification: `LEAST_PRIVILEGE_RECEIVER_PATH_IMPLEMENTED_READY_FOR_REHEARSAL`
+
+Accepted evidence HEAD: `07b8b4537939041ae50517d5177c7ac66cf818ae`
+
+| Closeout check | Accepted evidence | Result |
+| --- | --- | --- |
+| Activation commit | `bd47554e716d1e1d7ae0ff4c1125b63fef4a419b` | ACCEPTED |
+| Implementation commit | `01bccd2dbb29d8665c61cf799641b35621014087` | ACCEPTED |
+| Installed verifier | `/usr/local/sbin/marketly-f11-receiver-verify`; SHA `1f617e8e098871c1a50c8b319ccd1b3d8a1725054a832ecb3fce9b1ef95db46f`; `root:root`; `0755`; regular; non-symlink | ACCEPTED |
+| Installed sudoers | `/etc/sudoers.d/marketly-f11-receiver`; SHA `60f174339f56b2eeaa7b9da7838baa9b3c7b6281fc414caf8c8ee344a28c165c`; `root:root`; `0440`; regular | ACCEPTED |
+| Accepted privilege surface | RunAs `root`; `NOPASSWD:NOSETENV`; exact stop; exact start; fixed verifier only | ACCEPTED |
+| Excluded privilege | No restart, arbitrary systemctl, shell, arbitrary root, general Python/Node, arbitrary filesystem utilities, or unrelated services | ACCEPTED |
+| Fresh receiver/unit integrity | Fresh receiver/unit SHAs matched accepted historical values; both non-symlink | PASS |
+| Ownership/path invariants | Receiver/unit root-owned; interpreter root-owned/non-writable; verifier parent root-owned/non-writable; no drop-ins; no `EnvironmentFile=`; WorkingDirectory empty; service account `marketly-r02` | PASS |
+| Evidence baseline | `VALID_EMPTY / 0` | PASS |
+| Staged sudo syntax | `visudo -cf` | PASS |
+| Installed fragment syntax | `visudo -cf /etc/sudoers.d/marketly-f11-receiver` | PASS |
+| Full sudo syntax | `visudo -c` | PASS |
+| Approved NOPASSWD verifier | after `sudo -k`, `sudo -n /usr/local/sbin/marketly-f11-receiver-verify` = PASS / exit `0` | PASS |
+| Negative broad control | after `sudo -k`, `sudo -n /usr/bin/id -u` = DENIED / exit `1` | PASS |
+| Negative systemctl control | after `sudo -k`, `sudo -n /usr/bin/systemctl is-active marketly-r02-receiver.service` = DENIED / exit `1` | PASS |
+| Privilege conclusion | Required verifier NOPASSWD exists; bounded controls did not demonstrate unexpectedly broad noninteractive privilege | ACCEPTED |
+| Verifier suite | `18 run / 17 passed / 1 skipped` | PASS WITH NON-BLOCKING NOTE |
+| Full regression | `npm test` = `427 / 427 PASS` | PASS |
+| Typecheck | `npm run typecheck` | PASS |
+| Build | `npm run build` | PASS |
+| Diff/check gates | LPI01 diff/check gates | PASS |
+| Runtime state | service `active/running`; boot `disabled`; listener `127.0.0.1:8765`; local exact `200`; public root `404`; public exact `200`; near-miss `404` | PRESERVED |
+| Lifecycle counters | stop `0`; start `0`; restart `0` | PRESERVED |
+| Tunnel/readiness | tunnel `0`; readiness `0` | PRESERVED |
+| Parent blocker | `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN` | PRESERVED |
+| Parent/provider state | F11 `NOT DONE / BLOCKED PRE_PROVIDER`; authorization `AUTHORIZED / UNCONSUMED`; consumed `NO`; Provider `0`; post `NO`; P1-T08 `UNRESOLVED / NOT DONE`; Analytics `SPIKE_PENDING` | PRESERVED |
+| Provider results | `docs/PROVIDER_SPIKE_RESULTS.md` unchanged; no Provider Behavior tested | PASS |
+
+Non-blocking note: the POSIX FIFO/special-entry verifier test was skipped on the Windows development host because the required POSIX primitive was unavailable. Acceptance remains valid because the contract required this case where practical, the deployed target is Ubuntu/Linux, the deployed verifier uses its POSIX path and explicitly rejects non-regular direct entries, and no artificial special entry needs to be created in the accepted VPS evidence directory solely for closeout. This is not evidence of a runtime special-file test on the VPS.
+
+Next gate requirement only: one separately authorized Provider-free receiver handoff rehearsal may later prove static receiver -> exact stop -> inactive/8765-free -> reverse SSH tunnel -> local Node receiver -> public readiness -> close tunnel -> exact static receiver start -> verifier/post-state checks. That future rehearsal requires Provider/Zernio `0`, credentials `0`, posts `0`, and F11 authorization consumption `NO`; this closeout does not authorize it.
+
+Closeout safety counters: VPS commands `0`; sudo commands `0`; sudoers mutation `0`; systemd actions `0`; receiver lifecycle `0`; verifier changes `0`; tunnels `0`; readiness `0`; credentials `0`; Provider/Zernio `0`; F11 consumed `NO`.

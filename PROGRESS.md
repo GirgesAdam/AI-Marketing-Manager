@@ -3780,3 +3780,42 @@ Parent state is intentionally NOT self-cleared by LPI01: current blocker remains
 LPI01 result means the accepted least-privilege path is implemented and ready for a later separately authorized Provider-free rehearsal only. It does NOT authorize that rehearsal, receiver stop/start, reverse tunnel creation, readiness, credentials, Provider/Zernio transport, F11 live execution, or any successor task.
 
 Documentation scope for this result = `PROGRESS.md` + `docs/TEST_MATRIX.md` only. `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested. `DECISIONS.md` remains unchanged because D-041 was already accepted and LPI01 introduces no new architecture decision.
+
+
+### P1-T08-F11-LPI01-CLOSEOUT-01 - Documentation-only Team Leader acceptance closeout (2026-10-22)
+
+`P1-T08-F11-LPI01 = DONE / ACCEPTED WITH NON-BLOCKING NOTE`.
+
+Team Leader disposition = `ACCEPTED WITH NON-BLOCKING NOTE`.
+
+Accepted classification = `LEAST_PRIVILEGE_RECEIVER_PATH_IMPLEMENTED_READY_FOR_REHEARSAL`.
+
+Accepted evidence HEAD = `07b8b4537939041ae50517d5177c7ac66cf818ae`.
+
+Implementation commit = `01bccd2dbb29d8665c61cf799641b35621014087`. Activation commit = `bd47554e716d1e1d7ae0ff4c1125b63fef4a419b`.
+
+Accepted installed verifier = `/usr/local/sbin/marketly-f11-receiver-verify`; SHA-256 = `1f617e8e098871c1a50c8b319ccd1b3d8a1725054a832ecb3fce9b1ef95db46f`; metadata = `root:root`, mode `0755`, regular file, non-symlink.
+
+Accepted installed sudoers fragment = `/etc/sudoers.d/marketly-f11-receiver`; SHA-256 = `60f174339f56b2eeaa7b9da7838baa9b3c7b6281fc414caf8c8ee344a28c165c`; metadata = `root:root`, mode `0440`, regular file.
+
+Accepted privilege surface only: RunAs `root`, tags `NOPASSWD:NOSETENV`, exact `/usr/bin/systemctl stop marketly-r02-receiver.service`, exact `/usr/bin/systemctl start marketly-r02-receiver.service`, and exact `/usr/local/sbin/marketly-f11-receiver-verify`. No accepted privilege for restart, arbitrary `systemctl`, shell, arbitrary root commands, general Python/Node, arbitrary filesystem utilities, or unrelated services.
+
+Accepted security evidence: fresh receiver SHA and unit SHA matched the accepted historical values; receiver and unit were not symlinks; unit and receiver were root-owned; interpreter was root-owned/non-writable; verifier parent was root-owned/non-writable; no drop-ins; no `EnvironmentFile=`; WorkingDirectory empty; service account `marketly-r02`; evidence baseline `VALID_EMPTY / 0`.
+
+Accepted sudo validation: staged `visudo -cf` = PASS; installed-fragment `visudo -cf` = PASS; full `visudo -c` = PASS. After `sudo -k`, approved verifier `sudo -n /usr/local/sbin/marketly-f11-receiver-verify` = PASS / exit `0`; negative `sudo -n /usr/bin/id -u` = DENIED / exit `1`; negative `sudo -n /usr/bin/systemctl is-active marketly-r02-receiver.service` = DENIED / exit `1`. Accepted conclusion: the required verifier NOPASSWD capability exists while the bounded negative controls did not demonstrate an unexpectedly broad noninteractive privilege surface.
+
+Accepted regression evidence: verifier suite = `18 run / 17 passed / 1 skipped`; `npm test` = `427 / 427 PASS`; `npm run typecheck` = PASS; `npm run build` = PASS; diff/check gates = PASS.
+
+Non-blocking note: the verifier suite's POSIX FIFO/special-entry test was skipped on the Windows development host because the required POSIX primitive was unavailable there. This does not block LPI01 acceptance because the contract required the special-entry case where practical; the deployed target is Ubuntu/Linux; the deployed verifier uses its POSIX evidence-directory path; the implementation explicitly rejects non-regular direct entries; and there is no need to mutate the accepted VPS evidence directory with an artificial special file solely for this closeout. This note is not runtime proof of a special-file test on the VPS.
+
+Accepted preserved runtime state from LPI01 evidence: service `active/running`; boot `disabled`; listener `127.0.0.1:8765`; local exact receiver `200`; public root `404`; public exact F11 route `200`; public near-miss `404`. Lifecycle counters remained stop `0`, start `0`, restart `0`; tunnels `0`; readiness `0`.
+
+Parent blocker is intentionally NOT cleared by this closeout. Preserve `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; current blocker = `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN`. Reason: the least-privilege capability is implemented and its static privilege/security surface has been validated, but actual controlled lifecycle/handoff/restoration behavior has not yet been rehearsed.
+
+Preserved parent/provider state: F11 authorization = `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`; Provider requests = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`.
+
+Next gate requirement only: a later separately authorized task may perform exactly one Provider-free receiver handoff rehearsal to prove static receiver -> exact stop -> confirm inactive/8765 free -> reverse SSH tunnel -> local Node receiver -> public readiness -> close tunnel -> exact static receiver start -> verifier/post-state checks. That future rehearsal must make zero Zernio/Provider requests, load zero Zernio credentials, publish zero posts, and consume zero F11 authorization. This closeout does NOT authorize the rehearsal.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested.
+
+Closeout safety boundary: VPS commands `0`; sudo commands `0`; sudoers mutation `0`; systemd actions `0`; receiver lifecycle `0`; verifier changes `0`; tunnels `0`; readiness `0`; credentials `0`; Provider/Zernio `0`; F11 consumed `NO`. Repository scope = documentation only (`PROGRESS.md` and `docs/TEST_MATRIX.md`). STOP after commit/push and final Git verification; do not start the rehearsal or any successor task.
