@@ -3558,3 +3558,10 @@ Canonical state preserved: credential source = `IDENTIFIED / AVAILABLE`; child c
 Closeout safety boundary: VPS commands = `0`; sudo queries = `0`; receiver lifecycle = `0`; sudoers changes = `0`; infrastructure mutation = `0`; credentials = `0`; Provider/Zernio = `0`; source/test mutation = `0`; F11 authorization consumed = `NO`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, `.env`, and VPS/systemd/sudoers/Nginx/SSH state remain unchanged. Commit/push and STOP. Do not rerun `sudo -l`, run `sudo -ll`, execute receiver start/stop, inspect sudoers files, edit sudoers, access receiver source/evidence through privilege, start F11, or start a successor task.
+
+
+### P1-T08-F11-PV02 - verbose exact receiver lifecycle policy visibility activation (2026-10-22)
+
+`P1-T08-F11-PV02 = ACTIVATED — VERBOSE EXACT RECEIVER LIFECYCLE POLICY VISIBILITY`.
+
+Activation boundary: receiver lifecycle actions = `0`; privileged mutation executions = `0`; sudoers mutation = `0`; credentials = `0`; Provider = `0`; F11 authorization remains `AUTHORIZED / UNCONSUMED`.
