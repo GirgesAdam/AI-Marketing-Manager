@@ -2398,3 +2398,34 @@ Classification: `VPS_POLICY_VISIBILITY_STILL_INDETERMINATE`
 | Provider results doc | `docs/PROVIDER_SPIKE_RESULTS.md` unchanged | PASS |
 
 Safety counters: receiver stop `0`; receiver start `0`; receiver restart `0`; process signals `0`; systemd reload `0`; sudoers mutation `0`; VPS file writes `0`; permission/ownership changes `0`; receiver-source privileged reads `0`; evidence-directory privileged reads `0`; tunnels `0`; readiness `0`; credentials `0`; Provider/Zernio `0`; F11 authorization consumed `NO`.
+
+
+## P1-T08-F11-LPD01 — Deterministic least-privilege receiver path design (2026-10-22)
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`
+Classification: `LEAST_PRIVILEGE_RECEIVER_PATH_DESIGN_READY`
+Selected: **Candidate B — exact lifecycle grants + fixed verifier**.
+
+| Design check | Result | Evidence / requirement |
+| --- | --- | --- |
+| Candidate A — exact lifecycle + direct read utilities | REJECTED | Direct `find`/`sha256sum`-style privilege increases filesystem/tool argument surface and depends on command-argument semantics; fixed verifier is narrower and more auditable. |
+| Candidate B — exact lifecycle + fixed verifier | SELECTED | Exactly two service-state mutations plus one zero-argument bounded read-only verifier; lowest practical disclosure/custom-mutation surface for the accepted handoff. |
+| Candidate C — root control wrapper | REJECTED | Combines mutation and verification in larger privileged custom code; unnecessary for Phase-1 and more complex to audit/recover. |
+| RunAs | PASS DESIGN | `root` only; no arbitrary users/groups. |
+| Lifecycle scope | PASS DESIGN | Exact `/usr/bin/systemctl stop marketly-r02-receiver.service` and exact `/usr/bin/systemctl start marketly-r02-receiver.service`; no restart/wildcards/unrelated services. |
+| Verifier location/ownership | PASS DESIGN | `/usr/local/sbin/marketly-f11-receiver-verify`, `root:root`, `0755`, root-owned/non-writable parent; zero arguments/paths. |
+| Verifier fixed inputs | PASS DESIGN | Receiver source, unit, and F11 evidence directory fixed to accepted paths only. |
+| Safe output | PASS DESIGN | Bounded machine-readable hashes/readability/directory-state/count/result only; no filenames, contents, payloads, headers, or secrets. |
+| Symlink/path safety | PASS DESIGN | Reject symlink fixed files/dir; no-follow open + regular-file/fd identity checks; direct evidence entries only; reject symlink/special entries; no recursion. |
+| Evidence count | PASS DESIGN | Direct regular files only; distinguish missing/error/valid-empty/valid-nonempty/invalid-structure; count null on invalid state. |
+| Environment/injection | PASS DESIGN | NOSETENV/equivalent future grant; fixed/sanitized verifier environment; no eval/shell/caller input; no broad interpreter grant. |
+| Unit/ExecStart escalation | PASS GIVEN ACCEPTED FACTS | Root-owned/non-writable unit/interpreter/receiver parent; no writable EnvironmentFile observed; service account distinct. Any drift blocks later implementation. |
+| Pre/post handoff | PASS DESIGN | Verify → stop → inactive/8765-free → owned tunnel → readiness; restore by close tunnel → 8765-free → start → active → verify hashes/state → public route. |
+| Blind retry | PROHIBITED | All failure branches fail closed and require bounded restoration/human escalation. |
+| Parent blocker | UNCHANGED | `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN`; design readiness does not implement or prove the path. |
+
+Design-only future sudo surface: `(root) NOPASSWD:NOSETENV` for exactly the two fixed `systemctl` command+argument specs and `/usr/local/sbin/marketly-f11-receiver-verify`; explicitly no `NOPASSWD: ALL`, unrestricted systemctl, wildcards, shell/root, general Python/Node, arbitrary filesystem read/write utilities, sudoedit, or unrelated service/package control. Any implementation must separately validate installed sudoers syntax and ownership/mode invariants before enablement.
+
+Failure matrix: verifier→stop failure = no tunnel/STOP/human/unconsumed; stopped-but-8765-occupied = no tunnel/start conflict/STOP/human/unconsumed pre-Provider; tunnel failure after stop = restore exact receiver then verify or STOP/human/unconsumed; runner failure pre-Provider = close tunnel + restore + verify/unconsumed; restoration start failure = no blind retry/STOP/human/preserve actual authorization state; post-restore hash mismatch = not restored/STOP/human; evidence-count drift = fail closed with authorization state based on whether first Provider request occurred; unknown 8765 listener = never kill, STOP/human.
+
+Safety counters: VPS commands `0`; sudo queries `0`; sudoers/systemd mutations `0`; receiver lifecycle `0`; verifier implementation `0`; VPS file writes `0`; source/runtime changes `0`; tunnels/readiness `0`; credentials `0`; Provider/Zernio `0`; F11 authorization consumed `NO`. `docs/PROVIDER_SPIKE_RESULTS.md` unchanged; `DECISIONS.md` unchanged pending Team Leader acceptance.
