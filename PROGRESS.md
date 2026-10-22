@@ -3920,3 +3920,16 @@ Bounded Provider plan remains: (1) safe receiver infrastructure completed; (2) P
 `D-041` remains sufficient. `DECISIONS.md`, `PROVIDER_CAPABILITIES.md`, and `docs/PROVIDER_SPIKE_RESULTS.md` remain unchanged.
 
 Closeout safety boundary: VPS commands `0`; sudo/systemd `0`; receiver lifecycle `0`; tunnels `0`; readiness `0`; credentials `0`; Provider/Zernio `0`; publish `0`; F11 consumed `NO`. Repository scope = documentation only (`PROGRESS.md`, `docs/TEST_MATRIX.md`). STOP after commit/push and final Git verification; do not execute F11 or start a successor task.
+
+
+### P1-T08-F11-LIVE01 — Single authorized data-bearing live experiment activation (2026-10-22)
+
+`P1-T08-F11-LIVE01 = ACTIVATED — SINGLE AUTHORIZED DATA-BEARING LIVE EXPERIMENT`.
+
+Starting HEAD = `d8a13e9d7f24cd818d92c90a7b5cf8a5e4cc5897`; Local = Tracking = Live Remote; working tree clean; RHR01 = `DONE / ACCEPTED WITH NON-BLOCKING NOTES`; infrastructure blocker = `NONE — accepted receiver lifecycle/handoff prerequisite satisfied`.
+
+Frozen F11 authorization at activation = `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`; Provider requests = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`.
+
+Activation counters: receiver stop `0`; receiver start `0`; receiver restart `0`; tunnels `0`; readiness `0`; credentials loaded `0`; Provider/Zernio requests `0`; publish attempts `0`; posts created `0`.
+
+This activation uses the existing single F11 authorization and creates no new authorization. Authorization remains unconsumed until the first trusted Zernio Provider HTTP transport attempt is actually sent. No Provider action is authorized before the remaining LIVE01 pre-Provider gates pass.
