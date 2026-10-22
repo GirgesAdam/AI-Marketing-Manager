@@ -3321,3 +3321,10 @@ This closeout does **NOT** itself authorize or start an F11 live retry. Any futu
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source, tests, config, package files, and all `.env` files remain unchanged. No Provider/Zernio, credential, VPS, receiver, SSH tunnel, readiness, publish, or live-runner action is authorized or performed by this closeout.
 
 STOP after commit/push and evidence handoff. Do not start F11 live retry or any successor task automatically.
+
+
+### P1-T08-F11-LR06 - authorized timestamp-complete single-dispatch live retry activation (2026-10-22)
+
+`P1-T08-F11-LR06 = ACTIVATED — AUTHORIZED TIMESTAMP-COMPLETE SINGLE-DISPATCH LIVE RETRY`.
+
+Activation boundary: Provider/Zernio = `0`; credentials not accessed; infrastructure untouched; F11 authorization = `AUTHORIZED / UNCONSUMED`.
