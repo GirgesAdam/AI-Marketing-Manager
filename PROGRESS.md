@@ -3256,3 +3256,10 @@ Required future timestamp semantics for that later implementation task: each act
 Safety boundary for this closeout: process probes = `0`; source changes = `0`; test changes = `0`; credential access = `0`; Provider/Zernio = `0`; infrastructure = `0`; F11 authorization consumed = `NO`.
 
 Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source, tests, config, package files, and all `.env` files remain unchanged. Commit/push and STOP. Do not modify F10 harness or tests, access credentials, run an orchestration probe, contact Zernio, touch VPS/receiver/tunnel/readiness, start another F11 live retry, or start the observability successor task.
+
+
+### P1-T08-F11-OBS01 - F10 request timestamp observability hardening activation (2026-10-22)
+
+`P1-T08-F11-OBS01 = ACTIVATED — F10 REQUEST TIMESTAMP OBSERVABILITY HARDENING`.
+
+Activation boundary: Provider/Zernio = `0`; credentials = `0`; infrastructure = `0`; F11 authorization remains `AUTHORIZED / UNCONSUMED`.
