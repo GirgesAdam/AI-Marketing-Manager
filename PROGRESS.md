@@ -3525,3 +3525,36 @@ PV01 does **not** self-clear the parent blocker. Pending Team Leader review: `P1
 Safety boundary preserved: receiver stop = `0`; receiver start = `0`; receiver restart = `0`; process signals = `0`; systemd reload = `0`; sudoers edits = `0`; VPS file writes = `0`; permission changes = `0`; tunnel creation = `0`; readiness = `0`; credentials = `0`; Provider/Zernio = `0`; F11 authorization consumed = `NO`.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested. STOP after documentation commit/push and evidence handoff. Do not execute start/stop, test permission by mutation, inspect broad sudo policy, edit sudoers, access receiver evidence/source through privilege, create tunnel, access credentials, contact Zernio, start F11, or start a successor task.
+
+
+### P1-T08-F11-PV01-CLOSEOUT-01 - Team Leader documentation-only closeout (2026-10-22)
+
+`P1-T08-F11-PV01 = DONE / ACCEPTED`.
+
+Team Leader disposition = `ACCEPTED`.
+
+Accepted evidence HEAD = `64b73866d264fc25f6c736bee5d5ea5a41f8f0c2`.
+
+Accepted classification = `VPS_POLICY_VISIBILITY_STILL_INDETERMINATE`.
+
+Accepted stop-query evidence: exact query = `sudo -l /usr/bin/systemctl stop marketly-r02-receiver.service`; query reached VPS = `YES`; policy-view authentication requested = `YES`; first password attempt was rejected; subsequent policy-view authentication succeeded; relevant returned command = `/usr/bin/systemctl stop marketly-r02-receiver.service`; exit code = `NOT CAPTURED`; explicit `NOPASSWD` = `NOT SHOWN / UNVERIFIED`; underlying exact-vs-broad sudo rule = `UNVERIFIED`; receiver stop execution = `0`. The missing exit code is not inferred.
+
+Accepted start-query evidence: exact query = `sudo -l /usr/bin/systemctl start marketly-r02-receiver.service`; query reached VPS = `YES`; policy-view authentication requested on this query = `NO`; prior sudo authentication timestamp/session was already valid; relevant returned command = `/usr/bin/systemctl start marketly-r02-receiver.service`; exit code = `0`; explicit `NOPASSWD` = `NOT SHOWN / UNVERIFIED`; underlying exact-vs-broad sudo rule = `UNVERIFIED`; receiver start execution = `0`.
+
+Team Leader interpretation: single-command `sudo -l <command>` successfully showing the fully qualified target command proves the policy-check interface permits that queried command. From the captured PV01 output alone it does **NOT** establish `NOPASSWD`, `PASSWD`, exact narrow sudoers origin, or broad/wildcard sudoers origin. Authentication used to view policy is not sufficient evidence of the target command's execution-password semantics. Therefore `VPS_EXACT_NARROW_NOPASSWD_LIFECYCLE_CONFIRMED` = NOT PROVEN; `VPS_EXACT_LIFECYCLE_POLICY_INSUFFICIENT` = NOT PROVEN; `VPS_EXACT_LIFECYCLE_POLICY_ABSENT` = NOT PROVEN; `VPS_BROAD_PRIVILEGE_POLICY_REVIEW_REQUIRED` = NOT PROVEN. Accepted result remains `VPS_POLICY_VISIBILITY_STILL_INDETERMINATE`.
+
+Future policy-visibility requirement only: a later separately authorized task should use sudo's verbose command-policy listing form `sudo -ll <exact-command>` for only the exact receiver lifecycle commands, if supported by the installed sudo policy implementation. That later task must capture exact query, exit code, matching rule output, `PASSWD`/`NOPASSWD` semantics if exposed, command/runas constraints, and evidence of narrow-vs-broad matching. This closeout does **NOT** authorize those queries.
+
+PV01 no-mutation validation: receiver stop = `0`; receiver start = `0`; receiver restart = `0`; process signals = `0`; systemd reload = `0`; sudoers edits = `0`; VPS file writes = `0`; permission changes = `0`; tunnels = `0`; readiness = `0`; credentials = `0`; Provider/Zernio = `0`. Human sudo password was not shared with ChatGPT/tools.
+
+Canonical parent state remains `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`.
+
+Current blocker remains `VPS_EXACT_NONINTERACTIVE_PRIVILEGE_POLICY_UNVERIFIED`. Do **NOT** refine or clear it yet.
+
+Canonical state preserved: credential source = `IDENTIFIED / AVAILABLE`; child credential-delivery path = `ACCEPTED`; single-dispatch execution-control path = `ACCEPTED`; request timestamp observability = `ACCEPTED`; F11 authorization = `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`; Provider requests = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because PV01 produced no Provider Behavior evidence.
+
+Closeout safety boundary: VPS commands = `0`; sudo queries = `0`; receiver lifecycle = `0`; sudoers changes = `0`; infrastructure mutation = `0`; credentials = `0`; Provider/Zernio = `0`; source/test mutation = `0`; F11 authorization consumed = `NO`.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, `.env`, and VPS/systemd/sudoers/Nginx/SSH state remain unchanged. Commit/push and STOP. Do not rerun `sudo -l`, run `sudo -ll`, execute receiver start/stop, inspect sudoers files, edit sudoers, access receiver source/evidence through privilege, start F11, or start a successor task.
