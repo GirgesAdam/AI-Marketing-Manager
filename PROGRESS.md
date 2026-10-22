@@ -3498,3 +3498,30 @@ Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_
 `P1-T08-F11-PV01 = ACTIVATED — EXACT RECEIVER LIFECYCLE POLICY VISIBILITY`.
 
 Activation boundary: receiver lifecycle actions = `0`; privileged mutation commands = `0`; sudoers changes = `0`; Provider = `0`; credentials = `0`; F11 authorization remains `AUTHORIZED / UNCONSUMED`.
+
+
+### P1-T08-F11-PV01 - human-executed exact receiver lifecycle policy visibility result (2026-10-22)
+
+`P1-T08-F11-PV01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `VPS_POLICY_VISIBILITY_STILL_INDETERMINATE`.
+
+Starting HEAD = `38c55051e007387327b4995769f5e5b53854dc17`; activation commit = `b541af9e910f006a91f59b494f42a59bd2d66c29`. Activation was committed/pushed before human policy evidence collection.
+
+Human evidence route = direct authorized VPS terminal as `marktuser@srv822206`; password input, if any, remained in the human terminal and was not shared with ChatGPT/tools. Receiver lifecycle execution remained `0`.
+
+Exact stop policy query: `sudo -l /usr/bin/systemctl stop marketly-r02-receiver.service`. Policy-view authentication requested = `YES`; first password attempt was rejected locally by sudo, subsequent authentication succeeded. Relevant raw policy output after authentication = `/usr/bin/systemctl stop marketly-r02-receiver.service`. `STOP_EXIT = NOT CAPTURED` because no immediate exit-code print followed this query. Explicit `NOPASSWD` tag in returned output = `NOT SHOWN / UNVERIFIED`. Underlying sudoers match narrow-vs-broad = `UNVERIFIED` because this query form returned only the fully qualified queried command, not the matching rule/tag.
+
+Exact start policy query: `sudo -l /usr/bin/systemctl start marketly-r02-receiver.service`. Policy-view authentication requested during this second query = `NO` (consistent with an already-valid sudo authentication timestamp/session after the preceding policy-view authentication; this does not characterize the target execution policy). Relevant raw policy output = `/usr/bin/systemctl start marketly-r02-receiver.service`. `START_EXIT=0`. Explicit `NOPASSWD` tag in returned output = `NOT SHOWN / UNVERIFIED`. Underlying sudoers match narrow-vs-broad = `UNVERIFIED` for the same reason.
+
+Interpretation: the human queries prove that sudo policy visibility checks for both exact target commands were permitted and that the exact queried commands were recognized as allowed by policy checking. They do **not** authoritatively reveal whether the underlying execution rule for either command carries `NOPASSWD`, nor whether authorization derives from an exact narrow rule or a broader rule. Per PV01, authentication required to view policy must not be conflated with the target command's execution-password semantics.
+
+Therefore Classification A (`VPS_EXACT_NARROW_NOPASSWD_LIFECYCLE_CONFIRMED`) is not established; B/C/E are also not established because the evidence does not prove password-required target execution, absence of permission, or a broad underlying privilege rule. Classification D `VPS_POLICY_VISIBILITY_STILL_INDETERMINATE` is the exact supported result.
+
+Existing accepted VP01 security context is preserved: unit/interpreter/receiver parent path are non-writable by `marktuser`; no writable `EnvironmentFile` was observed; service runs as distinct `marketly-r02`; no existing user-owned receiver lifecycle was found.
+
+PV01 does **not** self-clear the parent blocker. Pending Team Leader review: `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; current blocker remains `VPS_EXACT_NONINTERACTIVE_PRIVILEGE_POLICY_UNVERIFIED`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider requests = `0`; F11 post published = `NO`.
+
+Safety boundary preserved: receiver stop = `0`; receiver start = `0`; receiver restart = `0`; process signals = `0`; systemd reload = `0`; sudoers edits = `0`; VPS file writes = `0`; permission changes = `0`; tunnel creation = `0`; readiness = `0`; credentials = `0`; Provider/Zernio = `0`; F11 authorization consumed = `NO`.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested. STOP after documentation commit/push and evidence handoff. Do not execute start/stop, test permission by mutation, inspect broad sudo policy, edit sudoers, access receiver evidence/source through privilege, create tunnel, access credentials, contact Zernio, start F11, or start a successor task.

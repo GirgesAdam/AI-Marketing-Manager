@@ -2336,3 +2336,36 @@ Classification: `VPS_PRIVILEGE_PATH_INDETERMINATE`.
 | F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
 
 Security finding: root/system unit, interpreter, and receiver parent paths are non-writable by `marktuser`; service account is distinct; no EnvironmentFile observed; WorkingDirectory empty; evidence/runtime paths non-writable. Exact start/stop grants could be low-risk if later policy evidence shows they are needed, but VP01 cannot classify READY while existing command-specific privilege remains unverified. `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged.
+
+
+## P1-T08-F11-PV01 - Human-Executed Exact Receiver Lifecycle Policy Visibility
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `VPS_POLICY_VISIBILITY_STILL_INDETERMINATE`.
+
+| Evidence item | Result |
+|---|---|
+| Starting HEAD | `38c55051e007387327b4995769f5e5b53854dc17` |
+| Activation commit | `b541af9e910f006a91f59b494f42a59bd2d66c29` |
+| Human execution route | direct VPS terminal as `marktuser@srv822206` |
+| Stop policy query | `sudo -l /usr/bin/systemctl stop marketly-r02-receiver.service` |
+| Stop query authentication requested | YES |
+| Stop raw relevant output | `/usr/bin/systemctl stop marketly-r02-receiver.service` |
+| Stop exit code | `NOT CAPTURED` |
+| Stop explicit `NOPASSWD` tag | `NOT SHOWN / UNVERIFIED` |
+| Stop underlying match narrow/broad | `UNVERIFIED` |
+| Start policy query | `sudo -l /usr/bin/systemctl start marketly-r02-receiver.service` |
+| Start query authentication requested | NO during second query after preceding successful sudo policy-view authentication |
+| Start raw relevant output | `/usr/bin/systemctl start marketly-r02-receiver.service` |
+| Start exit code | `0` |
+| Start explicit `NOPASSWD` tag | `NOT SHOWN / UNVERIFIED` |
+| Start underlying match narrow/broad | `UNVERIFIED` |
+| Receiver stop/start/restart | `0 / 0 / 0` |
+| Sudoers mutation | `0` |
+| Provider/Zernio | `0` |
+| F11 authorization consumed | `NO` |
+
+Interpretation: both exact `sudo -l <command>` policy checks reached the VPS and returned the exact queried command as permitted by the policy-check interface. The returned output did not expose the matching sudoers rule/tag, so it does not establish `NOPASSWD` or distinguish exact narrow authorization from a broader rule. The first policy-view query requested human authentication; the second did not after the sudo authentication timestamp/session was established. Per PV01, policy-view authentication behavior is not target execution-policy evidence. Therefore A/B/C/E are not proven and classification D `VPS_POLICY_VISIBILITY_STILL_INDETERMINATE` is retained pending Team Leader review.
+
+Parent blocker remains `VPS_EXACT_NONINTERACTIVE_PRIVILEGE_POLICY_UNVERIFIED`; P1-T08-F11 remains `NOT DONE / BLOCKED PRE_PROVIDER`; authorization remains `AUTHORIZED / UNCONSUMED`; no Provider Behavior was tested and `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged.
