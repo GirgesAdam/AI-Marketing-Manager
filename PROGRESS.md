@@ -57,6 +57,12 @@ Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ES
 
 Current Task = `P1-T09 — Verify Existing Data-Bearing Historical Analytics Fixture`
 
+P1-T09 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+
+Historical Analytics = `SPIKE_PENDING`
+
+PHASE 1 = **IN PROGRESS**
+
 P1-T08-F11-F09-R02 = **CLOSED / ACCEPTED WITH NON-BLOCKING NOTES**
 
 P1-T08-F11-F09-R03 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
@@ -4126,3 +4132,32 @@ Frozen target: Profile `6ac5a45a8e4ca44f355033ae`; Facebook account `6ac64f87403
 Initial counters before Provider execution: Provider GETs `0`; Provider mutations `0`; Analytics writes/triggers `0`; publish `0`; webhook mutations `0`; Delta `0`.
 
 P1-T09 scope is minimal read-only Historical Analytics Provider Behavior verification only. No successor task is started.
+
+
+## P1-T09 execution result — Existing Data-Bearing Historical Analytics Fixture (2026-10-22)
+
+`P1-T09 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Activation commit = `a5f48793e25569d3d7209eb0b204d5085d732e05`.
+
+Implementation/test checkpoint = `6ce913ccd68d5ab40712845cf9f8630b1b783dd6`.
+
+Offline validation before Provider execution: focused P1-T09 `15 / 15 PASS`; full suite `460 / 460 PASS` across `19` files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+Exactly `4` Provider requests were sent; all were read-only GETs and all returned HTTP `200`:
+1. Identity `GET /v1/auth/verify` — request `c58ba1d8-5949-4ee1-9a18-6adc7f3abd06`; trusted expected identity match = true.
+2. Exact ownership `GET /v1/accounts?profileId=6ac5a45a8e4ca44f355033ae` — request `64c4dd51-02cd-442d-9060-54c2d34e0a25`; exact account `6ac64f8740364f4695dd3077` belongs to exact Profile `6ac5a45a8e4ca44f355033ae`, platform `facebook`.
+3. Account health `GET /v1/accounts/6ac64f8740364f4695dd3077/health` — request `6608efbc-d34b-4d55-8024-03301ef2e98f`; health `healthy`; token valid=true; `canFetchAnalytics=true`; `pages_read_engagement=true`; `read_insights=true`.
+4. Historical Analytics page 1 `GET /v1/analytics` — request `7c8ac019-4611-4bdb-b0e3-4a3e7dde0443`; exact filters Profile A + exact Facebook account + platform `facebook` + source `all` + `fromDate=2026-07-25` + `toDate=2026-10-22` + `limit=100` + `page=1`.
+
+Historical Analytics response: `hasAnalyticsAccess=true`; `posts=[]`; total rows `0`; usable rows `0`; qualifying non-F11 rows `0`; prohibited-F11 rows observed `0`; pagination total `0`; total pages `1`; `hasMore` not exposed in the safe projection; additional pages remain=false. Page 2 was not requested because returned pagination established no additional data.
+
+Safe top-level Analytics fields observed: `accounts`, `hasAnalyticsAccess`, `overview`, `pagination`, `posts`. No row-level schema, stable fixture identifier, metric field name/type/nullability sample, or target-attribution field could be observed because zero Analytics rows were returned. No raw Analytics response, post text/caption, PII, comments/messages, or unnecessary URLs were persisted.
+
+Final classification = `AUTHORIZED_ANALYTICS_DATASET_STILL_EMPTY`.
+
+Historical Analytics recommendation = **remain `SPIKE_PENDING`**. No capability promotion is made by the Senior Engineer. A later separately reviewed fixture-acquisition strategy would be required if the Team Leader chooses to pursue non-empty Historical Analytics evidence.
+
+Safety totals: Provider GETs `4`; Provider mutations `0`; Analytics writes/triggers `0`; publish `0`; webhook operations/mutations `0`; Delta `0`; sync-external `0`; derived-signal calls `0`; Ads/media/community `0`; cross-Profile leakage `0`; secrets exposed `0`.
+
+P1-T08 remains closed and is not reopened. The historical F11 identifiers were not selected as a P1-T09 fixture. PHASE 1 remains **IN PROGRESS**. No Phase 2 or successor task is started.

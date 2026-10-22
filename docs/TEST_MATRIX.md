@@ -2816,3 +2816,48 @@ The production consumer must preserve D-016 bootstrap semantics: `capture cursor
 These are **future system integration requirements**, not implementation performed by P1-T08 and not additional Provider Behavior claims. Exact reconciliation cadence, cost controls, leases/retries, persistence schema, worker behavior, and failure policy belong to the separately authorized later production analytics task.
 
 Final P1-T08 closeout itself performs Provider/Zernio requests `0`, credentials `0`, publish `0`, webhook mutation `0`, Analytics/Delta `0`, sync triggers `0`, VPS/lifecycle `0`, tunnel `0`, and source/runtime changes `0`.
+
+
+## P1-T09 — Existing Data-Bearing Historical Analytics Fixture
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+### Offline safety validation
+
+| Gate | Result |
+|---|---|
+| Focused P1-T09 suite | PASS — `15 / 15` |
+| Full `npm test` | PASS — `460 / 460`, 19 files |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| `git diff --check` | PASS |
+| Default live mode | OFF / zero Provider requests |
+| Fixed target only | PASS |
+| Transport methods | GET-only |
+| Arbitrary endpoint input | NOT AVAILABLE |
+| Delta / derived / webhook / post / sync-external paths | NOT CALLABLE by P1-T09 runner |
+| Hard Provider ceiling | PASS — max `6` GETs |
+| F11 fixture exclusion | PASS — deterministic regression coverage |
+| Safe projection / secret isolation | PASS |
+
+### Live read-only Provider Behavior evidence
+
+| Request | Result | Safe evidence |
+|---|---|---|
+| 1 — trusted identity | PASS | `GET /v1/auth/verify`; HTTP `200`; request `c58ba1d8-5949-4ee1-9a18-6adc7f3abd06`; expected identity match=true |
+| 2 — exact account ownership | PASS | `GET /v1/accounts?profileId=6ac5a45a8e4ca44f355033ae`; HTTP `200`; request `64c4dd51-02cd-442d-9060-54c2d34e0a25`; exact account/Profile/facebook match |
+| 3 — account health | PASS | HTTP `200`; request `6608efbc-d34b-4d55-8024-03301ef2e98f`; healthy; token valid; canFetchAnalytics=true; pages_read_engagement/read_insights granted |
+| 4 — Historical Analytics page 1 | PASS / EMPTY DATASET | HTTP `200`; request `7c8ac019-4611-4bdb-b0e3-4a3e7dde0443`; exact target filters; `hasAnalyticsAccess=true`; rows `0` |
+| Historical range | INFO | `2026-07-25` → `2026-10-22`; source=`all`; limit=`100`; page=`1` |
+| Pagination | PASS / STOP | total=`0`; pages=`1`; safe `hasMore` field not exposed; no Page 2 justified or sent |
+| Usable analytics rows | `0` | no qualifying row |
+| Qualifying non-F11 fixture | NONE | no stable fixture identifier available |
+| Safe schema evidence | BOUNDED | top-level fields only: `accounts`, `hasAnalyticsAccess`, `overview`, `pagination`, `posts`; no row/metric schema observable because rows=0 |
+| Cross-Profile leakage | NONE | `0` |
+| Provider request count | PASS | `4 / 6` GETs; no retry |
+
+Final P1-T09 classification: **`AUTHORIZED_ANALYTICS_DATASET_STILL_EMPTY`**.
+
+Historical Analytics remains `SPIKE_PENDING`; no capability promotion occurs before Team Leader review. The empty authorized dataset is not classified as Provider failure.
+
+Safety: Provider mutations `0`; publish `0`; webhooks `0`; Delta `0`; sync-external `0`; derived-signal calls `0`; Ads/media/community `0`; secrets exposed `0`. No Phase 2 or successor task was started.

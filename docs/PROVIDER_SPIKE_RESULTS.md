@@ -2589,3 +2589,42 @@ A bounded reconciliation safety net independent of webhook arrival is required s
 This integration consequence is a defensive product/system design choice grounded in the evidence above. It must not be re-labeled as observed Zernio behavior.
 
 Provider probing cutoff is final for P1-T08: no second F11, no second diagnostic, no expanded historical log exploration, no new test webhook/post, no historical Delta probe, and no manufactured engagement without genuinely new evidence plus separate explicit scope/authorization.
+
+
+## P1-T09 — Existing Data-Bearing Historical Analytics Fixture
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+This was a minimal read-only Provider Behavior spike against the already-authorized frozen target only. It did not create or modify Provider resources and did not manufacture Analytics data.
+
+### Observed Provider Facts
+
+- Trusted identity verification succeeded: `GET /v1/auth/verify`, HTTP `200`, request `c58ba1d8-5949-4ee1-9a18-6adc7f3abd06`, expected identity match=true.
+- Exact account ownership read succeeded: request `64c4dd51-02cd-442d-9060-54c2d34e0a25`; account `6ac64f8740364f4695dd3077` belongs to Profile `6ac5a45a8e4ca44f355033ae`, platform `facebook`.
+- Account health read succeeded: HTTP `200`, request `6608efbc-d34b-4d55-8024-03301ef2e98f`; status `healthy`; token valid=true; `canFetchAnalytics=true`; Analytics permissions observed granted for `pages_read_engagement` and `read_insights`.
+- Historical Analytics page 1 succeeded: HTTP `200`, request `7c8ac019-4611-4bdb-b0e3-4a3e7dde0443`.
+- Exact Analytics filters: Profile `6ac5a45a8e4ca44f355033ae`; account `6ac64f8740364f4695dd3077`; platform `facebook`; source `all`; range `2026-07-25` through `2026-10-22`; limit `100`; page `1`.
+- The Analytics response exposed top-level fields `accounts`, `hasAnalyticsAccess`, `overview`, `pagination`, and `posts`.
+- `hasAnalyticsAccess=true`.
+- Returned `posts` rows = `0`; usable rows = `0`; qualifying non-F11 rows = `0`.
+- Pagination reported total=`0`, pages=`1`; safe `hasMore` was not exposed. No additional page was justified, so Page 2 was not requested.
+- No F11 row was observed in the empty result and no F11 identifier was selected or reinterpreted.
+- Provider traffic was exactly `4` GET requests; no automatic retry occurred.
+
+### Unresolved / Not Proven
+
+- No non-empty Historical Analytics row was observed.
+- No reusable data-bearing analytics fixture was established.
+- No stable analytics-row post identifier, row-level target-attribution shape, metric field name/type/nullability, or numeric metric sample could be observed because the Provider returned zero rows.
+- This result does not prove Historical Analytics is unsupported or broken. Access and the exact read succeeded; the authorized dataset was simply still empty for the bounded query.
+- P1-T09 does not establish any Delta changed-snapshot behavior or derived Analytics signal shape; those endpoints were not called.
+
+### Classification / Recommendation
+
+Final classification = **`AUTHORIZED_ANALYTICS_DATASET_STILL_EMPTY`**.
+
+Historical Analytics capability remains **`SPIKE_PENDING`**. No `SPIKE_PASS` promotion is recommended from this evidence because no qualifying non-empty analytics row exists.
+
+A future non-empty fixture-acquisition strategy, if desired, requires separate Team Leader review. P1-T09 itself does not authorize publishing, engagement manufacturing, `sync-external`, intentional sync triggering, another Brand/account, Delta, derived signals, or any successor Provider task.
+
+Safety totals: Provider GETs `4`; Provider mutations `0`; publish `0`; webhook operations `0`; Delta `0`; sync-external `0`; derived-signal calls `0`; Analytics writes/triggers `0`; Ads/media/community `0`; cross-Profile leakage `0`; secrets exposed `0`.
