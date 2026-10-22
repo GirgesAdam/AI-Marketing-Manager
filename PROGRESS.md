@@ -3361,3 +3361,44 @@ Authorization state preserved: F11 authorization = `AUTHORIZED / UNCONSUMED`; au
 Canonical parent state: `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`. Current blocker = `VPS_NONINTERACTIVE_PRIVILEGE_UNAVAILABLE_AT_LR06_INFRASTRUCTURE_GATE`. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because LR06 produced no Provider Behavior evidence. Per LR06 stop condition, do not retry LR06, rerun F11, start a second primary dispatch, republish, start a successor task, or mark P1-T08 complete before Team Leader review.
+
+
+### P1-T08-F11-LR06-CLOSEOUT-01 - Team Leader documentation-only closeout (2026-10-22)
+
+`P1-T08-F11-LR06 = DONE / ACCEPTED`.
+
+Team Leader disposition = `ACCEPTED`.
+
+Accepted evidence HEAD = `6f79cc1d67ec6f65e2e9ab4b936b0f4fc7716d85`.
+
+Accepted classification = `TECHNICAL_BLOCKER — PRE_PROVIDER`.
+
+Accepted historical failure stage = `VPS_NONINTERACTIVE_PRIVILEGE_UNAVAILABLE_AT_LR06_INFRASTRUCTURE_GATE`.
+
+LR06 is accepted as a **safe PRE_PROVIDER stop only**. It did **NOT** execute the F11 Provider experiment.
+
+Accepted LR06 evidence: canonical start/activation = PASS; activation HEAD = `bd7dfa452522897b401e3ae97e20a010769954cf`; fresh device rediscovery = PASS; primary orchestration dispatch = exactly `1`; primary PID = `18024`; second primary dispatch = `0`; `interact_with_process = 0`; later input injection = `0`; read-only output retrieval = `1`; orchestration residue = `0`.
+
+Accepted local gates: activation HEAD verification = PASS; clean tree = PASS; Node = `v24.21.0`; repo `.env` absent; parent Zernio variables absent; offline F10 = PASS / fail-closed; focused suite = `97 / 97 PASS`; typecheck = PASS; build = PASS; diff check = PASS; timestamp evidence gate = PASS.
+
+Accepted historical credential-source evidence: metadata gate = PASS; historical `.env` exists and is Git-ignored; secret values accessed = `NO`; copied = `NO`; fingerprinted/measured = `NO`; loaded into parent = `NO`; child `--env-file` delivery = `NOT STARTED`.
+
+Accepted privilege finding: at the infrastructure prerequisite gate, `sudo -n true` returned `sudo: a password is required`. Therefore the current automation/session does not have an already-established passwordless non-interactive sudo path. Correct safety behavior was preserved: no human password requested; no password exposed; no password injection; no interactive bypass; no privilege-escalation workaround; no infrastructure mutation attempted.
+
+Team Leader interpretation: LR06 proves `CURRENT NON-INTERACTIVE PRIVILEGED VPS PATH = NOT ESTABLISHED`. It does **NOT** prove VPS unavailable, systemd unavailable, receiver lifecycle impossible, SSH tunnel impossible, Zernio failure, credential failure, single-dispatch failure, F10 failure, or timestamp-observability failure. This result is not a permanent infrastructure-impossibility finding.
+
+Canonical parent state remains `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`.
+
+Current blocker = `VPS_NONINTERACTIVE_PRIVILEGE_PATH_NOT_ESTABLISHED`.
+
+Supersession mapping: `VPS_NONINTERACTIVE_PRIVILEGE_UNAVAILABLE_AT_LR06_INFRASTRUCTURE_GATE` = accepted historical LR06 failure stage. `VPS_NONINTERACTIVE_PRIVILEGE_PATH_NOT_ESTABLISHED` = current parent blocker.
+
+Canonical state preserved: credential source = `IDENTIFIED / AVAILABLE`; tool-safe child credential-delivery path = `ACCEPTED`; single-dispatch execution-control path = `ACCEPTED`; F10 request timestamp observability = `ACCEPTED`; F11 authorization = `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`; Provider requests = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`. Do **NOT** mark F11 ready for live retry yet.
+
+Infrastructure/Provider zero state: infrastructure-state verification after privilege prerequisite = `NOT COMPLETED`; local receiver port selected = `NO`; receiver stop/start = `0`; reverse tunnels = `0`; live runner children = `0`; readiness POSTs = `0`; public readiness = `0`; first trusted Zernio request = `0`; `/v1/auth/verify = 0`; Provider normal = `0`; Provider cleanup = `0`; Provider total = `0`; requestEvidence = `0`; Analytics = `0`; Delta = `0`; webhook operations = `0`; publish attempts = `0`; posts created = `0`; unresolved external artifacts = `NONE`. No rollback was required.
+
+Future privilege gate requirement only: before another F11 live retry, a separately authorized VPS privilege-path task must establish or prove a safe non-interactive method for the exact infrastructure operations required by the accepted receiver handoff. Investigation priority for that future task: (1) determine whether the accepted receiver lifecycle can already be managed safely by the authorized VPS user **without sudo** through an existing user-owned process/service mechanism; (2) if not, determine the minimum privileged operations actually required; (3) any proposed privilege bootstrap must follow least privilege and must not expose a human sudo password to ChatGPT/tool output; (4) do **NOT** use blanket `NOPASSWD: ALL`; (5) do **NOT** authorize arbitrary shell execution, arbitrary `systemctl`, arbitrary file writes, or general root access merely to unblock F11; (6) if an infrastructure privilege bootstrap is required, it must be separately reviewed/authorized before implementation. This closeout does **NOT** authorize the investigation or implementation.
+
+Safety boundary for this closeout: process probes = `0`; VPS commands = `0`; sudo commands = `0`; sudoers changes = `0`; credentials = `0`; Provider/Zernio = `0`; infrastructure mutation = `0`; source/test mutation = `0`; F11 authorization consumed = `NO`.
+
+Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, source/tests/config, package files, `.env`, VPS configuration, sudoers/systemd/Nginx/SSH configuration remain unchanged. Commit/push and STOP. Do not retry LR06, test sudo, ask for or inject a sudo password, edit sudoers, touch receiver/systemd/Nginx/SSH, access credentials, contact Zernio, start F11 live retry, or start the privilege-path successor task.
