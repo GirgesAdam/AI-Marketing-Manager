@@ -2429,3 +2429,49 @@ Design-only future sudo surface: `(root) NOPASSWD:NOSETENV` for exactly the two 
 Failure matrix: verifier→stop failure = no tunnel/STOP/human/unconsumed; stopped-but-8765-occupied = no tunnel/start conflict/STOP/human/unconsumed pre-Provider; tunnel failure after stop = restore exact receiver then verify or STOP/human/unconsumed; runner failure pre-Provider = close tunnel + restore + verify/unconsumed; restoration start failure = no blind retry/STOP/human/preserve actual authorization state; post-restore hash mismatch = not restored/STOP/human; evidence-count drift = fail closed with authorization state based on whether first Provider request occurred; unknown 8765 listener = never kill, STOP/human.
 
 Safety counters: VPS commands `0`; sudo queries `0`; sudoers/systemd mutations `0`; receiver lifecycle `0`; verifier implementation `0`; VPS file writes `0`; source/runtime changes `0`; tunnels/readiness `0`; credentials `0`; Provider/Zernio `0`; F11 authorization consumed `NO`. `docs/PROVIDER_SPIKE_RESULTS.md` unchanged; `DECISIONS.md` unchanged pending Team Leader acceptance.
+
+
+## P1-T08-F11-LPI01 — Implement and Validate the Accepted Least-Privilege Receiver Path (2026-10-22)
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`
+
+Classification: `LEAST_PRIVILEGE_RECEIVER_PATH_IMPLEMENTED_READY_FOR_REHEARSAL`
+
+| Gate | Evidence | Result |
+| --- | --- | --- |
+| Canonical start / activation | Clean branch `p1-t08-zernio-analytics-webhook`; activation commit `bd47554e716d1e1d7ae0ff4c1125b63fef4a419b` pushed before VPS mutation | PASS |
+| Implementation commit | `01bccd2dbb29d8665c61cf799641b35621014087` | PASS |
+| Verifier artifact | SHA-256 `1f617e8e098871c1a50c8b319ccd1b3d8a1725054a832ecb3fce9b1ef95db46f`; fixed paths; zero args; bounded schema; no shell/eval; fail closed | PASS |
+| Sudoers artifact | SHA-256 `60f174339f56b2eeaa7b9da7838baa9b3c7b6281fc414caf8c8ee344a28c165c`; exact stop/start + fixed verifier only | PASS |
+| Offline verifier suite | `python3 tests/provider-spike/test_marketly_f11_receiver_verify.py` => 18 run / 17 passed / 1 skipped (POSIX special-entry case skipped on Windows) | PASS |
+| Full regression | `npm test` => `427 / 427 PASS` | PASS |
+| Typecheck | `npm run typecheck` | PASS |
+| Build | `npm run build` | PASS |
+| Pre-mutation diff check | `git diff --check` | PASS |
+| Fresh receiver SHA | `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9` | PASS |
+| Fresh unit SHA | `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7` | PASS |
+| Fixed-path symlinks | Receiver = NO; unit = NO | PASS |
+| Unit/service invariants | Root-owned unit; fixed `/usr/bin/python3 /opt/marketly-r02/receiver.py`; no drop-ins; no EnvironmentFile; WorkingDirectory empty; User/Group `marketly-r02` | PASS |
+| Service/listener preflight | `active/running`, boot `disabled`, `127.0.0.1:8765` listening | PASS |
+| Evidence baseline | Directory exists / not symlink; no direct entries; `VALID_EMPTY`; count `0` | PASS |
+| Unprivileged staging | Legacy SCP succeeded; staged verifier/sudoers hashes matched tracked artifacts | PASS |
+| Verifier install metadata | `/usr/local/sbin/marketly-f11-receiver-verify` = `root:root`, `0755`, regular, not symlink, tracked SHA match | PASS |
+| Human-root verifier pre-grant | Bounded approved JSON; accepted receiver/unit hashes; `VALID_EMPTY`; count `0`; exit `0` | PASS |
+| Staged sudoers syntax | `visudo -cf` parsed OK; exit `0` | PASS |
+| Installed sudoers metadata | `/etc/sudoers.d/marketly-f11-receiver` = `root:root`, `0440`, regular, tracked SHA match | PASS |
+| Installed fragment syntax | `visudo -cf /etc/sudoers.d/marketly-f11-receiver` parsed OK; exit `0` | PASS |
+| Full sudoers syntax | `visudo -c` parsed all active files OK; exit `0` | PASS |
+| NOPASSWD verifier positive control | after `sudo -k`, `sudo -n /usr/local/sbin/marketly-f11-receiver-verify` => PASS / exit `0` | PASS |
+| Broad privilege negative control | after `sudo -k`, `sudo -n /usr/bin/id -u` => password required / exit `1` | PASS |
+| Unapproved systemctl negative control | after `sudo -k`, `sudo -n /usr/bin/systemctl is-active marketly-r02-receiver.service` => password required / exit `1` | PASS |
+| Receiver lifecycle execution | stop/start/restart = `0 / 0 / 0`; rules not executed in LPI01 | PASS |
+| Post-install service state | `active/running`, boot `disabled`, ExecStart unchanged, no drop-ins | PASS |
+| Post-install listener | loopback `127.0.0.1:8765` | PASS |
+| Post-install route checks | local exact `200`; public root `404`; public exact `200`; public near-miss `404` | PASS |
+| Provider / credentials / tunnel / readiness | Provider `0`; credentials `0`; tunnels `0`; readiness `0`; F11 authorization consumed `NO` | PASS |
+| Parent blocker | `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN` intentionally preserved pending separate review/rehearsal | PRESERVED |
+| Provider results doc | `docs/PROVIDER_SPIKE_RESULTS.md` unchanged | PASS |
+
+Final safety counters: receiver stop `0`; receiver start `0`; receiver restart `0`; process signals `0`; tunnels `0`; readiness POSTs `0`; credentials loaded `0`; Provider/Zernio `0`; `/v1/auth/verify` `0`; Analytics/Delta `0`; publish attempts `0`; posts `0`; F11 authorization consumed `NO`.
+
+LPI01 is implementation/security-validation evidence only. It does not authorize or execute the later Provider-free rehearsal, lifecycle commands, tunnel creation, readiness, credentials, Provider transport, F11 live execution, or any successor task.

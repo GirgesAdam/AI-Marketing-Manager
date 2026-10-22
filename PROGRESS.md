@@ -3740,3 +3740,43 @@ Safety boundary for this closeout: VPS commands = `0`; sudo queries = `0`; sudoe
 Activation counters: receiver stop/start/restart = `0`; tunnels = `0`; Provider/Zernio = `0`; credentials = `0`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`.
 
 Activation authorizes repository implementation/offline validation and the bounded human-authenticated bootstrap/read-only verification steps defined by the LPI01 contract only. It does not authorize receiver lifecycle execution, reverse tunnel creation, credentials, Provider/Zernio contact, F11 execution, rehearsal, or any successor task.
+
+
+### P1-T08-F11-LPI01 — Least-privilege receiver path implementation result (2026-10-22)
+
+`P1-T08-F11-LPI01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `LEAST_PRIVILEGE_RECEIVER_PATH_IMPLEMENTED_READY_FOR_REHEARSAL`.
+
+Activation commit = `bd47554e716d1e1d7ae0ff4c1125b63fef4a419b`. Implementation commit = `01bccd2dbb29d8665c61cf799641b35621014087`.
+
+Implemented repository artifacts:
+- `src/provider-spike/infra/marketly-f11-receiver-verify.py` SHA-256 = `1f617e8e098871c1a50c8b319ccd1b3d8a1725054a832ecb3fce9b1ef95db46f`.
+- `src/provider-spike/infra/marketly-f11-receiver.sudoers` SHA-256 = `60f174339f56b2eeaa7b9da7838baa9b3c7b6281fc414caf8c8ee344a28c165c`.
+- `tests/provider-spike/test_marketly_f11_receiver_verify.py` added as the standalone offline verifier security suite.
+
+Offline validation before VPS mutation = PASS: verifier suite `18` tests run / `17` passed / `1` skipped (POSIX-special-entry case skipped on Windows host); full `npm test` = `427 / 427 PASS`; `npm run typecheck` = PASS; `npm run build` = PASS; `git diff --check` = PASS.
+
+Fresh privileged pre-mutation revalidation = PASS. Receiver source SHA-256 = `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`; receiver unit SHA-256 = `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`; neither fixed file is a symlink. Unit = root-owned regular `0644`; receiver = root-owned regular `0640`; `/usr/bin/python3` and `/usr/local/sbin` are root-owned/non-writable by `marktuser`; no unit drop-in directory; no `EnvironmentFile=`; WorkingDirectory empty; service account remains `marketly-r02`; service state remained `active/running`; boot state remained `disabled`; listener remained `127.0.0.1:8765`.
+
+Fresh evidence baseline = PASS: `/var/lib/marketly-r02/f11-evidence` exists, is not a symlink, direct structure contained no entries, `evidenceDirectoryState = VALID_EMPTY`, `evidenceCount = 0`.
+
+Unprivileged staging = PASS using legacy SCP transport after default SCP transport closed before staging. Staged verifier SHA matched repository SHA; staged sudoers SHA matched repository SHA. No privileged path was mutated by the failed default-SCP attempts.
+
+Verifier bootstrap = PASS: installed `/usr/local/sbin/marketly-f11-receiver-verify` as `root:root`, mode `0755`, regular file, not symlink, SHA-256 exactly `1f617e8e098871c1a50c8b319ccd1b3d8a1725054a832ecb3fce9b1ef95db46f`. Human-authenticated root execution returned exit `0` and bounded JSON with only the approved schema fields; `result=PASS`, accepted receiver/unit hashes, `evidenceDirectoryState=VALID_EMPTY`, `evidenceCount=0`.
+
+Sudoers bootstrap = PASS. Staged sudoers SHA matched `60f174339f56b2eeaa7b9da7838baa9b3c7b6281fc414caf8c8ee344a28c165c`; staged `visudo -cf` parsed OK. Installed `/etc/sudoers.d/marketly-f11-receiver` is `root:root`, mode `0440`, regular file, same SHA. Installed-fragment `visudo -cf` = PASS and full `visudo -c` = PASS.
+
+Exact noninteractive privilege surface validation = PASS after `sudo -k` before each test: `sudo -n /usr/local/sbin/marketly-f11-receiver-verify` returned PASS / exit `0`; `sudo -n /usr/bin/id -u` was denied with exit `1`; `sudo -n /usr/bin/systemctl is-active marketly-r02-receiver.service` was denied with exit `1`. No broader noninteractive privilege surface was exposed by the required negative controls.
+
+Post-install non-drift = PASS: service remained `active/running`, boot `disabled`, fixed ExecStart unchanged, no drop-ins, listener remained loopback `127.0.0.1:8765`; local exact receiver HEAD = `200`; public generic root HEAD = `404`; public exact F11 route HEAD = `200`; public near-miss HEAD = `404`.
+
+No receiver lifecycle command was executed in LPI01. Exact stop/start rules were proven only by the canonical tracked sudoers artifact, installed hash/metadata, and successful `visudo` validation; execution of those lifecycle commands remains reserved for a separately authorized Provider-free rehearsal.
+
+Final counters: receiver stop = `0`; receiver start = `0`; receiver restart = `0`; process signals = `0`; tunnels = `0`; readiness POSTs = `0`; credentials loaded = `0`; Provider/Zernio requests = `0`; `/v1/auth/verify` = `0`; Analytics/Delta = `0`; publish attempts = `0`; posts created = `0`; F11 authorization consumed = `NO`.
+
+Parent state is intentionally NOT self-cleared by LPI01: current blocker remains `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN`; `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; F11 post published = `NO`; Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`.
+
+LPI01 result means the accepted least-privilege path is implemented and ready for a later separately authorized Provider-free rehearsal only. It does NOT authorize that rehearsal, receiver stop/start, reverse tunnel creation, readiness, credentials, Provider/Zernio transport, F11 live execution, or any successor task.
+
+Documentation scope for this result = `PROGRESS.md` + `docs/TEST_MATRIX.md` only. `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested. `DECISIONS.md` remains unchanged because D-041 was already accepted and LPI01 introduces no new architecture decision.
