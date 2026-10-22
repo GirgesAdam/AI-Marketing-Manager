@@ -2150,3 +2150,40 @@ Exact blocker stage: `PERSISTENT_CONTROLLER_INTERACTION_SURFACE_UNAVAILABLE_PRE_
 | F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
 
 No Provider Behavior evidence was generated, so `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged. LR04 permits no replacement controller or second LR04 attempt after this bounded pre-Provider failure. Parent P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 remains `NOT DONE` pending Team Leader review.
+
+
+## P1-T08-F11-EC01 - Single-Dispatch / Non-Interactive Local Execution-Control Preflight
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `SINGLE_DISPATCH_EXECUTION_CONTROL_READY`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Canonical start | PASS | starting HEAD `347036d0534394720cf436372ba45cac0f6a7cb1`; Local=Tracking=Live Remote; clean tree; LR04 accepted; F11 blocked pre-Provider on `REMOTE_CONTROLLER_INTERACTION_SURFACE_INTERMITTENT`; authorization unconsumed; Provider `0` |
+| Activation | PASS | activation commit `5acb3ff38c7c5c4e488b8c9e78805ff0d7de6498` pushed before EC01 execution-control testing |
+| Fresh device rediscovery | PASS | performed independently before each of the 3 required dispatches; authorized machine `DESKTOP-RL942A5`; no cached device-ID assumption |
+| Cycle 1 dispatch | PASS | exactly 1 non-interactive launch; remote PID `12900`; initial `Resource not found=NO`; exit `0`; `interact_with_process=0`; read-only retrieval calls `0`; no later injection |
+| Cycle 1 isolation | PASS | activation HEAD; Node `v24.21.0`; repo `.env` absent; both Zernio env names absent |
+| Cycle 1 offline F10 | PASS | `liveEnabled=false`; `result=BLOCKED`; `errorCategory=LIVE_OPT_IN_REQUIRED`; `providerCalls=0`; runner exit `2` |
+| Cycle 2 dispatch | PASS | exactly 1 non-interactive launch; remote PID `1656`; initial `Resource not found=NO`; exit `0`; `interact_with_process=0`; read-only retrieval calls `0`; no later injection |
+| Cycle 2 sentinel start | PASS | exact PID `13624`; harmless local Node sentinel alive before runner |
+| Cycle 2 concurrent offline F10 | PASS | runner `LIVE_OPT_IN_REQUIRED`; `providerCalls=0`; exit `2`; sentinel remained alive afterward |
+| Cycle 2 exact lifecycle | PASS | exact PID terminated; marker residue `0`; unrelated Node baseline `6364,11952,20300` preserved; missing `0` |
+| Cycle 3 dispatch | PASS | exactly 1 long-running non-interactive launch; remote PID `22556`; initial `Resource not found=NO`; exit `0`; `interact_with_process=0`; no later injection |
+| Cycle 3 offline F10 | PASS | `liveEnabled=false`; `result=BLOCKED`; `errorCategory=LIVE_OPT_IN_REQUIRED`; `providerCalls=0`; exit `2` |
+| Cycle 3 long-running sentinel | PASS | exact PID `5764`; observation `30s`; 3 safe progress markers; sentinel alive throughout bounded interval |
+| Cycle 3 read-only supervision | PASS | read-only output retrieval calls `7`; no external process input or interactive command injection |
+| Cycle 3 exact lifecycle | PASS | exact sentinel termination; marker residue `0`; unrelated Node baseline `6364,11952,20300` preserved |
+| Required dispatch count | PASS | Cycle 1=`1`; Cycle 2=`1`; Cycle 3=`1`; total required orchestration dispatches=`3`; no failed required-cycle retry |
+| Hidden interactive dependency | ZERO | total required-cycle `interact_with_process=0`; later command injection `0` |
+| Temporary orchestration cleanup | PASS | all 3 non-secret temp script paths absent after cycles; temporary residue `0` |
+| Process residue | PASS | dispatch PIDs `12900,1656,22556` absent; sentinel PIDs `13624,5764` absent; EC01-created process residue `0` |
+| Historical credential `.env` | ZERO | access `NO` |
+| Credentials | ZERO / SAFE | loaded `NO`; values exposed `NO` |
+| Provider/Zernio | ZERO | `0`; `/v1/auth/verify=0`; Analytics/webhook/publish all `0` |
+| Remote/infrastructure | ZERO | F10 live `0`; public HTTP readiness `0`; VPS `0`; receiver `0`; SSH tunnels `0`; readiness `0`; infra mutation `0` |
+| Source/test/package mutation | ZERO | `0`; dependency install/update `0` |
+| F11 authorization consumed | NO | remains `AUTHORIZED / UNCONSUMED` |
+
+Classification A threshold is satisfied: all 3 independent single dispatches started and passed; offline runner behavior was correct in every required use; exact child lifecycle passed; long-running read-only supervision passed; `interact_with_process=0`; residue `0`; safety boundary intact. EC01 does not self-clear the parent blocker and does not authorize F11 live.

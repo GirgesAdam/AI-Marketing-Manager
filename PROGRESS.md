@@ -3113,3 +3113,32 @@ Documentation scope = `PROGRESS.md` only. `docs/TEST_MATRIX.md`, `docs/PROVIDER_
 `P1-T08-F11-EC01 = ACTIVATED — SINGLE-DISPATCH EXECUTION-CONTROL PREFLIGHT`.
 
 Activation boundary: Provider = `0`; credentials = `0`; VPS = `0`; receiver/tunnel/readiness = `0`; live runner = `0`.
+
+
+### P1-T08-F11-EC01 - single-dispatch execution-control preflight result (2026-10-22)
+
+`P1-T08-F11-EC01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification = `SINGLE_DISPATCH_EXECUTION_CONTROL_READY`.
+
+Starting HEAD = `347036d0534394720cf436372ba45cac0f6a7cb1`; activation commit = `5acb3ff38c7c5c4e488b8c9e78805ff0d7de6498`.
+
+Fresh device rediscovery was performed independently immediately before each required dispatch. Cycles 1, 2, and 3 each rediscovered authorized machine `DESKTOP-RL942A5` online under the then-current run-scoped device identity; no cached device-ID assumption was used.
+
+Cycle 1 = PASS. Exactly one non-interactive orchestration dispatch started as remote process PID `12900`; initial `Resource not found` = `NO`; orchestration exit = `0`; explicit read-only output retrieval calls = `0`; `interact_with_process` = `0`; later command/input injection required = `NO`. Workspace HEAD = activation commit; Node = `v24.21.0`; current repo-root `.env` absent; `ZERNIO_API_KEY` absent; `ZERNIO_EXPECTED_USER_EMAIL` absent. Accepted offline F10 runner result: `liveEnabled=false`; `result=BLOCKED`; `errorCategory=LIVE_OPT_IN_REQUIRED`; `providerCalls=0`; runner exit = `2`. The orchestration normalized the expected runner exit to cycle PASS and self-deleted its non-secret temporary script.
+
+Cycle 2 = PASS. Exactly one independent non-interactive orchestration dispatch started as remote process PID `1656`; initial `Resource not found` = `NO`; orchestration exit = `0`; explicit read-only output retrieval calls = `0`; `interact_with_process` = `0`; later command/input injection required = `NO`. Environment isolation = PASS. Harmless sentinel exact PID = `13624`; sentinel alive before runner = `YES`; accepted offline F10 runner returned `liveEnabled=false`, `result=BLOCKED`, `errorCategory=LIVE_OPT_IN_REQUIRED`, `providerCalls=0`, exit `2`; sentinel alive after runner = `YES`; exact PID termination = PASS; sentinel marker residue = `0`; unrelated Node baseline PIDs `6364,11952,20300` remained present; unrelated Node missing = `0`. The non-secret temporary orchestration script self-deleted.
+
+Cycle 3 = PASS. Exactly one independent long-running non-interactive orchestration dispatch started as remote process PID `22556`; initial `Resource not found` = `NO`; orchestration exit = `0`; `interact_with_process` = `0`; later command/input injection required = `NO`. Environment isolation = PASS. Accepted offline F10 runner returned `liveEnabled=false`, `result=BLOCKED`, `errorCategory=LIVE_OPT_IN_REQUIRED`, `providerCalls=0`, exit `2`. Harmless sentinel exact PID = `5764`; sentinel alive at observation start = `YES`; self-directed observation duration = `30` seconds; safe progress markers = `3` at approximately 10/20/30 seconds; read-only process-output retrieval calls = `7`; no external input was sent. Exact sentinel termination = PASS; marker residue = `0`; unrelated Node baseline PIDs `6364,11952,20300` remained present; unrelated Node missing = `0`; orchestration completed cleanly and self-deleted its non-secret temporary script.
+
+No hidden interactive dependency was used: total required orchestration dispatches = exactly `3`; required-cycle `interact_with_process` calls = `0`; later command injection = `0`. Cycle 1 read-only retrieval count = `0`; Cycle 2 = `0`; Cycle 3 = `7`. Each cycle was initiated by exactly one `start_process` dispatch, and no failed required cycle was retried.
+
+Residual cleanup = PASS: all three EC01 temporary orchestration script paths returned not-found after their cycles; dispatch PIDs `12900`, `1656`, `22556` absent; sentinel PIDs `13624`, `5764` absent; EC01-created process residue = `0`; temporary orchestration residue = `0`; working tree remained clean before documentation.
+
+Safety boundary remained intact: historical credential `.env` access = `NO`; Zernio credentials loaded = `NO`; credential values exposed = `NO`; Provider/Zernio = `0`; `/v1/auth/verify = 0`; Analytics = `0`; webhook = `0`; publish = `0`; F10 live runner = `0`; public HTTP readiness actions = `0`; VPS = `0`; receiver actions = `0`; SSH tunnels = `0`; readiness = `0`; infrastructure mutation = `0`; source/test/package edits = `0`; dependency install/update = `0`; F11 authorization consumed = `NO`.
+
+Acceptance meaning: EC01 proves a bounded local orchestration path can be dispatched once and then execute/manage the required local process lifecycle without `interact_with_process`. It does **not** prove Zernio authentication, receiver handoff, tunnel reliability, public readiness, or live F11 success.
+
+EC01 does **not** self-clear the parent blocker. Canonical parent state remains pending Team Leader review: `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; current blocker remains `REMOTE_CONTROLLER_INTERACTION_SURFACE_INTERMITTENT`; credential source remains `IDENTIFIED / AVAILABLE`; persistent-controller execution path remains `ACCEPTED AS BOUNDED CAPABILITY`; tool-safe child credential-delivery path remains `ACCEPTED`; P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider request count remains `0`; F11 post published = `NO`.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because EC01 produced no Provider Behavior evidence. STOP after documentation commit/push and evidence handoff; do not repeat a failed cycle, access credentials or historical `.env`, contact Zernio, touch VPS/receiver/tunnel/readiness, run F10 live, start F11 retry, or start another task.
