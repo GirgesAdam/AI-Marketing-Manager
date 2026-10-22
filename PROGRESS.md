@@ -3633,3 +3633,10 @@ Safety boundary for this closeout: receiver stop/start/restart = `0`; process si
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested. `docs/TEST_MATRIX.md` remains unchanged in this closeout because PV02 evidence is already recorded there.
 
 Documentation scope = `PROGRESS.md` only. Commit/push and STOP. Do not rerun `sudo -l/-ll`, execute receiver lifecycle, inspect or modify sudoers, access receiver source/evidence through privilege, create tunnel, access credentials, contact Zernio, start F11, or start a successor task.
+
+
+### P1-T08-F11-LPD01 - deterministic least-privilege receiver path design activation (2026-10-22)
+
+`P1-T08-F11-LPD01 = ACTIVATED — DETERMINISTIC LEAST-PRIVILEGE RECEIVER PATH DESIGN`.
+
+Activation boundary: VPS actions = `0`; sudo changes = `0`; systemd changes = `0`; implementation = `0`; Provider = `0`; credentials = `0`; F11 authorization remains `AUTHORIZED / UNCONSUMED`.
