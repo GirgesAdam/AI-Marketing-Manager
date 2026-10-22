@@ -3694,3 +3694,40 @@ If direct behavior remains inconclusive after the bounded sequence, the document
 Current execution state is unchanged by this registration: `P1-T08-F11-LPD01 = EXECUTED / AWAITING TEAM LEADER REVIEW`; `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; current blocker remains `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN`; F11 authorization remains `AUTHORIZED / UNCONSUMED`; Provider requests = `0`; F11 post published = `NO`; P1-T08 remains `UNRESOLVED / NOT DONE`; Analytics Webhook remains `SPIKE_PENDING`.
 
 This documentation change does not authorize LPD01 implementation, receiver lifecycle/rehearsal, credentials, Provider/Zernio calls, F11 execution, production Analytics implementation, or any successor task.
+
+
+### P1-T08-F11-LPD01-CLOSEOUT-01 — Team Leader documentation-only acceptance closeout (2026-10-22)
+
+`P1-T08-F11-LPD01 = DONE / ACCEPTED`.
+
+Team Leader disposition = `ACCEPTED`.
+
+Accepted evidence HEAD = `813d70b594b4db94b4de5f80c6543c430bb02c54`.
+
+Accepted classification = `LEAST_PRIVILEGE_RECEIVER_PATH_DESIGN_READY`.
+
+Accepted selected design = `Candidate B — Exact lifecycle grants + fixed verifier`.
+
+Canonical HEAD later advanced only through accepted documentation registration commit `e9c86e7b6057725e4ccdf7af77b4dbd92ab163ba` (`docs(provider): bound P1-T08 probing and fallback`), parent `813d70b594b4db94b4de5f80c6543c430bb02c54`. That documentation-only advancement did not change the LPD01 evidence, classification, selected design, blocker, authorization state, Provider count, or post state.
+
+Accepted future privilege surface: RunAs = `root`; exact lifecycle commands only = `/usr/bin/systemctl stop marketly-r02-receiver.service` and `/usr/bin/systemctl start marketly-r02-receiver.service`; fixed verifier only = `/usr/local/sbin/marketly-f11-receiver-verify`. No restart privilege, wildcard service control, unrestricted `systemctl`, arbitrary RunAs, arbitrary shell/root command surface, general Python/Node privilege, or arbitrary file-read/write utility grants.
+
+Accepted verifier contract: `/usr/local/sbin/marketly-f11-receiver-verify`, owner/group `root:root`, mode `0755`, root-owned/non-writable parent, zero arguments, zero caller-selected paths, fixed/sanitized environment, no shell evaluation, and no caller-controlled execution behavior. Fixed inputs only: `/opt/marketly-r02/receiver.py`, `/etc/systemd/system/marketly-r02-receiver.service`, `/var/lib/marketly-r02/f11-evidence`. Accepted receiver SHA-256 = `f2851eac800b417ec870083f7acb69f0fa231fdea645c96b328736486fa7dcb9`; accepted unit SHA-256 = `c0d3c948068ebbd5c315e88d6a305e3dc2a66a18f497470a3ef88c547c9ff1d7`.
+
+Accepted output boundary: approved machine-readable fields only = `schemaVersion`, `receiverSourceSha256`, `unitSha256`, `receiverSourceReadable`, `unitReadable`, `evidenceDirectoryExists`, `evidenceDirectoryState`, `evidenceCount`, `result`. The verifier must not expose evidence contents, evidence filenames, webhook payloads, headers, credentials/secrets, or arbitrary filesystem contents. Incomplete verification must fail closed/nonzero.
+
+Accepted evidence-state/path safety: `evidenceCount` counts direct regular evidence files only; states = `MISSING`, `UNREADABLE_OR_INTERNAL_ERROR`, `VALID_EMPTY`, `VALID_NONEMPTY`, `INVALID_STRUCTURE`; count numeric only for valid states and `null` otherwise. Fixed paths require `lstat` or equivalent; symlink fixed inputs are rejected; file opens use no-follow semantics where supported; opened identity/type is verified after open; evidence directory must be a real directory; direct children only; no recursion; symlink/special/unexpected entries invalidate structure; no traversal outside the fixed evidence directory.
+
+Accepted implementation security invariants: systemd unit root-owned/non-writable by `marktuser`; interpreter root-owned/non-writable; receiver parent path non-writable; unit/drop-ins not user-writable; ExecStart target not user-writable; no writable EnvironmentFile; no writable service WorkingDirectory dependency; verifier and parent directory non-writable; service runs under the accepted distinct service account. Any implementation-time drift is a hard blocker.
+
+Accepted failure model: no blind lifecycle retry; unknown listener is never killed automatically; no tunnel until exact stop + inactive + port-free gates pass; restoration failure requires STOP/human escalation; post-restoration hash mismatch means receiver is NOT safely restored; evidence-count drift fails closed; authorization-consumption state depends only on whether the first trusted Provider request occurred.
+
+Architecture/operational decision registered as `D-041 — Phase-1 F11 Least-Privilege Receiver Handoff` with status `Accepted` in `DECISIONS.md`.
+
+Parent blocker is intentionally NOT cleared: `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN`. Design accepted != capability implemented. Preserve `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`; F11 authorization = `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`; Provider requests = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`.
+
+Bounded Provider plan remains registered and unchanged: safe receiver infrastructure; one Provider-free rehearsal; one authorized F11 experiment; at most one diagnostic/cross-check round; then STOP unless genuinely new evidence justifies an explicitly authorized change. This operating plan is NOT Provider Behavior evidence.
+
+Next gate requirement only: a later separately authorized implementation task must implement/install/protect the fixed verifier, establish only the exact three sudo capabilities, validate installed sudoers syntax, revalidate all ownership/writability invariants, test fail-closed verifier behavior, test the exact privilege surface, and perform zero Provider/Zernio requests. This closeout does NOT authorize implementation.
+
+Safety boundary for this closeout: VPS commands = `0`; sudo queries = `0`; sudoers mutation = `0`; systemd mutation = `0`; receiver lifecycle = `0`; verifier implementation = `0`; VPS writes = `0`; tunnels = `0`; readiness = `0`; credentials = `0`; Provider/Zernio = `0`; F11 authorization consumed = `NO`. Repository changes are documentation-only. `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested.

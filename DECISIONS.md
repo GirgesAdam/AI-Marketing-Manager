@@ -386,3 +386,39 @@ D-040 does not execute, consume, expand, or renew F11 authorization.
 F11 remains `AUTHORIZED / UNCONSUMED` and `UNCONSUMED / BLOCKED PRE-PROVIDER` until a separately authorized operational task satisfies its prerequisites.
 
 P1-T08 remains unresolved and `analytics.synced` remains `SPIKE_PENDING`.
+
+## D-041 — Phase-1 F11 Least-Privilege Receiver Handoff
+
+**Status:** Accepted
+
+For the bounded P1-T08/F11 Phase-1 experiment, the accepted receiver handoff design is `Candidate B — Exact lifecycle grants + fixed verifier`.
+
+Automation privilege is limited to exactly:
+1. `/usr/bin/systemctl stop marketly-r02-receiver.service`
+2. `/usr/bin/systemctl start marketly-r02-receiver.service`
+3. `/usr/local/sbin/marketly-f11-receiver-verify`
+
+RunAs is `root` only. No restart privilege is included.
+
+The fixed verifier is a zero-argument read-only capability. It may inspect only:
+- `/opt/marketly-r02/receiver.py`
+- `/etc/systemd/system/marketly-r02-receiver.service`
+- `/var/lib/marketly-r02/f11-evidence`
+
+It may emit only bounded hash/count/state evidence. It must not expose evidence contents, evidence filenames, webhook payloads, headers, credentials/secrets, or arbitrary filesystem contents. Incomplete verification must fail closed/nonzero.
+
+Explicitly prohibited: `NOPASSWD: ALL`; unrestricted or wildcard `systemctl`; arbitrary shell/root; arbitrary RunAs; unrestricted interpreter execution; caller-controlled paths; arbitrary filesystem reads/writes; unrelated service control.
+
+The verifier must be `root:root`, mode `0755`, in a root-owned/non-writable parent; accept zero arguments and zero caller-selected paths; use a fixed/sanitized environment; perform no shell evaluation or caller-controlled execution behavior; reject symlink fixed inputs; avoid following symlinks; verify opened file type/identity; treat the evidence directory as a fixed real directory; inspect direct children only with no recursion; and fail closed on symlink/special/unexpected evidence entries.
+
+`evidenceCount` counts direct regular evidence files only. Accepted evidence states are `MISSING`, `UNREADABLE_OR_INTERNAL_ERROR`, `VALID_EMPTY`, `VALID_NONEMPTY`, and `INVALID_STRUCTURE`; the count is numeric only for valid states and `null` otherwise.
+
+This design remains valid only while the systemd unit, interpreter, receiver parent path, unit/drop-ins, ExecStart target, EnvironmentFile dependencies, service WorkingDirectory dependencies, verifier, and verifier parent preserve the accepted non-writability/ownership invariants; the service must continue to run under the accepted distinct service account. Any implementation-time drift is a hard blocker.
+
+Failure/recovery policy: no blind lifecycle retry; never kill an unknown listener automatically; do not create the reverse tunnel until exact stop + inactive + port-free gates pass; restoration failure requires STOP/human escalation; post-restoration hash mismatch means the receiver is not safely restored; evidence-count drift fails closed; F11 authorization consumption depends only on whether the first trusted Provider request occurred.
+
+This decision is scoped only to the Phase-1 P1-T08/F11 test infrastructure. It does not define Commercial V1 production deployment architecture.
+
+Implementation remains separately gated. Before activation, a separately authorized task must prove exact installed sudoers syntax, ownership/mode invariants, verifier path safety, fail-closed behavior, absence of a privilege-escalation path, exact privilege-surface behavior, and safe recovery/restoration behavior. That implementation task must make zero Provider/Zernio requests.
+
+This decision does not authorize F11 execution and does not consume F11 authorization.
