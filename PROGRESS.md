@@ -3590,3 +3590,46 @@ PV02 does **not** self-clear the parent blocker. Pending Team Leader review: `P1
 Safety boundary preserved: receiver stop = `0`; receiver start = `0`; receiver restart = `0`; process signals = `0`; systemd reload = `0`; sudoers mutation = `0`; VPS file writes = `0`; permission/ownership changes = `0`; receiver-source privileged reads = `0`; evidence-directory privileged reads = `0`; tunnels = `0`; readiness = `0`; credentials = `0`; Provider/Zernio = `0`; F11 authorization consumed = `NO`. Human sudo password was not shared with ChatGPT/tools.
 
 `docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because PV02 produced no Provider Behavior evidence. STOP after documentation commit/push and evidence handoff. Do not execute receiver lifecycle, run mutation-based privilege tests, inspect or edit sudoers files directly, access receiver source/evidence through privilege, create tunnel, access credentials, contact Zernio, start F11, or start a successor task.
+
+
+### P1-T08-F11-PV02-CLOSEOUT-01 - Team Leader documentation-only closeout (2026-10-22)
+
+`P1-T08-F11-PV02 = DONE / ACCEPTED`.
+
+Team Leader disposition = `ACCEPTED`.
+
+Accepted evidence HEAD = `63a7ad060accef42de75a4b5451e6beff1b1dc06`.
+
+Accepted classification = `VPS_POLICY_VISIBILITY_STILL_INDETERMINATE`.
+
+Accepted sudo-version evidence: sudo version = `1.8.31`; sudoers policy plugin = `1.8.31`; sudoers grammar = `46`; sudoers I/O plugin = `1.8.31`.
+
+Accepted stop evidence: exact query = `sudo -ll /usr/bin/systemctl stop marketly-r02-receiver.service`; reached VPS = `YES`; policy-view authentication requested = `YES`; first password attempt rejected; subsequent policy-view authentication succeeded; relevant output = `/usr/bin/systemctl stop marketly-r02-receiver.service`; exit code = `NOT CAPTURED`; missing exit code is not inferred; `PASSWD/NOPASSWD` semantics = `INDETERMINATE`; `authenticate/!authenticate` semantics = `INDETERMINATE`; RunAs semantics = `INDETERMINATE`; matching-rule source = `INDETERMINATE`; narrow-vs-broad scope = `INDETERMINATE`; receiver stop execution = `0`.
+
+Accepted start evidence: exact query = `sudo -ll /usr/bin/systemctl start marketly-r02-receiver.service`; reached VPS = `YES`; fresh policy-view authentication requested = `NO`; prior sudo authentication timestamp/session was already valid; relevant output = `/usr/bin/systemctl start marketly-r02-receiver.service`; exit code = `0`; `PASSWD/NOPASSWD` semantics = `INDETERMINATE`; `authenticate/!authenticate` semantics = `INDETERMINATE`; RunAs semantics = `INDETERMINATE`; matching-rule source = `INDETERMINATE`; narrow-vs-broad scope = `INDETERMINATE`; receiver start execution = `0`.
+
+Team Leader interpretation: PV01 single-command `sudo -l` and PV02 exact-command `sudo -ll` both reached the VPS but did not expose sufficient policy metadata to establish the target commands as passwordless, password-required, exact narrow grants, or broad grants. No inference may be made from omitted tags. No mutation-based privilege test is accepted as a substitute for policy visibility. Accepted classification remains `VPS_POLICY_VISIBILITY_STILL_INDETERMINATE`.
+
+Safe policy-visibility exhaustion finding: for the installed sudo/sudoers `1.8.31` environment, the currently accepted bounded human policy-listing approaches — exact `sudo -l <command>` and exact `sudo -ll <command>` — have both been exercised and did not produce authoritative execution-auth or narrowness evidence. Do **NOT** schedule another materially identical policy-listing retry merely to repeat the same evidence. This does not prove that a narrow `NOPASSWD` rule is absent. It proves that the existing rule cannot currently be relied upon as a **proven safe automation path**.
+
+Canonical parent state remains `P1-T08-F11 = NOT DONE / BLOCKED PRE_PROVIDER`.
+
+Blocker entering PV01/PV02 policy visibility = `VPS_EXACT_NONINTERACTIVE_PRIVILEGE_POLICY_UNVERIFIED`.
+
+Current blocker after accepted PV02 = `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN`.
+
+Supersession mapping: `VPS_EXACT_NONINTERACTIVE_PRIVILEGE_POLICY_UNVERIFIED` = blocker entering PV01/PV02 policy visibility. `VPS_SAFE_NONINTERACTIVE_RECEIVER_LIFECYCLE_PATH_NOT_PROVEN` = current blocker after accepted PV02. Reason: although sudo policy checks recognize the exact commands, the evidence does not prove a safe, narrow, passwordless automation path suitable for F11 execution.
+
+Remaining read-only infrastructure gate: F11 also still requires a safe method to obtain fresh authoritative receiver source SHA-256 and F11 evidence-directory count/state. `marktuser` cannot currently access those paths unprivileged. PV02 did not address or authorize that capability. This is infrastructure/read-only verification, not Provider Behavior.
+
+Canonical state preserved: credential source = `IDENTIFIED / AVAILABLE`; child credential-delivery path = `ACCEPTED`; single-dispatch execution-control path = `ACCEPTED`; request timestamp observability = `ACCEPTED`; F11 authorization = `AUTHORIZED / UNCONSUMED`; authorization consumed = `NO`; Provider requests = `0`; F11 post published = `NO`; P1-T08 = `UNRESOLVED / NOT DONE`; Analytics Webhook = `SPIKE_PENDING`. Do **NOT** mark F11 ready for live retry.
+
+Future gate requirement only: before any further F11 live retry, a separately authorized task must define and review a **deterministic least-privilege receiver-control/read-only verification path**. Prefer an explicitly established known-safe capability rather than continuing to depend on an existing sudo policy whose effective automation semantics cannot be proven. A future design may cover exact receiver stop, exact receiver start, fixed receiver-source hash verification, and fixed F11 evidence-count/state verification, but must not assume or implement them without separate Team Leader authorization.
+
+Least-privilege constraints preserved: no `NOPASSWD: ALL`; no arbitrary shell/root; no arbitrary `systemctl`; no caller-controlled arbitrary paths; no arbitrary file read/write; no broad interpreter grants; no unrelated service control.
+
+Safety boundary for this closeout: receiver stop/start/restart = `0`; process signals = `0`; systemd reload = `0`; sudo queries = `0`; sudoers changes = `0`; VPS commands = `0`; privileged receiver-source reads = `0`; privileged evidence reads = `0`; infrastructure mutations = `0`; tunnels = `0`; credentials = `0`; Provider/Zernio = `0`; F11 authorization consumed = `NO`.
+
+`docs/PROVIDER_SPIKE_RESULTS.md` remains unchanged because no Provider Behavior was tested. `docs/TEST_MATRIX.md` remains unchanged in this closeout because PV02 evidence is already recorded there.
+
+Documentation scope = `PROGRESS.md` only. Commit/push and STOP. Do not rerun `sudo -l/-ll`, execute receiver lifecycle, inspect or modify sudoers, access receiver source/evidence through privilege, create tunnel, access credentials, contact Zernio, start F11, or start a successor task.
