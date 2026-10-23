@@ -3091,3 +3091,64 @@ The bounded runner exposes only explicit `--observe-a` / `--observe-b` modes and
 Offline gates: focused P1-T14 `24 / 24` PASS; full `npm test` `613 / 613` PASS across `26` files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
 
 Current Provider/network evidence for P1-T14: authenticated API calls `0`; credentials `0`; presigns `0`; PUTs `0`; public GETs `0 / 2`; uploads `0`; Provider mutations `0`; retries `0`. No retention observation has executed yet.
+
+
+## P1-T15 — Safe Native Comment-to-DM Automation Lifecycle
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Primary classification: `NATIVE_AUTOMATION_SAFETY_FAILURE`.
+
+Error category: `SAFETY_FROZEN_POST_MISMATCH`.
+
+Capability recommendation: `Comment-to-DM remains SPIKE_PENDING`.
+
+### Scope and Provider contract boundary
+
+P1-T15 was limited to the configuration/state lifecycle required by D-014: safe disabled creation, disabled read-back, enable/read-back, disable/read-back, no-trigger verification, and exact owned cleanup. It did not authorize creation of a triggering comment, intentional DM delivery, public auto-reply delivery, delayed actions, delayed-action cancellation, or AI/native race testing.
+
+At task start, current public Provider documentation established the create/read/update/delete Comment Automation endpoints. The documented update path exposes `isActive`; the public create request contract did not establish `isActive` as a supported create input. P1-T15 therefore required the one authorized create request, if reached, to include explicit `isActive=false` and prohibited any fallback active-create attempt. This documentation fact is not treated as live Provider behavior.
+
+Frozen target: Profile `6ac5a45a8e4ca44f355033ae`; Facebook account `6ac64f8740364f4695dd3077`; Page `1387424501114639`; Zernio post `6ada5bc404775bbecc763501`; Facebook platform post `1387424501114639_122110940457502015`; frozen content SHA-256 `db58ab9f9a09803d402dfe975d204baaeec1f9dc828c0f3c541833a84fc03113`.
+
+### Implementation / offline evidence
+
+Activation commit: `d53912f70f4e7fcb073dfb5fab0fb5dd5daea371`. Implementation/test commit: `6e44049340d94726b03e8b147897d5ff67b61786`.
+
+The runner is fail-closed to the frozen Profile/account/post/configuration, explicit `isActive=false`, one automation create maximum, one enable PATCH maximum, one disable-or-emergency-disable PATCH maximum, one DELETE maximum, and an absolute Provider request ceiling of `12`. No comment-create, DM-send, conversation-create, Ads, media, webhook, or P1-T14 retention surface is callable from the runner.
+
+Focused P1-T15 suite: `30 / 30` PASS. Full `npm test`: `643 / 643` PASS across `27` files. `npm run typecheck`, `npm run build`, and `git diff --check`: PASS before live execution.
+
+### Single authorized live execution
+
+Exactly one live P1-T15 runner invocation occurred. Its durable fixed-path journal is `artifacts/provider-spike/p1-t15-evidence.jsonl`, gitignored. Reached checkpoint sequence was exactly:
+
+`RUN_STARTED → IDENTITY_VERIFIED → RUN_FINALIZED`.
+
+Observed safe request evidence:
+
+| Request | Result |
+|---|---|
+| Trusted identity `GET /v1/auth/verify` | HTTP `200`; request `fa0d0710-5b87-4ba3-b2d0-6eed4582bf5c`; expected identity matched |
+| Profile/account ownership `GET /v1/accounts` | HTTP `200`; request `696ca39b-cfac-45a7-a34a-93841d1d517a`; gate passed sufficiently for the frozen-post read to execute |
+| Exact frozen-post `GET /v1/posts/6ada5bc404775bbecc763501` | HTTP `200`; request `9253161a-ad49-44cc-83ba-85ebf3416a70`; exact frozen-post identity/content/target attestation did not pass |
+
+The evidence journal does not retain a field-level post mismatch projection. Therefore P1-T15 does **not** claim which Provider field differed, that the residual post was deleted, that its content changed, or that Provider ownership changed. Historical accepted P1-T10 evidence remains historical evidence only and is not used to override this P1-T15 fail-closed preflight result.
+
+Because target attestation failed, the runner stopped before mutation exactly as required. The create-disabled probe was **not reached**. No automation ID exists from this task, and no enable/disable lifecycle state was exercised.
+
+### Safety / boundedness
+
+Provider requests: `3 / 12`. Automation create attempts: `0`. Enable PATCH: `0`. Disable/emergency-disable PATCH: `0`. DELETE: `0`. Comments created: `0`. Intentional DMs: `0`. Conversations created: `0`. Ads/media/webhook mutations: `0`. Retries: `0`. Secrets persisted: `0`. Private PII persisted: `0`.
+
+Cleanup is `NOT_APPLICABLE` because no automation was created. No second live run, alternate target, broader post lookup, active-create fallback, or additional Provider read was performed.
+
+### Interpretation
+
+Primary classification is `NATIVE_AUTOMATION_SAFETY_FAILURE` because the exact frozen-post precondition could not be established by the bounded live runner. This classification is a safety stop, not proof of a specific Provider post mutation or of a Comment Automation API defect.
+
+P1-T15 therefore does **not** establish whether `POST /v1/comment-automations` honors or rejects explicit `isActive=false`; safe create-disabled support remains unverified. The create-disabled → enable → disable lifecycle, actual trigger matching, DM delivery, delayed DM/public reply behavior, already-queued delayed-action behavior, and AI/native reply race behavior all remain unresolved Provider Behavior work.
+
+Canonical capability state is unchanged pending Team Leader review: `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`. `PROVIDER_CAPABILITIES.md` is intentionally unchanged.
+
+D-043 parallel waiting state is preserved: P1-T14 remains `WAITING_TIME_GATE`; P1-T15 made no P1-T14 request, did not access the retention object, did not create P1-T14 evidence, and did not alter the P1-T14 Observation A/B timestamps or `0 / 2` GET budget.

@@ -63,11 +63,27 @@ Executing Senior Tasks = `1 / 1`
 
 Current Task = `P1-T15 — Verify Safe Native Comment-to-DM Automation Lifecycle`
 
-P1-T15 = **ACTIVATED**
+P1-T15 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
 
 P1-T15 starting HEAD = `b6f191ca535c871385d1fc1a2162acdb730d1c7f`; branch = `p1-t15-zernio-comment-automation-lifecycle`.
 
-P1-T15 scope = `PROVIDER BEHAVIOR - safe create-disabled -> enable -> disable lifecycle only`; P1-T14 remains independently frozen in `WAITING_TIME_GATE`.
+P1-T15 activation commit = `d53912f70f4e7fcb073dfb5fab0fb5dd5daea371`; implementation/test commit = `6e44049340d94726b03e8b147897d5ff67b61786`.
+
+P1-T15 scope = `PROVIDER BEHAVIOR — safe create-disabled → enable → disable lifecycle only`; P1-T14 remains independently frozen in `WAITING_TIME_GATE`.
+
+P1-T15 offline gates = focused `30 / 30` PASS; full `npm test` `643 / 643` PASS across `27` files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+P1-T15 live run = `CONSUMED — FAIL CLOSED PRE-MUTATION`.
+
+P1-T15 primary classification = `NATIVE_AUTOMATION_SAFETY_FAILURE`; error category = `SAFETY_FROZEN_POST_MISMATCH`.
+
+P1-T15 preflight evidence: trusted identity HTTP `200`, request `fa0d0710-5b87-4ba3-b2d0-6eed4582bf5c`; exact Profile/account ownership gate HTTP `200`, request `696ca39b-cfac-45a7-a34a-93841d1d517a`, passed far enough for the frozen-post read to execute; exact frozen-post GET HTTP `200`, request `9253161a-ad49-44cc-83ba-85ebf3416a70`, but the runner's exact frozen-post identity/content/target attestation did not pass. The durable evidence does not identify a field-level mismatch, so no specific Provider post drift cause is claimed.
+
+P1-T15 create-disabled probe = `NOT REACHED`; automation ID = `NONE`; automation creates `0`; enable PATCH `0`; disable/emergency-disable PATCH `0`; DELETE `0`; comments created `0`; intentional DMs `0`; conversations `0`; Ads/media/webhook mutations `0`; retries `0`; total Provider requests `3 / 12`.
+
+P1-T15 durable evidence = fixed gitignored `artifacts/provider-spike/p1-t15-evidence.jsonl`; checkpoints reached exactly `RUN_STARTED → IDENTITY_VERIFIED → RUN_FINALIZED`; secrets persisted `0`; private PII persisted `0`.
+
+Comment-to-DM = `SPIKE_PENDING`; safe create-disabled support and the enable/disable lifecycle remain unverified because no automation mutation was allowed after preflight attestation failed. Delayed Native DM and Delayed Native Reply remain `SPIKE_PENDING`.
 
 P1-GOV-01 = **DONE / ACCEPTED**
 

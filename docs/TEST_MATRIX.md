@@ -3288,3 +3288,78 @@ Automated focused suite: `tests/provider-spike/p1-t14.test.ts`.
 | Pre-observation unrelated mutations | `0` |
 
 Observation A earliest UTC: `2026-10-30T16:01:20.743Z`. Observation B earliest UTC: `2026-10-31T21:01:20.743Z`, only after exact-present A. Current retention Provider Behavior remains unobserved; the 7-day auto-deletion statement is `DOC_CONFIRMED`, not live evidence.
+
+
+## P1-T15 — Safe Native Comment-to-DM Automation Lifecycle
+
+Task state: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Primary classification: `NATIVE_AUTOMATION_SAFETY_FAILURE`.
+
+Automated focused suite: `tests/provider-spike/p1-t15.test.ts`.
+
+| Gate / evidence | Result |
+|---|---|
+| Activation branch | PASS — `p1-t15-zernio-comment-automation-lifecycle` |
+| Activation commit | `d53912f70f4e7fcb073dfb5fab0fb5dd5daea371` |
+| Implementation/test commit | `6e44049340d94726b03e8b147897d5ff67b61786` |
+| Live defaults OFF | PASS — zero network |
+| Frozen Profile/account/post only | PASS |
+| Frozen post content/hash validation | PASS — deterministic/offline |
+| Exact unique keyword | PASS — `marketlyai_p1_t15_7f3c9b2e_no_action` |
+| Create body always includes `isActive=false` | PASS |
+| Active-create fallback | NOT CALLABLE |
+| Automation create maximum | PASS — `1` |
+| Enable PATCH maximum | PASS — `1` |
+| Disable/emergency-disable maximum | PASS — `1`, mutually exclusive with normal lifecycle path |
+| DELETE maximum | PASS — `1` |
+| Absolute Provider request ceiling | PASS — `12` |
+| Create HTTP 400/no ID path | PASS — `COMMENT_AUTOMATION_CREATE_DISABLED_UNSUPPORTED`, no retry |
+| Unexpected active create path | PASS — one emergency disable + read-back; no normal enable |
+| Normal enable gated by disabled read-back | PASS |
+| Final disable/read-back required | PASS |
+| Unexpected trigger/send detection | PASS — safety classification; PII excluded |
+| Exact-ID cleanup only | PASS |
+| Final 404 cleanup verification | PASS |
+| Residual disabled cleanup-blocked path | PASS |
+| Comment-create API surface | NOT AVAILABLE |
+| Intentional DM-send API surface | NOT AVAILABLE |
+| Conversation-create API surface | NOT AVAILABLE |
+| Ads/media/webhook mutation surface | NOT AVAILABLE |
+| P1-T14 object/evidence surface | NOT AVAILABLE |
+| Fixed evidence path | PASS — `artifacts/provider-spike/p1-t15-evidence.jsonl` |
+| Evidence path gitignored | PASS |
+| Credential/Authorization persistence | PASS — `0` |
+| Focused P1-T15 suite | PASS — `30 / 30` |
+| Full `npm test` | PASS — `643 / 643` across `27` files |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| `git diff --check` before live | PASS |
+| Single authorized live invocation | EXECUTED — exactly `1` |
+| Trusted identity live | PASS — HTTP `200`; request `fa0d0710-5b87-4ba3-b2d0-6eed4582bf5c` |
+| Profile/account ownership gate live | PASS sufficiently to proceed — HTTP `200`; request `696ca39b-cfac-45a7-a34a-93841d1d517a` |
+| Frozen post GET live | HTTP `200`; request `9253161a-ad49-44cc-83ba-85ebf3416a70` |
+| Frozen post exact attestation live | FAIL CLOSED — `SAFETY_FROZEN_POST_MISMATCH`; field-level mismatch not retained, no cause invented |
+| Automation POST live | NOT REACHED — `0` create attempts |
+| Disabled read-back live | NOT REACHED |
+| Enable/read-back live | NOT REACHED |
+| Disable/read-back live | NOT REACHED |
+| Trigger/send count live | NOT REACHED as automation stage; no intentional trigger traffic created |
+| Cleanup live | `NOT_APPLICABLE` — no automation created |
+| Provider requests live | `3 / 12` |
+| Automation creates live | `0` |
+| Enable PATCH live | `0` |
+| Disable/emergency-disable PATCH live | `0` |
+| DELETE live | `0` |
+| Comments created live | `0` |
+| Intentional DMs live | `0` |
+| Conversations created live | `0` |
+| Ads/media/webhook mutations live | `0` |
+| Retries live | `0` |
+| Durable checkpoint sequence | `RUN_STARTED → IDENTITY_VERIFIED → RUN_FINALIZED` |
+| Primary classification | `NATIVE_AUTOMATION_SAFETY_FAILURE` |
+| Canonical Comment-to-DM state | `SPIKE_PENDING` — unchanged pending Team Leader review |
+| Delayed Native DM / Reply | `SPIKE_PENDING` / `SPIKE_PENDING` |
+| P1-T14 preservation | PASS — remains `WAITING_TIME_GATE`, GET `0 / 2`, timestamps unchanged |
+
+The one live run stopped before automation creation because the exact frozen-post precondition was not established. The result does not determine whether create-time `isActive=false` is supported or honored. No second live run or alternate target is authorized/performed under P1-T15.
