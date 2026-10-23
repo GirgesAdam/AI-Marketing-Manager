@@ -463,13 +463,15 @@ NOT_APPLICABLE
 | Ad Preview | Yes | SPIKE_PENDING | Meta Ads | Approval UI | Preview |
 | Boost | Yes | SPIKE_PENDING | Eligible post | Policy/approval | Ads execution |
 | Paused-First Ads | Yes | SPIKE_PENDING | Provider support | Safety workflow | Ads execution |
-| Media Upload | Yes | SPIKE_PENDING | Media API | Original ownership | Temporary transfer |
+| Media Upload | Yes | PARTIALLY_VERIFIED | Media API | Original ownership | Temporary transfer |
 | Profile Usage | Yes | SPIKE_PENDING | Usage access | Unit economics | Attribution |
 | Comment-to-DM | Yes | SPIKE_PENDING | Supported automation | Ownership coordination | Native execution |
 | Delayed Native DM | Yes* | SPIKE_PENDING | Automation support | Safety coordination | Delayed action |
 | Delayed Native Reply | Yes* | SPIKE_PENDING | Automation support | Safety coordination | Delayed action |
 
 Organic Comments observed scope: `SPIKE_PASS — controlled Facebook organic create/read/list/reply behavior verified; production tenant/Brand authorization, ownership, policy, AI/Human workflow, durable state, idempotency, and reconciliation remain system responsibilities.` Zernio supplies Provider comment fetch/reply execution. This does not verify DMs, Ad Comments, private replies, Likes/hide, or `comment.received` webhook behavior.
+
+Media Upload observed scope: `PARTIALLY_VERIFIED — temporary presign, exact upload, public binary retrieval, and signed upload-URL expiry enforcement verified.` This does not promote Media Upload to `SPIKE_PASS`. Remaining Phase-1 Media gaps are temporary object retention/deletion behavior and re-upload of an approved original using a new presign. Temporary object lifetime/deletion remains `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`; `APPROVED_ORIGINAL_REUPLOAD = SPIKE_PENDING`.
 
 `Yes*` يعني أنها ضمن الـV1 الوظيفي، لكن تمكينها في Production يعتمد على اجتياز Safety Spike.
 

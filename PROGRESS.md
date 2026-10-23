@@ -55,25 +55,37 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `P1-T12-R01 — Durable Evidence Capture and One Reauthorized Media Expiry Run`
+Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`
 
-P1-T12-R01 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+P1-T12-R01 = **DONE / ACCEPTED**
 
-P1-T12-R01 classification = `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VERIFIED`.
+P1-T12-R01 accepted classification = `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VERIFIED`.
 
-P1-T12-R01 recommendation = `Media Upload → PARTIALLY_VERIFIED — AWAITING TEAM LEADER REVIEW`.
+P1-T12-R01 accepted evidence HEAD = `deefccbe84e7fb5841f5e07fe10f7682f739f5ee`.
 
-P1-T12 = **UNRESOLVED / NOT DONE**
+P1-T12-R01 accepted recommendation = `Media Upload → PARTIALLY_VERIFIED`.
+
+P1-T12 = **DONE / ACCEPTED VIA P1-T12-R01**
 
 P1-T12 prior execution = **ACCEPTED WITH BLOCKING EVIDENCE LIMITATION**
 
 P1-T12 prior execution = `MEDIA_PROVIDER_BEHAVIOR_BLOCKED / LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`
 
-Interpretation = `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE = internal evidence/tooling limitation; not proven Zernio media failure`
+Interpretation = `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE = internal evidence-capture limitation; not proven Provider media failure`
 
-Media Upload = `SPIKE_PENDING`
+The separately authorized P1-T12-R01 supplied the missing authoritative expiry evidence.
 
-P1-T12-R01 final counters: Zernio API calls `2 / 2`; presigns `1`; initial PUTs `1`; expired PUTs `1`; public GETs `1 / 2`; total network `5 / 6`; posts/social mutations `0`; retries `0`; second presign `0`.
+Media Upload = `PARTIALLY_VERIFIED`
+
+Media Upload observed scope = `PARTIALLY_VERIFIED — temporary presign, exact upload, public binary retrieval, and signed upload-URL expiry enforcement verified`.
+
+Remaining Media limitations = `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED`; `APPROVED_ORIGINAL_REUPLOAD_UNVERIFIED`.
+
+Temporary retention/deletion = `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`.
+
+APPROVED_ORIGINAL_REUPLOAD = `SPIKE_PENDING`.
+
+P1-T12-R01 accepted counters: Zernio API calls `2 / 2`; presigns `1`; initial PUTs `1`; expired PUTs `1`; cloud PUT total `2 / 2`; public GETs `1 / 2`; total network `5 / 6`; second presign `0`; automatic retries `0`; social/publishing mutations `0`; DMs `0`; comments `0`; Ads `0`; webhooks `0`; permanent uploads `0`; signed URLs persisted `0`; secrets persisted `0`.
 
 P1-T12 prior known live bounds: Zernio API requests `2 / 2` before the expiry wait; initial cloud upload PUT `1 / 1` reached and passed its 2xx gate; public media read `1` reached and passed exact binary equality; expiry PUT final outcome `NOT CAPTURED`; Provider/social mutations `0`; posts `0`; permanent uploads `0`; automatic retries `0`; second presign `0`.
 
@@ -4495,13 +4507,15 @@ Media Upload remains canonical `SPIKE_PENDING`. No successor task is started.
 
 ## P1-T12-R01 — Durable Evidence Capture and One Reauthorized Media Expiry Run
 
-**Status: EXECUTED / AWAITING TEAM LEADER REVIEW**
+**Status: DONE / ACCEPTED**
 
-Classification = `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VERIFIED`.
+Accepted classification = `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VERIFIED`.
 
-Recommendation = `Media Upload → PARTIALLY_VERIFIED — AWAITING TEAM LEADER REVIEW`.
+Accepted evidence HEAD = `deefccbe84e7fb5841f5e07fe10f7682f739f5ee`.
 
-Canonical `Media Upload` remains `SPIKE_PENDING` pending Team Leader review. `PROVIDER_CAPABILITIES.md` is unchanged.
+Accepted capability outcome = `Media Upload → PARTIALLY_VERIFIED`.
+
+Canonical `Media Upload` = `PARTIALLY_VERIFIED`. `PROVIDER_CAPABILITIES.md` is updated by P1-T12-CLOSEOUT-01.
 
 This R01 execution is a separate Team-Leader-authorized experiment. It does not rewrite the original P1-T12 run: the first run remains `MEDIA_PROVIDER_BEHAVIOR_BLOCKED / LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`, with control-flow evidence reaching the expiry wait and the original final expiry-PUT result unavailable.
 
@@ -4531,8 +4545,10 @@ Final safety counters: Zernio API calls `2 / 2`; presigns `1`; initial PUTs `1`;
 
 Evidence-safety scan: checkpoint count `9`; `uploadUrl` absent; `X-Amz-` absent; `Authorization` absent; `Bearer` absent; `apiKey` absent; signed-query markers absent; query marker `?` absent. Runner result records `signedUrlsPersisted=0`, `secretsPersisted=0`, `secondPresign=0`, `permanentUploads=0`.
 
-Interpretation: R01 live evidence verifies that the one temporary signed upload URL accepted the frozen upload and then, after the Provider-returned `3600s` expiry plus the required `60s` safety margin, the same URL was definitively rejected with HTTP `403` / `SIGNED_REQUEST_EXPIRED`. This supports the recommendation `Media Upload → PARTIALLY_VERIFIED — AWAITING TEAM LEADER REVIEW`.
+Interpretation: R01 live evidence verifies that the one temporary signed upload URL accepted the frozen upload and then, after the Provider-returned `3600s` expiry plus the required `60s` safety margin, the same URL was definitively rejected with HTTP `403` / `SIGNED_REQUEST_EXPIRED`. Team Leader acceptance sets `Media Upload = PARTIALLY_VERIFIED`; `Media Upload != SPIKE_PASS`.
 
-Still unresolved and explicitly not covered by R01: temporary object retention/deletion behavior; re-upload of an approved original using a new presign. Those remain separate Phase-1 dispositions.
+Remaining Media limitations: `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED`; `APPROVED_ORIGINAL_REUPLOAD_UNVERIFIED`. Temporary retention/deletion remains `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`; `APPROVED_ORIGINAL_REUPLOAD = SPIKE_PENDING`.
 
-PHASE 1 remains **IN PROGRESS**. No successor Phase-1 task, Ads work, retention/deletion experiment, or approved-original re-upload was started.
+P1-T12-CLOSEOUT-01 safety boundary: Provider calls `0`; credentials `0`; presigns `0`; media PUTs `0`; public GETs `0`; social mutations `0`; source/test/runtime changes `0`. Documentation only.
+
+PHASE 1 remains **IN PROGRESS**. Current Task is `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`. No successor Phase-1 task, Ads work, retention/deletion experiment, approved-original re-upload, or Phase 2 work was started.

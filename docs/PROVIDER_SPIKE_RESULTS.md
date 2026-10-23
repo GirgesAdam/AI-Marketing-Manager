@@ -2894,13 +2894,15 @@ Closeout execution was documentation-only: Provider/Zernio calls `0`; credential
 
 ## P1-T12 — Zernio Temporary Media Presign / Upload / Public Read / Upload-URL Expiry
 
-Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+Status: `DONE / ACCEPTED VIA P1-T12-R01`.
 
-Classification: `MEDIA_PROVIDER_BEHAVIOR_BLOCKED`.
+Original execution classification: `MEDIA_PROVIDER_BEHAVIOR_BLOCKED`.
 
-Evidence limitation: `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`.
+Original execution evidence limitation: `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`.
 
-Capability recommendation: `Media Upload remains SPIKE_PENDING`.
+Interpretation: `internal evidence-capture limitation; not proven Provider media failure`. The separately authorized P1-T12-R01 supplied the missing authoritative expiry evidence.
+
+Final capability status: `Media Upload = PARTIALLY_VERIFIED`.
 
 ### DOC_CONFIRMED — not live evidence
 
@@ -2934,19 +2936,21 @@ This is control-flow evidence, not a substitute for the missing final JSON. Exac
 
 ### Interpretation
 
-P1-T12 does not prove upload-URL expiry enforcement. Because the final expiry outcome is not preserved, classification is conservatively `MEDIA_PROVIDER_BEHAVIOR_BLOCKED` with `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`. Media Upload remains `SPIKE_PENDING`; `PROVIDER_CAPABILITIES.md` is unchanged.
+The original P1-T12 execution does not prove upload-URL expiry enforcement. Because its final expiry outcome was not preserved, that original execution remains conservatively classified `MEDIA_PROVIDER_BEHAVIOR_BLOCKED` with `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`. At that point in time Media Upload remained `SPIKE_PENDING`; this historical record is not retroactively rewritten by the later accepted R01 evidence.
 
 Known live bounds: Zernio API requests `2 / 2` before expiry wait; initial cloud PUT `1`; public GET `1`; expiry PUT outcome `NOT CAPTURED`; total network requests at least `4` and at most committed ceiling `6`; Provider/social mutations `0`; posts `0`; DMs `0`; comments `0`; Ads `0`; webhook mutations `0`; permanent uploads `0`; automatic retries `0`; second presign `0`.
 
 ## P1-T12-R01 — Durable Media Expiry Evidence
 
-Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+Status: `DONE / ACCEPTED`.
 
-Classification: `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VERIFIED`.
+Accepted classification: `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VERIFIED`.
 
-Recommendation: `Media Upload → PARTIALLY_VERIFIED — AWAITING TEAM LEADER REVIEW`.
+Accepted evidence HEAD: `deefccbe84e7fb5841f5e07fe10f7682f739f5ee`.
 
-Canonical capability remains unchanged pending Team Leader review; `PROVIDER_CAPABILITIES.md` is not modified.
+Accepted capability outcome: `Media Upload → PARTIALLY_VERIFIED`.
+
+`PROVIDER_CAPABILITIES.md` is updated by this Team-Leader-authorized documentation-only closeout.
 
 ### Separation from original P1-T12
 
@@ -2987,6 +2991,12 @@ Live evidence persisted no signed upload URL, query string, AWS/R2 signature, AP
 
 ### Interpretation
 
-R01 verifies the bounded temporary upload flow through initial upload/public binary read and verifies signed upload-URL expiry enforcement after the actual Provider `expiresIn` plus the required 60-second margin. The capability recommendation is therefore `Media Upload → PARTIALLY_VERIFIED — AWAITING TEAM LEADER REVIEW`, not `SPIKE_PASS`.
+R01 verifies the bounded temporary upload flow through initial upload/public binary read and verifies signed upload-URL expiry enforcement after the actual Provider `expiresIn` plus the required 60-second margin. Team Leader acceptance promotes the canonical capability to `Media Upload = PARTIALLY_VERIFIED`; `Media Upload != SPIKE_PASS`.
 
-Not proven by R01: temporary object retention/deletion behavior; re-upload of an approved original using a new presign; production media lifecycle, durable application state, tenant/Brand authorization, or production policy/usage-control integration.
+Durable evidence survived the long wait and finalized with all nine required checkpoints in exact order. No duplicate live launch occurred. Persisted signed URLs `0`; signed queries `0`; API keys `0`; Authorization/Bearer secrets `0`.
+
+Accepted safety totals: Zernio API `2 / 2`; presigns `1`; initial PUTs `1`; expired PUTs `1`; cloud PUT total `2 / 2`; public GET `1 / 2`; total network `5 / 6`; second presign `0`; automatic retries `0`; social/publishing mutations `0`; DMs `0`; comments `0`; Ads `0`; webhooks `0`; permanent uploads `0`; signed URLs persisted `0`; secrets persisted `0`.
+
+Remaining Phase-1 Media limitations: `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED` and `APPROVED_ORIGINAL_REUPLOAD_UNVERIFIED`. Temporary object lifetime/deletion remains `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`. `APPROVED_ORIGINAL_REUPLOAD = SPIKE_PENDING`; successful first upload is not treated as proof of a new-presign re-upload flow.
+
+This closeout itself is documentation-only: Provider calls `0`; credentials `0`; presigns `0`; media PUTs `0`; public GETs `0`; social mutations `0`; source/test/runtime changes `0`.

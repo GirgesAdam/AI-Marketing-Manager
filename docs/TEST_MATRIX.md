@@ -3090,7 +3090,7 @@ Closeout safety boundary: Provider calls `0`; credentials `0`; outbound messages
 
 ## P1-T12 — Temporary Media Presign / Upload / Public Read / Upload-URL Expiry
 
-Task state: `EXECUTED / AWAITING TEAM LEADER REVIEW`. Classification: `MEDIA_PROVIDER_BEHAVIOR_BLOCKED`. Evidence limitation: `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`.
+Task state: `DONE / ACCEPTED VIA P1-T12-R01`. Original execution classification: `MEDIA_PROVIDER_BEHAVIOR_BLOCKED`. Original evidence limitation: `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE` (internal evidence-capture limitation; not proven Provider media failure).
 
 | Gate / evidence | Result |
 |---|---|
@@ -3115,7 +3115,7 @@ Task state: `EXECUTED / AWAITING TEAM LEADER REVIEW`. Classification: `MEDIA_PRO
 | Pre-expiry control-flow gate | REACHED — runner active >= `1919s`, only reachable after identity + presign + initial PUT + exact public binary read gates pass |
 | Exact expiry PUT outcome | NOT CAPTURED — terminal session expired before final JSON retrieval |
 | Expiry enforcement verified | NO |
-| Capability promotion | NO — Media Upload remains `SPIKE_PENDING` |
+| Original execution capability promotion | NO — Media Upload remained `SPIKE_PENDING` at that point; later R01 acceptance is recorded separately |
 
 Live evidence discipline: reaching the long expiry wait proves the committed preconditions passed in the one execution, but it does not recover exact request IDs, exact `expiresIn`, or final second-PUT response. Those values are not reconstructed. No rerun, second presign, substitute request, or social mutation was performed after the evidence-capture loss.
 
@@ -3123,9 +3123,11 @@ Known live bounds: Zernio API `2 / 2` before expiry wait; initial cloud PUT `1`;
 
 ## P1-T12-R01 — Durable Safe Evidence Capture + Reauthorized Media Expiry Run
 
-Task result: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+Task result: `DONE / ACCEPTED`.
 
-Classification: `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VERIFIED`.
+Accepted classification: `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VERIFIED`.
+
+Accepted evidence HEAD: `deefccbe84e7fb5841f5e07fe10f7682f739f5ee`.
 
 | Gate / evidence | Result |
 |---|---|
@@ -3164,11 +3166,15 @@ Classification: `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VER
 | Actual expiry+60s margin | PASS — elapsed `3,660,020 ms`, required `3,660,000 ms` |
 | Same-URL post-expiry PUT | HTTP `403` / `SIGNED_REQUEST_EXPIRED` |
 | Expiry enforcement | VERIFIED for this bounded signed URL experiment |
-| Capability recommendation | `Media Upload → PARTIALLY_VERIFIED — AWAITING TEAM LEADER REVIEW` |
-| Canonical capability change by Senior | NO |
+| Accepted capability outcome | `Media Upload → PARTIALLY_VERIFIED` |
+| Canonical capability documentation update | PASS — authorized by Team Leader closeout; no source/test/runtime change |
 
 Live request IDs: identity `890bd9a9-752b-4f7e-bb24-4433ec07a703`; presign `65be44ab-eb22-44e5-81c4-0215004f849d`.
 
 Frozen fixture: `marketlyai-p1-t12-fixture.png`, `image/png`, `68` bytes, SHA-256 `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460`.
 
-Remaining separate Phase-1 coverage after R01: temporary object retention/deletion behavior and re-upload of an approved original using a new presign. R01 does not authorize or execute either.
+Remaining separate Phase-1 coverage after R01: `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED` and `APPROVED_ORIGINAL_REUPLOAD_UNVERIFIED`. Temporary retention/deletion remains `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`; `APPROVED_ORIGINAL_REUPLOAD = SPIKE_PENDING`. Media Upload is `PARTIALLY_VERIFIED`, not `SPIKE_PASS`.
+
+Original P1-T12 evidence-loss regression coverage remains preserved: its final expiry-PUT result was not captured and is not retroactively reconstructed from R01.
+
+P1-T12-CLOSEOUT-01 safety boundary: Provider calls `0`; credentials `0`; presigns `0`; media PUTs `0`; public GETs `0`; social mutations `0`; source/test/runtime changes `0`. Documentation only.
