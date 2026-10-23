@@ -2999,3 +2999,50 @@ Not proven by P1-T10: real-user production reply workflow, Comments Agent policy
 Publishing cleanup observation remains Provider evidence only: exact owned test post stayed published after the two separately bounded unpublish failures. Canonical Publishing status is not automatically changed by this closeout.
 
 Final-closeout execution is documentation-only: Provider calls `0`; credentials `0`; post/comment/reply writes `0`; cleanup attempts `0`; Ads/DM/webhook operations `0`; source/test/runtime changes `0`; infrastructure `0`.
+
+## P1-T11 — Facebook DM Read Contract and Controlled Fixture Availability
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `AUTHORIZED_FACEBOOK_DM_DATASET_EMPTY`.
+
+### Offline safety gates
+
+| Gate | Result |
+|---|---|
+| Focused P1-T11 suite | PASS — `22 / 22` |
+| Full `npm test` | PASS — `529 / 529` across `22` files |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| `git diff --check` | PASS |
+| Default live mode | OFF / zero Provider calls |
+| Provider methods | GET-only |
+| Frozen Profile/account/platform | PASS |
+| Caller-selected conversation ID | NOT ACCEPTED |
+| Message/conversation POST | NOT CALLABLE |
+| Mark-read / reaction / private reply | NOT CALLABLE |
+| Comment/post/Ads/webhook mutation | NOT CALLABLE |
+| Raw DM body persistence | BLOCKED by safe projection tests |
+| Participant/sender PII persistence | BLOCKED by safe projection tests |
+| Foreign account/conversation/message scope | FAIL CLOSED |
+| Frozen account failed/skipped handling | BLOCKED, never empty success |
+| Opaque cursor handling | PASS — verbatim transport use, masked evidence |
+| Hard Provider ceiling | PASS — maximum `6` GETs; N+1 blocked pre-transport |
+
+### Live Provider Behavior
+
+| # | Operation | HTTP | Provider request ID | Evidence |
+|---:|---|---:|---|---|
+| 1 | trusted identity | 200 | `dd7327cb-808c-4bb2-a515-c91ee7ec75ca` | expected identity match=true |
+| 2 | exact account ownership | 200 | `b333e9d7-bf97-46ac-a899-9a46d1a0298d` | exact Profile `6ac5a45a8e4ca44f355033ae` + Facebook account `6ac64f8740364f4695dd3077`; no cross-scope leakage |
+| 3 | exact Facebook conversation list | 200 | `b3966925-4207-40d1-990c-56faf6325952` | exact Profile/account/facebook filters; limit `20`; conversation count `0` |
+
+Conversation-list pagination/meta: `hasMore=false`; next cursor absent; `accountsQueried=1`; `accountsFailed=0`; failed-account entries `0`; skipped-account entries `0`; frozen account was not present in failed/skipped entries.
+
+Exact conversation reads `0`; message reads `0`; message count `0`; additional pagination `0`. The empty exact-scoped dataset required immediate stop and no other Brand/account was explored.
+
+Controlled fixture available: `NO`. DMs remain `SPIKE_PENDING`; no PARTIALLY_VERIFIED recommendation is made because no live conversation/message read was possible.
+
+Safety totals: Provider GETs `3 / 6`; mutations `0`; outbound DMs `0`; conversations created `0`; mark-read calls `0`; reactions `0`; private replies `0`; comment/post mutations `0`; Ads `0`; webhook mutations `0`; unrelated PII persisted `0`; secrets exposed `0`; automatic retries `0`.
+
+Future separate work, only after Team Leader selection and a controlled fixture, must cover send/reply behavior, messaging-window constraints, ambiguous send outcomes/idempotency, production tenant/Brand routing, durable ingestion, worker recovery, policy/handoff, and Unknown-result reconciliation. None is implemented by P1-T11.

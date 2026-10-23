@@ -2769,3 +2769,65 @@ Organic Comments canonical capability is promoted to `SPIKE_PASS` for the contro
 Publishing cleanup observation: exact owned test post remained published after bounded unpublish failures (HTTP 500 then HTTP 400). This observation remains visible Provider Behavior evidence and does not downgrade Organic Comments. This closeout does not automatically modify canonical Publishing capability status.
 
 Final-closeout safety boundary: Provider/Zernio calls `0`; credentials `0`; post/comment/reply mutations `0`; cleanup attempts `0`; Ads/DM/webhook operations `0`; source/test/runtime changes `0`; infrastructure `0`.
+
+## P1-T11 — Zernio Facebook DM Read Contract and Controlled Fixture Availability
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `AUTHORIZED_FACEBOOK_DM_DATASET_EMPTY`.
+
+Capability recommendation: `DMs remains SPIKE_PENDING`.
+
+### Current documented contract — DOC_CONFIRMED
+
+Current Zernio documentation checked before live execution documents `GET /v1/inbox/conversations`, `GET /v1/inbox/conversations/{conversationId}`, and `GET /v1/inbox/conversations/{conversationId}/messages`. The current documentation supports Facebook conversation list/read, bounded Facebook/Instagram pre-connect history replay, no historical webhooks for replayed history, opaque message cursors, side-effect-free message GETs that do not mark a conversation read, and failed/skipped-account reporting on conversation aggregation. This documentation evidence is `DOC_CONFIRMED` only and is not substituted for live Provider Behavior.
+
+The documented create-conversation surface was not generalized to Facebook Messenger. P1-T11 performed no `POST /v1/inbox/conversations` and no outbound message operation.
+
+### Deterministic safety evidence
+
+- focused P1-T11 suite: `22 / 22 PASS`;
+- full suite: `529 / 529 PASS` across `22` files;
+- `npm run typecheck`: PASS;
+- `npm run build`: PASS;
+- `git diff --check`: PASS;
+- live mode defaults OFF;
+- Provider surface is GET-only with hard maximum `6` GETs;
+- frozen Profile/account/facebook scope is hard-coded and no caller-selected conversation ID is accepted;
+- no message/conversation POST, mark-read, reaction, private reply, comments/posts/Ads, or webhook mutation surface exists in the runner;
+- raw DM bodies, participant name/username/avatar/IDs, sender PII, and raw conversation IDs are excluded from returned evidence;
+- message cursor values are used opaquely and masked from safe evidence;
+- foreign account/Profile/conversation/message scope fails closed;
+- frozen-account failed/skipped states cannot be mislabeled as trustworthy empty data.
+
+### Single bounded live Provider run
+
+1. Trusted identity — `GET /v1/auth/verify`: HTTP `200`; request `dd7327cb-808c-4bb2-a515-c91ee7ec75ca`; independently expected identity matched.
+2. Exact ownership — `GET /v1/accounts?profileId=6ac5a45a8e4ca44f355033ae`: HTTP `200`; request `b333e9d7-bf97-46ac-a899-9a46d1a0298d`; exact frozen Facebook account `6ac64f8740364f4695dd3077` under Profile `6ac5a45a8e4ca44f355033ae` validated; cross-account/Profile leakage observed `NO`.
+3. Conversation list — `GET /v1/inbox/conversations` with exact Profile/account/`platform=facebook`/`limit=20`: HTTP `200`; request `b3966925-4207-40d1-990c-56faf6325952`.
+
+Observed conversation-list safe evidence:
+- Facebook conversation count: `0`;
+- pagination `hasMore=false`;
+- `nextCursor` present: `NO`;
+- safe pagination total/limit/skip values: not exposed in this response projection;
+- meta `accountsQueried=1`;
+- meta `accountsFailed=0`;
+- failed-account entry count `0`;
+- skipped-account entry count `0` in the safe projection;
+- frozen account present in failed entries: `NO`;
+- frozen account present in skipped entries: `NO`.
+
+Because the exact authorized Facebook conversation dataset was empty, P1-T11 stopped immediately after the list response. Exact conversation read requests: `0`. Message-page requests: `0`. Message count: `0`. No other account/Brand was queried merely to obtain a fixture.
+
+Controlled send fixture available: `NO`. The bounded authorized dataset contained no Facebook conversation, so there is no existing conversation to qualify. No participant identity was inspected/persisted or inferred from content/name/recency.
+
+### Interpretation / capability discipline
+
+`AUTHORIZED_FACEBOOK_DM_DATASET_EMPTY` is a successful exact scoped read with an empty dataset; it is not Provider failure and does not establish that Facebook DM read is unsupported. It also does not live-verify exact conversation/message payload behavior because there was no existing conversation to read.
+
+DMs therefore remain canonical `SPIKE_PENDING`. P1-T11 does not recommend `PARTIALLY_VERIFIED` because the contract's A/B read-verification conditions require live conversation/message reads. Full `SPIKE_PASS` remains dependent on separately reviewed send/reply evidence after a controlled fixture exists.
+
+### Safety totals
+
+Provider GETs `3 / 6`; Provider mutations `0`; outbound messages `0`; conversations created `0`; mark-read calls `0`; reactions `0`; private replies `0`; comment/post mutations `0`; Ads `0`; webhook mutations `0`; unrelated PII persisted `0`; raw DM bodies persisted `0`; secrets exposed `0`; automatic retries `0`.

@@ -57,9 +57,15 @@ Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ES
 
 Current Task = `P1-T11 — Verify Facebook DM Read Contract and Controlled Fixture Availability`
 
-P1-T11 = **ACTIVATED**
+P1-T11 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
 
-P1-T11 initial counters: Provider GETs `0`; Provider mutations `0`; outbound messages `0`; conversations created `0`; read receipts `0`; reactions `0`; private replies `0`.
+P1-T11 classification = `AUTHORIZED_FACEBOOK_DM_DATASET_EMPTY`
+
+DMs = `SPIKE_PENDING`
+
+P1-T11 recommendation = `DMs remains SPIKE_PENDING`
+
+P1-T11 final counters: Provider GETs `3`; Provider mutations `0`; outbound messages `0`; conversations created `0`; read receipts `0`; reactions `0`; private replies `0`; unrelated PII persisted `0`.
 
 P1-T10 = **DONE / ACCEPTED WITH NON-BLOCKING PROVIDER CLEANUP LIMITATION**
 
@@ -4363,3 +4369,28 @@ Publishing cleanup observation: exact owned test post remained published after b
 Current Phase remains `PHASE 1 — Provider Feasibility & Basic Cost Safety`; Phase 1 remains **IN PROGRESS**. Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`. No successor task or Phase 2 work is started.
 
 Final-closeout safety boundary: Provider calls `0`; credentials accessed `0`; post/comment/reply writes `0`; cleanup attempts `0`; Ads/DM/webhook operations `0`; source/test/runtime changes `0`; infrastructure actions `0`.
+
+## P1-T11 — Facebook DM Read Contract / Controlled Fixture Availability (2026-10-23)
+
+P1-T11 = **EXECUTED / AWAITING TEAM LEADER REVIEW**.
+
+Classification = `AUTHORIZED_FACEBOOK_DM_DATASET_EMPTY`.
+
+Current Zernio documentation was checked before implementation/live execution and recorded only as `DOC_CONFIRMED`: Facebook conversations can be listed/read; Facebook/Instagram pre-connect history replay is bounded; replay emits no historical webhooks; message cursors are opaque; message GETs do not mark conversations read; and conversation aggregation exposes failed/skipped-account reporting. No Facebook conversation-initiation behavior is inferred.
+
+Pre-live offline gates: focused P1-T11 `22 / 22 PASS`; full `npm test` `529 / 529 PASS` across `22` files; typecheck PASS; build PASS; `git diff --check` PASS. The runner is GET-only, hard-coded to the frozen Profile/account/facebook target, accepts no caller-selected conversation ID, persists no raw DM body/participant PII, masks opaque cursor evidence, and enforces a hard ceiling of `6` Provider GETs.
+
+Single bounded live run:
+- trusted identity: HTTP `200`, request `dd7327cb-808c-4bb2-a515-c91ee7ec75ca`, expected identity matched;
+- exact account ownership: HTTP `200`, request `b333e9d7-bf97-46ac-a899-9a46d1a0298d`, frozen Facebook account under exact Profile validated;
+- exact Facebook conversation list: HTTP `200`, request `b3966925-4207-40d1-990c-56faf6325952`, filters exact Profile `6ac5a45a8e4ca44f355033ae`, account `6ac64f8740364f4695dd3077`, platform `facebook`, limit `20`.
+
+Conversation-list result: conversation count `0`; pagination `hasMore=false`; no `nextCursor`; safe meta projection `accountsQueried=1`, `accountsFailed=0`, failed-account entries `0`, skipped-account entries `0`; frozen account was not present in failed/skipped entries. No exact-conversation or message GET was issued because the authorized dataset was empty.
+
+Controlled fixture availability = `NO`. No existing Facebook conversation exists in the bounded authorized result, and no other Brand/account was queried to manufacture a fixture.
+
+Capability recommendation = `DMs remains SPIKE_PENDING`. This empty authorized dataset is not Provider failure and does not verify DM send/reply behavior.
+
+Safety totals: Provider GETs `3 / 6`; Provider mutations `0`; outbound DMs `0`; conversations created `0`; mark-read calls `0`; reactions `0`; private replies `0`; comment/post mutations `0`; Ads `0`; webhook mutations `0`; unrelated PII persisted `0`; secrets exposed `0`; automatic retries `0`.
+
+PHASE 1 remains **IN PROGRESS**. Current Task remains P1-T11 awaiting Team Leader review. No DM send test, Ad Comments, Native Automation, successor Phase-1 task, or Phase 2 work was started.
