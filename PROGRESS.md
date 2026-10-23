@@ -55,17 +55,23 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `P1-T12 — Verify Zernio Temporary Media Presign, Upload, Public Read & Upload-URL Expiry`
+Current Task = `P1-T12-R01 — Durable Evidence Capture and One Reauthorized Media Expiry Run`
 
-P1-T12 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+P1-T12-R01 = **ACTIVATED**
 
-P1-T12 classification = `MEDIA_PROVIDER_BEHAVIOR_BLOCKED`
+P1-T12 = **UNRESOLVED / NOT DONE**
 
-P1-T12 evidence limitation = `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`
+P1-T12 prior execution = **ACCEPTED WITH BLOCKING EVIDENCE LIMITATION**
+
+P1-T12 prior execution = `MEDIA_PROVIDER_BEHAVIOR_BLOCKED / LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`
+
+Interpretation = `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE = internal evidence/tooling limitation; not proven Zernio media failure`
 
 Media Upload = `SPIKE_PENDING`
 
-P1-T12 known live bounds: Zernio API requests `2 / 2` before the expiry wait; initial cloud upload PUT `1 / 1` reached and passed its 2xx gate; public media read `1` reached and passed exact binary equality; expiry PUT final outcome `NOT CAPTURED`; Provider/social mutations `0`; posts `0`; permanent uploads `0`; automatic retries `0`; second presign `0`.
+P1-T12-R01 initial counters: Zernio API calls `0`; presigns `0`; initial PUTs `0`; expired PUTs `0`; public GETs `0`; posts/social mutations `0`.
+
+P1-T12 prior known live bounds: Zernio API requests `2 / 2` before the expiry wait; initial cloud upload PUT `1 / 1` reached and passed its 2xx gate; public media read `1` reached and passed exact binary equality; expiry PUT final outcome `NOT CAPTURED`; Provider/social mutations `0`; posts `0`; permanent uploads `0`; automatic retries `0`; second presign `0`.
 
 P1-T11 = **DONE / ACCEPTED**
 
@@ -4469,3 +4475,16 @@ The Senior Engineer does not convert the missing final output into expiry proof.
 Known live bounds: Zernio API requests `2 / 2` before the expiry wait; initial cloud PUT `1`; public GET `1`; expiry PUT final outcome `NOT CAPTURED`; total network requests definitely at least `4` and no more than the committed hard ceiling `6`; Provider/social mutations `0`; posts `0`; DMs `0`; comments `0`; Ads `0`; webhook mutations `0`; permanent uploads `0`; automatic retries `0`; second presign `0`.
 
 PHASE 1 remains **IN PROGRESS**. No successor task is started.
+
+
+## P1-T12-R01 — Activation
+
+Status: `ACTIVATED`.
+
+Current Task = `P1-T12-R01 — Durable Evidence Capture and One Reauthorized Media Expiry Run`.
+
+Parent `P1-T12 = UNRESOLVED / NOT DONE`. The prior P1-T12 execution is accepted with blocking evidence limitation, preserving `MEDIA_PROVIDER_BEHAVIOR_BLOCKED / LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE` and the fact that control-flow evidence reached the expiry wait while the final expiry-PUT result remained unavailable. This is an internal evidence/tooling limitation, not proven Zernio media failure.
+
+This is one separately Team-Leader-authorized media experiment, not an automatic retry. Initial counters: Zernio API calls `0`; presigns `0`; initial PUTs `0`; expired PUTs `0`; public GETs `0`; posts/social mutations `0`.
+
+Media Upload remains canonical `SPIKE_PENDING`. No successor task is started.
