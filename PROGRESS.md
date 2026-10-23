@@ -55,7 +55,11 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`
+Current Task = `P1-T13 — Verify Approved-Original Re-upload Using a Fresh Presign`
+
+P1-T13 = **ACTIVATED**
+
+P1-T13 initial counters: Zernio API calls `0`; fresh presigns `0`; cloud PUTs `0`; public GETs `0`; second presign `0`; social mutations `0`.
 
 P1-T12-R01 = **DONE / ACCEPTED**
 
