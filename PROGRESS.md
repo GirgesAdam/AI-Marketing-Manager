@@ -49,7 +49,7 @@ Closed definitions include:
 
 Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
-Parent Product Task = `NONE — P1-T13 is a standalone Phase-1 Provider Behavior task`
+Parent Product Task = `NONE — P1-T14 is a standalone Phase-1 Provider Behavior task`
 
 Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
@@ -68,6 +68,18 @@ P1-T14 fixtureUploadedAt = `2026-10-23T15:01:20.743Z` from accepted local `REUPL
 Observation A earliest UTC = `2026-10-30T16:01:20.743Z`. Observation B earliest UTC = `2026-10-31T21:01:20.743Z` and is permitted only if A still returns the exact original binary.
 
 P1-T14 activation safety boundary: authenticated API calls `0`; credentials `0`; presigns `0`; PUTs `0`; public GETs `0`; uploads `0`; Provider mutations `0`.
+
+P1-T14 implementation/test commit = `0461f9b1b6271738e5e9f9e37a297058bc10323b`.
+
+P1-T14 offline gates before any retention observation: focused `24 / 24` PASS; full `npm test` `613 / 613` PASS across `26` files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+P1-T14 documentation contract = `DOC_CONFIRMED — current Zernio documentation states temporary media is automatically deleted after 7 days`; this is not live Provider evidence.
+
+P1-T14 durable evidence path = `artifacts/provider-spike/p1-t14-evidence.jsonl`, fixed and gitignored; it does not exist before Observation A.
+
+P1-T14 current network totals remain: authenticated API `0`; presigns `0`; PUTs `0`; public GETs `0 / 2`; retries `0`; credentials used `0`; unrelated mutations `0`.
+
+P1-T14 state = `WAITING FOR OBSERVATION A ELIGIBILITY`; no request before `2026-10-30T16:01:20.743Z`.
 
 
 P1-T13 accepted classification = `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`.

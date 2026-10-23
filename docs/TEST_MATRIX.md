@@ -3246,3 +3246,45 @@ The ignored Windows PowerShell 5.1 launcher compatibility failure occurred befor
 P1-T13 does not test or close `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED`; temporary retention/deletion remains `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`.
 
 P1-T13-CLOSEOUT-01 safety boundary: Provider calls `0`; credentials `0`; presigns `0`; media PUTs `0`; public GETs `0`; source/test/runtime changes `0`; external mutations `0`. Documentation only.
+
+## P1-T14 — Temporary Media Retention / Auto-Deletion
+
+Task state: `ACTIVATED — WAITING FOR OBSERVATION A ELIGIBILITY`.
+
+Automated focused suite: `tests/provider-spike/p1-t14.test.ts`.
+
+| Gate / evidence | Result |
+|---|---|
+| Accepted P1-T13 six-checkpoint baseline | PASS |
+| `fixtureUploadedAt` source | PASS — `REUPLOAD_COMPLETED` = `2026-10-23T15:01:20.743Z` |
+| Frozen public target only | PASS |
+| Arbitrary URL/file input | NOT CALLABLE |
+| Credential / Authorization path | NOT AVAILABLE |
+| Early Observation A | FAIL CLOSED / zero network |
+| Early Observation B | FAIL CLOSED / zero network |
+| Observation A max GET | PASS — `1` |
+| Observation B requires exact-present A | PASS |
+| Total GET ceiling | PASS — `2` |
+| 404/410 deletion classification | PASS |
+| HTTP 200 exact size/hash requirement | PASS |
+| Binary mismatch | `MEDIA_RETENTION_SAFETY_FAILURE` |
+| HTTP 403 | `RETENTION_OBSERVATION_BLOCKED` — never blindly deletion |
+| Redirect | BLOCKED / manual redirect handling |
+| timeout/network/5xx | `RETENTION_OBSERVATION_BLOCKED`; no retry |
+| Presign / PUT / upload surface | NOT AVAILABLE |
+| Social/publish/DM/comment/Ads/webhook surface | NOT AVAILABLE |
+| Evidence path | PASS — fixed `artifacts/provider-spike/p1-t14-evidence.jsonl` |
+| Evidence path gitignored | PASS |
+| Focused P1-T14 suite | PASS — `24 / 24` |
+| Full `npm test` | PASS — `613 / 613` across `26` files |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| `git diff --check` | PASS |
+| Pre-observation authenticated API calls | `0` |
+| Pre-observation presigns | `0` |
+| Pre-observation PUTs | `0` |
+| Pre-observation public GETs | `0 / 2` |
+| Pre-observation credentials used | `0` |
+| Pre-observation unrelated mutations | `0` |
+
+Observation A earliest UTC: `2026-10-30T16:01:20.743Z`. Observation B earliest UTC: `2026-10-31T21:01:20.743Z`, only after exact-present A. Current retention Provider Behavior remains unobserved; the 7-day auto-deletion statement is `DOC_CONFIRMED`, not live evidence.

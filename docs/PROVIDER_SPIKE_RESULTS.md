@@ -3067,3 +3067,27 @@ Team Leader acceptance sets `APPROVED_ORIGINAL_REUPLOAD = VERIFIED`. Canonical `
 Provider Behavior is limited to the observed fresh authorization, transfer, and exact binary read-back above. Not proven: production MediaProvider implementation; tenant/Brand authorization; durable production storage; automated production re-upload; publishing; temporary retention/deletion; permanent storage.
 
 P1-T13-CLOSEOUT-01 safety boundary: Provider calls `0`; credentials `0`; presigns `0`; media PUTs `0`; public GETs `0`; source/test/runtime changes `0`; external mutations `0`. Documentation only.
+
+## P1-T14 — Temporary Media Retention / Auto-Deletion
+
+Status: `ACTIVATED — WAITING FOR OBSERVATION A ELIGIBILITY`.
+
+Starting HEAD: `6cca879cc923eb4e43292575ed6b1bfdf27b8f80`. Branch: `p1-t14-zernio-media-retention`. Activation commit: `f5c43aba6a618511ac262da4b7532ea2e454ce2e`. Implementation/test commit: `0461f9b1b6271738e5e9f9e37a297058bc10323b`.
+
+### Accepted baseline
+
+The only authorized target is the existing P1-T13 temporary object at `media.zernio.com` path `/temp/1792767679997_dncsau4l_marketlyai-p1-t12-fixture.png`. The accepted local gitignored P1-T13 journal contains exactly six checkpoints and records `REUPLOAD_COMPLETED` at `2026-10-23T15:01:20.743Z`; this is `fixtureUploadedAt` and the retention baseline. P1-T13 had already verified HTTP `200`, `68` bytes, SHA-256 `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460`, exactMatch=`true`.
+
+Observation A is not permitted before `2026-10-30T16:01:20.743Z`. Observation B is not permitted before `2026-10-31T21:01:20.743Z` and may occur only if Observation A returns HTTP 2xx with the exact original binary. No pre-retention baseline GET is used.
+
+### Documentation contract — DOC_CONFIRMED
+
+Current Zernio documentation states that temporary media is automatically deleted after 7 days. This is recorded only as `DOC_CONFIRMED`; no live retention/deletion behavior is inferred from documentation.
+
+### Pre-observation implementation evidence
+
+The bounded runner exposes only explicit `--observe-a` / `--observe-b` modes and one hard-coded HTTPS public target. It has no credential/Authorization path, no arbitrary URL input, no presign, no PUT/upload, and no publishing/DM/comment/Ads/webhook surface. It rejects early execution, enforces one GET per observation and two GETs total, requires exact 68-byte/SHA-256 equality for any 2xx, accepts 404/410 as definitive absence, treats 403/redirect/timeout/5xx conservatively, and persists only sanitized fixed-path evidence.
+
+Offline gates: focused P1-T14 `24 / 24` PASS; full `npm test` `613 / 613` PASS across `26` files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+Current Provider/network evidence for P1-T14: authenticated API calls `0`; credentials `0`; presigns `0`; PUTs `0`; public GETs `0 / 2`; uploads `0`; Provider mutations `0`; retries `0`. No retention observation has executed yet.
