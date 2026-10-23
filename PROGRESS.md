@@ -55,9 +55,20 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`
+Current Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T13 = **DONE / ACCEPTED**
+
+P1-T14 = **ACTIVATED**
+
+P1-T14 goal = `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED` using the accepted P1-T13 temporary object only.
+
+P1-T14 fixtureUploadedAt = `2026-10-23T15:01:20.743Z` from accepted local `REUPLOAD_COMPLETED` durable evidence.
+
+Observation A earliest UTC = `2026-10-30T16:01:20.743Z`. Observation B earliest UTC = `2026-10-31T21:01:20.743Z` and is permitted only if A still returns the exact original binary.
+
+P1-T14 activation safety boundary: authenticated API calls `0`; credentials `0`; presigns `0`; PUTs `0`; public GETs `0`; uploads `0`; Provider mutations `0`.
+
 
 P1-T13 accepted classification = `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`.
 
