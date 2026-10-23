@@ -471,7 +471,7 @@ NOT_APPLICABLE
 
 Organic Comments observed scope: `SPIKE_PASS — controlled Facebook organic create/read/list/reply behavior verified; production tenant/Brand authorization, ownership, policy, AI/Human workflow, durable state, idempotency, and reconciliation remain system responsibilities.` Zernio supplies Provider comment fetch/reply execution. This does not verify DMs, Ad Comments, private replies, Likes/hide, or `comment.received` webhook behavior.
 
-Media Upload observed scope: `PARTIALLY_VERIFIED — temporary presign, exact upload, public binary retrieval, and signed upload-URL expiry enforcement verified.` This does not promote Media Upload to `SPIKE_PASS`. Remaining Phase-1 Media gaps are temporary object retention/deletion behavior and re-upload of an approved original using a new presign. Temporary object lifetime/deletion remains `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`; `APPROVED_ORIGINAL_REUPLOAD = SPIKE_PENDING`.
+Media Upload observed scope: `PARTIALLY_VERIFIED — temporary presign, exact upload, public binary retrieval, signed upload-URL expiry enforcement, and approved-original fresh-presign re-upload verified.` Observed sub-capability: `APPROVED_ORIGINAL_REUPLOAD = VERIFIED`. This does not promote Media Upload to `SPIKE_PASS`. Only remaining Phase-1 Media gap: temporary object retention/deletion behavior. Temporary object lifetime/deletion remains `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`.
 
 `Yes*` يعني أنها ضمن الـV1 الوظيفي، لكن تمكينها في Production يعتمد على اجتياز Safety Spike.
 

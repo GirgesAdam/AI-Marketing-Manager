@@ -55,17 +55,23 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `P1-T13 — Verify Approved-Original Re-upload Using a Fresh Presign`
+Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`
 
-P1-T13 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+P1-T13 = **DONE / ACCEPTED**
 
-P1-T13 classification = `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`.
+P1-T13 accepted classification = `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`.
 
-P1-T13 recommendation = `Media Upload remains PARTIALLY_VERIFIED — approved-original re-upload verified; retention/deletion is the only remaining Media Phase-1 gap — AWAITING TEAM LEADER REVIEW`.
+P1-T13 accepted evidence HEAD = `f31eb4a0dd171d4524862152ffe64cab2a813b49`.
 
-P1-T13 final counters: Zernio API calls `2 / 2`; fresh presigns `1`; cloud PUTs `1 / 1`; public GETs `1 / 1`; total network `4 / 4`; second presign `0`; automatic retries `0`; social mutations `0`; permanent uploads `0`; signed URLs persisted `0`; secrets persisted `0`.
+P1-T13 activation commit = `7b600c381011a4ee1f345eddc4a81fdbf7de82a5`.
 
-APPROVED_ORIGINAL_REUPLOAD recommendation = `VERIFIED — AWAITING TEAM LEADER REVIEW`; canonical `APPROVED_ORIGINAL_REUPLOAD = SPIKE_PENDING` is preserved until Team Leader review.
+P1-T13 implementation/test commit = `cab4607b9d2ab0fb7ed3774a9b1f7baae99a783a`.
+
+P1-T13 accepted outcome = `approved-original fresh-presign re-upload verified`.
+
+P1-T13 accepted counters: Zernio API calls `2 / 2`; fresh presigns `1`; cloud PUTs `1 / 1`; public GETs `1 / 1`; total network `4 / 4`; second presign `0`; automatic retries `0`; social/publishing mutations `0`; DMs `0`; comments `0`; Ads `0`; webhooks `0`; permanent uploads `0`; signed URLs persisted `0`; signed query persisted `0`; secrets persisted `0`.
+
+APPROVED_ORIGINAL_REUPLOAD = `VERIFIED`.
 
 P1-T12-R01 = **DONE / ACCEPTED**
 
@@ -87,13 +93,15 @@ The separately authorized P1-T12-R01 supplied the missing authoritative expiry e
 
 Media Upload = `PARTIALLY_VERIFIED`
 
-Media Upload observed scope = `PARTIALLY_VERIFIED — temporary presign, exact upload, public binary retrieval, and signed upload-URL expiry enforcement verified`.
+Media Upload observed scope = `PARTIALLY_VERIFIED — temporary presign, exact upload, public binary retrieval, signed upload-URL expiry enforcement, and approved-original fresh-presign re-upload verified`.
 
-Remaining Media limitations = `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED`; `APPROVED_ORIGINAL_REUPLOAD_UNVERIFIED`.
+Remaining Media limitation = `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED`.
+
+APPROVED_ORIGINAL_REUPLOAD_UNVERIFIED = `CLOSED`.
 
 Temporary retention/deletion = `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`.
 
-APPROVED_ORIGINAL_REUPLOAD = `SPIKE_PENDING`.
+APPROVED_ORIGINAL_REUPLOAD = `VERIFIED`.
 
 P1-T12-R01 accepted counters: Zernio API calls `2 / 2`; presigns `1`; initial PUTs `1`; expired PUTs `1`; cloud PUT total `2 / 2`; public GETs `1 / 2`; total network `5 / 6`; second presign `0`; automatic retries `0`; social/publishing mutations `0`; DMs `0`; comments `0`; Ads `0`; webhooks `0`; permanent uploads `0`; signed URLs persisted `0`; secrets persisted `0`.
 
@@ -4565,11 +4573,13 @@ PHASE 1 remains **IN PROGRESS**. Current Task is `NOT_STARTED — NEXT PHASE-1 T
 
 ## P1-T13 — Approved-Original Fresh-Presign Re-upload
 
-**Status: EXECUTED / AWAITING TEAM LEADER REVIEW**
+**Status: DONE / ACCEPTED**
 
-Classification = `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`.
+Accepted classification = `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`.
 
-Recommendation = `Media Upload remains PARTIALLY_VERIFIED — approved-original re-upload verified; retention/deletion is the only remaining Media Phase-1 gap — AWAITING TEAM LEADER REVIEW`.
+Accepted evidence HEAD = `f31eb4a0dd171d4524862152ffe64cab2a813b49`.
+
+Accepted capability outcome = `APPROVED_ORIGINAL_REUPLOAD = VERIFIED`; `Media Upload = PARTIALLY_VERIFIED`. Only remaining Phase-1 Media gap: `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED`.
 
 Git evidence: starting HEAD `fd19b818384eae5c5af31f054cbe320fae18fe5d`; activation commit `7b600c381011a4ee1f345eddc4a81fdbf7de82a5`; implementation/test commit `cab4607b9d2ab0fb7ed3774a9b1f7baae99a783a`; branch `p1-t13-zernio-media-reupload`.
 
@@ -4600,4 +4610,6 @@ Evidence-safety scan: full signed URL absent; signed query absent; `X-Amz-*` abs
 
 Interpretation: P1-T13 proves that the independently retained approved original bytes can later obtain one fresh Zernio temporary upload authorization, be transferred again exactly once, and be read back as the exact same binary. It does not prove retention/deletion, publishing, automatic production re-upload, production media storage, tenant/Brand ownership logic, MediaProvider production implementation, media URL lifetime beyond observed behavior, or permanent storage.
 
-Canonical `Media Upload` remains `PARTIALLY_VERIFIED`. `APPROVED_ORIGINAL_REUPLOAD` remains `SPIKE_PENDING` pending Team Leader review, with recommendation `VERIFIED — AWAITING TEAM LEADER REVIEW`. If accepted, `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED` is the only remaining Media Phase-1 gap. No retention/deletion experiment, publishing, Ads work, successor Phase-1 task, or Phase 2 work was started.
+Canonical `Media Upload` remains `PARTIALLY_VERIFIED`; it is not `SPIKE_PASS`. `APPROVED_ORIGINAL_REUPLOAD = VERIFIED`. `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED` is the only remaining Media Phase-1 gap and remains `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`. Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`. PHASE 1 remains **IN PROGRESS**. No retention/deletion experiment, publishing, Ads work, successor Phase-1 task, or Phase 2 work was started.
+
+P1-T13-CLOSEOUT-01 safety boundary: Provider calls `0`; credentials `0`; presigns `0`; media PUTs `0`; public GETs `0`; source/test/runtime changes `0`; external mutations `0`. Documentation only.

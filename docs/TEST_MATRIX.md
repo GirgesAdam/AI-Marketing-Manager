@@ -3181,9 +3181,11 @@ P1-T12-CLOSEOUT-01 safety boundary: Provider calls `0`; credentials `0`; presign
 
 ## P1-T13 — Approved-Original Fresh-Presign Re-upload
 
-Task state: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+Task state: `DONE / ACCEPTED`.
 
-Classification: `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`.
+Accepted classification: `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`.
+
+Accepted evidence HEAD: `f31eb4a0dd171d4524862152ffe64cab2a813b49`.
 
 Automated focused suite: `tests/provider-spike/p1-t13.test.ts`.
 
@@ -3232,9 +3234,15 @@ Automated focused suite: `tests/provider-spike/p1-t13.test.ts`.
 | Total network live | PASS — `4 / 4` |
 | Social mutations live | PASS — `0` |
 | Permanent uploads live | PASS — `0` |
-| Final classification | `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED` |
-| Capability recommendation | `Media Upload remains PARTIALLY_VERIFIED — approved-original re-upload verified; retention/deletion is the only remaining Media Phase-1 gap — AWAITING TEAM LEADER REVIEW` |
-| Canonical Media Upload self-promotion | NO — remains `PARTIALLY_VERIFIED` |
-| Canonical re-upload gap | `APPROVED_ORIGINAL_REUPLOAD = SPIKE_PENDING` pending Team Leader review |
+| Accepted classification | `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED` |
+| Accepted re-upload sub-capability | `APPROVED_ORIGINAL_REUPLOAD = VERIFIED` |
+| Canonical Media Upload | `PARTIALLY_VERIFIED` — not `SPIKE_PASS` |
+| Only remaining Media gap | `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED` |
 
-P1-T13 does not test or close `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED`; no retention/deletion request or experiment was performed.
+Accepted checkpoint sequence: `RUN_STARTED → IDENTITY_VERIFIED → FRESH_PRESIGN_RECEIVED → REUPLOAD_COMPLETED → PUBLIC_READ_VERIFIED → RUN_FINALIZED`.
+
+The ignored Windows PowerShell 5.1 launcher compatibility failure occurred before Node child creation/evidence/PID/provider/cloud activity and does not count as a live retry. Exactly one actual P1-T13 live runner invocation occurred.
+
+P1-T13 does not test or close `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED`; temporary retention/deletion remains `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`.
+
+P1-T13-CLOSEOUT-01 safety boundary: Provider calls `0`; credentials `0`; presigns `0`; media PUTs `0`; public GETs `0`; source/test/runtime changes `0`; external mutations `0`. Documentation only.

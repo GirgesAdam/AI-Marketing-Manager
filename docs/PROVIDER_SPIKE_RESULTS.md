@@ -3003,11 +3003,15 @@ This closeout itself is documentation-only: Provider calls `0`; credentials `0`;
 
 ## P1-T13 — Approved-Original Fresh-Presign Re-upload
 
-Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+Status: `DONE / ACCEPTED`.
 
-Classification: `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`.
+Accepted classification: `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`.
 
-Recommendation: `Media Upload remains PARTIALLY_VERIFIED — approved-original re-upload verified; retention/deletion is the only remaining Media Phase-1 gap — AWAITING TEAM LEADER REVIEW`.
+Accepted evidence HEAD: `f31eb4a0dd171d4524862152ffe64cab2a813b49`.
+
+Accepted capability outcome: `APPROVED_ORIGINAL_REUPLOAD = VERIFIED`; `Media Upload = PARTIALLY_VERIFIED`.
+
+Only remaining Phase-1 Media gap: `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED`.
 
 ### Approved original / scope
 
@@ -3023,7 +3027,7 @@ Focused P1-T13 suite: `20 / 20` PASS. Full `npm test`: `589 / 589` PASS across `
 
 ### Live execution boundary
 
-A local ignored launcher compatibility attempt failed before Node child creation because Windows PowerShell 5.1 lacked `ProcessStartInfo.ArgumentList`. No P1-T13 runner, durable evidence/PID file, Provider call, cloud PUT, or public GET existed from that attempt. The ignored launcher was corrected, after which exactly one actual P1-T13 live runner invocation executed. No live rerun is authorized or performed.
+One ignored Windows PowerShell 5.1 launcher compatibility attempt failed because `ProcessStartInfo.ArgumentList` was unavailable. Before that failure: Node child creation `0`; evidence journal absent; PID file absent; Provider calls `0`; cloud calls `0`. This was local orchestration evidence, not a Provider/live experiment, and does not count as a retry. After correcting the ignored launcher, exactly one actual P1-T13 live runner invocation executed.
 
 Durable journal: `artifacts/provider-spike/p1-t13-evidence.jsonl`, fixed and gitignored. Six checkpoints persisted in exact order: `RUN_STARTED`, `IDENTITY_VERIFIED`, `FRESH_PRESIGN_RECEIVED`, `REUPLOAD_COMPLETED`, `PUBLIC_READ_VERIFIED`, `RUN_FINALIZED`. Live child PID `16492` was not alive after `RUN_FINALIZED`.
 
@@ -3058,4 +3062,8 @@ Observed Provider Behavior proves that the independently retained approved origi
 
 P1-T13 does not establish automatic production re-upload, durable production media storage, tenant/Brand ownership logic, production MediaProvider implementation, temporary object retention/deletion, publishing success, public-media lifetime beyond the observed read, or permanent storage.
 
-Canonical `Media Upload` remains `PARTIALLY_VERIFIED`; Senior Engineer does not set `SPIKE_PASS`. Canonical `APPROVED_ORIGINAL_REUPLOAD = SPIKE_PENDING` remains pending Team Leader review, with recommendation `VERIFIED — AWAITING TEAM LEADER REVIEW`. If accepted, `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED` is the only remaining Media Phase-1 gap.
+Team Leader acceptance sets `APPROVED_ORIGINAL_REUPLOAD = VERIFIED`. Canonical `Media Upload` remains `PARTIALLY_VERIFIED`; `Media Upload != SPIKE_PASS`. The only remaining Phase-1 Media gap is `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED`, which remains `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`.
+
+Provider Behavior is limited to the observed fresh authorization, transfer, and exact binary read-back above. Not proven: production MediaProvider implementation; tenant/Brand authorization; durable production storage; automated production re-upload; publishing; temporary retention/deletion; permanent storage.
+
+P1-T13-CLOSEOUT-01 safety boundary: Provider calls `0`; credentials `0`; presigns `0`; media PUTs `0`; public GETs `0`; source/test/runtime changes `0`; external mutations `0`. Documentation only.
