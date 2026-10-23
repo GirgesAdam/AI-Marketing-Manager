@@ -51,29 +51,33 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `P1-GOV-01 — Controlled Parallel Wait Lanes Governance Amendment`
+Current Executing Task = `NOT_STARTED — NEXT PHASE-1 EXECUTING TASK REQUIRES TEAM LEADER SELECTION`
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`
 
-Open Senior Tasks = `2 / 2`
+Open Senior Tasks = `1 / 2`
 
-Executing Senior Tasks = `1 / 1`
+Executing Senior Tasks = `0 / 1`
 
-Current Task = `P1-GOV-01 — Controlled Parallel Wait Lanes Governance Amendment`
+Current Task = `NOT_STARTED — NEXT PHASE-1 EXECUTING TASK REQUIRES TEAM LEADER SELECTION`
 
-P1-GOV-01 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+P1-GOV-01 = **DONE / ACCEPTED**
 
-P1-GOV-01 decision = `D-043 — Controlled Parallel Wait Lanes`; decision status = `ACCEPTED`.
+P1-GOV-01 accepted evidence HEAD = `d84d831d66f2eb85fbd14b7e2a6136cdd06dac3a`.
+
+P1-GOV-01 accepted decision = `D-043 — Controlled Parallel Wait Lanes`; decision status = `ACCEPTED`.
+
+P1-GOV-01 accepted governance model = `EXECUTING = max 1; WAITING_EXTERNAL / WAITING_TIME_GATE = max 1; Maximum open Senior tasks = 2; Maximum simultaneously executing Senior tasks = 1`.
 
 P1-GOV-01 starting HEAD = `611a443291a05776d574f27249b11d85d89372a8`; branch = `p1-gov-01-controlled-parallel-wait`.
 
 P1-GOV-01 type = `GOVERNANCE / DOCUMENTATION ONLY`; Provider calls `0`; credentials `0`; source/test/runtime changes `0`; external mutations `0`.
 
-MASTER_IMPLEMENTATION_PLAN sync = `SYNC COMPLETE — canonical Project-backed MASTER_IMPLEMENTATION_PLAN.md now contains the D-043 controlled parallel wait-lane Session Protocol`.
+MASTER_IMPLEMENTATION_PLAN sync = `SYNC COMPLETE — canonical Project-backed MASTER_IMPLEMENTATION_PLAN.md contains the accepted D-043 controlled parallel wait-lane Session Protocol`.
 
-P1-GOV-01 review readiness = `READY FOR TEAM LEADER REVIEW — D-043 is recorded in DECISIONS.md, execution lanes are recorded in PROGRESS.md, and the canonical Project MASTER Session Protocol is synchronized`.
+P1-GOV-01 closeout = `TEAM LEADER ACCEPTED — governance amendment closed; no functional successor task started by this closeout`.
 
 Parent Product Task = `NONE — P1-GOV-01 is a standalone Phase-1 governance amendment; P1-T14 remains separately open in the waiting lane`
 
