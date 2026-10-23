@@ -3000,3 +3000,62 @@ Accepted safety totals: Zernio API `2 / 2`; presigns `1`; initial PUTs `1`; expi
 Remaining Phase-1 Media limitations: `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED` and `APPROVED_ORIGINAL_REUPLOAD_UNVERIFIED`. Temporary object lifetime/deletion remains `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`. `APPROVED_ORIGINAL_REUPLOAD = SPIKE_PENDING`; successful first upload is not treated as proof of a new-presign re-upload flow.
 
 This closeout itself is documentation-only: Provider calls `0`; credentials `0`; presigns `0`; media PUTs `0`; public GETs `0`; social mutations `0`; source/test/runtime changes `0`.
+
+## P1-T13 — Approved-Original Fresh-Presign Re-upload
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`.
+
+Recommendation: `Media Upload remains PARTIALLY_VERIFIED — approved-original re-upload verified; retention/deletion is the only remaining Media Phase-1 gap — AWAITING TEAM LEADER REVIEW`.
+
+### Approved original / scope
+
+The task reused only the retained frozen approved original bytes: filename `marketlyai-p1-t12-fixture.png`, MIME `image/png`, exact size `68`, SHA-256 `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460`. The old P1-T12/R01 expired signed upload URL was not reused. The prior temporary public object was not used as source. No arbitrary file/URL input or media regeneration path exists in the runner.
+
+This task did not test retention/deletion, publishing, permanent media, DMs, comments, Ads, webhooks, or production MediaProvider behavior.
+
+### Offline gates
+
+Activation commit: `7b600c381011a4ee1f345eddc4a81fdbf7de82a5`. Implementation/test commit: `cab4607b9d2ab0fb7ed3774a9b1f7baae99a783a`.
+
+Focused P1-T13 suite: `20 / 20` PASS. Full `npm test`: `589 / 589` PASS across `25` files. `npm run typecheck`, `npm run build`, and `git diff --check`: PASS.
+
+### Live execution boundary
+
+A local ignored launcher compatibility attempt failed before Node child creation because Windows PowerShell 5.1 lacked `ProcessStartInfo.ArgumentList`. No P1-T13 runner, durable evidence/PID file, Provider call, cloud PUT, or public GET existed from that attempt. The ignored launcher was corrected, after which exactly one actual P1-T13 live runner invocation executed. No live rerun is authorized or performed.
+
+Durable journal: `artifacts/provider-spike/p1-t13-evidence.jsonl`, fixed and gitignored. Six checkpoints persisted in exact order: `RUN_STARTED`, `IDENTITY_VERIFIED`, `FRESH_PRESIGN_RECEIVED`, `REUPLOAD_COMPLETED`, `PUBLIC_READ_VERIFIED`, `RUN_FINALIZED`. Live child PID `16492` was not alive after `RUN_FINALIZED`.
+
+### OBSERVED Provider / cloud behavior
+
+| Stage | Result |
+|---|---|
+| Trusted identity | HTTP `200`; request ID `20aafe3d-8976-4c23-a653-4cf6d3466c20`; expected identity matched |
+| Fresh media presign | HTTP `200`; request ID `d47acb02-aaa9-459a-885f-8a0540c22faa` |
+| Fresh authorization issued at | `2026-10-23T15:01:20.023Z` |
+| `expiresIn` | `3600` seconds |
+| Safe key | `temp/1792767679997_dncsau4l_marketlyai-p1-t12-fixture.png` |
+| Upload target evidence | HTTPS; `late-media.613d73a46130ed0083c059a837d6511b.r2.cloudflarestorage.com`; signed query present |
+| Public target evidence | HTTPS; `media.zernio.com`; path `/temp/1792767679997_dncsau4l_marketlyai-p1-t12-fixture.png` |
+| Re-upload PUT | exactly one; HTTP `200`; source bytes = retained approved original |
+| Public GET | exactly one; HTTP `200`; downloaded `68` bytes |
+| Downloaded SHA-256 | `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460` |
+| Exact binary equality | `true` |
+| Final classification | `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED` |
+
+A successful fresh `POST /v1/media/presign` after the previously accepted expiry experiment is evidence of newly issued Provider authorization. No claim is made that the fresh signed URL string differs from the old one because the full signed URL is intentionally never persisted.
+
+### Safety / boundedness
+
+Zernio API `2 / 2`; fresh presigns `1`; cloud PUTs `1 / 1`; public GETs `1 / 1`; total network `4 / 4`; second presign `0`; automatic retries `0`; social/publishing/DM/comment/Ads/webhook mutations `0`; permanent uploads `0`.
+
+Durable evidence persisted no full signed URL, signed query, `X-Amz-*` material, API key, expected identity value, Authorization/Bearer secret, or query marker. Safe scan results: `uploadUrl=false`, `X-Amz-=false`, Authorization header=false, Bearer=false, API-key value=false, expected-identity value=false, query marker=false. Result records `fullSignedUrlPersisted=0`, `signedQueryPersisted=0`, `secretsPersisted=0`, `permanentUploads=0`.
+
+### Interpretation
+
+Observed Provider Behavior proves that the independently retained approved original can be reproduced locally from the frozen bytes, one fresh Zernio temporary authorization can be requested later, those exact bytes can be transferred again, and the newly public object contains the exact approved binary.
+
+P1-T13 does not establish automatic production re-upload, durable production media storage, tenant/Brand ownership logic, production MediaProvider implementation, temporary object retention/deletion, publishing success, public-media lifetime beyond the observed read, or permanent storage.
+
+Canonical `Media Upload` remains `PARTIALLY_VERIFIED`; Senior Engineer does not set `SPIKE_PASS`. Canonical `APPROVED_ORIGINAL_REUPLOAD = SPIKE_PENDING` remains pending Team Leader review, with recommendation `VERIFIED — AWAITING TEAM LEADER REVIEW`. If accepted, `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED` is the only remaining Media Phase-1 gap.

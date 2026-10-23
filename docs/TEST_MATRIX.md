@@ -3178,3 +3178,63 @@ Remaining separate Phase-1 coverage after R01: `TEMPORARY_MEDIA_RETENTION_DELETI
 Original P1-T12 evidence-loss regression coverage remains preserved: its final expiry-PUT result was not captured and is not retroactively reconstructed from R01.
 
 P1-T12-CLOSEOUT-01 safety boundary: Provider calls `0`; credentials `0`; presigns `0`; media PUTs `0`; public GETs `0`; social mutations `0`; source/test/runtime changes `0`. Documentation only.
+
+## P1-T13 — Approved-Original Fresh-Presign Re-upload
+
+Task state: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`.
+
+Automated focused suite: `tests/provider-spike/p1-t13.test.ts`.
+
+| Gate / evidence | Result |
+|---|---|
+| Focused P1-T13 suite | PASS — `20 / 20` |
+| Full `npm test` | PASS — `589 / 589` across `25` files |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| `git diff --check` | PASS |
+| Live defaults OFF | PASS — zero network |
+| Frozen original size | PASS — `68` bytes |
+| Frozen original SHA-256 | PASS — `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460` |
+| Approved-original source | PASS — retained frozen bytes only; no old URL/public-object download/regeneration |
+| CLI file/URL/old-URL/permanent/publish inputs | NOT CALLABLE |
+| Trusted identity required | PASS |
+| Fresh presign maximum | PASS — `1` |
+| Cloud PUT maximum | PASS — `1` |
+| Public GET maximum | PASS — `1` |
+| Total network maximum | PASS — `4` |
+| Second presign | PASS — `0` |
+| Automatic retries | PASS — `0` |
+| Fixed evidence path | PASS — `artifacts/provider-spike/p1-t13-evidence.jsonl` |
+| Fixed PID/launch guard | PASS — `artifacts/provider-spike/p1-t13-live.pid` |
+| Duplicate live runner launch protection | PASS |
+| Durable checkpoint order | PASS — six required stages in exact order |
+| Signed URL persistence | PASS — `0` |
+| Signed query persistence | PASS — `0` |
+| API key / expected identity persistence | PASS — `0` |
+| Authorization/Bearer persistence | PASS — `0` |
+| Social/publish/DM/comment/Ads/webhook endpoint surface | NOT AVAILABLE |
+| Permanent upload surface | NOT AVAILABLE |
+| Exact public binary equality required for PASS | PASS |
+| Pre-child launcher compatibility failure | SAFE — zero Node runner / zero Provider-network activity; live authorization not consumed |
+| Actual P1-T13 live runner invocation | PASS — exactly `1` |
+| Trusted identity live | HTTP `200`; request `20aafe3d-8976-4c23-a653-4cf6d3466c20` |
+| Fresh presign live | HTTP `200`; request `d47acb02-aaa9-459a-885f-8a0540c22faa`; `expiresIn=3600` |
+| Fresh presign target | PASS — expected HTTPS R2 storage/public host contract |
+| Fresh authorization evidence | PASS — issued at `2026-10-23T15:01:20.023Z`; new presign request succeeded |
+| Re-upload PUT live | PASS — exactly one; HTTP `200` |
+| Public GET live | PASS — exactly one; HTTP `200` |
+| Downloaded bytes | PASS — `68` |
+| Downloaded SHA-256 | PASS — `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460` |
+| Exact match | PASS — `true` |
+| Zernio calls live | PASS — `2 / 2` |
+| Total network live | PASS — `4 / 4` |
+| Social mutations live | PASS — `0` |
+| Permanent uploads live | PASS — `0` |
+| Final classification | `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED` |
+| Capability recommendation | `Media Upload remains PARTIALLY_VERIFIED — approved-original re-upload verified; retention/deletion is the only remaining Media Phase-1 gap — AWAITING TEAM LEADER REVIEW` |
+| Canonical Media Upload self-promotion | NO — remains `PARTIALLY_VERIFIED` |
+| Canonical re-upload gap | `APPROVED_ORIGINAL_REUPLOAD = SPIKE_PENDING` pending Team Leader review |
+
+P1-T13 does not test or close `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED`; no retention/deletion request or experiment was performed.
