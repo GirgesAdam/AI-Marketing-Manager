@@ -454,3 +454,45 @@ This decision is grounded in P1-T08 evidence:
 This does not claim Zernio webhook unreliability.
 
 It deliberately removes webhook delivery from being a single point of correctness failure.
+
+
+---
+
+## D-043 — Controlled Parallel Wait Lanes
+
+**Status:** Accepted
+
+The normal Senior Engineer execution model remains one actively executing task. A second Senior task may remain open only when it is formally classified `WAITING_EXTERNAL` or `WAITING_TIME_GATE` and all currently authorized implementation work for that waiting task is complete.
+
+Maximum open Senior tasks = `2`.
+
+Maximum simultaneously executing Senior tasks = `1`.
+
+Allowed lanes:
+
+```text
+EXECUTING = max 1
+WAITING_EXTERNAL / WAITING_TIME_GATE = max 1
+```
+
+This is controlled parallel waiting, not unrestricted parallel development. When no legitimate external/time-gated wait exists, the default remains single-task execution.
+
+A task may enter the waiting lane only when further progress depends solely on a real external condition such as a Provider retention window, scheduled observation, external approval, external fixture availability, third-party response, or unavoidable time-based Provider behavior. A task must not enter the waiting lane merely because implementation is difficult, tests are failing, review is incomplete, an internal blocker is solvable, or the Senior wants to switch tasks.
+
+While a task is in the waiting lane, there is no speculative implementation expansion, unauthorized Provider polling, retry beyond its Task Contract, unrelated mutation, or successor work on its branch. Only the explicitly authorized future observation/action may resume it. Existing task-specific request ceilings, one-run authorization, safety boundaries, and evidence rules remain unchanged.
+
+A new executing task may start while one task waits only after Team Leader confirmation that the new task has no dependency on the unfinished waiting-task outcome; no shared mutable Provider fixture; no conflicting external resource ownership; no overlapping budget/spend authority; no conflicting publishing/social target; no incompatible infrastructure mutation; no requirement to assume the waiting task's result; and its own complete Task Contract.
+
+Every concurrently open task uses its own branch. The waiting branch remains frozen except for its authorized scheduled observation/action and resulting evidence/documentation. Successor work must not be implemented on the waiting branch.
+
+Shared documentation must preserve both open lanes. Each branch records only facts known to that task; one lane must not erase another; later integration must preserve both histories; documentation conflicts require Team Leader review and must not be resolved blindly.
+
+Each open task retains its own lifecycle: `Implementation → Tests → Review → Accept/Reject`. A waiting task is not DONE. Completion of the executing task does not change the waiting task, and each task requires separate Team Leader acceptance.
+
+Parallel wait lanes do not permit premature Phase transition. Phase 1 cannot close while any mandatory Phase-1 task or material Provider assumption remains unresolved; a mandatory waiting task remains an open Phase blocker where applicable.
+
+Parallel lanes never weaken tenant/Brand isolation, approval, policy, Usage Limiter, budget controls, emergency controls, Provider request ceilings, idempotency, or task-specific one-run authorization. Authorization cannot be borrowed or transferred between lanes.
+
+Dependency-gated successor tasks remain blocked until their dependency is accepted. Never execute two Senior tasks simultaneously.
+
+P1-T14 is the initial waiting-lane case under this decision. It remains `WAITING_TIME_GATE` and remains fully bound to its existing Observation A/B contract, timestamps, request ceiling, and zero-credential/no-presign/no-upload authorization boundary.
