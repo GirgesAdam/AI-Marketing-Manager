@@ -55,13 +55,17 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `P1-T10 — Verify Zernio Organic Comments with Controlled Test Fixture`
+Current Task = `P1-T10-CLEANUP-01 — One Bounded Cleanup Attempt for the Exact Residual P1-T10 Test Post`
 
-P1-T10 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+P1-T10 = **ACCEPTED WITH NON-BLOCKING NOTE — RESIDUAL TEST POST CLEANUP PENDING**
+
+Accepted P1-T10 classification = `ORGANIC_COMMENTS_CREATE_READ_REPLY_VERIFIED`
 
 Organic Comments = `SPIKE_PENDING`
 
-P1-T10 recommendation = `Organic Comments → SPIKE_PASS — AWAITING TEAM LEADER REVIEW`
+Team Leader capability recommendation = `Organic Comments → SPIKE_PASS`
+
+P1-T10-CLEANUP-01 = **ACTIVATED — EXACT RESIDUAL TEST POST CLEANUP**
 
 P1-T09 = **DONE / ACCEPTED**
 
@@ -4267,3 +4271,30 @@ Cleanup is therefore **NOT fully completed**. Precisely bounded residual resourc
 Safety totals: normal requests `11 / 12` (preferred `<=10` exceeded by one because the required preflight/create/read/list/reply evidence path used 11; hard ceiling met); cleanup `5 / 5`; absolute `16 / 17`; publish attempts `1`; posts proven `1`; top-level comment create attempts `1`; comments proven `1`; reply create attempts `1`; replies proven `1`; Provider mutation attempts `6` including cleanup; Likes `0`; DMs `0`; Ads `0`; private replies `0`; webhook mutations `0`; unrelated-resource mutations `0`; PII leakage `0`; automatic retries `0`; secret exposure `0`.
 
 PHASE 1 remains **IN PROGRESS**. P1-T10 does not start DMs, Ad Comments, Native Automations, Phase 2, or any successor Provider capability.
+
+
+## P1-T10-CLEANUP-01 — Exact Residual Test Post Cleanup
+
+**Status: ACTIVATED — EXACT RESIDUAL TEST POST CLEANUP**
+
+Activation date: `2026-10-23`.
+
+Starting HEAD: `d908a4a7440b2e9253d82d52c56325dcf38e5778`.
+
+Parent P1-T10 = **ACCEPTED WITH NON-BLOCKING NOTE — RESIDUAL TEST POST CLEANUP PENDING**.
+
+Accepted classification = `ORGANIC_COMMENTS_CREATE_READ_REPLY_VERIFIED`.
+
+Team Leader capability recommendation = `Organic Comments → SPIKE_PASS`; canonical Organic Comments state remains `SPIKE_PENDING` pending later documentation closeout.
+
+Frozen target: Profile `6ac5a45a8e4ca44f355033ae`; account `6ac64f8740364f4695dd3077`; Page `1387424501114639`; platform `facebook`.
+
+Exact residual Provider post: `6ada5bc404775bbecc763501`; exact Facebook platform post: `1387424501114639_122110940457502015`.
+
+Frozen content SHA-256: `db58ab9f9a09803d402dfe975d204baaeec1f9dc828c0f3c541833a84fc03113`.
+
+Current documented cleanup operation: `POST /v1/posts/{postId}/unpublish` with `platform=facebook`; no undocumented delete substitute is authorized.
+
+Initial counters: Provider GETs `0`; Provider mutations `0`; unpublish attempts `0`; new posts `0`; comments/replies `0`; Likes `0`; DMs `0`; Ads `0`; webhook mutations `0`.
+
+Safety boundary: exact-resource reconciliation only. No new post/comment/reply, no Like/DM/Ads/webhook operation, no broad list/cleanup loop, no arbitrary caller-selected resource ID, and no second unpublish attempt.
