@@ -1,0 +1,53 @@
+import { createHash } from 'node:crypto';
+import { pathToFileURL } from 'node:url';
+import { createZernioLiveTransport } from './p1-t02-zernio.js';
+import { P1_T10_ACCOUNT_ID, P1_T10_PAGE_ID, P1_T10_PLATFORM, P1_T10_POST_SHA256, P1_T10_POST_TEXT, P1_T10_PROFILE_ID } from './p1-t10-runner.js';
+import type { ProviderTransport, ProviderTransportRequest, ProviderTransportResponse } from './types.js';
+
+export const P1_T10_CLEANUP_PROVIDER_POST_ID='6ada5bc404775bbecc763501';
+export const P1_T10_CLEANUP_PLATFORM_POST_ID='1387424501114639_122110940457502015';
+export const P1_T10_CLEANUP_REQUEST_CEILING=4;
+
+type JsonObject=Record<string,unknown>;
+type Result='PASS'|'BLOCKED'|'FAIL';
+export type P1T10CleanupClassification='RESIDUAL_POST_CLEANUP_VERIFIED'|'RESIDUAL_POST_ALREADY_CLEAN'|'RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED'|'RESIDUAL_POST_CLEANUP_SAFETY_FAILURE';
+type Purpose='IDENTITY'|'PRE_CLEANUP_READ'|'UNPUBLISH'|'FINAL_READ';
+export interface P1T10CleanupRequestEvidence{ordinal:number;purpose:Purpose;method:'GET'|'POST';path:string;status:number|null;requestId:string|null;}
+export interface P1T10CleanupPostEvidence{providerPostId:string|null;platformPostId:string|null;accountId:string|null;pageId:string|null;platform:string|null;postStatus:string|null;platformStatus:string|null;contentHashMatch:boolean;exactOwnedFixture:boolean;}
+export interface P1T10CleanupRunResult{liveEnabled:boolean;result:Result;errorCategory:string|null;classification:P1T10CleanupClassification;identityMatch:boolean;preCleanup:P1T10CleanupPostEvidence|null;unpublishRequired:boolean;unpublishStatus:number|null;unpublishRequestId:string|null;unpublishTransportAmbiguous:boolean;finalState:P1T10CleanupPostEvidence|null;providerGets:number;providerMutations:number;unpublishAttempts:number;postCreates:0;commentCreates:0;replyCreates:0;likes:0;dms:0;ads:0;webhookMutations:0;unrelatedResourceMutations:0;requests:P1T10CleanupRequestEvidence[];secretsExposed:false;}
+export interface P1T10CleanupRunOptions{live?:boolean;env?:NodeJS.ProcessEnv;transport?:ProviderTransport;requestCeiling?:number;}
+
+function obj(v:unknown):JsonObject|null{return typeof v==='object'&&v!==null&&!Array.isArray(v)?v as JsonObject:null;}
+function text(v:unknown){return typeof v==='string'&&v.length>0?v:null;}
+function valueId(v:unknown):string|null{if(typeof v==='string'&&v)return v;const o=obj(v);return o?text(o._id)??text(o.id)??text(o.accountId):null;}
+function status(r:ProviderTransportResponse){return typeof r.status==='number'?r.status:null;}
+function header(r:ProviderTransportResponse,name:string){for(const [k,v] of Object.entries(r.headers??{}))if(k.toLowerCase()===name.toLowerCase()&&v)return v;return null;}
+function requestId(r:ProviderTransportResponse){return header(r,'x-request-id')??header(r,'x-correlation-id');}
+function postEnvelope(body:unknown){const root=obj(body);return obj(root?.post)??root;}
+function hash(v:string){return createHash('sha256').update(v,'utf8').digest('hex');}
+function facebookEntry(post:JsonObject|null){if(!post||!Array.isArray(post.platforms))return null;return post.platforms.map(obj).find(p=>p?.platform==='facebook')??null;}
+function pageId(entry:JsonObject|null){if(!entry)return null;return text(entry.pageId)??text(obj(entry.platformSpecificData)?.pageId)??text(entry.platformPostId)?.match(/^([1-9]\d*)_[1-9]\d*$/)?.[1]??null;}
+function safeTransportError(error:unknown){const m=error instanceof Error?error.message:'UNKNOWN_PROVIDER_ERROR';return /timeout|abort|network|fetch/i.test(m)?'NETWORK_OR_TIMEOUT':'PROVIDER_TRANSPORT_ERROR';}
+function inspectPost(body:unknown):P1T10CleanupPostEvidence{const post=postEnvelope(body),fb=facebookEntry(post);const content=text(post?.content),providerId=valueId(post),platformPostId=text(fb?.platformPostId),accountId=valueId(fb?.accountId??fb?.account),page=pageId(fb),platform=text(fb?.platform),postStatus=text(post?.status),platformStatus=text(fb?.status),contentHashMatch=Boolean(content&&content===P1_T10_POST_TEXT&&hash(content)===P1_T10_POST_SHA256);return{providerPostId:providerId,platformPostId,accountId,pageId:page,platform,postStatus,platformStatus,contentHashMatch,exactOwnedFixture:providerId===P1_T10_CLEANUP_PROVIDER_POST_ID&&platformPostId===P1_T10_CLEANUP_PLATFORM_POST_ID&&accountId===P1_T10_ACCOUNT_ID&&page===P1_T10_PAGE_ID&&platform===P1_T10_PLATFORM&&contentHashMatch};}
+
+export function parseP1T10CleanupArgs(argv:string[]){if(argv.length===0)return{ok:true as const,live:false};if(argv.length===1&&argv[0]==='--live')return{ok:true as const,live:true};return{ok:false as const,live:false};}
+
+export async function runP1T10Cleanup(options:P1T10CleanupRunOptions={}):Promise<P1T10CleanupRunResult>{
+ const live=options.live===true,env=options.env??process.env,requests:P1T10CleanupRequestEvidence[]=[];let gets=0,mutations=0,attempts=0,identityMatch=false,preCleanup:P1T10CleanupPostEvidence|null=null,finalState:P1T10CleanupPostEvidence|null=null,unpublishRequired=false,unpublishStatus:number|null=null,unpublishRequestId:string|null=null,unpublishTransportAmbiguous=false,classification:P1T10CleanupClassification='RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED',result:Result='BLOCKED',errorCategory:string|null=null;
+ const finish=():P1T10CleanupRunResult=>({liveEnabled:live,result,errorCategory,classification,identityMatch,preCleanup,unpublishRequired,unpublishStatus,unpublishRequestId,unpublishTransportAmbiguous,finalState,providerGets:gets,providerMutations:mutations,unpublishAttempts:attempts,postCreates:0,commentCreates:0,replyCreates:0,likes:0,dms:0,ads:0,webhookMutations:0,unrelatedResourceMutations:0,requests,secretsExposed:false});
+ if(!live){errorCategory='LIVE_OPT_IN_REQUIRED';return finish();}
+ if(hash(P1_T10_POST_TEXT)!==P1_T10_POST_SHA256){classification='RESIDUAL_POST_CLEANUP_SAFETY_FAILURE';result='FAIL';errorCategory='SAFETY_FROZEN_CONTENT_HASH_MISMATCH';return finish();}
+ const transport=options.transport??(env.ZERNIO_API_KEY?createZernioLiveTransport(env.ZERNIO_API_KEY):undefined);if(!transport||!env.ZERNIO_EXPECTED_USER_EMAIL?.trim()){errorCategory='MISSING_LIVE_CREDENTIAL_OR_EXPECTED_IDENTITY';return finish();}
+ const ceiling=Math.min(P1_T10_CLEANUP_REQUEST_CEILING,Math.max(1,Math.trunc(options.requestCeiling??P1_T10_CLEANUP_REQUEST_CEILING)));
+ const send=async(purpose:Purpose,request:ProviderTransportRequest)=>{if(requests.length>=ceiling)throw new Error('SAFETY_REQUEST_CEILING_VIOLATION');const method=(request.method??'GET').toUpperCase() as 'GET'|'POST',path=request.url??'';const exactPost=`/v1/posts/${P1_T10_CLEANUP_PROVIDER_POST_ID}`,exactUnpublish=`${exactPost}/unpublish`;if(!((method==='GET'&&path==='/v1/auth/verify')||(method==='GET'&&path===exactPost)||(method==='POST'&&path===exactUnpublish)))throw new Error('SAFETY_ENDPOINT_NOT_AUTHORIZED');if(method==='GET')gets++;else{mutations++;attempts++;if(attempts>1)throw new Error('SAFETY_DUPLICATE_UNPUBLISH_ATTEMPT');if(obj(request.body)?.platform!=='facebook')throw new Error('SAFETY_UNPUBLISH_BODY_MISMATCH');}const ordinal=requests.length+1;try{const response=await transport.send(request,{signal:AbortSignal.timeout(7000)});requests.push({ordinal,purpose,method,path,status:status(response),requestId:requestId(response)});return response;}catch(error){requests.push({ordinal,purpose,method,path,status:null,requestId:null});throw error;}};
+ try{
+  const identity=await send('IDENTITY',{method:'GET',url:'/v1/auth/verify',safeMetadata:{task:'P1-T10-CLEANUP-01',read_only:true}});if(status(identity)!==200)throw new Error(`IDENTITY_HTTP_${String(status(identity))}`);const ib=obj(identity.body),expected=env.ZERNIO_EXPECTED_USER_EMAIL.trim().toLowerCase(),actual=text(ib?.email)?.trim().toLowerCase();identityMatch=Boolean(ib?.valid===true&&actual===expected);if(!identityMatch)throw new Error('SAFETY_IDENTITY_MISMATCH');
+  const pre=await send('PRE_CLEANUP_READ',{method:'GET',url:`/v1/posts/${P1_T10_CLEANUP_PROVIDER_POST_ID}`,safeMetadata:{task:'P1-T10-CLEANUP-01',purpose:'exact-residual-pre-read'}});if(status(pre)!==200)throw new Error(`PRE_CLEANUP_READ_HTTP_${String(status(pre))}`);preCleanup=inspectPost(pre.body);if(!preCleanup.exactOwnedFixture)throw new Error('SAFETY_RESIDUAL_POST_TARGET_OR_CONTENT_MISMATCH');if(preCleanup.platformStatus==='cancelled'){classification='RESIDUAL_POST_ALREADY_CLEAN';result='PASS';finalState=preCleanup;return finish();}if(preCleanup.platformStatus!=='published')throw new Error('SAFETY_PRE_CLEANUP_PLATFORM_STATE_UNRESOLVED');
+  unpublishRequired=true;try{const unpublish=await send('UNPUBLISH',{method:'POST',url:`/v1/posts/${P1_T10_CLEANUP_PROVIDER_POST_ID}/unpublish`,body:{platform:'facebook'},safeMetadata:{task:'P1-T10-CLEANUP-01',purpose:'one-bounded-unpublish'}});unpublishStatus=status(unpublish);unpublishRequestId=requestId(unpublish);}catch(error){unpublishTransportAmbiguous=true;errorCategory=safeTransportError(error);}
+  const final=await send('FINAL_READ',{method:'GET',url:`/v1/posts/${P1_T10_CLEANUP_PROVIDER_POST_ID}`,safeMetadata:{task:'P1-T10-CLEANUP-01',purpose:'mandatory-final-reconciliation'}});if(status(final)!==200)throw new Error(`FINAL_READ_HTTP_${String(status(final))}`);finalState=inspectPost(final.body);if(!finalState.exactOwnedFixture)throw new Error('SAFETY_FINAL_POST_TARGET_OR_CONTENT_MISMATCH');if(finalState.platformStatus==='cancelled'){classification='RESIDUAL_POST_CLEANUP_VERIFIED';result='PASS';errorCategory=null;}else if(finalState.platformStatus==='published'){classification='RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED';result='BLOCKED';errorCategory=errorCategory??`UNPUBLISH_HTTP_${String(unpublishStatus)}`;}else{classification='RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED';result='BLOCKED';errorCategory='FINAL_PLATFORM_STATE_UNRESOLVED';}
+ }catch(error){const message=error instanceof Error?error.message:'UNKNOWN_CLEANUP_FAILURE';if(message.startsWith('SAFETY_')){classification='RESIDUAL_POST_CLEANUP_SAFETY_FAILURE';result='FAIL';errorCategory=message;}else{classification='RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED';result='BLOCKED';errorCategory=errorCategory??message;}}
+ return finish();
+}
+
+async function main(){const parsed=parseP1T10CleanupArgs(process.argv.slice(2));if(!parsed.ok){console.log(JSON.stringify({liveEnabled:false,result:'BLOCKED',errorCategory:'INVALID_P1_T10_CLEANUP_ARGUMENTS',classification:'RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED',providerGets:0,providerMutations:0,unpublishAttempts:0}));process.exitCode=2;return;}const result=await runP1T10Cleanup({live:parsed.live,env:process.env});console.log(JSON.stringify(result,null,2));process.exitCode=result.result==='PASS'?0:result.result==='FAIL'?1:2;}
+if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)await main();
