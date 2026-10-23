@@ -63,7 +63,7 @@ Executing Senior Tasks = `1 / 1`
 
 Current Task = `P1-GOV-01 — Controlled Parallel Wait Lanes Governance Amendment`
 
-P1-GOV-01 = **IMPLEMENTED IN REPO / PROJECT MASTER SYNC PENDING**
+P1-GOV-01 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
 
 P1-GOV-01 decision = `D-043 — Controlled Parallel Wait Lanes`; decision status = `ACCEPTED`.
 
@@ -71,9 +71,9 @@ P1-GOV-01 starting HEAD = `611a443291a05776d574f27249b11d85d89372a8`; branch = `
 
 P1-GOV-01 type = `GOVERNANCE / DOCUMENTATION ONLY`; Provider calls `0`; credentials `0`; source/test/runtime changes `0`; external mutations `0`.
 
-MASTER_IMPLEMENTATION_PLAN sync = `PROJECT_SOURCE_PRESENT / SESSION_PROTOCOL_SYNC_PENDING — canonical Project-backed MASTER_IMPLEMENTATION_PLAN.md exists and still contains the pre-D-043 single-task wording; current Project-file tool surface permits read/materialize but not in-place Project attachment replacement`.
+MASTER_IMPLEMENTATION_PLAN sync = `SYNC COMPLETE — canonical Project-backed MASTER_IMPLEMENTATION_PLAN.md now contains the D-043 controlled parallel wait-lane Session Protocol`.
 
-P1-GOV-01 review readiness = `BLOCKED UNTIL PROJECT MASTER SYNC — corrected replacement prepared from Project file version 1; no duplicate canonical file was added to the Git repository`.
+P1-GOV-01 review readiness = `READY FOR TEAM LEADER REVIEW — D-043 is recorded in DECISIONS.md, execution lanes are recorded in PROGRESS.md, and the canonical Project MASTER Session Protocol is synchronized`.
 
 Parent Product Task = `NONE — P1-GOV-01 is a standalone Phase-1 governance amendment; P1-T14 remains separately open in the waiting lane`
 
