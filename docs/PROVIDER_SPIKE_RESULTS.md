@@ -2695,3 +2695,26 @@ Only the frozen synthetic fixture content and its stable owned IDs are retained.
 ### Remaining limitation
 
 P1-T10 proves controlled Organic Facebook comment create/read/reply behavior on the frozen internal test target. It does not prove Likes, private replies, DMs, Ads comments, automation behavior, or general production Community architecture. Cleanup of the temporary post was not completed because the one authorized unpublish attempt returned HTTP `500` and the bounded post read-back showed it still published. That cleanup limitation is visible to Team Leader review and is not hidden by the capability recommendation.
+
+
+## P1-T10-CLEANUP-01 — Exact Residual P1-T10 Post Cleanup
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED`.
+
+The cleanup-only run did not reopen or repeat Organic Comments behavior. Accepted parent classification remains `ORGANIC_COMMENTS_CREATE_READ_REPLY_VERIFIED`; Team Leader recommendation remains `Organic Comments → SPIKE_PASS`; canonical `PROVIDER_CAPABILITIES.md` remains unchanged at `SPIKE_PENDING` pending later closeout.
+
+Observed Provider behavior:
+- trusted identity: HTTP `200`, request `10281b72-8a3e-4fe1-be24-f0d4b3af5f54`, exact expected identity matched;
+- exact pre-cleanup post read: HTTP `200`, request `5b607a12-92bd-4d12-a74f-3e0de2f76553`; Provider ID `6ada5bc404775bbecc763501`; Facebook platform ID `1387424501114639_122110940457502015`; account `6ac64f8740364f4695dd3077`; Page `1387424501114639`; platform `facebook`; frozen content SHA matched; state `published`;
+- exactly one documented unpublish request was sent with `platform=facebook`: HTTP `400`, request `63eb1b5d-bfe9-40b1-9a9b-98252f132584`; no retry;
+- mandatory final exact read: HTTP `200`, request `329cd53e-3ef0-4d00-a2bf-14c8f946cb2b`; exact fixture still had Facebook platform state `published`.
+
+The HTTP `400` response alone was not treated as the cleanup outcome; the final read-back established the authoritative observed state for this experiment. The residual exact owned synthetic post therefore remains published.
+
+Residual resource: Provider post `6ada5bc404775bbecc763501` / Facebook platform post `1387424501114639_122110940457502015`, state `published`.
+
+No second unpublish, alternate delete, broad list/reconciliation loop, post creation, comment/reply creation, Likes, DMs, Ads, or webhook operation was performed. No more automatic or unreviewed cleanup attempts are authorized by this task.
+
+Safety totals: Provider GETs `3`; Provider mutations `1`; unpublish attempts `1`; post creates `0`; comment creates `0`; reply creates `0`; Likes `0`; DMs `0`; Ads `0`; webhook mutations `0`; unrelated-resource mutations `0`; secrets exposed `0`.

@@ -65,7 +65,9 @@ Organic Comments = `SPIKE_PENDING`
 
 Team Leader capability recommendation = `Organic Comments → SPIKE_PASS`
 
-P1-T10-CLEANUP-01 = **ACTIVATED — EXACT RESIDUAL TEST POST CLEANUP**
+P1-T10-CLEANUP-01 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+
+P1-T10-CLEANUP-01 classification = `RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED`
 
 P1-T09 = **DONE / ACCEPTED**
 
@@ -4298,3 +4300,32 @@ Current documented cleanup operation: `POST /v1/posts/{postId}/unpublish` with `
 Initial counters: Provider GETs `0`; Provider mutations `0`; unpublish attempts `0`; new posts `0`; comments/replies `0`; Likes `0`; DMs `0`; Ads `0`; webhook mutations `0`.
 
 Safety boundary: exact-resource reconciliation only. No new post/comment/reply, no Like/DM/Ads/webhook operation, no broad list/cleanup loop, no arbitrary caller-selected resource ID, and no second unpublish attempt.
+
+
+## P1-T10-CLEANUP-01 execution result — Exact Residual Post Cleanup (2026-10-23)
+
+`P1-T10-CLEANUP-01 = EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Activation commit = `e38a37cbaea726cc2ec8a17dbfd7e1caceee1922`.
+
+Cleanup runner/test checkpoint = `db0833c63c06228d8b73f5e25ad3c6160900bd84`.
+
+Offline gates before Provider activity: focused cleanup suite `20 / 20 PASS`; full suite `507 / 507 PASS` across `21` files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+Trusted identity GET: HTTP `200`, request `10281b72-8a3e-4fe1-be24-f0d4b3af5f54`; expected identity match=true.
+
+Exact pre-cleanup residual-post GET: HTTP `200`, request `5b607a12-92bd-4d12-a74f-3e0de2f76553`. Exact Provider post `6ada5bc404775bbecc763501`; platform post `1387424501114639_122110940457502015`; account `6ac64f8740364f4695dd3077`; Page `1387424501114639`; platform `facebook`; frozen content hash match=true; post/platform state=`published`.
+
+One authorized unpublish was therefore required and sent exactly once: `POST /v1/posts/6ada5bc404775bbecc763501/unpublish`, body `platform=facebook`; HTTP `400`; request `63eb1b5d-bfe9-40b1-9a9b-98252f132584`. No retry was sent.
+
+Mandatory final exact post GET: HTTP `200`, request `329cd53e-3ef0-4d00-a2bf-14c8f946cb2b`; exact owned fixture remained intact and platform state remained `published`.
+
+Final classification = `RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED`.
+
+Residual P1-T10 external resource remains: Provider post `6ada5bc404775bbecc763501` / Facebook platform post `1387424501114639_122110940457502015`, state `published`.
+
+No more automatic or unreviewed cleanup attempts are authorized. The accepted P1-T10 capability classification `ORGANIC_COMMENTS_CREATE_READ_REPLY_VERIFIED` is unchanged. Organic Comments canonical state remains `SPIKE_PENDING`; Team Leader recommendation remains `Organic Comments → SPIKE_PASS` pending later documentation closeout.
+
+Safety totals: Provider GETs `3`; Provider mutations `1`; unpublish attempts `1`; post creates `0`; comment creates `0`; reply creates `0`; Likes `0`; DMs `0`; Ads `0`; webhook mutations `0`; unrelated-resource mutations `0`; secrets exposed `0`.
+
+PHASE 1 remains **IN PROGRESS**. No successor capability or Phase 2 work was started.

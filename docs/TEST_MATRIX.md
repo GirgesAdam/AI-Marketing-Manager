@@ -2946,3 +2946,25 @@ Cleanup status: comments/reply cleaned; temporary post cleanup **not completed**
 Safety totals: normal `11 / 12`; cleanup `5 / 5`; absolute `16 / 17`; Provider mutation attempts `6`; publish attempts `1`; posts proven `1`; comments created/proven `1`; replies created/proven `1`; Likes `0`; DMs `0`; Ads `0`; private replies `0`; webhook mutations `0`; unrelated-resource mutations `0`; PII leakage `0`; automatic retries `0`; secret exposure `0`.
 
 Future system integration coverage is still required for production ownership routing, tenant/brand authorization, durable state, worker/idempotency behavior, policy/emergency controls, and user-facing Community workflows. P1-T10 is Provider Behavior evidence only.
+
+
+## P1-T10-CLEANUP-01 — Exact Residual Post Cleanup
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Offline gates: focused cleanup `20 / 20 PASS`; full `npm test` `507 / 507 PASS` across `21` files; typecheck PASS; build PASS; diff-check PASS. Regression coverage proves live defaults OFF, exact residual IDs/content/target are fixed, one unpublish maximum, no create/comments/replies/Ads/DM/webhook surface, no arbitrary endpoint/resource input, no blind retry, and hard request ceiling `4`.
+
+Live bounded sequence:
+
+| # | Operation | HTTP | Provider request ID | Evidence |
+|---:|---|---:|---|---|
+| 1 | trusted identity | 200 | `10281b72-8a3e-4fe1-be24-f0d4b3af5f54` | expected identity match=true |
+| 2 | exact residual post pre-read | 200 | `5b607a12-92bd-4d12-a74f-3e0de2f76553` | exact Provider/platform/account/Page/Facebook/content; state=`published` |
+| 3 | exact one-time unpublish | 400 | `63eb1b5d-bfe9-40b1-9a9b-98252f132584` | one mutation only; body `platform=facebook`; no retry |
+| 4 | mandatory exact final read | 200 | `329cd53e-3ef0-4d00-a2bf-14c8f946cb2b` | exact fixture still `published` |
+
+Classification: `RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED`.
+
+Residual exact resource remains Provider post `6ada5bc404775bbecc763501`, Facebook platform post `1387424501114639_122110940457502015`, state `published`. No more automatic/unreviewed cleanup attempts are authorized.
+
+Safety totals: Provider GETs `3`; mutations `1`; unpublish attempts `1`; post creates `0`; comment creates `0`; reply creates `0`; Likes `0`; DMs `0`; Ads `0`; webhook mutations `0`; unrelated-resource mutations `0`; secrets exposed `0`.
