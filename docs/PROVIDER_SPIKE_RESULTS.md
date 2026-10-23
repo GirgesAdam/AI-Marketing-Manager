@@ -2890,3 +2890,50 @@ Future separately reviewed work may establish a controlled Facebook DM fixture o
 Accepted safety totals: Provider GETs `3 / 6`; Provider mutations `0`; outbound DMs `0`; conversations created `0`; mark-read calls `0`; reactions `0`; private replies `0`; comment/post mutations `0`; Ads `0`; webhook mutations `0`; unrelated PII persisted `0`; raw DM bodies persisted `0`; secrets exposed `0`; automatic retries `0`.
 
 Closeout execution was documentation-only: Provider/Zernio calls `0`; credentials `0`; outbound messages `0`; conversation creation `0`; mark-read/reactions `0`; source/test/runtime changes `0`.
+
+
+## P1-T12 — Zernio Temporary Media Presign / Upload / Public Read / Upload-URL Expiry
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `MEDIA_PROVIDER_BEHAVIOR_BLOCKED`.
+
+Evidence limitation: `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`.
+
+Capability recommendation: `Media Upload remains SPIKE_PENDING`.
+
+### DOC_CONFIRMED — not live evidence
+
+Before the live run, current Zernio media documentation was reviewed. It documents `POST /v1/media/presign`, direct PUT to the returned signed upload URL with the requested MIME type, a returned public URL/key/expiry value, and temporary-media semantics. The current request contract does not expose the previous `permanent` field. Documentation-only retention/lifetime claims remain `DOC_CONFIRMED`; P1-T12 does not promote them to observed Provider facts.
+
+### Frozen fixture / implementation evidence
+
+- filename: `marketlyai-p1-t12-fixture.png`;
+- MIME: `image/png`;
+- exact bytes: `68`;
+- SHA-256: `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460`;
+- activation commit: `cb5e553e75b6472bcbf862bae9aab7c595d41719`;
+- implementation/test commit: `67a244d882987af472200739eb5399a7f1972716`;
+- runner default is offline and requires explicit `--live`;
+- hard ceilings: Zernio `2`, cloud PUT `2`, public GET `2`, total network `6`;
+- no arbitrary filename/URL selector; no permanent-upload option; no social/publishing/DM/comment/Ads/webhook surface; no automatic retry.
+
+### Offline gates
+
+Focused P1-T12 tests: `18 / 18` PASS. Full `npm test`: `547 / 547` PASS across `23` files. `npm run typecheck`, `npm run build`, and `git diff --check`: PASS.
+
+### One live execution — evidence boundary
+
+Exactly one committed live runner invocation was launched. Credentials were isolated to the child process; the parent remained credential-free. No secret, raw signed upload URL, or signed query was intentionally persisted. No rerun and no second presign occurred.
+
+`CONTROL_FLOW_EVIDENCE`: the same Node runner remained active for at least `1919` seconds. Under the committed runner, the long `expiresIn + 60s` sleep is reachable only after all of these gates have succeeded in sequence: trusted identity HTTP `200` + expected identity match; presign HTTP `200` + complete/safe HTTPS upload/public target validation; initial cloud PUT 2xx; public GET 2xx; exact downloaded size `68`; exact downloaded SHA-256 `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460`. Thus the one live execution demonstrably reached the expiry-wait stage.
+
+This is control-flow evidence, not a substitute for the missing final JSON. Exact request IDs, the exact numeric `expiresIn`, exact pre-expiry HTTP status values within their accepted 2xx ranges, and raw Provider/cloud response bodies were not recovered from the cleaned terminal session and are not invented here.
+
+`NOT CAPTURED`: when the task was resumed, the original terminal session no longer existed and no P1-T12 Node runner was active. The final same-signed-URL PUT result was therefore unavailable. It is not known from preserved evidence whether that PUT returned an expiry/signature rejection, another non-2xx condition, succeeded, or was interrupted before evidence capture. A rerun would violate the one-live-run/no-second-presign boundary, so no rerun was attempted.
+
+### Interpretation
+
+P1-T12 does not prove upload-URL expiry enforcement. Because the final expiry outcome is not preserved, classification is conservatively `MEDIA_PROVIDER_BEHAVIOR_BLOCKED` with `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`. Media Upload remains `SPIKE_PENDING`; `PROVIDER_CAPABILITIES.md` is unchanged.
+
+Known live bounds: Zernio API requests `2 / 2` before expiry wait; initial cloud PUT `1`; public GET `1`; expiry PUT outcome `NOT CAPTURED`; total network requests at least `4` and at most committed ceiling `6`; Provider/social mutations `0`; posts `0`; DMs `0`; comments `0`; Ads `0`; webhook mutations `0`; permanent uploads `0`; automatic retries `0`; second presign `0`.

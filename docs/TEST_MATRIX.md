@@ -3086,3 +3086,37 @@ Future Provider/system requirements remain unimplemented and require separate re
 Future controlled-send testing also requires independently established internal test participant authorization/consent and a valid existing Facebook Messenger conversation. P1-T11 did not use undocumented Facebook conversation creation, and a future task must not generalize another platform's conversation-create API to Facebook Messenger without current documented Provider support.
 
 Closeout safety boundary: Provider calls `0`; credentials `0`; outbound messages `0`; conversation creation `0`; mark-read/reactions `0`; source/test/runtime changes `0`. Documentation only.
+
+
+## P1-T12 — Temporary Media Presign / Upload / Public Read / Upload-URL Expiry
+
+Task state: `EXECUTED / AWAITING TEAM LEADER REVIEW`. Classification: `MEDIA_PROVIDER_BEHAVIOR_BLOCKED`. Evidence limitation: `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`.
+
+| Gate / evidence | Result |
+|---|---|
+| Frozen PNG size | PASS — `68` bytes |
+| Frozen PNG SHA-256 | PASS — `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460` |
+| Focused P1-T12 suite | PASS — `18 / 18` |
+| Full `npm test` | PASS — `547 / 547` across `23` files |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| `git diff --check` | PASS |
+| Default live mode | OFF / zero network |
+| Zernio hard ceiling | PASS — maximum `2` |
+| Cloud PUT hard ceiling | PASS — maximum `2` |
+| Public GET hard ceiling | PASS — maximum `2` |
+| Total network hard ceiling | PASS — maximum `6` |
+| Arbitrary file/URL input | NOT CALLABLE |
+| Permanent upload/lifetime override | NOT CALLABLE |
+| Social/publishing/DM/comment/Ads/webhook mutation | NOT CALLABLE |
+| Signed upload URL persistence | BLOCKED by safe evidence projection |
+| Automatic retry / second presign | NOT CALLABLE |
+| One live invocation | OBSERVED — exactly one launched |
+| Pre-expiry control-flow gate | REACHED — runner active >= `1919s`, only reachable after identity + presign + initial PUT + exact public binary read gates pass |
+| Exact expiry PUT outcome | NOT CAPTURED — terminal session expired before final JSON retrieval |
+| Expiry enforcement verified | NO |
+| Capability promotion | NO — Media Upload remains `SPIKE_PENDING` |
+
+Live evidence discipline: reaching the long expiry wait proves the committed preconditions passed in the one execution, but it does not recover exact request IDs, exact `expiresIn`, or final second-PUT response. Those values are not reconstructed. No rerun, second presign, substitute request, or social mutation was performed after the evidence-capture loss.
+
+Known live bounds: Zernio API `2 / 2` before expiry wait; initial cloud PUT `1`; public GET `1`; expiry PUT final outcome `NOT CAPTURED`; network total `>=4` and `<=6`; Provider/social mutations `0`; permanent uploads `0`; retries `0`; second presign `0`.

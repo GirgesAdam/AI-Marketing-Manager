@@ -57,9 +57,15 @@ Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ES
 
 Current Task = `P1-T12 — Verify Zernio Temporary Media Presign, Upload, Public Read & Upload-URL Expiry`
 
-P1-T12 = **ACTIVATED**
+P1-T12 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
 
-P1-T12 initial counters: Zernio API requests `0`; cloud upload PUTs `0`; public media reads `0`; Provider/social mutations `0`; posts `0`; permanent uploads `0`.
+P1-T12 classification = `MEDIA_PROVIDER_BEHAVIOR_BLOCKED`
+
+P1-T12 evidence limitation = `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`
+
+Media Upload = `SPIKE_PENDING`
+
+P1-T12 known live bounds: Zernio API requests `2 / 2` before the expiry wait; initial cloud upload PUT `1 / 1` reached and passed its 2xx gate; public media read `1` reached and passed exact binary equality; expiry PUT final outcome `NOT CAPTURED`; Provider/social mutations `0`; posts `0`; permanent uploads `0`; automatic retries `0`; second presign `0`.
 
 P1-T11 = **DONE / ACCEPTED**
 
@@ -4432,3 +4438,34 @@ Accepted safety evidence: Provider GETs `3 / 6`; Provider mutations `0`; outboun
 Closeout safety boundary: Provider calls `0`; credentials accessed `0`; outbound messages `0`; conversation creation `0`; mark-read/reactions `0`; source/test/runtime changes `0`. Documentation only.
 
 Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`. Current Phase remains `PHASE 1 — Provider Feasibility & Basic Cost Safety`; PHASE 1 remains **IN PROGRESS**. No DM send test, Ad Comments, Native Automation, successor Phase-1 task, or Phase 2 work is started.
+
+
+## P1-T12 — Temporary Media Presign / Upload / Public Read / Upload-URL Expiry
+
+**Status: EXECUTED / AWAITING TEAM LEADER REVIEW**
+
+Classification = `MEDIA_PROVIDER_BEHAVIOR_BLOCKED`.
+
+Evidence limitation = `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`.
+
+Capability recommendation = `Media Upload remains SPIKE_PENDING`. No `PROVIDER_CAPABILITIES.md` promotion is requested from this evidence.
+
+Activation commit: `cb5e553e75b6472bcbf862bae9aab7c595d41719`. Implementation/test commit: `67a244d882987af472200739eb5399a7f1972716`.
+
+Frozen local fixture gate passed before live execution: filename `marketlyai-p1-t12-fixture.png`; MIME `image/png`; exact size `68` bytes; SHA-256 `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460`.
+
+Offline gates before live execution: focused P1-T12 suite `18 / 18` PASS; full `npm test` `547 / 547` PASS across `23` files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+Current Zernio documentation was checked before mutation. `DOC_CONFIRMED` only: `POST /v1/media/presign` accepts filename/content type (size supported), returns an upload URL/public URL/key/expiry value, the returned signed URL is used with direct PUT, and the current contract does not expose the old `permanent` request field. Documentation claims about temporary retention are not treated as live Provider behavior in this task.
+
+Exactly one live runner invocation was launched from the committed build with child-only credentials. The parent process remained credential-free; the credential source was an ignored `.env` in a workspace with the same repository origin; no secret or signed upload URL was intentionally persisted. No rerun and no second presign were performed.
+
+`CONTROL_FLOW_EVIDENCE` only: the committed runner was still active after at least `1919` seconds. Its code cannot enter the long `expiresIn + 60s` wait unless all earlier gates have passed: trusted identity HTTP `200` with expected identity match; one presign HTTP `200` with complete/safe target fields; one initial cloud PUT with a 2xx result; one public GET with a 2xx result; and exact public binary size/hash equality to the frozen 68-byte PNG. This establishes that the one live execution reached the expiry wait, but it does not preserve the individual response IDs/status codes beyond those control-flow gates.
+
+`NOT CAPTURED`: after the long wait, the terminal session was cleaned up before its final JSON could be read. When execution was revisited, no P1-T12 Node runner remained active and the original terminal session was no longer available. Therefore the second same-URL PUT outcome, its HTTP status/body category, the exact Provider `expiresIn`, exact request IDs, and the final runner classification cannot be reconstructed without a prohibited rerun.
+
+The Senior Engineer does not convert the missing final output into expiry proof. No second presign, no retry, no substitute media request, and no social/publishing mutation is authorized or performed. The conservative task classification is therefore `MEDIA_PROVIDER_BEHAVIOR_BLOCKED` with limitation `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`; canonical Media Upload remains `SPIKE_PENDING`.
+
+Known live bounds: Zernio API requests `2 / 2` before the expiry wait; initial cloud PUT `1`; public GET `1`; expiry PUT final outcome `NOT CAPTURED`; total network requests definitely at least `4` and no more than the committed hard ceiling `6`; Provider/social mutations `0`; posts `0`; DMs `0`; comments `0`; Ads `0`; webhook mutations `0`; permanent uploads `0`; automatic retries `0`; second presign `0`.
+
+PHASE 1 remains **IN PROGRESS**. No successor task is started.
