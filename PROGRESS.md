@@ -49,13 +49,17 @@ Closed definitions include:
 
 Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
-Parent Product Task = `P1-T09 — Verify Existing Data-Bearing Historical Analytics Fixture`
+Parent Product Task = `NONE — P1-T11 is a standalone Phase-1 Provider Behavior task`
 
 Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`
+Current Task = `P1-T11 — Verify Facebook DM Read Contract and Controlled Fixture Availability`
+
+P1-T11 = **ACTIVATED**
+
+P1-T11 initial counters: Provider GETs `0`; Provider mutations `0`; outbound messages `0`; conversations created `0`; read receipts `0`; reactions `0`; private replies `0`.
 
 P1-T10 = **DONE / ACCEPTED WITH NON-BLOCKING PROVIDER CLEANUP LIMITATION**
 
