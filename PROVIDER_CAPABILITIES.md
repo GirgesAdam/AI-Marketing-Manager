@@ -457,7 +457,7 @@ NOT_APPLICABLE
 | Performance Decay | Yes | SPIKE_PENDING | Analytics | Strategy signal | Calculation |
 | Frequency Analysis | Yes | SPIKE_PENDING | History | Strategy signal | Calculation |
 | Analytics Webhook | Yes | PARTIALLY_VERIFIED | Webhooks + durable Analytics/Delta reconciliation | Signal validation + ownership + reconciliation | Change/wake-up signal |
-| Organic Comments | Yes | SPIKE_PENDING | Inbox support | AI/Human workflow | Fetch/reply |
+| Organic Comments | Yes | SPIKE_PASS | Inbox support | AI/Human workflow | Fetch/reply |
 | Ad Comments | Yes | SPIKE_PENDING | Meta Ads | Unified workflow | Dark-post access |
 | DMs | Yes | SPIKE_PENDING | Inbox support | Agent/handoff | Messaging |
 | Ad Preview | Yes | SPIKE_PENDING | Meta Ads | Approval UI | Preview |
@@ -468,6 +468,8 @@ NOT_APPLICABLE
 | Comment-to-DM | Yes | SPIKE_PENDING | Supported automation | Ownership coordination | Native execution |
 | Delayed Native DM | Yes* | SPIKE_PENDING | Automation support | Safety coordination | Delayed action |
 | Delayed Native Reply | Yes* | SPIKE_PENDING | Automation support | Safety coordination | Delayed action |
+
+Organic Comments observed scope: `SPIKE_PASS — controlled Facebook organic create/read/list/reply behavior verified; production tenant/Brand authorization, ownership, policy, AI/Human workflow, durable state, idempotency, and reconciliation remain system responsibilities.` Zernio supplies Provider comment fetch/reply execution. This does not verify DMs, Ad Comments, private replies, Likes/hide, or `comment.received` webhook behavior.
 
 `Yes*` يعني أنها ضمن الـV1 الوظيفي، لكن تمكينها في Production يعتمد على اجتياز Safety Spike.
 

@@ -2968,3 +2968,34 @@ Classification: `RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED`.
 Residual exact resource remains Provider post `6ada5bc404775bbecc763501`, Facebook platform post `1387424501114639_122110940457502015`, state `published`. No more automatic/unreviewed cleanup attempts are authorized.
 
 Safety totals: Provider GETs `3`; mutations `1`; unpublish attempts `1`; post creates `0`; comment creates `0`; reply creates `0`; Likes `0`; DMs `0`; Ads `0`; webhook mutations `0`; unrelated-resource mutations `0`; secrets exposed `0`.
+
+## P1-T10-FINAL-CLOSEOUT-01 — Accepted Organic Comments and Bounded Cleanup
+
+`P1-T10 = DONE / ACCEPTED` for Provider Behavior, with final parent disposition `DONE / ACCEPTED WITH NON-BLOCKING PROVIDER CLEANUP LIMITATION`.
+
+`P1-T10-CLEANUP-01 = DONE / ACCEPTED` with accepted classification `RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED`.
+
+| Accepted gate / evidence | Result |
+|---|---|
+| Focused P1-T10 suite | PASS — `27 / 27` |
+| Full suite at P1-T10 | PASS — `487 / 487` across 20 files |
+| Focused cleanup suite | PASS — `20 / 20` |
+| Full suite at cleanup | PASS — `507 / 507` across 21 files |
+| P1-T10 request ceilings | PASS — normal `11 / 12`, cleanup `5 / 5`, absolute `16 / 17` |
+| Cleanup-task hard ceiling | PASS — exactly `4 / 4` Provider requests |
+| Controlled resource counts | PASS — exactly one post, one top-level comment, one reply |
+| Automatic write retries | PASS — `0` |
+| Comment/reply cleanup | PASS — exact deletes + bounded thread absence verification |
+| Residual post cleanup | BLOCKED / bounded — original unpublish HTTP `500`, later separately authorized unpublish HTTP `400`; exact read-backs showed the same owned post still `published` |
+| Residual external resource | Provider `6ada5bc404775bbecc763501`; Facebook `1387424501114639_122110940457502015`; known synthetic owned test fixture |
+| Further automatic cleanup | NOT AUTHORIZED |
+
+Accepted Organic Comments Provider Behavior classification: `ORGANIC_COMMENTS_CREATE_READ_REPLY_VERIFIED`. Canonical Organic Comments status is `SPIKE_PASS` after Team Leader acceptance. The cleanup limitation does not reopen or invalidate the controlled comment create/read/list/reply result.
+
+Future system-integration coverage remains required and is **not implemented by this closeout**: wrong Brand/account comment routing; duplicate webhook/comment delivery; duplicate reply prevention; policy denial; human handoff; crash after Provider reply but before local settlement; reconciliation of an Unknown reply result; tenant/Brand authorization; durable ingestion/state; and worker/idempotency behavior.
+
+Not proven by P1-T10: real-user production reply workflow, Comments Agent policy behavior, `comment.received` webhook behavior, private replies, Likes/hide, Ad Comments, or DMs.
+
+Publishing cleanup observation remains Provider evidence only: exact owned test post stayed published after the two separately bounded unpublish failures. Canonical Publishing status is not automatically changed by this closeout.
+
+Final-closeout execution is documentation-only: Provider calls `0`; credentials `0`; post/comment/reply writes `0`; cleanup attempts `0`; Ads/DM/webhook operations `0`; source/test/runtime changes `0`; infrastructure `0`.

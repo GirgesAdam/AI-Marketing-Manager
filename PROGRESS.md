@@ -55,19 +55,19 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `P1-T10-CLEANUP-01 — One Bounded Cleanup Attempt for the Exact Residual P1-T10 Test Post`
+Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`
 
-P1-T10 = **ACCEPTED WITH NON-BLOCKING NOTE — RESIDUAL TEST POST CLEANUP PENDING**
+P1-T10 = **DONE / ACCEPTED WITH NON-BLOCKING PROVIDER CLEANUP LIMITATION**
 
 Accepted P1-T10 classification = `ORGANIC_COMMENTS_CREATE_READ_REPLY_VERIFIED`
 
-Organic Comments = `SPIKE_PENDING`
+Organic Comments = `SPIKE_PASS`
 
 Team Leader capability recommendation = `Organic Comments → SPIKE_PASS`
 
-P1-T10-CLEANUP-01 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+P1-T10-CLEANUP-01 = **DONE / ACCEPTED — RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED**
 
-P1-T10-CLEANUP-01 classification = `RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED`
+Accepted P1-T10-CLEANUP-01 classification = `RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED`
 
 P1-T09 = **DONE / ACCEPTED**
 
@@ -4329,3 +4329,33 @@ No more automatic or unreviewed cleanup attempts are authorized. The accepted P1
 Safety totals: Provider GETs `3`; Provider mutations `1`; unpublish attempts `1`; post creates `0`; comment creates `0`; reply creates `0`; Likes `0`; DMs `0`; Ads `0`; webhook mutations `0`; unrelated-resource mutations `0`; secrets exposed `0`.
 
 PHASE 1 remains **IN PROGRESS**. No successor capability or Phase 2 work was started.
+
+## P1-T10-FINAL-CLOSEOUT-01 — Final Team Leader Acceptance (2026-10-23)
+
+`P1-T10 = DONE / ACCEPTED WITH NON-BLOCKING PROVIDER CLEANUP LIMITATION`.
+
+Accepted Provider Behavior classification = `ORGANIC_COMMENTS_CREATE_READ_REPLY_VERIFIED`.
+
+Accepted P1-T10 evidence HEAD = `d908a4a7440b2e9253d82d52c56325dcf38e5778`.
+
+Accepted Provider Behavior proved: trusted identity; exact Profile/account/Page targeting; one controlled post; one controlled top-level organic Facebook comment with stable returned comment ID; exact comment thread read-back; visibility of the controlled fixture in the bounded normal Inbox list; one exact controlled reply; exact reply read-back; no duplicate post/comment/reply mutation; and exact controlled comment/reply cleanup.
+
+`P1-T10-CLEANUP-01 = DONE / ACCEPTED — RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED`.
+
+Accepted cleanup evidence HEAD = `9865d9bfeac081b8d0b3309d1b5911e26fa50a88`.
+
+Accepted cleanup sequence: exact owned residual post read → state `published` → exactly one new unpublish attempt → HTTP `400` → exact final reconciliation read → state still `published`. No retry occurred.
+
+Known residual synthetic owned internal-test resource: Provider post `6ada5bc404775bbecc763501`; Facebook post `1387424501114639_122110940457502015`; state `published`; content `MarketlyAI internal organic comments fixture. No action required.` The controlled comment and controlled reply are already deleted.
+
+Provider limitation = `EXACT_TEST_POST_UNPUBLISH_BLOCKED`. Exact observed fixture evidence only: the original P1-T10 unpublish attempt returned HTTP `500` and exact read-back proved the post remained published; the separately authorized P1-T10-CLEANUP-01 attempt returned HTTP `400` and exact read-back again proved the same exact post remained published. This does not establish that all Zernio unpublish operations fail, that Facebook cannot remove the post, or that Provider deletion is impossible.
+
+No further automatic or unreviewed P1-T10 Provider cleanup attempt is authorized. The residual resource is known and bounded. Any future explicit hygiene action is separate from Organic Comments capability verification and requires separate Team Leader selection/authorization.
+
+Organic Comments = `SPIKE_PASS`. `PROVIDER_CAPABILITIES.md` is promoted only for the accepted controlled Facebook organic create/read/list/reply Provider Behavior scope. Production tenant/Brand authorization, policy, AI/Human workflow, ownership, durable state, worker/idempotency/reconciliation, and handoff remain system responsibilities.
+
+Publishing cleanup observation: exact owned test post remained published after bounded unpublish failures (HTTP 500 then HTTP 400). This final closeout does not automatically change the canonical Publishing capability status; whether a separate Publishing limitation spike is needed is a later Team Leader selection decision.
+
+Current Phase remains `PHASE 1 — Provider Feasibility & Basic Cost Safety`; Phase 1 remains **IN PROGRESS**. Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`. No successor task or Phase 2 work is started.
+
+Final-closeout safety boundary: Provider calls `0`; credentials accessed `0`; post/comment/reply writes `0`; cleanup attempts `0`; Ads/DM/webhook operations `0`; source/test/runtime changes `0`; infrastructure actions `0`.

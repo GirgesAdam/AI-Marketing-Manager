@@ -2718,3 +2718,54 @@ Residual resource: Provider post `6ada5bc404775bbecc763501` / Facebook platform 
 No second unpublish, alternate delete, broad list/reconciliation loop, post creation, comment/reply creation, Likes, DMs, Ads, or webhook operation was performed. No more automatic or unreviewed cleanup attempts are authorized by this task.
 
 Safety totals: Provider GETs `3`; Provider mutations `1`; unpublish attempts `1`; post creates `0`; comment creates `0`; reply creates `0`; Likes `0`; DMs `0`; Ads `0`; webhook mutations `0`; unrelated-resource mutations `0`; secrets exposed `0`.
+
+## P1-T10-FINAL-CLOSEOUT-01 — Organic Comments Final Acceptance
+
+P1-T10 status: `DONE / ACCEPTED WITH NON-BLOCKING PROVIDER CLEANUP LIMITATION`.
+
+Accepted Provider Behavior classification: `ORGANIC_COMMENTS_CREATE_READ_REPLY_VERIFIED`.
+
+Accepted P1-T10 evidence HEAD: `d908a4a7440b2e9253d82d52c56325dcf38e5778`.
+
+### PROVEN Provider Behavior
+
+- Trusted identity and exact frozen Profile/account/Facebook Page target validation passed.
+- One exact owned synthetic Facebook post was used as the controlled fixture.
+- Exact owned top-level organic Facebook comment creation worked and returned stable comment ID `122110940457502015_1097949062827339`.
+- Exact comment/thread read-back worked and returned one controlled match with no duplicate.
+- The controlled fixture appeared exactly once in the bounded normal Organic Inbox list.
+- Exact owned reply creation worked and returned stable reply ID `122110940457502015_944970255025536`.
+- Exact reply read-back worked under the controlled parent with no duplicate.
+- Controlled reply deletion and controlled parent-comment deletion both returned HTTP `200`; bounded thread verification proved both absent.
+- No duplicate post/comment/reply write occurred and no automatic write retry occurred.
+
+P1-T10-CLEANUP-01 status: `DONE / ACCEPTED`.
+
+Accepted cleanup classification: `RESIDUAL_POST_CLEANUP_PROVIDER_BLOCKED`.
+
+Accepted cleanup evidence HEAD: `9865d9bfeac081b8d0b3309d1b5911e26fa50a88`.
+
+Accepted exact sequence: exact owned residual post read → `published` → one new documented unpublish attempt → HTTP `400` → mandatory exact final read → still `published`. No retry occurred.
+
+Provider limitation: `EXACT_TEST_POST_UNPUBLISH_BLOCKED`. The original P1-T10 unpublish attempt returned HTTP `500`, followed by an exact read-back showing the fixture still published. The separately authorized cleanup attempt returned HTTP `400`, followed by another exact read-back showing the same fixture still published. These bounded observations apply only to this exact fixture and do not establish universal Zernio unpublish failure, Facebook removal impossibility, or Provider deletion impossibility.
+
+Residual synthetic owned internal-test resource remains: Provider post `6ada5bc404775bbecc763501`; Facebook post `1387424501114639_122110940457502015`; state `published`; content `MarketlyAI internal organic comments fixture. No action required.` The controlled comment and reply are already deleted. No further automatic or unreviewed P1-T10 Provider cleanup attempt is authorized.
+
+### NOT PROVEN / OUT OF SCOPE
+
+- real-user production reply workflow;
+- Comments Agent policy behavior;
+- tenant/Brand routing and authorization;
+- durable comment ingestion/state;
+- worker/idempotency/reconciliation behavior;
+- `comment.received` webhook behavior;
+- private replies;
+- Likes/hide;
+- Ad Comments;
+- DMs.
+
+Organic Comments canonical capability is promoted to `SPIKE_PASS` for the controlled Facebook organic create/read/list/reply Provider Behavior scope only. Our system still owns tenant/Brand authorization, policy, AI/Human workflow, ownership, durable state, idempotency/reconciliation, and human handoff; Zernio supplies Provider comment fetch/reply execution.
+
+Publishing cleanup observation: exact owned test post remained published after bounded unpublish failures (HTTP 500 then HTTP 400). This observation remains visible Provider Behavior evidence and does not downgrade Organic Comments. This closeout does not automatically modify canonical Publishing capability status.
+
+Final-closeout safety boundary: Provider/Zernio calls `0`; credentials `0`; post/comment/reply mutations `0`; cleanup attempts `0`; Ads/DM/webhook operations `0`; source/test/runtime changes `0`; infrastructure `0`.
