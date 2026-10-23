@@ -49,13 +49,17 @@ Closed definitions include:
 
 Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
-Parent Product Task = `NONE — P1-T11 is a standalone Phase-1 Provider Behavior task`
+Parent Product Task = `NONE — P1-T12 is a standalone Phase-1 Provider Behavior task`
 
 Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`
+Current Task = `P1-T12 — Verify Zernio Temporary Media Presign, Upload, Public Read & Upload-URL Expiry`
+
+P1-T12 = **ACTIVATED**
+
+P1-T12 initial counters: Zernio API requests `0`; cloud upload PUTs `0`; public media reads `0`; Provider/social mutations `0`; posts `0`; permanent uploads `0`.
 
 P1-T11 = **DONE / ACCEPTED**
 
