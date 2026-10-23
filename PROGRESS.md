@@ -51,17 +51,23 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NOT_STARTED — NEXT PHASE-1 EXECUTING TASK REQUIRES TEAM LEADER SELECTION`
+Current Executing Task = `P1-T15 — Verify Safe Native Comment-to-DM Automation Lifecycle`
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`
 
-Open Senior Tasks = `1 / 2`
+Open Senior Tasks = `2 / 2`
 
-Executing Senior Tasks = `0 / 1`
+Executing Senior Tasks = `1 / 1`
 
-Current Task = `NOT_STARTED — NEXT PHASE-1 EXECUTING TASK REQUIRES TEAM LEADER SELECTION`
+Current Task = `P1-T15 — Verify Safe Native Comment-to-DM Automation Lifecycle`
+
+P1-T15 = **ACTIVATED**
+
+P1-T15 starting HEAD = `b6f191ca535c871385d1fc1a2162acdb730d1c7f`; branch = `p1-t15-zernio-comment-automation-lifecycle`.
+
+P1-T15 scope = `PROVIDER BEHAVIOR - safe create-disabled -> enable -> disable lifecycle only`; P1-T14 remains independently frozen in `WAITING_TIME_GATE`.
 
 P1-GOV-01 = **DONE / ACCEPTED**
 
