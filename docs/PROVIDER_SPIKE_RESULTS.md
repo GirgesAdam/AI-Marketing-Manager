@@ -2831,3 +2831,62 @@ DMs therefore remain canonical `SPIKE_PENDING`. P1-T11 does not recommend `PARTI
 ### Safety totals
 
 Provider GETs `3 / 6`; Provider mutations `0`; outbound messages `0`; conversations created `0`; mark-read calls `0`; reactions `0`; private replies `0`; comment/post mutations `0`; Ads `0`; webhook mutations `0`; unrelated PII persisted `0`; raw DM bodies persisted `0`; secrets exposed `0`; automatic retries `0`.
+
+## P1-T11-CLOSEOUT-01 — Team Leader Acceptance
+
+P1-T11 status: `DONE / ACCEPTED`.
+
+Accepted classification: `AUTHORIZED_FACEBOOK_DM_DATASET_EMPTY`.
+
+Accepted evidence HEAD: `7f77c827916c009aa1cccefa0ae17d94b85dc288`.
+
+Activation commit: `d129d46e6a48712ed601e0fcf81bda3b67e8640c`.
+
+Implementation/test commit: `84dea71fef8e55d5eedbc69ce9fb5d57fd2c7ac8`.
+
+### Proven / OBSERVED Provider Behavior
+
+- Trusted identity verification passed.
+- Exact Profile/account ownership passed for Profile `6ac5a45a8e4ca44f355033ae` and Facebook account `6ac64f8740364f4695dd3077`.
+- Exact `GET /v1/inbox/conversations` against the frozen Facebook account returned HTTP `200`.
+- Exact list filters were Profile `6ac5a45a8e4ca44f355033ae`, account `6ac64f8740364f4695dd3077`, platform `facebook`, limit `20`.
+- Conversation count was `0`.
+- Pagination/meta evidence: `hasMore=false`; `nextCursor` absent; `accountsQueried=1`; `accountsFailed=0`; failed-account entries `0`; skipped-account entries `0`; frozen account failed=`false`; frozen account skipped=`false`.
+- Because the exact authorized dataset was empty, exact conversation reads=`0`, message reads=`0`, message count=`0`, pagination continuation=`0`.
+
+### DOC_CONFIRMED — not live evidence
+
+Current Zernio documentation describes Facebook conversation listing/reads, message reads, opaque cursors, failed/skipped-account reporting, and read-only message GET semantics. These remain documentation-contract facts only. P1-T11 did not convert them into observed conversation/message payload behavior.
+
+### Accepted interpretation
+
+`AUTHORIZED_FACEBOOK_DM_DATASET_EMPTY` means the exact-scoped Facebook conversation-list read succeeded, the frozen account was not failed/skipped, and no conversations were present. It does not mean Facebook DMs are unsupported, conversation reads are verified end-to-end, message payloads are verified, outbound DM send is verified, or Provider permissions are broken.
+
+### Controlled fixture / blocker
+
+Controlled Facebook DM fixture = `NOT AVAILABLE`.
+
+Limitation: no existing authorized Facebook DM conversation currently exists on the frozen test account. P1-T11 did not query another Brand/account, did not use a real-user participant as a test fixture, did not perform participant search, and did not use undocumented Facebook conversation creation.
+
+P1-T11 did not use `POST /v1/inbox/conversations`. A future task must not generalize another platform's conversation-create API to Facebook Messenger without current documented Provider support.
+
+### Not proven
+
+- exact conversation-read payload behavior;
+- message-read payload behavior;
+- message pagination behavior beyond documentation;
+- controlled outbound send/reply behavior;
+- messaging-window behavior;
+- ambiguous send outcome/idempotency behavior;
+- duplicate-send prevention;
+- tenant/Brand routing;
+- durable state/reconciliation;
+- production policy/handoff behavior.
+
+DMs remain canonical `SPIKE_PENDING`. No `PARTIALLY_VERIFIED` promotion is made because no live conversation/message read occurred. `PROVIDER_CAPABILITIES.md` remains unchanged.
+
+Future separately reviewed work may establish a controlled Facebook DM fixture only after independently proving an authorized internal test participant, valid existing Facebook Messenger conversation, messaging-window constraints, participant ownership/consent, bounded send/reply behavior, and ambiguous-send/idempotency handling. This closeout authorizes none of those actions.
+
+Accepted safety totals: Provider GETs `3 / 6`; Provider mutations `0`; outbound DMs `0`; conversations created `0`; mark-read calls `0`; reactions `0`; private replies `0`; comment/post mutations `0`; Ads `0`; webhook mutations `0`; unrelated PII persisted `0`; raw DM bodies persisted `0`; secrets exposed `0`; automatic retries `0`.
+
+Closeout execution was documentation-only: Provider/Zernio calls `0`; credentials `0`; outbound messages `0`; conversation creation `0`; mark-read/reactions `0`; source/test/runtime changes `0`.

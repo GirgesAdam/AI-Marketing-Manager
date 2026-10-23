@@ -3046,3 +3046,43 @@ Controlled fixture available: `NO`. DMs remain `SPIKE_PENDING`; no PARTIALLY_VER
 Safety totals: Provider GETs `3 / 6`; mutations `0`; outbound DMs `0`; conversations created `0`; mark-read calls `0`; reactions `0`; private replies `0`; comment/post mutations `0`; Ads `0`; webhook mutations `0`; unrelated PII persisted `0`; secrets exposed `0`; automatic retries `0`.
 
 Future separate work, only after Team Leader selection and a controlled fixture, must cover send/reply behavior, messaging-window constraints, ambiguous send outcomes/idempotency, production tenant/Brand routing, durable ingestion, worker recovery, policy/handoff, and Unknown-result reconciliation. None is implemented by P1-T11.
+
+## P1-T11-CLOSEOUT-01 — Accepted Facebook DM Read-Only Spike
+
+`P1-T11 = DONE / ACCEPTED`.
+
+Accepted classification: `AUTHORIZED_FACEBOOK_DM_DATASET_EMPTY`.
+
+Accepted evidence HEAD: `7f77c827916c009aa1cccefa0ae17d94b85dc288`.
+
+| Accepted gate / evidence | Result |
+|---|---|
+| Focused P1-T11 suite | PASS — `22 / 22` |
+| Full `npm test` | PASS — `529 / 529` across `22` files |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| GET-only runtime surface | PASS |
+| Provider request ceiling | PASS — `3 / 6` GETs used |
+| Exact Profile/account/facebook scoping | PASS |
+| Exact conversation-list request | PASS — HTTP `200` |
+| Frozen account failed/skipped handling | PASS — not failed/skipped |
+| Empty authorized dataset handling | PASS — conversation count `0`, `hasMore=false`, `nextCursor` absent |
+| Provider mutations | PASS — `0` |
+| Outbound DMs | PASS — `0` |
+| Conversations created | PASS — `0` |
+| Mark-read / reactions / private replies | PASS — `0 / 0 / 0` |
+| Unrelated PII persisted | PASS — `0` |
+| Raw DM bodies persisted | PASS — `0` |
+| Automatic retries | PASS — `0` |
+
+Accepted live empty-dataset metadata: `accountsQueried=1`; `accountsFailed=0`; failed-account entries `0`; skipped-account entries `0`; frozen account failed=`false`; frozen account skipped=`false`. Exact conversation reads=`0`; message reads=`0`; message count=`0`; pagination continuation=`0` because the authorized list was empty.
+
+Controlled Facebook DM fixture = `NOT AVAILABLE`. DMs remain `SPIKE_PENDING`; no `PARTIALLY_VERIFIED` promotion is made because no live conversation/message read occurred.
+
+Provider documentation remains separate from observed Provider Behavior: documented conversation/message read contracts, opaque cursors, failed/skipped reporting, and read-only GET semantics are `DOC_CONFIRMED`; P1-T11 observed only exact list success plus an empty authorized dataset with clean failure metadata.
+
+Future Provider/system requirements remain unimplemented and require separate review: exact conversation read; message read; pagination; controlled outbound send; messaging-window behavior; ambiguous send result; duplicate-send prevention; tenant/Brand routing; durable state/reconciliation; policy denial/human handoff.
+
+Future controlled-send testing also requires independently established internal test participant authorization/consent and a valid existing Facebook Messenger conversation. P1-T11 did not use undocumented Facebook conversation creation, and a future task must not generalize another platform's conversation-create API to Facebook Messenger without current documented Provider support.
+
+Closeout safety boundary: Provider calls `0`; credentials `0`; outbound messages `0`; conversation creation `0`; mark-read/reactions `0`; source/test/runtime changes `0`. Documentation only.

@@ -55,17 +55,19 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `P1-T11 — Verify Facebook DM Read Contract and Controlled Fixture Availability`
+Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`
 
-P1-T11 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+P1-T11 = **DONE / ACCEPTED**
 
-P1-T11 classification = `AUTHORIZED_FACEBOOK_DM_DATASET_EMPTY`
+Accepted P1-T11 classification = `AUTHORIZED_FACEBOOK_DM_DATASET_EMPTY`
+
+Accepted P1-T11 evidence HEAD = `7f77c827916c009aa1cccefa0ae17d94b85dc288`
 
 DMs = `SPIKE_PENDING`
 
-P1-T11 recommendation = `DMs remains SPIKE_PENDING`
+Controlled Facebook DM fixture = `NOT AVAILABLE`
 
-P1-T11 final counters: Provider GETs `3`; Provider mutations `0`; outbound messages `0`; conversations created `0`; read receipts `0`; reactions `0`; private replies `0`; unrelated PII persisted `0`.
+P1-T11 final counters: Provider GETs `3 / 6`; Provider mutations `0`; outbound messages `0`; conversations created `0`; read receipts `0`; reactions `0`; private replies `0`; unrelated PII persisted `0`.
 
 P1-T10 = **DONE / ACCEPTED WITH NON-BLOCKING PROVIDER CLEANUP LIMITATION**
 
@@ -4394,3 +4396,35 @@ Capability recommendation = `DMs remains SPIKE_PENDING`. This empty authorized d
 Safety totals: Provider GETs `3 / 6`; Provider mutations `0`; outbound DMs `0`; conversations created `0`; mark-read calls `0`; reactions `0`; private replies `0`; comment/post mutations `0`; Ads `0`; webhook mutations `0`; unrelated PII persisted `0`; secrets exposed `0`; automatic retries `0`.
 
 PHASE 1 remains **IN PROGRESS**. Current Task remains P1-T11 awaiting Team Leader review. No DM send test, Ad Comments, Native Automation, successor Phase-1 task, or Phase 2 work was started.
+
+## P1-T11-CLOSEOUT-01 — Team Leader Acceptance (2026-10-23)
+
+`P1-T11 = DONE / ACCEPTED`.
+
+Accepted classification = `AUTHORIZED_FACEBOOK_DM_DATASET_EMPTY`.
+
+Accepted evidence HEAD = `7f77c827916c009aa1cccefa0ae17d94b85dc288`.
+
+Activation commit = `d129d46e6a48712ed601e0fcf81bda3b67e8640c`. Implementation/test commit = `84dea71fef8e55d5eedbc69ce9fb5d57fd2c7ac8`.
+
+Accepted observed Provider evidence: trusted identity verification PASS; exact Profile/account ownership PASS; exact `GET /v1/inbox/conversations` request returned HTTP `200` with frozen Profile `6ac5a45a8e4ca44f355033ae`, account `6ac64f8740364f4695dd3077`, `platform=facebook`, `limit=20`.
+
+Accepted empty-dataset evidence: conversation count `0`; `hasMore=false`; `nextCursor` absent; `accountsQueried=1`; `accountsFailed=0`; failed-account entries `0`; skipped-account entries `0`; frozen account failed=`false`; frozen account skipped=`false`. Therefore exact conversation reads=`0`, message reads=`0`, message count=`0`, pagination continuation=`0`.
+
+Interpretation: `AUTHORIZED_FACEBOOK_DM_DATASET_EMPTY` proves only that the exact-scoped Facebook conversation-list read succeeded, the frozen account was not failed/skipped, and no conversations were present. It does not prove Facebook DMs unsupported, end-to-end conversation reads, message payload behavior, outbound send behavior, or broken Provider permissions.
+
+Controlled Facebook DM fixture = `NOT AVAILABLE` because no existing authorized Facebook conversation exists on the frozen test account. No fixture was inferred from another account/Brand, a real user, participant search, or undocumented conversation creation.
+
+DMs remain `SPIKE_PENDING`; no `PARTIALLY_VERIFIED` promotion is made because no live conversation/message read occurred. `PROVIDER_CAPABILITIES.md` is unchanged.
+
+`DOC_CONFIRMED` remains separate from `OBSERVED`: current Zernio documentation describes Facebook conversation listing/reads, message reads, opaque cursors, failed/skipped-account reporting, and read-only message GET semantics. P1-T11 observed only the exact list request success, empty authorized dataset, and clean failed/skipped metadata.
+
+P1-T11 did not use undocumented Facebook conversation creation. A future separately reviewed task must not generalize another platform's conversation-create API to Facebook Messenger without current documented Provider support.
+
+Future gate only: a separately reviewed task may determine whether a controlled Facebook DM fixture can be established safely. It must independently establish an authorized internal test participant, a valid existing Facebook Messenger conversation, messaging-window constraints, participant ownership/consent, bounded send/reply behavior, and ambiguous-send/idempotency handling. This closeout authorizes none of those actions.
+
+Accepted safety evidence: Provider GETs `3 / 6`; Provider mutations `0`; outbound DMs `0`; conversations created `0`; mark-read calls `0`; reactions `0`; private replies `0`; comment/post mutations `0`; Ads `0`; webhook mutations `0`; unrelated PII persisted `0`; raw DM bodies persisted `0`; secrets exposed `0`; automatic retries `0`.
+
+Closeout safety boundary: Provider calls `0`; credentials accessed `0`; outbound messages `0`; conversation creation `0`; mark-read/reactions `0`; source/test/runtime changes `0`. Documentation only.
+
+Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`. Current Phase remains `PHASE 1 — Provider Feasibility & Basic Cost Safety`; PHASE 1 remains **IN PROGRESS**. No DM send test, Ad Comments, Native Automation, successor Phase-1 task, or Phase 2 work is started.
