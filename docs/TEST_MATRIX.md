@@ -3120,3 +3120,55 @@ Task state: `EXECUTED / AWAITING TEAM LEADER REVIEW`. Classification: `MEDIA_PRO
 Live evidence discipline: reaching the long expiry wait proves the committed preconditions passed in the one execution, but it does not recover exact request IDs, exact `expiresIn`, or final second-PUT response. Those values are not reconstructed. No rerun, second presign, substitute request, or social mutation was performed after the evidence-capture loss.
 
 Known live bounds: Zernio API `2 / 2` before expiry wait; initial cloud PUT `1`; public GET `1`; expiry PUT final outcome `NOT CAPTURED`; network total `>=4` and `<=6`; Provider/social mutations `0`; permanent uploads `0`; retries `0`; second presign `0`.
+
+## P1-T12-R01 — Durable Safe Evidence Capture + Reauthorized Media Expiry Run
+
+Task result: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VERIFIED`.
+
+| Gate / evidence | Result |
+|---|---|
+| Focused R01 suite | PASS — `22 / 22` |
+| Full `npm test` | PASS — `569 / 569` across `24` files |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| `git diff --check` | PASS |
+| Default live mode | OFF / zero network |
+| Fixed evidence path only | PASS — `artifacts/provider-spike/p1-t12-r01-evidence.jsonl` |
+| Evidence path gitignored | PASS |
+| Checkpoint order | PASS — 9 required stages in exact order |
+| Checkpoint before sleep | PASS — `EXPIRY_WAIT_STARTED` persisted before wait |
+| Deadline checkpoint before expired PUT | PASS |
+| Checkpoint after expired PUT | PASS — `EXPIRED_PUT_COMPLETED` |
+| Final durable evidence | PASS — `RUN_FINALIZED` |
+| Signature sentinel absent in tests | PASS |
+| API-key sentinel absent in tests | PASS |
+| Live signed URL persistence | PASS — `0` |
+| Live secret persistence | PASS — `0` |
+| Live raw query marker | ABSENT |
+| Live raw cloud error body | NOT PERSISTED |
+| Duplicate live launch prevention | PASS |
+| One presign maximum | PASS — live `1` |
+| Two PUT maximum | PASS — live `2` total |
+| Public GET maximum | PASS — live `1 / 2` |
+| Zernio maximum | PASS — live `2 / 2` |
+| Total network maximum | PASS — live `5 / 6` |
+| Automatic retries | PASS — `0` |
+| Second presign | PASS — `0` |
+| Social/publish/DM/comments/Ads/webhook paths | NOT CALLED / counters `0` |
+| Permanent media | `0` |
+| Initial upload | PASS — HTTP `200` |
+| Initial public binary read | PASS — HTTP `200`, `68` bytes, exact SHA-256 |
+| Provider `expiresIn` | OBSERVED — `3600s` |
+| Actual expiry+60s margin | PASS — elapsed `3,660,020 ms`, required `3,660,000 ms` |
+| Same-URL post-expiry PUT | HTTP `403` / `SIGNED_REQUEST_EXPIRED` |
+| Expiry enforcement | VERIFIED for this bounded signed URL experiment |
+| Capability recommendation | `Media Upload → PARTIALLY_VERIFIED — AWAITING TEAM LEADER REVIEW` |
+| Canonical capability change by Senior | NO |
+
+Live request IDs: identity `890bd9a9-752b-4f7e-bb24-4433ec07a703`; presign `65be44ab-eb22-44e5-81c4-0215004f849d`.
+
+Frozen fixture: `marketlyai-p1-t12-fixture.png`, `image/png`, `68` bytes, SHA-256 `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460`.
+
+Remaining separate Phase-1 coverage after R01: temporary object retention/deletion behavior and re-upload of an approved original using a new presign. R01 does not authorize or execute either.

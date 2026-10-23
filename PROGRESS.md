@@ -57,7 +57,11 @@ Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ES
 
 Current Task = `P1-T12-R01 — Durable Evidence Capture and One Reauthorized Media Expiry Run`
 
-P1-T12-R01 = **ACTIVATED**
+P1-T12-R01 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+
+P1-T12-R01 classification = `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VERIFIED`.
+
+P1-T12-R01 recommendation = `Media Upload → PARTIALLY_VERIFIED — AWAITING TEAM LEADER REVIEW`.
 
 P1-T12 = **UNRESOLVED / NOT DONE**
 
@@ -69,7 +73,7 @@ Interpretation = `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE = internal evidence/to
 
 Media Upload = `SPIKE_PENDING`
 
-P1-T12-R01 initial counters: Zernio API calls `0`; presigns `0`; initial PUTs `0`; expired PUTs `0`; public GETs `0`; posts/social mutations `0`.
+P1-T12-R01 final counters: Zernio API calls `2 / 2`; presigns `1`; initial PUTs `1`; expired PUTs `1`; public GETs `1 / 2`; total network `5 / 6`; posts/social mutations `0`; retries `0`; second presign `0`.
 
 P1-T12 prior known live bounds: Zernio API requests `2 / 2` before the expiry wait; initial cloud upload PUT `1 / 1` reached and passed its 2xx gate; public media read `1` reached and passed exact binary equality; expiry PUT final outcome `NOT CAPTURED`; Provider/social mutations `0`; posts `0`; permanent uploads `0`; automatic retries `0`; second presign `0`.
 
@@ -4488,3 +4492,47 @@ Parent `P1-T12 = UNRESOLVED / NOT DONE`. The prior P1-T12 execution is accepted 
 This is one separately Team-Leader-authorized media experiment, not an automatic retry. Initial counters: Zernio API calls `0`; presigns `0`; initial PUTs `0`; expired PUTs `0`; public GETs `0`; posts/social mutations `0`.
 
 Media Upload remains canonical `SPIKE_PENDING`. No successor task is started.
+
+## P1-T12-R01 — Durable Evidence Capture and One Reauthorized Media Expiry Run
+
+**Status: EXECUTED / AWAITING TEAM LEADER REVIEW**
+
+Classification = `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VERIFIED`.
+
+Recommendation = `Media Upload → PARTIALLY_VERIFIED — AWAITING TEAM LEADER REVIEW`.
+
+Canonical `Media Upload` remains `SPIKE_PENDING` pending Team Leader review. `PROVIDER_CAPABILITIES.md` is unchanged.
+
+This R01 execution is a separate Team-Leader-authorized experiment. It does not rewrite the original P1-T12 run: the first run remains `MEDIA_PROVIDER_BEHAVIOR_BLOCKED / LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`, with control-flow evidence reaching the expiry wait and the original final expiry-PUT result unavailable.
+
+Git evidence: starting HEAD `5b910e591eed1cc76997316f56c0127df4a27118`; activation commit `bec7555f659a5b764e8fea3a3beae697c75f5a47`; implementation/test commit `6455214c88028cbb6d397ba96987d412c908baef`; branch `p1-t12-r01-media-expiry-evidence`.
+
+Frozen asset reused exactly: `marketlyai-p1-t12-fixture.png`; MIME `image/png`; size `68`; SHA-256 `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460`.
+
+Offline gates before live execution: focused R01 suite `22 / 22` PASS; full `npm test` `569 / 569` PASS across `24` files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+Durable evidence file: `artifacts/provider-spike/p1-t12-r01-evidence.jsonl` (fixed, repository-local, gitignored). Recorded live child PID `21456`; wrapper PID `11888`; the recorded child was no longer alive after `RUN_FINALIZED`. No duplicate launch occurred.
+
+Durable checkpoint order, exactly nine records: `RUN_STARTED → IDENTITY_VERIFIED → PRESIGN_RECEIVED → INITIAL_UPLOAD_COMPLETED → PUBLIC_READ_VERIFIED → EXPIRY_WAIT_STARTED → EXPIRY_DEADLINE_REACHED → EXPIRED_PUT_COMPLETED → RUN_FINALIZED`.
+
+Observed Provider/network evidence:
+- trusted identity: HTTP `200`, request ID `890bd9a9-752b-4f7e-bb24-4433ec07a703`, expected identity matched;
+- media presign: HTTP `200`, request ID `65be44ab-eb22-44e5-81c4-0215004f849d`;
+- Provider `expiresIn`: `3600` seconds;
+- presign issued at `2026-10-23T12:14:34.725Z`;
+- calculated expiry+margin deadline: `2026-10-23T13:15:34.725Z`;
+- initial same-asset cloud PUT: HTTP `200`;
+- initial public GET: HTTP `200`, `68` bytes, SHA-256 `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460`, exactMatch=`true`;
+- expiry deadline checkpoint: `2026-10-23T13:15:34.746Z`, elapsed `3,660,020 ms`, required `3,660,000 ms`, deadlineReached=`true`;
+- exactly one same-signed-URL post-expiry PUT: HTTP `403`, safe category `SIGNED_REQUEST_EXPIRED`, rejected=`true`;
+- optional final public GET was not used.
+
+Final safety counters: Zernio API calls `2 / 2`; presigns `1`; initial PUTs `1`; expired PUTs `1`; public GETs `1 / 2`; total network calls `5 / 6`; second presign `0`; automatic retries `0`; posts/social mutations `0`; DMs `0`; comments `0`; Ads `0`; webhook mutations `0`; permanent uploads `0`.
+
+Evidence-safety scan: checkpoint count `9`; `uploadUrl` absent; `X-Amz-` absent; `Authorization` absent; `Bearer` absent; `apiKey` absent; signed-query markers absent; query marker `?` absent. Runner result records `signedUrlsPersisted=0`, `secretsPersisted=0`, `secondPresign=0`, `permanentUploads=0`.
+
+Interpretation: R01 live evidence verifies that the one temporary signed upload URL accepted the frozen upload and then, after the Provider-returned `3600s` expiry plus the required `60s` safety margin, the same URL was definitively rejected with HTTP `403` / `SIGNED_REQUEST_EXPIRED`. This supports the recommendation `Media Upload → PARTIALLY_VERIFIED — AWAITING TEAM LEADER REVIEW`.
+
+Still unresolved and explicitly not covered by R01: temporary object retention/deletion behavior; re-upload of an approved original using a new presign. Those remain separate Phase-1 dispositions.
+
+PHASE 1 remains **IN PROGRESS**. No successor Phase-1 task, Ads work, retention/deletion experiment, or approved-original re-upload was started.

@@ -2937,3 +2937,56 @@ This is control-flow evidence, not a substitute for the missing final JSON. Exac
 P1-T12 does not prove upload-URL expiry enforcement. Because the final expiry outcome is not preserved, classification is conservatively `MEDIA_PROVIDER_BEHAVIOR_BLOCKED` with `LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`. Media Upload remains `SPIKE_PENDING`; `PROVIDER_CAPABILITIES.md` is unchanged.
 
 Known live bounds: Zernio API requests `2 / 2` before expiry wait; initial cloud PUT `1`; public GET `1`; expiry PUT outcome `NOT CAPTURED`; total network requests at least `4` and at most committed ceiling `6`; Provider/social mutations `0`; posts `0`; DMs `0`; comments `0`; Ads `0`; webhook mutations `0`; permanent uploads `0`; automatic retries `0`; second presign `0`.
+
+## P1-T12-R01 — Durable Media Expiry Evidence
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Classification: `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VERIFIED`.
+
+Recommendation: `Media Upload → PARTIALLY_VERIFIED — AWAITING TEAM LEADER REVIEW`.
+
+Canonical capability remains unchanged pending Team Leader review; `PROVIDER_CAPABILITIES.md` is not modified.
+
+### Separation from original P1-T12
+
+The original P1-T12 execution remains recorded as `MEDIA_PROVIDER_BEHAVIOR_BLOCKED / LIVE_FINAL_EVIDENCE_CAPTURE_UNAVAILABLE`. It reached the expiry wait by control-flow evidence but did not preserve the final expiry-PUT outcome. R01 is a separate one-run authorization and does not retroactively rewrite that first execution.
+
+### Offline evidence
+
+Activation commit: `bec7555f659a5b764e8fea3a3beae697c75f5a47`. Implementation/test commit: `6455214c88028cbb6d397ba96987d412c908baef`.
+
+Focused R01 suite `22 / 22` PASS. Full `npm test` `569 / 569` PASS across `24` files. `npm run typecheck`, `npm run build`, and `git diff --check`: PASS.
+
+Durable journal: `artifacts/provider-spike/p1-t12-r01-evidence.jsonl`, fixed and gitignored. Live child PID `21456`; wrapper PID `11888`. Exactly one live invocation occurred; no duplicate launch or relaunch.
+
+Checkpoint sequence: `RUN_STARTED`, `IDENTITY_VERIFIED`, `PRESIGN_RECEIVED`, `INITIAL_UPLOAD_COMPLETED`, `PUBLIC_READ_VERIFIED`, `EXPIRY_WAIT_STARTED`, `EXPIRY_DEADLINE_REACHED`, `EXPIRED_PUT_COMPLETED`, `RUN_FINALIZED`.
+
+### OBSERVED Provider / cloud behavior
+
+| Stage | Result |
+|---|---|
+| Trusted identity | HTTP `200`, request ID `890bd9a9-752b-4f7e-bb24-4433ec07a703`, expected identity matched |
+| Media presign | HTTP `200`, request ID `65be44ab-eb22-44e5-81c4-0215004f849d` |
+| `expiresIn` | `3600` seconds |
+| Issued at | `2026-10-23T12:14:34.725Z` |
+| Initial upload | HTTP `200` |
+| Initial public read | HTTP `200`, `68` bytes, exact SHA-256 match |
+| Expiry+margin deadline | `2026-10-23T13:15:34.725Z` |
+| Deadline checkpoint | elapsed `3,660,020 ms` vs required `3,660,000 ms`, reached=`true` |
+| Same-URL expired PUT | HTTP `403`, `SIGNED_REQUEST_EXPIRED`, rejected=`true` |
+| Final classification | `TEMP_MEDIA_PRESIGN_UPLOAD_PUBLIC_READ_AND_UPLOAD_URL_EXPIRY_VERIFIED` |
+
+Frozen binary SHA-256: `431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460`.
+
+### Safety / boundedness
+
+Zernio API `2 / 2`; presigns `1`; cloud PUTs `2 / 2`; public GETs `1 / 2`; total network `5 / 6`; second presign `0`; retries `0`; social/publishing/DM/comment/Ads/webhook mutations `0`; permanent uploads `0`; optional final GET `0`.
+
+Live evidence persisted no signed upload URL, query string, AWS/R2 signature, API key, bearer token, or Authorization header. Structural scan found `uploadUrl=false`, `X-Amz-=false`, `Authorization=false`, `Bearer=false`, `apiKey=false`, query marker=false. Result records `signedUrlsPersisted=0` and `secretsPersisted=0`.
+
+### Interpretation
+
+R01 verifies the bounded temporary upload flow through initial upload/public binary read and verifies signed upload-URL expiry enforcement after the actual Provider `expiresIn` plus the required 60-second margin. The capability recommendation is therefore `Media Upload → PARTIALLY_VERIFIED — AWAITING TEAM LEADER REVIEW`, not `SPIKE_PASS`.
+
+Not proven by R01: temporary object retention/deletion behavior; re-upload of an approved original using a new presign; production media lifecycle, durable application state, tenant/Brand authorization, or production policy/usage-control integration.
