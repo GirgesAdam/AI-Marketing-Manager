@@ -69,7 +69,7 @@ P1-T15 safety stop = `ACCEPTED — fail-closed behavior correct`.
 
 P1-T15 unresolved reason = `SAFETY_FROZEN_POST_MISMATCH prevented the lifecycle probe from reaching any automation mutation.`
 
-P1-T15-R01 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+P1-T15-R01 = **DONE / ACCEPTED**
 
 P1-T15-R01 starting HEAD = `fccd095a8701419c8b0941c90af5f43412d44c75`; branch = `p1-t15-r01-frozen-post-diagnostic`.
 
@@ -80,6 +80,16 @@ P1-T15-R01 scope = `READ-ONLY PROVIDER DIAGNOSTIC — exact frozen post attestat
 P1-T15-R01 offline gates = focused `25 / 25` PASS; full `npm test` `668 / 668` PASS across `28` files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
 
 P1-T15-R01 classification = `FROZEN_POST_RESPONSE_SHAPE_DRIFT_CONFIRMED`.
+
+P1-T15-R01 accepted evidence HEAD = `6b4b36fbc84a17c7fbdc30bd4cc793faea008d3e`.
+
+P1-T15-R01 accepted classification = `FROZEN_POST_RESPONSE_SHAPE_DRIFT_CONFIRMED`.
+
+P1-T15-R02 = **ACTIVATED**
+
+P1-T15-R02 starting HEAD = `6b4b36fbc84a17c7fbdc30bd4cc793faea008d3e`; branch = `p1-t15-r02-automation-lifecycle-retry`.
+
+P1-T15-R02 scope = `PROVIDER BEHAVIOR REMEDIATION ? bounded accountId response-shape parser correction plus one reauthorized native automation lifecycle run`; no trigger traffic is authorized.
 
 P1-T15-R01 cause = all frozen controlled identity/content facts still matched, but the Facebook platform account identifier was exposed at safe bounded path `platform.accountId._id`; legacy P1-T15 attestation expected a direct scalar `platform.accountId`, so `legacyP1T15AttestationWouldPass=false`. This is response-shape/parser drift, not confirmed target/content drift.
 
