@@ -85,11 +85,37 @@ P1-T15-R01 accepted evidence HEAD = `6b4b36fbc84a17c7fbdc30bd4cc793faea008d3e`.
 
 P1-T15-R01 accepted classification = `FROZEN_POST_RESPONSE_SHAPE_DRIFT_CONFIRMED`.
 
-P1-T15-R02 = **ACTIVATED**
+P1-T15-R02 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
 
 P1-T15-R02 starting HEAD = `6b4b36fbc84a17c7fbdc30bd4cc793faea008d3e`; branch = `p1-t15-r02-automation-lifecycle-retry`.
 
 P1-T15-R02 scope = `PROVIDER BEHAVIOR REMEDIATION — bounded accountId response-shape parser correction plus one reauthorized native automation lifecycle run`; no trigger traffic is authorized.
+
+P1-T15-R02 activation commit = `272fcc1e0abee66fafdd302528db530dfcd0c358`; parser/test commit = `226a65e3bde9b20469e9a96ecea7285392e4f9aa`. Activation-lane label corrections were docs-only commits `c52d3db83cc02708d11b38ddb483ddb2ec3b598f` and `56473a7b719961a87d6e148673d3710f509a759b`.
+
+P1-T15-R02 parser remediation = legacy frozen-post attestation treated `platform.accountId` as a scalar; corrected bounded attestation accepts the exact field as either a scalar or an exact account-ID object resolved only through existing bounded `valueId()` semantics (`_id`, `id`, `accountId`). Exactly one Facebook platform entry remains mandatory; no recursive lookup or arbitrary response traversal was added.
+
+P1-T15-R02 offline gates = focused parent+R02 suite `43 / 43` PASS across `2` files; full `npm test` `681 / 681` PASS across `29` files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS before live execution.
+
+P1-T15-R02 live run = `CONSUMED — EXACTLY ONE REAUTHORIZED INVOCATION`; no rerun authorized or performed.
+
+P1-T15-R02 primary classification = `NATIVE_AUTOMATION_SAFETY_FAILURE`; error category = `SAFETY_DISABLED_READBACK_CONFIG_MISMATCH`.
+
+P1-T15-R02 live preflight = trusted identity HTTP `200`, request `2405117a-433f-4de2-bcfb-a45a0bd86d6b`; Profile/account ownership HTTP `200`, request `9540584e-d3fa-4036-aa42-6b6fe7a2cf21`; exact frozen-post GET HTTP `200`, request `62527f3b-3501-43ba-93e4-042343e8f979`; corrected target attestation PASS.
+
+P1-T15-R02 create-disabled evidence = `POST /v1/comment-automations` HTTP `200`, request `9ae7cb32-5964-45cf-8e2a-cce7891e9094`; exact owned automation ID `6adca6359828998e85c0ab50`; requested `isActive=false`; create response reported `isActive=false`.
+
+P1-T15-R02 disabled read-back = exact automation GET HTTP `200`, request `b9f61ec6-183d-408d-9acf-4f3738294fbe`, but the bounded accepted `exactConfig` attestation did not pass. Durable safe evidence does not retain a field-level mismatch cause; no response-shape guess, parser patch, or same-run retry is claimed/performed. `CREATED_DISABLED_VERIFIED` was not reached.
+
+P1-T15-R02 normal transition stages = enable PATCH `0`; active read-back `NOT REACHED`; normal disable PATCH `0`; final disabled read-back `NOT REACHED`; trigger/send verification `NOT REACHED`. No trigger traffic was created.
+
+P1-T15-R02 cleanup = `CLEANUP_VERIFIED`: exact automation DELETE HTTP `200`, request `bec07323-5659-4d3a-93ab-a12cba15f879`; final exact GET HTTP `404`, request `629a0889-dd97-493b-802f-a4dc54a6ec98`; residual state `ABSENT`.
+
+P1-T15-R02 safety totals = Provider requests `7 / 12`; creates `1`; enable PATCH `0`; disable/emergency-disable PATCH `0`; DELETE `1`; retries `0`; comments `0`; intentional DMs `0`; conversations `0`; Ads/media/webhook mutations `0`; P1-T14 requests `0`; secrets persisted `0`; private PII persisted `0`.
+
+P1-T15-R02 durable evidence = fixed gitignored `artifacts/provider-spike/p1-t15-r02-evidence.jsonl`; reached checkpoints exactly `RUN_STARTED → IDENTITY_VERIFIED → TARGET_VERIFIED → CREATE_ATTEMPT_COMPLETED → CLEANUP_COMPLETED → RUN_FINALIZED`.
+
+P1-T15-R02 interpretation = the proven frozen-post parser defect is remediated and target preflight now passes. Provider accepted explicit disabled create and reported `isActive=false` in the create response, but the mandatory exact disabled read-back configuration attestation failed, so the create-disabled → enable → disable lifecycle is **not verified**. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; canonical `Comment-to-DM` remains `SPIKE_PENDING`; `Delayed Native DM` and `Delayed Native Reply` remain `SPIKE_PENDING`. No PARTIALLY_VERIFIED recommendation is made under classification F.
 
 P1-T15-R01 cause = all frozen controlled identity/content facts still matched, but the Facebook platform account identifier was exposed at safe bounded path `platform.accountId._id`; legacy P1-T15 attestation expected a direct scalar `platform.accountId`, so `legacyP1T15AttestationWouldPass=false`. This is response-shape/parser drift, not confirmed target/content drift.
 
@@ -121,7 +147,7 @@ P1-T15 create-disabled probe = `NOT REACHED`; automation ID = `NONE`; automation
 
 P1-T15 durable evidence = fixed gitignored `artifacts/provider-spike/p1-t15-evidence.jsonl`; checkpoints reached exactly `RUN_STARTED → IDENTITY_VERIFIED → RUN_FINALIZED`; secrets persisted `0`; private PII persisted `0`.
 
-Comment-to-DM = `SPIKE_PENDING`; safe create-disabled support and the enable/disable lifecycle remain unverified because no automation mutation was allowed after preflight attestation failed. Delayed Native DM and Delayed Native Reply remain `SPIKE_PENDING`.
+Comment-to-DM = `SPIKE_PENDING`; P1-T15-R02 corrected the frozen-post preflight and Provider accepted one explicit disabled create, but the mandatory exact disabled read-back config attestation failed before enable, so the enable/disable lifecycle remains unverified. Delayed Native DM and Delayed Native Reply remain `SPIKE_PENDING`.
 
 P1-GOV-01 = **DONE / ACCEPTED**
 

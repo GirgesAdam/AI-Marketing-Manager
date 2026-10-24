@@ -3431,3 +3431,74 @@ Automated focused suite: `tests/provider-spike/p1-t15-r01.test.ts`.
 Live checkpoint sequence: `RUN_STARTED → IDENTITY_VERIFIED → ACCOUNT_SCOPE_VERIFIED → POST_DIAGNOSTIC_CAPTURED → RUN_FINALIZED`.
 
 The diagnostic confirms response-shape/parser drift only. It does not change the original P1-T15 safety-stop evidence or certify Comment-to-DM lifecycle behavior. P1-T15 remains `UNRESOLVED / FIX REQUIRED` and Comment-to-DM remains `SPIKE_PENDING` pending Team Leader review and any separately authorized parser remediation/lifecycle rerun.
+
+## P1-T15-R02 — Frozen Post Parser Remediation + Reauthorized Lifecycle
+
+Task state: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Automated suites: `tests/provider-spike/p1-t15.test.ts` and `tests/provider-spike/p1-t15-r02.test.ts`.
+
+| Gate / evidence | Result |
+|---|---|
+| Accepted R01 dependency | PASS — `DONE / ACCEPTED`; `FROZEN_POST_RESPONSE_SHAPE_DRIFT_CONFIRMED` |
+| Legacy scalar `platform.accountId` | PASS — still accepted |
+| R01 observed `platform.accountId._id` | PASS — exact controlled nested form accepted |
+| Wrong nested `_id` | PASS — fail closed before create |
+| Missing account ID | PASS — fail closed before create |
+| Unrelated nested expected ID | PASS — not recursively traversed; fail closed |
+| Duplicate Facebook target | PASS — ambiguous/fail closed |
+| Content mismatch | PASS — existing regression preserved |
+| Platform post mismatch | PASS — fail closed |
+| Page mismatch | PASS — fail closed |
+| Recursive ID search | NOT IMPLEMENTED |
+| Comment Automation response parser expansion | NOT IMPLEMENTED |
+| Live defaults OFF | PASS |
+| Create body explicit `isActive=false` | PASS |
+| Active-create fallback | NOT AVAILABLE |
+| Automation create ceiling | PASS — max `1` |
+| Request ceiling | PASS — max `12` |
+| Normal enable/disable/delete ceilings | PASS |
+| Mutation before target verification | NOT POSSIBLE in tested flow |
+| Unexpected active create emergency path | PASS offline |
+| Normal lifecycle ordering | PASS offline |
+| Comments / DM / conversation APIs | NOT CALLED |
+| P1-T14 access from R02 | NOT AVAILABLE |
+| R02 evidence path | PASS — fixed gitignored `artifacts/provider-spike/p1-t15-r02-evidence.jsonl` |
+| Secret / PII persistence guards | PASS |
+| Focused parent + R02 tests | PASS — `43 / 43` across `2` files |
+| Full `npm test` | PASS — `681 / 681` across `29` files |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| `git diff --check` before live | PASS |
+| R02 live invocation | EXECUTED — exactly `1`; no rerun |
+| Trusted identity live | PASS — `200`; `2405117a-433f-4de2-bcfb-a45a0bd86d6b` |
+| Account ownership live | PASS — `200`; `9540584e-d3fa-4036-aa42-6b6fe7a2cf21` |
+| Frozen-post live | PASS — `200`; `62527f3b-3501-43ba-93e4-042343e8f979`; corrected target attestation verified |
+| Disabled create POST | REACHED — `200`; `9ae7cb32-5964-45cf-8e2a-cce7891e9094`; requested false; returned false |
+| Automation ID | `6adca6359828998e85c0ab50` |
+| Mandatory disabled read-back | FAIL CLOSED — `200`; `b9f61ec6-183d-408d-9acf-4f3738294fbe`; exact config mismatch |
+| Field-level read-back mismatch cause | NOT ESTABLISHED — safe evidence intentionally does not persist raw Provider body |
+| `CREATED_DISABLED_VERIFIED` checkpoint | NOT REACHED |
+| Enable PATCH / active read-back | NOT REACHED — `0` enable PATCH |
+| Normal disable PATCH / final disabled read-back | NOT REACHED — `0` normal disable PATCH |
+| Trigger/send verification | NOT REACHED; no intentional trigger traffic |
+| Cleanup DELETE | PASS — `200`; `bec07323-5659-4d3a-93ab-a12cba15f879` |
+| Final exact GET | PASS — `404`; `629a0889-dd97-493b-802f-a4dc54a6ec98`; residual absent |
+| Cleanup classification | `CLEANUP_VERIFIED` |
+| Provider requests live | `7 / 12` |
+| Creates / enable PATCH / disable PATCH / DELETE | `1 / 0 / 0 / 1` |
+| Retries live | `0` |
+| Comments / intentional DMs / conversations | `0 / 0 / 0` |
+| Ads/media/webhook mutations | `0` |
+| P1-T14 requests | `0` |
+| Secrets / private PII persisted | `0 / 0` |
+| Final classification | `NATIVE_AUTOMATION_SAFETY_FAILURE` |
+| Error category | `SAFETY_DISABLED_READBACK_CONFIG_MISMATCH` |
+| Parent P1-T15 | `UNRESOLVED / FIX REQUIRED` |
+| Canonical Comment-to-DM | `SPIKE_PENDING` — unchanged |
+| Delayed Native DM / Reply | `SPIKE_PENDING / SPIKE_PENDING` |
+| P1-T14 preservation | PASS — waiting, GET `0 / 2`, no retention evidence |
+
+Live checkpoint sequence: `RUN_STARTED → IDENTITY_VERIFIED → TARGET_VERIFIED → CREATE_ATTEMPT_COMPLETED → CLEANUP_COMPLETED → RUN_FINALIZED`.
+
+The exact frozen-post parser remediation is proven by offline regressions and successful live target preflight. The native automation lifecycle itself remains unverified because the mandatory exact disabled automation read-back config gate failed before enable. No speculative parser change or second live run is permitted/performed in P1-T15-R02.

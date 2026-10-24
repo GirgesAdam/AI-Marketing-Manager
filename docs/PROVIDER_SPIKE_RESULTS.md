@@ -3227,3 +3227,49 @@ The frozen fixture remains safely usable for a corrected bounded attestation par
 Durable evidence: fixed gitignored `artifacts/provider-spike/p1-t15-r01-evidence.jsonl`. Checkpoint order: `RUN_STARTED → IDENTITY_VERIFIED → ACCOUNT_SCOPE_VERIFIED → POST_DIAGNOSTIC_CAPTURED → RUN_FINALIZED`.
 
 Mutations `0`; automation calls `0`; comments `0`; DMs `0`; Ads/media/webhook mutations `0`; P1-T14 requests `0`; retries `0`; secrets persisted `0`; raw Provider payloads persisted `0`; lifecycle reruns `0`.
+
+## P1-T15-R02 — Correct Proven Account-ID Response Shape and One Reauthorized Lifecycle Run
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`. `P1-T15-R01 = DONE / ACCEPTED` with classification `FROZEN_POST_RESPONSE_SHAPE_DRIFT_CONFIRMED`.
+
+Starting HEAD: `6b4b36fbc84a17c7fbdc30bd4cc793faea008d3e`. Branch: `p1-t15-r02-automation-lifecycle-retry`. Activation commit: `272fcc1e0abee66fafdd302528db530dfcd0c358`. Parser/test commit: `226a65e3bde9b20469e9a96ecea7285392e4f9aa`.
+
+### Parser remediation
+
+The original P1-T15 frozen-post attestation assumed `platform.accountId` was a scalar string. Accepted P1-T15-R01 evidence proved the controlled Provider response exposes the expected account ID at `platform.accountId._id`. R02 changed only this frozen-post attestation to use the already-existing bounded `valueId()` helper on the exact `accountId` field, accepting scalar or exact object identifiers (`_id`, `id`, `accountId`) without recursive traversal. R02 also requires exactly one Facebook platform entry. Exact post ID, content/hash, account, platform post ID, Page, and `facebook` platform gates remain mandatory.
+
+Regression coverage proves the observed nested `_id` form passes; wrong nested ID, missing account ID, unrelated nested occurrence, duplicate Facebook entries, content mismatch, platform-post mismatch, and Page mismatch fail closed before automation create. No Comment Automation response parser was expanded speculatively.
+
+### Offline gates
+
+Focused P1-T15 + R02 suite: `43 / 43` PASS across `2` files. Full `npm test`: `681 / 681` PASS across `29` files. `npm run typecheck`, `npm run build`, and `git diff --check`: PASS before live execution.
+
+### Exactly one reauthorized live execution
+
+Exactly one P1-T15-R02 live invocation occurred. The original P1-T15 run and R01 diagnostic remain historical and separate. No second R02 invocation occurred.
+
+| Ordinal | Request | Status | Request ID | Safe interpretation |
+|---|---|---:|---|---|
+| 1 | `GET /v1/auth/verify` | `200` | `2405117a-433f-4de2-bcfb-a45a0bd86d6b` | trusted identity verified |
+| 2 | `GET /v1/accounts?profileId=<frozen-profile>` | `200` | `9540584e-d3fa-4036-aa42-6b6fe7a2cf21` | frozen ownership scope verified |
+| 3 | `GET /v1/posts/<frozen-post>` | `200` | `62527f3b-3501-43ba-93e4-042343e8f979` | corrected exact frozen target attestation PASS |
+| 4 | `POST /v1/comment-automations` | `200` | `9ae7cb32-5964-45cf-8e2a-cce7891e9094` | one create only; requested `isActive=false`; returned state `false`; owned automation `6adca6359828998e85c0ab50` |
+| 5 | exact automation `GET` | `200` | `b9f61ec6-183d-408d-9acf-4f3738294fbe` | mandatory exact config attestation failed; `CREATED_DISABLED_VERIFIED` not reached |
+| 6 | exact automation `DELETE` | `200` | `bec07323-5659-4d3a-93ab-a12cba15f879` | bounded cleanup of exact owned automation |
+| 7 | final exact automation `GET` | `404` | `629a0889-dd97-493b-802f-a4dc54a6ec98` | cleanup verified; residual absent |
+
+The create response establishes only that Provider accepted the explicit disabled-create request and reported `isActive=false` in that response. The immediate exact automation read-back did not satisfy the existing accepted `exactConfig` contract. The safe durable journal does not retain a field-level mismatch projection, so R02 does not claim which automation field differed or that a particular undocumented response shape caused the mismatch. Per contract, code was not patched after the live finding and the lifecycle was not rerun.
+
+Normal enable was never attempted. Active read-back, normal disable, final disabled read-back, and bounded trigger/send verification were therefore not reached. No comment, reply, intentional DM, conversation, or external keyword trigger was created.
+
+### Classification, cleanup, and safety
+
+Primary classification: `NATIVE_AUTOMATION_SAFETY_FAILURE`. Error category: `SAFETY_DISABLED_READBACK_CONFIG_MISMATCH`. Cleanup: `CLEANUP_VERIFIED`.
+
+Provider requests `7 / 12`; creates `1`; enable PATCH `0`; disable/emergency-disable PATCH `0`; DELETE `1`; retries `0`; comments `0`; intentional DMs `0`; conversations `0`; Ads/media/webhook mutations `0`; P1-T14 requests `0`; secrets persisted `0`; private PII persisted `0`.
+
+Durable evidence path: fixed gitignored `artifacts/provider-spike/p1-t15-r02-evidence.jsonl`. Reached checkpoints: `RUN_STARTED → IDENTITY_VERIFIED → TARGET_VERIFIED → CREATE_ATTEMPT_COMPLETED → CLEANUP_COMPLETED → RUN_FINALIZED`. No raw Provider body, API key, Authorization value, commenter/recipient identity, or real-user DM content was persisted.
+
+Canonical capability state is unchanged pending Team Leader review: `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`. Classification A was not reached, so no `PARTIALLY_VERIFIED` recommendation is made. The remaining native-automation gaps include a trustworthy exact disabled automation read-back/config contract, the complete enable/active-read/disable/disabled-read lifecycle, actual trigger/delivery behavior, and delayed behavior.
+
+P1-T14 preservation remains exact: `WAITING_TIME_GATE`, `fixtureUploadedAt = 2026-10-23T15:01:20.743Z`, Observation A earliest `2026-10-30T16:01:20.743Z`, Observation B earliest `2026-10-31T21:01:20.743Z`, public GET budget `0 / 2`, and no retention evidence/request.
