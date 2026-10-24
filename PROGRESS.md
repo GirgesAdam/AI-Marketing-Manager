@@ -51,7 +51,7 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `P1-T15 — Verify Safe Native Comment-to-DM Automation Lifecycle`
+Current Executing Task = `P1-T15-R01 — Diagnose Frozen Post Attestation Mismatch`
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
@@ -61,9 +61,19 @@ Open Senior Tasks = `2 / 2`
 
 Executing Senior Tasks = `1 / 1`
 
-Current Task = `P1-T15 — Verify Safe Native Comment-to-DM Automation Lifecycle`
+Current Task = `P1-T15-R01 — Diagnose Frozen Post Attestation Mismatch`
 
-P1-T15 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+P1-T15 = **UNRESOLVED / FIX REQUIRED**
+
+P1-T15 safety stop = `ACCEPTED — fail-closed behavior correct`.
+
+P1-T15 unresolved reason = `SAFETY_FROZEN_POST_MISMATCH prevented the lifecycle probe from reaching any automation mutation.`
+
+P1-T15-R01 = **ACTIVATED**
+
+P1-T15-R01 starting HEAD = `fccd095a8701419c8b0941c90af5f43412d44c75`; branch = `p1-t15-r01-frozen-post-diagnostic`.
+
+P1-T15-R01 scope = `READ-ONLY PROVIDER DIAGNOSTIC — exact frozen post attestation only`; no Comment Automation endpoint or mutation is authorized.
 
 P1-T15 starting HEAD = `b6f191ca535c871385d1fc1a2162acdb730d1c7f`; branch = `p1-t15-zernio-comment-automation-lifecycle`.
 
