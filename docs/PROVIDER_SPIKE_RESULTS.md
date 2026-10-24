@@ -3275,9 +3275,9 @@ Canonical capability state is unchanged pending Team Leader review: `Comment-to-
 P1-T14 preservation remains exact: `WAITING_TIME_GATE`, `fixtureUploadedAt = 2026-10-23T15:01:20.743Z`, Observation A earliest `2026-10-30T16:01:20.743Z`, Observation B earliest `2026-10-31T21:01:20.743Z`, public GET budget `0 / 2`, and no retention evidence/request.
 
 
-## P1-T15-R03 — Diagnose Exact Comment Automation Read-back Contract
+## P1-T15-R03 — Initial Implementation (REJECTED; Historical Evidence)
 
-Task state: `IMPLEMENTED OFFLINE / AWAITING TEAM LEADER REVIEW`. The R03 live diagnostic was **NOT AUTHORIZED and NOT RUN**. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
+Task state for this initial implementation: `REJECTED — FIX REQUIRED` by Team Leader for lifecycle enable/PATCH reachability and non-reserved cleanup budget. The counts and behavior notes in this historical section describe the rejected version only; the corrected implementation and its fresh evidence are recorded in `P1-T15-R03-RFIX` below. No live Provider request was authorized or executed during the remediation. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
 
 Starting HEAD: `ef5e1890ff2279e5df4c6ed4e52fc5061aa5e3b3`. Branch: `p1-t15-r03-automation-readback-diagnostic`.
 
@@ -3316,7 +3316,7 @@ These are descriptions of current code predicates, **not** claims that Zernio gu
 - Identifier checks report bounded source and comparison outcome only; no raw identifier values are included in the projection.
 - No arbitrary nested traversal, raw Provider response persistence, message content, credentials, commenter/recipient details, or unknown response fields are included.
 - R03 uses its own fixed gitignored evidence path: `artifacts/provider-spike/p1-t15-r03-evidence.jsonl`.
-- R03 live mode is OFF by default and additionally requires `P1_T15_R03_LIVE_AUTHORIZED=true` with the explicit `--live` CLI argument. Its runner clamps the total request budget to at most 9 and reserves the final two request slots for exact-resource DELETE plus final read-back. If trigger evidence is unavailable and a logs GET would consume those cleanup slots, the runner skips that optional evidence request, reports `BLOCKED / NO_TRIGGER_EVIDENCE_UNAVAILABLE`, and performs cleanup rather than reporting PASS. This environment gate was not enabled for this work.
+- R03 live mode is OFF by default and additionally requires `P1_T15_R03_LIVE_AUTHORIZED=true` with the explicit `--live` CLI argument. The R03 runner calls the separate `runP1T15ReadbackDiagnostic` mode, never the lifecycle wrapper. A mode-enforced send guard rejects every PATCH and rejects DELETE unless cleanup has explicitly started. The request budget is capped at 9, requires at least 7 before any Provider request, permits at most `maxRequests - 2` non-cleanup requests, and permits at most two cleanup requests (exact-resource DELETE plus final GET). At the minimum budget of 7, the normal diagnostic path uses 5 pre-cleanup requests and reserves exactly 2 for cleanup. This environment gate was not enabled for this work.
 
 ### Offline verification
 
@@ -3336,7 +3336,7 @@ npm test
 
 Additional gates: `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS; `git show --format= --check HEAD` PASS at the implementation commit. Implementation commit `8abe2b3055de87b21ab884b45d5ed33a33ec90a8` was pushed to `origin/p1-t15-r03-automation-readback-diagnostic`; remote-tracking HEAD matched and the working tree was clean after push.
 
-R03 synthetic mock tests exercise deterministic field projection, missing/null/wrong-type/value mismatch distinctions, bounded identifier semantics, optional-field behavior, parity with the pre-R03 exactConfig predicate across synthetic shape variants, multiple independent mismatches, value/PII redaction, default-off behavior, explicit authorization gating, the disabled-read-back failure path, active-create emergency-disable path, cleanup-slot reservation when trigger evidence is unavailable, the nine-request cap, and unresolved cleanup classification. These tests use an injected mock transport only and are not Provider observations.
+R03 synthetic mock tests exercise deterministic field projection, missing/null/wrong-type/value mismatch distinctions, bounded identifier semantics, optional-field behavior, parity with the pre-R03 exactConfig predicate across synthetic shape variants, multiple independent mismatches, value/PII redaction, default-off behavior, explicit authorization gating, matching and mismatching read-back cleanup, active-create and active-read-back immediate DELETE paths with zero PATCH, the minimum seven-request budget, a hard two-request cleanup allowance, the nine-request cap, failed DELETE even when a later GET returns 404, unresolved final GET, and cleanup failure classification. These tests use an injected mock transport only and are not Provider observations.
 
 ### Live execution and safety boundary
 
@@ -3352,3 +3352,50 @@ R03 synthetic mock tests exercise deterministic field projection, missing/null/w
 ### R03 conclusion / remaining blocker
 
 The diagnostic implementation is ready for Team Leader review, but the actual R02 read-back mismatch remains unresolved because live field-level evidence is unavailable and no R03 live authorization was issued. No Provider capability state is promoted. Stop here pending review and, if desired, explicit separate authorization for the single bounded R03 live diagnostic. Do not start R04.
+
+
+## P1-T15-R03-RFIX — Diagnostic-Only Execution and Reserved Cleanup
+
+Status: `IMPLEMENTED OFFLINE / RESUBMITTED FOR TEAM LEADER REVIEW`. This section supersedes the initial R03 implementation details above. The Team Leader rejection identified two blockers: R03 could reach the lifecycle enable/disable PATCH path, and the 9-request ceiling did not reserve cleanup requests on the normal path.
+
+### Enforcement changes
+
+- R03 now calls the separate `runP1T15ReadbackDiagnostic` execution mode. The ordinary `runP1T15` entrypoint retains lifecycle behavior for its already-scoped task; R03 does not call it.
+- The shared internal request sender enforces the execution mode: any PATCH is rejected with `SAFETY_R03_PATCH_FORBIDDEN`; DELETE is rejected until cleanup explicitly starts; once cleanup starts, only the exact automation DELETE and exact automation-detail GET are allowed. The cleanup phase permits at most two requests.
+- R03's total request budget is capped at 9. A requested budget below 7 returns `BLOCKED` before transport. Before cleanup starts, no more than `maxRequests - 2` requests can be sent. At the minimum budget of 7, the standard path is identity GET, account GET, frozen-post GET, one create POST, one configuration read-back GET, then exact DELETE and final GET.
+- A create response reporting `isActive=true` takes the immediate exact-resource DELETE/final-read path; it never PATCHes and never reports diagnostic PASS. A read-back reporting active state likewise fails and cleans up without PATCH.
+- For the ordinary successful diagnostic, PASS requires a passing exact-config projection, read-back `isActive=false`, a successful 2xx DELETE, and final GET `404`. A failed DELETE remains `CLEANUP_UNSAFE_OR_UNKNOWN` even if a later GET returns 404; the evidence records `residualState=UNKNOWN`. A final GET with a non-404/200 status or a transport error remains unresolved and fails.
+- If create returns success without an addressable automation ID, R03 fails with `CLEANUP_UNSAFE_OR_UNKNOWN`; it does not claim absence or success. An uncertain create transport outcome without an ID is also classified as cleanup unknown.
+- R03's RUN_STARTED evidence omits the raw automation name and keyword; the field-level projection never contains raw field values, the DM message, commenter/recipient data, or arbitrary response fields. The create body and all frozen target constants remain unchanged.
+
+### Required offline verification
+
+Focused command:
+
+```text
+npm test -- tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts tests/provider-spike/p1-t15-r03.test.ts
+65 passed / 0 failed across 3 files
+```
+
+Full suite:
+
+```text
+npm test
+703 passed / 0 failed across 30 files
+```
+
+Additional gates: `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS. Post-commit `git show --format= --check HEAD`, final branch/remote SHAs, push result, and clean-tree state are recorded after commit below.
+
+R03 mock coverage now explicitly proves: matching configuration never PATCHes and only passes after DELETE plus final 404; mismatch logs the safe projection before cleanup; active create/read-back paths never PATCH; budget 6 blocks before any request; budget 7 preserves both cleanup slots; failed DELETE cannot claim absence even if final GET returns 404; unresolved final GET cannot pass; create-success-without-ID fails without claiming cleanup; and the frozen create body is unchanged. All tests use an injected mock transport.
+
+### Live/provider boundary
+
+- Live R03 authorization: **NOT ISSUED**.
+- CLI gate smoke test: `npm run p1-t15-r03 -- --live` with `P1_T15_R03_LIVE_AUTHORIZED` unset returned `R03_LIVE_AUTHORIZATION_REQUIRED`, exit code `2`, and `providerRequests=0`.
+- Actual Zernio requests: `0`.
+- Actual create / PATCH / DELETE: `0 / 0 / 0`.
+- Actual comments / DMs / conversations / Ads / media / webhook mutations: `0`.
+- No R02 rerun or R02 evidence modification occurred.
+- No trigger traffic, DM, lifecycle enable, P1-T14 request, or R04 work occurred.
+
+Canonical state remains `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. The implementation is resubmitted for Team Leader review only; no live authorization is implied.

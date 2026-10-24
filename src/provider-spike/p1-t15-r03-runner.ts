@@ -3,7 +3,7 @@ import { dirname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
   parseP1T15Args,
-  runP1T15,
+  runP1T15ReadbackDiagnostic,
   type P1T15Journal,
   type P1T15RunOptions,
   type P1T15RunResult,
@@ -78,7 +78,7 @@ export async function runP1T15R03(options:P1T15R03RunOptions={}):Promise<P1T15Ru
   const {liveAuthorized:_liveAuthorized,...runOptions}=options;
   const requestedMax=runOptions.maxRequests;
   const boundedMax=typeof requestedMax==='number'&&Number.isFinite(requestedMax)?Math.min(9,Math.max(1,Math.trunc(requestedMax))):9;
-  return runP1T15({
+  return runP1T15ReadbackDiagnostic({
     ...runOptions,
     maxRequests:boundedMax,
     captureReadbackDiagnostics:true,

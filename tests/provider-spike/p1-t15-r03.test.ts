@@ -13,6 +13,7 @@ import {
   P1_T15_POST_SHA256,
   P1_T15_PROFILE_ID,
   P1_T15_ZERNIO_POST_ID,
+  p1T15CreateBody,
 } from '../../src/provider-spike/p1-t15-runner.js';
 import { FixedP1T15R03Journal, P1_T15_R03_EVIDENCE_PATH, runP1T15R03 } from '../../src/provider-spike/p1-t15-r03-runner.js';
 import type { P1T15Journal, P1T15Stage } from '../../src/provider-spike/p1-t15-runner.js';
@@ -72,11 +73,12 @@ function referenceExactConfig(a:Obj|null,id:string):boolean{
 const rsp=(status:number,body:unknown,id:string):ProviderTransportResponse=>({status,headers:{'x-request-id':id},body});
 const env=():NodeJS.ProcessEnv=>({ZERNIO_API_KEY:API,ZERNIO_EXPECTED_USER_EMAIL:EMAIL});
 
-type MockOptions={createActive?:boolean;readbackActiveAfterCreate?:boolean;missingTriggerEvidence?:boolean;readbackMismatch?:string|null;deleteStatus?:number};
+type MockOptions={createActive?:boolean;createWithoutId?:boolean;readbackActiveAfterCreate?:boolean;missingTriggerEvidence?:boolean;readbackMismatch?:string|null;deleteStatus?:number;deleteRemovesDespiteFailure?:boolean;finalGetStatus?:number};
 function mockProvider(options:MockOptions={}){
   const requests:ProviderTransportRequest[]=[];
   let exists=false;
   let active=false;
+  let deleteAttempted=false;
   let automation=baseAutomation();
   const postBody=()=>({_id:P1_T15_ZERNIO_POST_ID,content:P1_T15_POST_CONTENT,status:'published',platforms:[{platform:'facebook',accountId:P1_T15_ACCOUNT_ID,status:'published',platformPostId:P1_T15_PLATFORM_POST_ID,platformSpecificData:{pageId:P1_T15_PAGE_ID}}]});
   const transport:ProviderTransport={kind:'mock',send:vi.fn(async(request)=>{
@@ -91,9 +93,12 @@ function mockProvider(options:MockOptions={}){
       exists=true;
       active=options.createActive===true;
       automation={...baseAutomation(),isActive:active};
-      return rsp(200,{success:true,automation},'create-r03');
+      const created:Obj={...automation};
+      if(options.createWithoutId)delete created.id;
+      return rsp(200,{success:true,automation:created},'create-r03');
     }
     if(method==='GET'&&path===`/v1/comment-automations/${AUTO}`){
+      if(deleteAttempted&&options.finalGetStatus!==undefined)return rsp(options.finalGetStatus,{error:'synthetic final read-back unavailable'},'final-get-r03');
       if(!exists)return rsp(404,{error:'Not found'},'absent-r03');
       const detailReadCount=requests.filter(x=>x.method==='GET'&&x.url===`/v1/comment-automations/${AUTO}`).length;
       const current:Obj={...automation,isActive:options.readbackActiveAfterCreate&&detailReadCount===1?true:active,stats:{totalTriggered:0,totalSent:0,totalFailed:0},logs:[]};
@@ -110,8 +115,9 @@ function mockProvider(options:MockOptions={}){
       return rsp(200,{success:true,automation},'patch-r03');
     }
     if(method==='DELETE'&&path===`/v1/comment-automations/${AUTO}`){
+      deleteAttempted=true;
       const status=options.deleteStatus??200;
-      if(status>=200&&status<300)exists=false;
+      if((status>=200&&status<300)||options.deleteRemovesDespiteFailure)exists=false;
       return rsp(status,status===200?{success:true}:{error:'delete failed'},'delete-r03');
     }
     throw new Error(`UNEXPECTED_MOCK_REQUEST:${method}:${path}`);
@@ -276,6 +282,30 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
     expect(journal.initialized).toBe(false);
   });
 
+  it('R03-10a matching read-back uses no PATCH, reserves cleanup slots, and only passes after DELETE plus final 404',async()=>{
+    const provider=mockProvider();
+    const journal=new MemoryJournal();
+    const result=await runP1T15R03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal,maxRequests:7});
+    expect(result.result).toBe('PASS');
+    expect(result.classification).toBe('COMMENT_AUTOMATION_READBACK_DIAGNOSTIC_COMPLETED');
+    expect(result.errorCategory).toBeNull();
+    expect(result.cleanup).toBe('CLEANUP_VERIFIED');
+    expect(result.counters).toMatchObject({providerRequests:7,creates:1,enablePatches:0,disablePatches:0,deletes:1,retries:0});
+    expect(result.requests).toHaveLength(7);
+    expect(provider.requests.some(r=>r.method==='PATCH')).toBe(false);
+    expect(provider.requests.at(-3)?.method).toBe('GET');
+    expect(provider.requests.at(-2)?.method).toBe('DELETE');
+    expect(provider.requests.at(-1)?.method).toBe('GET');
+    expect(provider.requests.at(-1)?.url).toBe(`/v1/comment-automations/${AUTO}`);
+    expect(provider.exists).toBe(false);
+    expect(provider.requests.find(r=>r.method==='POST')?.body).toEqual(p1T15CreateBody());
+    expect(journal.rows.find(row=>row.stage==='CLEANUP_COMPLETED')).toMatchObject({deleteStatus:200,finalGetStatus:404,residualState:'ABSENT'});
+    expect(journal.rows.findIndex(row=>row.stage==='READBACK_DIAGNOSTIC_CAPTURED')).toBeLessThan(journal.rows.findIndex(row=>row.stage==='CLEANUP_COMPLETED'));
+    const evidence=JSON.stringify(journal.rows);
+    for(const value of [P1_T15_DM_MESSAGE,P1_T15_KEYWORD,P1_T15_AUTOMATION_NAME,API,EMAIL])expect(evidence).not.toContain(value);
+    expect(result.counters.providerRequests).toBeLessThanOrEqual(7);
+  });
+
   it('R03-10 synthetic mock read-back mismatch captures only safe field-level diagnostics and cleans up',async()=>{
     const provider=mockProvider({readbackMismatch:'name'});
     const journal=new MemoryJournal();
@@ -291,6 +321,7 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
     expect((diagnostic?.diagnostic as ReturnType<typeof diag>).accepted).toBe(false);
     expect(field(diagnostic?.diagnostic as ReturnType<typeof diag>,'name')).toMatchObject({accepted:false,mismatchCategory:'VALUE_MISMATCH'});
     expect(journal.rows.map(row=>row.stage)).toContain('CLEANUP_COMPLETED');
+    expect(journal.rows.findIndex(row=>row.stage==='READBACK_DIAGNOSTIC_CAPTURED')).toBeLessThan(journal.rows.findIndex(row=>row.stage==='CLEANUP_COMPLETED'));
     const serialized=JSON.stringify(journal.rows);
     expect(serialized).not.toContain('R03_SYNTHETIC_MISMATCH_SENTINEL');
     expect(serialized).not.toContain(P1_T15_DM_MESSAGE);
@@ -301,34 +332,58 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
     expect(provider.requests.some(r=>(r.url??'').includes('/logs'))).toBe(false);
   });
 
-  it('R03-11 active create response takes only emergency-disable path and remains under nine requests',async()=>{
+  it('R03-10b successful create without an addressable ID fails with cleanup UNKNOWN, never PASS',async()=>{
+    const provider=mockProvider({createWithoutId:true});
+    const journal=new MemoryJournal();
+    const result=await runP1T15R03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal,maxRequests:7});
+    expect(result.result).toBe('FAIL');
+    expect(result.errorCategory).toBe('SAFETY_CREATE_SUCCEEDED_WITHOUT_AUTOMATION_ID');
+    expect(result.cleanup).toBe('CLEANUP_UNSAFE_OR_UNKNOWN');
+    expect(result.counters.providerRequests).toBe(4);
+    expect(provider.requests.some(r=>r.method==='PATCH'||r.method==='DELETE')).toBe(false);
+    expect(provider.exists).toBe(true);
+    expect(journal.rows.some(row=>row.stage==='CLEANUP_COMPLETED'&&row.residualState==='ABSENT')).toBe(false);
+  });
+
+  it('R03-11 active create response performs immediate DELETE/final read-back and never PATCHes',async()=>{
     const provider=mockProvider({createActive:true});
     const journal=new MemoryJournal();
     const result=await runP1T15R03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal,maxRequests:99});
-    expect(result.classification).toBe('COMMENT_AUTOMATION_CREATE_DISABLED_NOT_HONORED');
-    expect(result.result).toBe('PASS');
+    expect(result.classification).toBe('NATIVE_AUTOMATION_SAFETY_FAILURE');
+    expect(result.result).toBe('FAIL');
+    expect(result.errorCategory).toBe('R03_CREATE_RESPONSE_ACTIVE');
     expect(result.cleanup).toBe('CLEANUP_VERIFIED');
-    expect(result.counters).toMatchObject({providerRequests:8,creates:1,enablePatches:0,disablePatches:1,deletes:1,retries:0});
+    expect(result.counters).toMatchObject({providerRequests:6,creates:1,enablePatches:0,disablePatches:0,deletes:1,retries:0});
     expect(result.counters.providerRequests).toBeLessThanOrEqual(9);
-    expect(provider.requests.filter(r=>r.method==='PATCH')).toHaveLength(1);
-    expect((provider.requests.find(r=>r.method==='PATCH')?.body as Obj).isActive).toBe(false);
+    expect(provider.requests.some(r=>r.method==='PATCH')).toBe(false);
+    expect(provider.requests.at(-2)?.method).toBe('DELETE');
+    expect(provider.requests.at(-1)?.method).toBe('GET');
+    expect(provider.exists).toBe(false);
   });
 
-  it('R03-11a budget reserves cleanup when immediate-active read-back has no trigger evidence',async()=>{
+  it('R03-11a active read-back is rejected and cleaned up without any PATCH',async()=>{
     const provider=mockProvider({readbackActiveAfterCreate:true,missingTriggerEvidence:true});
     const journal=new MemoryJournal();
     const result=await runP1T15R03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal,maxRequests:99});
-    expect(result.classification).toBe('NATIVE_AUTOMATION_STATE_TRANSITION_BLOCKED');
-    expect(result.result).toBe('BLOCKED');
-    expect(result.errorCategory).toBe('NO_TRIGGER_EVIDENCE_UNAVAILABLE');
-    expect(result.finalDisabledState).toBe(true);
+    expect(result.classification).toBe('NATIVE_AUTOMATION_SAFETY_FAILURE');
+    expect(result.result).toBe('FAIL');
+    expect(result.errorCategory).toBe('R03_READBACK_ACTIVE');
     expect(result.cleanup).toBe('CLEANUP_VERIFIED');
-    expect(result.counters).toMatchObject({providerRequests:9,creates:1,enablePatches:0,disablePatches:1,deletes:1,retries:0});
-    expect(provider.requests).toHaveLength(9);
-    expect(provider.requests.some(r=>(r.url??'').includes('/logs'))).toBe(false);
+    expect(result.counters).toMatchObject({providerRequests:7,creates:1,enablePatches:0,disablePatches:0,deletes:1,retries:0});
+    expect(provider.requests).toHaveLength(7);
+    expect(provider.requests.some(r=>r.method==='PATCH')).toBe(false);
     expect(provider.requests.at(-2)?.method).toBe('DELETE');
     expect(provider.requests.at(-1)?.method).toBe('GET');
-    expect(journal.rows.some(row=>row.stage==='NO_TRIGGER_VERIFIED')).toBe(false);
+    expect(provider.exists).toBe(false);
+  });
+
+  it('R03-11b insufficient caller budget blocks before any request and preserves cleanup reservation',async()=>{
+    const provider=mockProvider();
+    const result=await runP1T15R03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal:new MemoryJournal(),maxRequests:6});
+    expect(result.result).toBe('BLOCKED');
+    expect(result.errorCategory).toBe('R03_REQUEST_BUDGET_INSUFFICIENT_FOR_CLEANUP_RESERVATION');
+    expect(result.counters.providerRequests).toBe(0);
+    expect(provider.requests).toHaveLength(0);
   });
 
   it('R03-12 cleanup uncertainty is not misreported as verified',async()=>{
@@ -340,6 +395,31 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
     expect(result.result).toBe('FAIL');
     expect(result.counters.providerRequests).toBeLessThanOrEqual(9);
     expect(journal.rows.some(row=>row.stage==='CLEANUP_COMPLETED'&&(row.residualState==='ABSENT'||row.residualState==='DISABLED'))).toBe(false);
+  });
+
+  it('R03-12a successful DELETE with unresolved final read-back never claims absence or success',async()=>{
+    const provider=mockProvider({finalGetStatus:503});
+    const journal=new MemoryJournal();
+    const result=await runP1T15R03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal,maxRequests:7});
+    expect(result.result).toBe('FAIL');
+    expect(result.cleanup).toBe('CLEANUP_UNSAFE_OR_UNKNOWN');
+    expect(result.errorCategory).toBe('R03_CLEANUP_FINAL_READBACK_UNRESOLVED');
+    expect(result.counters.providerRequests).toBe(7);
+    expect(provider.requests.some(r=>r.method==='PATCH')).toBe(false);
+    expect(journal.rows.some(row=>row.stage==='CLEANUP_COMPLETED'&&row.residualState==='ABSENT')).toBe(false);
+    expect(journal.rows.find(row=>row.stage==='CLEANUP_COMPLETED')).toMatchObject({deleteStatus:200,finalGetStatus:503,residualState:'UNKNOWN'});
+  });
+
+  it('R03-12b failed DELETE cannot claim absence even when a later GET returns 404',async()=>{
+    const provider=mockProvider({readbackMismatch:'name',deleteStatus:500,deleteRemovesDespiteFailure:true});
+    const journal=new MemoryJournal();
+    const result=await runP1T15R03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal,maxRequests:7});
+    expect(result.result).toBe('FAIL');
+    expect(result.cleanup).toBe('CLEANUP_UNSAFE_OR_UNKNOWN');
+    expect(result.errorCategory).toBe('R03_CLEANUP_DELETE_FAILED');
+    expect(result.counters.providerRequests).toBe(7);
+    expect(journal.rows.some(row=>row.stage==='CLEANUP_COMPLETED'&&row.residualState==='ABSENT')).toBe(false);
+    expect(journal.rows.find(row=>row.stage==='CLEANUP_COMPLETED')).toMatchObject({deleteStatus:500,finalGetStatus:404,residualState:'UNKNOWN',deleteFailed:true});
   });
 
   it('R03-13 fixed journal refuses secrets and private fields before persistence',async()=>{

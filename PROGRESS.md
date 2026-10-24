@@ -4780,3 +4780,29 @@ Live authorization: `NOT ISSUED`. CLI gate smoke test `npm run p1-t15-r03 -- --l
 Safety/cleanup: synthetic disabled-read-back mismatch path verifies the projection and exact-resource cleanup in mock tests; synthetic active-create path exercises emergency disable and remains within 9 mock requests; a synthetic failed cleanup is classified unresolved. These are test evidence only, not real Provider cleanup evidence.
 
 Canonical states remain unchanged: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`. R03 stops here for Team Leader review. No live diagnostic will run without explicit independent authorization.
+
+
+## P1-T15-R03 — Team Leader Rejection Remediation
+
+Current task remains `P1-T15-R03 — Diagnose Exact Comment Automation Read-back Contract`. This is a repair of the rejected R03 implementation, not a new task and not authorization for live execution.
+
+Team Leader decision on the prior R03 implementation: `REJECTED — FIX REQUIRED` for two blocking defects: R03 could reach the lifecycle enable/disable PATCH path, and the request budget did not reserve cleanup on the successful configuration-read-back path.
+
+Repair implemented on the same branch, `p1-t15-r03-automation-readback-diagnostic`:
+- Added the dedicated `runP1T15ReadbackDiagnostic` mode and routed R03 to it instead of the normal lifecycle entrypoint.
+- Enforced a hard no-PATCH guard inside the request sender for diagnostic mode.
+- Enforced DELETE-only-after-cleanup-start, an exact-target cleanup-only phase, and a maximum of two cleanup requests.
+- Capped total requests at 9; budgets below 7 block before transport; non-cleanup requests cannot consume the final two reserved slots.
+- Matching read-back only returns PASS after exact DELETE succeeds and final GET returns 404. DELETE failure remains unknown even if final GET later returns 404; unresolved final GET also fails. Successful create without an addressable ID fails with cleanup unknown.
+- Kept frozen target constants and create body unchanged. R03 journal omits raw automation name/keyword, and diagnostics never persist raw configuration values, DM content, or person data.
+
+Offline results before closeout commit:
+- Focused command `npm test -- tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts tests/provider-spike/p1-t15-r03.test.ts`: `65 / 65 PASS` across 3 files.
+- Full `npm test`: `703 / 703 PASS` across 30 files.
+- `npm run typecheck`: PASS.
+- `npm run build`: PASS.
+- `git diff --check`: PASS.
+
+Safety boundary: no live authorization was issued. CLI gate rerun `npm run p1-t15-r03 -- --live` with `P1_T15_R03_LIVE_AUTHORIZED` unset returned `R03_LIVE_AUTHORIZATION_REQUIRED`, exit code `2`, and `providerRequests=0`. All execution-path tests used injected mock transport. Actual Provider requests `0`; actual create/PATCH/DELETE `0 / 0 / 0`; comments/DMs/conversations/Ads/media/webhook mutations `0`. No R02 rerun or evidence modification occurred. No P1-T14 request and no R04 or later task was started.
+
+Repair status: `IMPLEMENTED OFFLINE / RESUBMITTED FOR TEAM LEADER REVIEW`. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; canonical Comment-to-DM and delayed DM/reply states remain `SPIKE_PENDING`. Live diagnostic execution remains blocked pending a separate explicit authorization after review.

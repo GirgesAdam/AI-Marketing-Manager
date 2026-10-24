@@ -3506,7 +3506,7 @@ The exact frozen-post parser remediation is proven by offline regressions and su
 
 ## P1-T15-R03 — Exact Comment Automation Read-back Diagnostic
 
-Status: `IMPLEMENTED OFFLINE / AWAITING TEAM LEADER REVIEW`. No live Provider authorization or invocation occurred.
+Status: `REJECTION REMEDIATION IMPLEMENTED OFFLINE / RESUBMITTED FOR TEAM LEADER REVIEW`. The prior R03 version was rejected for lifecycle enable/PATCH reachability and non-reserved cleanup budget; this revision enforces a separate diagnostic-only mode. No live Provider authorization or invocation occurred.
 
 | Test ID | Coverage | Result |
 |---|---|---|
@@ -3522,22 +3522,28 @@ Status: `IMPLEMENTED OFFLINE / AWAITING TEAM LEADER REVIEW`. No live Provider au
 | R03-08 | Missing/non-object automation envelope fails closed | PASS |
 | R03-09a | Default execution remains offline with zero transport calls | PASS |
 | R03-09 | `live=true` without explicit R03 authorization blocks before transport | PASS |
-| R03-10 | Synthetic disabled read-back mismatch records safe field-level projection and exact cleanup | PASS |
-| R03-11 | Synthetic active-create response uses only emergency disable and remains within 9 requests | PASS |
-| R03-11a | Immediate-active read-back with missing trigger evidence reserves DELETE/final GET, returns BLOCKED, and stays within 9 requests | PASS |
-| R03-12 | Cleanup uncertainty is never reported as verified | PASS |
+| R03-10a | Matching read-back performs no PATCH and passes only after exact DELETE plus final GET 404; minimum budget 7 reserves the final two slots | PASS |
+| R03-10 | Synthetic disabled read-back mismatch records safe field-level projection, performs no PATCH, then cleans up exact resource | PASS |
+| R03-10b | Successful create without an addressable ID fails with cleanup UNKNOWN and never claims absence | PASS |
+| R03-11 | Active create response is rejected and immediately DELETEd; no PATCH; final GET verifies absence | PASS |
+| R03-11a | Active read-back is rejected and cleaned up without any PATCH | PASS |
+| R03-11b | Caller budget below 7 blocks before any request; no cleanup slot can be borrowed | PASS |
+| R03-12 | HTTP DELETE failure remains unresolved and is never reported as verified | PASS |
+| R03-12a | Successful DELETE with unresolved final GET remains unresolved | PASS |
+| R03-12b | Failed DELETE does not claim absence even when a later GET returns 404 | PASS |
 | R03-13 | Fixed R03 journal rejects credential and private-field material before persistence | PASS |
 | R03-14 (manual CLI gate) | `npm run p1-t15-r03 -- --live` without the task authorization marker returns `R03_LIVE_AUTHORIZATION_REQUIRED`, exit code 2, and zero Provider requests | PASS |
+| R03-15 (repair CLI gate rerun) | Re-ran the live CLI entry with `P1_T15_R03_LIVE_AUTHORIZED` unset; result `R03_LIVE_AUTHORIZATION_REQUIRED`, exit code 2, `providerRequests=0` | PASS |
 | Regression | All previously accepted P1-T15 and R02 safety tests | PASS |
 
 ### Exact executed commands
 
 ```text
 npm test -- tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts tests/provider-spike/p1-t15-r03.test.ts
-60 passed / 0 failed across 3 files
+65 passed / 0 failed across 3 files
 
 npm test
-698 passed / 0 failed across 30 files
+703 passed / 0 failed across 30 files
 
 npm run typecheck
 PASS
