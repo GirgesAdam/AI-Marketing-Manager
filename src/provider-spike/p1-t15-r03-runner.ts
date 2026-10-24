@@ -3,8 +3,9 @@ import { dirname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
   parseP1T15Args,
+  P1_T15_R03_JOURNAL_BRAND,
   runP1T15ReadbackDiagnostic,
-  type P1T15Journal,
+  type P1T15R03Journal,
   type P1T15RunOptions,
   type P1T15RunResult,
   type P1T15Stage,
@@ -15,8 +16,8 @@ export const P1_T15_R03_EVIDENCE_PATH='artifacts/provider-spike/p1-t15-r03-evide
 type Obj=Record<string,unknown>;
 export interface P1T15R03RunOptions extends P1T15RunOptions {
   /**
-   * Explicit task-specific live authorization. The CLI derives this only from
-   * P1_T15_R03_LIVE_AUTHORIZED=true after Team Leader authorization.
+   * Legacy compatibility field only. It is never an authorization source;
+   * real R03 live execution requires process.env.P1_T15_R03_LIVE_AUTHORIZED=true.
    */
   liveAuthorized?: boolean;
 }
@@ -26,7 +27,8 @@ function sensitive(serialized:string,forbidden:string[]){
     || forbidden.filter(Boolean).some(value=>serialized.includes(value));
 }
 
-export class FixedP1T15R03Journal implements P1T15Journal{
+export class FixedP1T15R03Journal implements P1T15R03Journal{
+  readonly [P1_T15_R03_JOURNAL_BRAND]='fixed' as const;
   private sequence=0;
   async initialize(forbidden:string[]){
     await mkdir(dirname(P1_T15_R03_EVIDENCE_PATH),{recursive:true});
@@ -74,7 +76,7 @@ function authorizationBlocked():P1T15RunResult{
 }
 
 export async function runP1T15R03(options:P1T15R03RunOptions={}):Promise<P1T15RunResult>{
-  if(options.live===true&&options.liveAuthorized!==true)return authorizationBlocked();
+  if(options.live===true&&process.env.P1_T15_R03_LIVE_AUTHORIZED?.trim()!=='true')return authorizationBlocked();
   const {liveAuthorized:_liveAuthorized,...runOptions}=options;
   const requestedMax=runOptions.maxRequests;
   const boundedMax=typeof requestedMax==='number'&&Number.isFinite(requestedMax)?Math.min(9,Math.max(1,Math.trunc(requestedMax))):9;
@@ -93,8 +95,7 @@ async function main(){
     process.exitCode=2;
     return;
   }
-  const liveAuthorized=process.env.P1_T15_R03_LIVE_AUTHORIZED?.trim()==='true';
-  const result=await runP1T15R03({live:parsed.live,liveAuthorized,env:process.env});
+  const result=await runP1T15R03({live:parsed.live,env:process.env});
   console.log(JSON.stringify(result,null,2));
   process.exitCode=result.result==='PASS'?0:result.result==='FAIL'?1:2;
 }
