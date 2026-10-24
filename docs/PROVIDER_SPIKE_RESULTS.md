@@ -3399,3 +3399,53 @@ R03 mock coverage now explicitly proves: matching configuration never PATCHes an
 - No trigger traffic, DM, lifecycle enable, P1-T14 request, or R04 work occurred.
 
 Canonical state remains `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. The implementation is resubmitted for Team Leader review only; no live authorization is implied.
+
+
+## P1-T15-R03-RFIX2 — Execution-Boundary Authorization & Evidence Isolation
+
+Status: `IMPLEMENTED OFFLINE / RESUBMITTED FOR TEAM LEADER REVIEW`. This section supersedes the R03-RFIX execution-boundary authorization and journal handling. It does not replace or convert the historical rejection record into acceptance.
+
+### Root cause
+
+The prior R03 wrapper treated caller-provided `liveAuthorized` as the authorization gate, but the exported `runP1T15ReadbackDiagnostic` could be called directly. The shared diagnostic path also inherited the generic `FixedP1T15Journal` fallback when no journal was supplied. A caller could therefore bypass the wrapper or allow R03 evidence to route to the parent P1-T15 journal.
+
+### Enforcement
+
+- Both the R03 wrapper and the shared diagnostic execution boundary require actual process-level `P1_T15_R03_LIVE_AUTHORIZED=true` for `live=true`. The shared check is before live transport construction, evidence initialization, and Provider requests. Caller-provided `liveAuthorized` and an authorization value present only in injected `options.env` are not authoritative.
+- The diagnostic core has no generic-journal fallback. Missing R03 journal returns `BLOCKED / R03_JOURNAL_REQUIRED`; an unscoped journal returns `BLOCKED / SAFETY_R03_JOURNAL_SCOPE_INVALID`, before journal initialization or transport calls.
+- Added a dedicated R03 journal brand. The fixed R03 journal is marked `fixed`; injected in-memory journals are marked `test-memory` and accepted only with a transport whose kind is `mock`. Test-memory journals are rejected for live-kind transports. The normal R03 wrapper supplies `FixedP1T15R03Journal`; the parent lifecycle runner is unchanged.
+- R03's existing diagnostic-only controls remain unchanged: no PATCH, DELETE only after cleanup starts, request ceiling 9, budget below 7 blocks before requests, final two request slots reserved for DELETE/final GET, and PASS requires successful DELETE plus final GET 404. Frozen target and exact create body remain unchanged.
+
+### Offline verification
+
+Focused command:
+
+```text
+npm test -- tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts tests/provider-spike/p1-t15-r03.test.ts
+exit code: 0
+73 passed / 0 failed across 3 files; skipped: 0
+```
+
+Full suite:
+
+```text
+npm test
+exit code: 0
+711 passed / 0 failed across 30 files; skipped: 0
+```
+
+Additional commands and results, after the final implementation changes:
+- `npm run typecheck` — exit code 0, PASS.
+- `npm run build` — exit code 0, PASS.
+- `git diff --check` — exit code 0, PASS.
+- `git show --format= --check HEAD` — exit code 0, PASS at implementation commit.
+
+Implementation commit: `17d9e1e2f5de8504e17c3dd857d5504f62d29fda`.
+
+New tests: AUTH-01 direct diagnostic authorization; AUTH-02 caller-controlled boolean rejection; AUTH-03 injected-env authorization rejection; AUTH-04 authorized direct diagnostic with mock transport; JOURNAL-01 missing-journal fail-closed; JOURNAL-02 generic parent journal rejected before init/transport; JOURNAL-02b test-memory journal rejected for live-kind transport; JOURNAL-03 default R03 journal isolation. Existing R03 cleanup/configuration/privacy tests and parent P1-T15/R02 regressions remain green.
+
+### Live Provider boundary
+
+No live R03 CLI command was run. The process authorization variable was absent in the execution shell; tests set it only within isolated mock-test helpers and restore its prior value in `finally`. No real Provider request or external mutation occurred: Provider requests `0`; create/PATCH/DELETE `0 / 0 / 0`; comments/DMs/conversations/Ads/media/webhook mutations `0`. All transport execution tests used injected mocks. R02 and its preserved evidence were not touched; no P1-T14 request, trigger traffic, DM, R04, or later task occurred.
+
+Canonical states remain unchanged: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. No acceptance or live authorization is implied.

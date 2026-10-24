@@ -4808,3 +4808,50 @@ Offline results from the final pre-commit verification run:
 Safety boundary: no live authorization was issued. CLI gate rerun `npm run p1-t15-r03 -- --live` with `P1_T15_R03_LIVE_AUTHORIZED` unset returned `R03_LIVE_AUTHORIZATION_REQUIRED`, exit code `2`, and `providerRequests=0`. All execution-path tests used injected mock transport. Actual Provider requests `0`; actual create/PATCH/DELETE `0 / 0 / 0`; comments/DMs/conversations/Ads/media/webhook mutations `0`. No R02 rerun or evidence modification occurred. No P1-T14 request and no R04 or later task was started.
 
 Repair status: `IMPLEMENTED OFFLINE / RESUBMITTED FOR TEAM LEADER REVIEW`. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; canonical Comment-to-DM and delayed DM/reply states remain `SPIKE_PENDING`. Live diagnostic execution remains blocked pending a separate explicit authorization after review.
+
+
+## P1-T15-R03-RFIX2 — Execution-Boundary Authorization & Evidence Isolation
+
+Status: `IMPLEMENTED OFFLINE / RESUBMITTED FOR TEAM LEADER REVIEW`. This is rework of the current R03 task, not a successor. Starting HEAD: `184ed042d00a9e11a539f71c975fbe75854f01bd`. Branch remains `p1-t15-r03-automation-readback-diagnostic`.
+
+### Confirmed root causes and implementation
+
+- The previous wrapper trusted `liveAuthorized`, while direct callers could invoke `runP1T15ReadbackDiagnostic` without the wrapper. The shared diagnostic execution boundary now independently requires the actual `process.env.P1_T15_R03_LIVE_AUTHORIZED?.trim() === 'true'` whenever `live=true`. It checks this before journal initialization, live transport construction, or Provider calls.
+- `options.env` and caller-provided `liveAuthorized` do not grant authorization. The wrapper also checks the process-level gate; its legacy `liveAuthorized` field is retained only for compatibility and is ignored as an authority source.
+- The diagnostic core no longer falls back to `FixedP1T15Journal`. It rejects a missing R03 journal and rejects an unscoped/generic parent journal before transport creation or journal initialization.
+- Added a journal scope brand with two explicit cases: `fixed` for the dedicated `FixedP1T15R03Journal`, and `test-memory` for injected in-memory regression journals. A test-memory journal is accepted only when the injected transport declares `kind: 'mock'`; it is rejected for a live-kind transport. The default R03 wrapper supplies the dedicated fixed R03 journal. The ordinary parent `runP1T15` lifecycle entry point and its journal behavior remain unchanged.
+- Existing R03 diagnostic protections remain enforced: zero PATCH in diagnostic mode, DELETE only after cleanup begins, at most 9 Provider requests, budgets below 7 blocked before requests, two cleanup slots reserved, and PASS requires successful DELETE plus final GET 404. Frozen target constants and exact create body are unchanged.
+
+### New regression coverage
+
+- `AUTH-01`: direct diagnostic call without process authorization blocks before transport/journal initialization and creates no R03 evidence artifact.
+- `AUTH-02`: `liveAuthorized: true` cannot grant authorization.
+- `AUTH-03`: an authorization value present only in injected `options.env` cannot grant authorization.
+- `AUTH-04`: process authorization permits the intended direct diagnostic path with an injected mock transport; the helper restores the previous process environment in `finally`.
+- `JOURNAL-01`: direct diagnostic call with no journal blocks without fallback.
+- `JOURNAL-02`: the generic parent journal is rejected before initialization or transport calls.
+- `JOURNAL-02b`: a test-memory journal is rejected for a live-kind transport.
+- `JOURNAL-03`: the default R03 wrapper uses its dedicated R03 evidence journal and does not call the generic parent journal.
+- Existing R03 sanitizer/PII tests and parent P1-T15/R02 regression tests remain green.
+
+### Exact offline verification
+
+All commands below completed successfully after the final implementation changes and before the implementation commit. No test was skipped in the reported Vitest summaries.
+
+- `npm test -- tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts tests/provider-spike/p1-t15-r03.test.ts` — exit code `0`; `73 passed / 0 failed` across 3 files; skipped `0`.
+- `npm test` — exit code `0`; `711 passed / 0 failed` across 30 files; skipped `0`.
+- `npm run typecheck` — exit code `0`, PASS.
+- `npm run build` — exit code `0`, PASS.
+- `git diff --check` — exit code `0`, PASS.
+- `git show --format= --check HEAD` — exit code `0`, PASS at implementation commit.
+
+Implementation commit: `17d9e1e2f5de8504e17c3dd857d5504f62d29fda`.
+
+### Live Provider and preservation boundary
+
+- No live R03 CLI command was run, per this Task Contract.
+- No real Provider request or external mutation occurred: Provider requests `0`; create/PATCH/DELETE `0 / 0 / 0`; comments/DMs/conversations/Ads/media/webhook mutations `0`.
+- The process authorization variable was absent in the execution shell; tests set it only inside isolated mock-test helpers and restore the prior value in `finally`. It was not enabled for a real execution.
+- All transport execution tests used injected mocks. R02 was not rerun and its preserved evidence was not altered. No P1-T14 request, trigger traffic, DM, R04, or later task occurred.
+
+The implementation is committed; final documentation commit and push state are recorded in the closeout section below. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. No acceptance or live authorization is implied.

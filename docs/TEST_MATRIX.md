@@ -3553,3 +3553,49 @@ PASS
 ```
 
 The R03 tests that pass an authorization flag use only an injected mock transport. They are offline simulations, not Provider calls or live authorization. Actual R03 Provider requests and mutations: `0`. `git diff --check` and `git show --format= --check HEAD` passed; implementation commit `1339c2765da7a38ef60d764f7b63187e86ac9702` was pushed to `origin/p1-t15-r03-automation-readback-diagnostic`, with matching local/remote-tracking HEAD and clean worktree after push. The final documentation closeout HEAD and clean-tree state are reported in the handoff summary; implementation SHA is recorded in `PROGRESS.md`.
+
+
+## P1-T15-R03-RFIX2 — Execution-Boundary Authorization & Evidence Isolation
+
+Status: `IMPLEMENTED OFFLINE / RESUBMITTED FOR TEAM LEADER REVIEW`. This section is the current rework evidence and does not change the previous Team Leader rejection into acceptance.
+
+| Test ID | Coverage | Result |
+|---|---|---|
+| AUTH-01 | Direct `runP1T15ReadbackDiagnostic` without process authorization blocks before transport/journal initialization and creates no evidence artifact | PASS |
+| AUTH-02 | Wrapper call with `liveAuthorized: true` but no process authorization remains blocked | PASS |
+| AUTH-03 | `P1_T15_R03_LIVE_AUTHORIZED=true` only in injected `options.env` cannot grant authorization | PASS |
+| AUTH-04 | Process authorization allows direct diagnostic execution with mock transport and R03-scoped memory journal; prior process environment restored in `finally` | PASS |
+| JOURNAL-01 | Direct diagnostic without a journal fails closed; no generic fallback, transport request, or evidence artifact | PASS |
+| JOURNAL-02 | Generic `FixedP1T15Journal` supplied to R03 is rejected before initialize/append or transport calls | PASS |
+| JOURNAL-02b | R03 test-memory journal is rejected for a live-kind transport | PASS |
+| JOURNAL-03 | Default R03 entry point writes through `FixedP1T15R03Journal`; parent journal methods are not called | PASS |
+| JOURNAL-04 | Existing R03 secret/private-PII rejection and parent P1-T15/R02 sanitizer regressions remain green | PASS |
+| R03 regression | Matching/mismatching read-back, active create/read-back, request-budget reservation, failed DELETE, unresolved final read-back, exact cleanup, frozen create body, and no-PATCH constraints | PASS |
+
+### Exact commands and results
+
+```text
+npm test -- tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts tests/provider-spike/p1-t15-r03.test.ts
+exit code: 0
+73 passed / 0 failed across 3 files; skipped: 0
+
+npm test
+exit code: 0
+711 passed / 0 failed across 30 files; skipped: 0
+
+npm run typecheck
+exit code: 0 — PASS
+
+npm run build
+exit code: 0 — PASS
+
+git diff --check
+exit code: 0 — PASS
+
+git show --format= --check HEAD
+exit code: 0 — PASS at implementation commit
+```
+
+Implementation commit: `17d9e1e2f5de8504e17c3dd857d5504f62d29fda`. Final documentation commit(s), branch push, remote HEAD equality, and clean worktree are recorded in the closeout entry in `PROGRESS.md`.
+
+The shared diagnostic boundary requires actual process-level `P1_T15_R03_LIVE_AUTHORIZED=true` for live mode, regardless of caller-provided `liveAuthorized` or injected `options.env`. It rejects missing/wrong journal scope before transport creation or evidence initialization. Test-memory R03 journals are accepted only with injected mock transports; the default wrapper uses the fixed R03 journal. No live R03 CLI command was run. Actual Provider requests and external mutations: `0`. R02 evidence remains untouched. P1-T15 remains `UNRESOLVED / FIX REQUIRED`; Comment-to-DM and delayed DM/reply remain `SPIKE_PENDING`.
