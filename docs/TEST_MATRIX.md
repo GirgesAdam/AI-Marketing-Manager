@@ -3599,3 +3599,52 @@ exit code: 0 — PASS at implementation commit
 Implementation commit: `17d9e1e2f5de8504e17c3dd857d5504f62d29fda`. Final documentation commit(s), branch push, remote HEAD equality, and clean worktree are recorded in the closeout entry in `PROGRESS.md`.
 
 The shared diagnostic boundary requires actual process-level `P1_T15_R03_LIVE_AUTHORIZED=true` for live mode, regardless of caller-provided `liveAuthorized` or injected `options.env`. It rejects missing/wrong journal scope before transport creation or evidence initialization. Test-memory R03 journals are accepted only with injected mock transports; the default wrapper uses the fixed R03 journal. No live R03 CLI command was run. Actual Provider requests and external mutations: `0`. R02 evidence remains untouched. P1-T15 remains `UNRESOLVED / FIX REQUIRED`; Comment-to-DM and delayed DM/reply remain `SPIKE_PENDING`.
+
+
+## P1-T15-R03-RFIX3 — Trusted Journal Provenance
+
+Status: `IMPLEMENTED OFFLINE / RESUBMITTED FOR TEAM LEADER REVIEW`. These results are implementation evidence, not Team Leader acceptance.
+
+| Test ID | Coverage | Result |
+|---|---|---|
+| AUTH-01 | Direct diagnostic without process authorization blocks before journal initialization/transport | PASS |
+| AUTH-02 | `liveAuthorized: true` cannot grant authorization | PASS |
+| AUTH-03 | Authorization supplied only via injected `options.env` cannot grant authorization | PASS |
+| AUTH-04 | Actual process authorization permits the direct diagnostic path with mock transport and genuine fixed journal | PASS |
+| JOURNAL-01 | Missing journal fails closed without fallback, evidence file, or Provider call | PASS |
+| JOURNAL-02 | Generic parent journal rejected before initialize/append/transport | PASS |
+| JOURNAL-03 | Default R03 wrapper uses genuine R03 journal, not generic parent journal | PASS |
+| JOURNAL-04 | Fixed journal rejects secrets/private fields before persistence | PASS |
+| JOURNAL-05 | Custom journal with exported `P1_T15_R03_JOURNAL_BRAND = 'fixed'` is rejected before initialize/append/send | PASS |
+| JOURNAL-06 | Test-memory journal with forged `'fixed'` marker rejected for both caller-controlled `mock` and `live` transport kinds | PASS |
+| JOURNAL-07 | Genuine `FixedP1T15R03Journal` accepted; DELETE succeeds and final GET returns 404 | PASS |
+| R03 preservation | No PATCH; cleanup reservation; request cap; fixed target/create body; sanitizer/privacy tests | PASS |
+| P1-T15/R02 regressions | Parent lifecycle and R02 suites preserved | PASS |
+
+### Exact command results
+
+```text
+npm test -- tests/provider-spike/p1-t15-r03.test.ts tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts
+exit code: 0 — 76 passed / 0 failed across 3 files; skipped: 0
+
+npm test
+exit code: 0 — 714 passed / 0 failed across 30 files; skipped: 0
+
+npm run typecheck
+exit code: 0 — PASS
+
+npm run build
+exit code: 0 — PASS
+
+git diff --check
+exit code: 0 — PASS
+
+git show --format= --check HEAD
+exit code: 0 — PASS at implementation commit
+```
+
+Implementation/test commit: `cb9129a6235176ea5d74ffcfdac8d797ba81f995`.
+
+The trust guard uses a private `WeakSet<object>` populated only by the genuine fixed journal constructor in the shared module. The exported marker remains available to construct spoofing regressions but is not read as authority. The fixed journal instance, prototype, and constructor are frozen; subclass construction is rejected. No `transport.kind` value can make a custom journal trusted.
+
+The real process authorization gate is unchanged. No live CLI command was run; every transport used in tests was a mock; real Provider requests and external mutations were zero. R02 evidence was unchanged. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; Comment-to-DM and delayed DM/reply remain `SPIKE_PENDING`.

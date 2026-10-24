@@ -3449,3 +3449,58 @@ New tests: AUTH-01 direct diagnostic authorization; AUTH-02 caller-controlled bo
 No live R03 CLI command was run. The process authorization variable was absent in the execution shell; tests set it only within isolated mock-test helpers and restore its prior value in `finally`. No real Provider request or external mutation occurred: Provider requests `0`; create/PATCH/DELETE `0 / 0 / 0`; comments/DMs/conversations/Ads/media/webhook mutations `0`. All transport execution tests used injected mocks. R02 and its preserved evidence were not touched; no P1-T14 request, trigger traffic, DM, R04, or later task occurred.
 
 Canonical states remain unchanged: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. No acceptance or live authorization is implied.
+
+
+## P1-T15-R03-RFIX3 — Trusted Journal Provenance
+
+Status: `IMPLEMENTED OFFLINE / RESUBMITTED FOR TEAM LEADER REVIEW`. This section records the third limited R03 rework; it does not change the prior Team Leader rejection into acceptance.
+
+### Root cause
+
+The previous implementation accepted a journal when the caller-controlled exported `P1_T15_R03_JOURNAL_BRAND` property equaled `'fixed'`. It also accepted `'test-memory'` when the caller-controlled transport declared `kind: 'mock'`. Neither value proves journal provenance.
+
+### Implementation
+
+- Moved `FixedP1T15R03Journal` and `P1_T15_R03_EVIDENCE_PATH` into `src/provider-spike/p1-t15-runner.ts`, shared with the R03 execution boundary. The wrapper re-exports them and retains the default fixed-journal behavior.
+- A module-private `WeakSet<object>` is now the only journal-trust authority. The genuine fixed-journal constructor registers its own instance. The execution guard checks exact object identity and never uses the exported marker or `transport.kind`.
+- The fixed journal constructor disallows subclass construction and freezes the instance, prototype, and constructor; its evidence path and sensitive-data sanitizer remain fixed.
+- A custom object with the exported marker `'fixed'` is rejected before journal initialization or transport. A test-memory journal with its marker changed to `'fixed'` is rejected for both `kind: 'mock'` and `kind: 'live'`. A missing journal remains fail-closed. The actual fixed R03 journal remains accepted.
+- The process authorization gate remains unchanged and checks actual `process.env.P1_T15_R03_LIVE_AUTHORIZED?.trim() === 'true'` before journal validation, evidence initialization, or transport. Injected `options.env` and `liveAuthorized` cannot grant authorization.
+- The exact target, create body, no-PATCH rule, cleanup reservation, request ceiling, and final DELETE + GET-404 cleanup criterion remain unchanged.
+
+### Exact offline verification
+
+Focused command:
+
+```text
+npm test -- tests/provider-spike/p1-t15-r03.test.ts tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts
+exit code: 0
+76 passed / 0 failed across 3 files; skipped: 0
+```
+
+Full suite:
+
+```text
+npm test
+exit code: 0
+714 passed / 0 failed across 30 files; skipped: 0
+```
+
+Additional gates after final implementation/test changes:
+- `npm run typecheck` — exit code 0, PASS.
+- `npm run build` — exit code 0, PASS.
+- `git diff --check` — exit code 0, PASS.
+- `git show --format= --check HEAD` — exit code 0, PASS at implementation commit.
+
+Implementation/test commit: `cb9129a6235176ea5d74ffcfdac8d797ba81f995`.
+
+### New and preserved regression coverage
+
+- `AUTH-01`–`AUTH-04` all pass.
+- `JOURNAL-01`–`JOURNAL-04` all pass, including generic parent-journal rejection, default R03 isolation, and sensitive-field rejection.
+- `JOURNAL-05` rejects a custom journal with the exported fixed marker.
+- `JOURNAL-06` rejects test-memory marker spoofing regardless of caller-controlled transport kind.
+- `JOURNAL-07` verifies that the genuine fixed R03 journal is accepted and cleanup is verified.
+- All tests used mock transports only. The actual process authorization variable was absent outside test helpers. No live R03 CLI command was run; real Provider requests and external mutations were all zero. R02 evidence was not touched.
+
+Canonical states remain unchanged: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. This rework awaits Team Leader review.

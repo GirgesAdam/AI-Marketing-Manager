@@ -4866,3 +4866,45 @@ The implementation is committed; final documentation commit and push state are r
 - Final worktree status after push: clean.
 - Final safety totals: real Provider requests `0`; external mutations `0`; no live CLI command was run; R02 evidence unchanged.
 - Submission status: `IMPLEMENTED OFFLINE / RESUBMITTED FOR TEAM LEADER REVIEW`. This is not Team Leader acceptance.
+
+
+## P1-T15-R03-RFIX3 — Trusted Journal Provenance
+
+Status: `IMPLEMENTED OFFLINE / RESUBMITTED FOR TEAM LEADER REVIEW`. This is a limited rework of the existing R03 task; no R04 or subsequent task was started. Branch: `p1-t15-r03-automation-readback-diagnostic`. Starting HEAD: `17d2905febc2fa2148f4f7624c5d2ab92d5b567b`.
+
+### Root cause and fix
+
+- The rejected implementation trusted the exported `P1_T15_R03_JOURNAL_BRAND` value `'fixed'` and accepted `'test-memory'` based only on caller-controlled `transport.kind === 'mock'`.
+- Moved `FixedP1T15R03Journal` and its fixed R03 evidence path into the shared `p1-t15-runner.ts` module, where the diagnostic boundary and trusted journal implementation share a private `WeakSet<object>`.
+- Trust is granted only when the genuine fixed journal constructor registers its own instance in that private WeakSet. The guard checks object identity only; it does not read the exported symbol/brand or transport kind.
+- The fixed journal rejects subclass construction, freezes its instance and prototype/constructor, retains the fixed evidence path, and preserves the prior secret/PII sanitizer. The R03 wrapper re-exports the class/path for compatibility and continues to supply the genuine fixed journal by default.
+- Arbitrary custom journals—including ones that copy the exported marker as `'fixed'`, mutate a test-memory journal marker to `'fixed'`, or pair a test-memory journal with a `kind: 'mock'` transport—are rejected before journal initialization or Provider transport. Missing journal still blocks with `R03_JOURNAL_REQUIRED`.
+- The process authorization gate remains exactly `process.env.P1_T15_R03_LIVE_AUTHORIZED?.trim() === 'true'` for diagnostic live mode. `options.env` and `liveAuthorized` remain non-authoritative. The authorization check precedes journal validation/initialization and all transport calls.
+- Existing R03 restrictions remain unchanged: no PATCH; bounded request ceiling 9; minimum budget 7; last two requests reserved for DELETE/final GET; PASS requires successful DELETE and final GET 404. Frozen target and create body remain unchanged.
+
+### Regression evidence
+
+- `AUTH-01`–`AUTH-04`: direct entry point authorization, caller boolean, injected env, and authorized mock-only diagnostic path.
+- `JOURNAL-01`–`JOURNAL-04`: missing journal, generic parent journal, default R03 journal isolation, and sanitizer/private-field rejection.
+- `JOURNAL-05`: custom journal copying the exported `'fixed'` marker is rejected before initialize/append/send.
+- `JOURNAL-06`: test-memory journal whose marker is changed to `'fixed'` is rejected for both caller-declared `mock` and `live` transport kinds.
+- `JOURNAL-07`: genuine `FixedP1T15R03Journal` is accepted with mock transport; cleanup ends with DELETE success and final GET 404.
+- All test transports are mocks. No live R03 CLI command or real Provider request was run.
+
+### Exact offline verification after final code/test changes
+
+- `npm test -- tests/provider-spike/p1-t15-r03.test.ts tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts` — exit code 0; `76 passed / 0 failed` across 3 files; skipped 0.
+- `npm test` — exit code 0; `714 passed / 0 failed` across 30 files; skipped 0.
+- `npm run typecheck` — exit code 0, PASS.
+- `npm run build` — exit code 0, PASS.
+- `git diff --check` — exit code 0, PASS.
+- `git show --format= --check HEAD` — exit code 0, PASS at implementation commit.
+
+Implementation/test commit: `cb9129a6235176ea5d74ffcfdac8d797ba81f995`.
+
+### Safety and task boundary
+
+- Real Provider requests: `0`; actual create/PATCH/DELETE: `0 / 0 / 0`; all external mutations: `0`.
+- The process authorization variable was absent in the execution shell. Test helpers set it only for mock tests and restore its previous value in `finally`.
+- R02 evidence remains untouched. No P1-T14 request, no live CLI invocation, no R04, and no subsequent task occurred.
+- Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; Comment-to-DM and delayed DM/reply remain `SPIKE_PENDING`. This rework is not accepted until Team Leader review.
