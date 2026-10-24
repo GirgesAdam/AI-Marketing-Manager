@@ -3453,7 +3453,7 @@ Canonical states remain unchanged: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Commen
 
 ## P1-T15-R03-RFIX3 — Trusted Journal Provenance
 
-Status: `IMPLEMENTED OFFLINE / RESUBMITTED FOR TEAM LEADER REVIEW`. This section records the third limited R03 rework; it does not change the prior Team Leader rejection into acceptance.
+Team Leader decision: `ACCEPTED WITH NON-BLOCKING NOTES`. This is the current RFIX3 closeout decision for the reviewed offline implementation and regression coverage only; it does not accept or resolve parent `P1-T15`. The historical rejection and prior submission records above remain historical records.
 
 ### Root cause
 
@@ -3503,4 +3503,54 @@ Implementation/test commit: `cb9129a6235176ea5d74ffcfdac8d797ba81f995`.
 - `JOURNAL-07` verifies that the genuine fixed R03 journal is accepted and cleanup is verified.
 - All tests used mock transports only. The actual process authorization variable was absent outside test helpers. No live R03 CLI command was run; real Provider requests and external mutations were all zero. R02 evidence was not touched.
 
-Canonical states remain unchanged: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. This rework awaits Team Leader review.
+Canonical states remain unchanged: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. At the time this implementation submission was recorded, it awaited Team Leader review; the subsequent RFIX3 closeout section records the current decision as `ACCEPTED WITH NON-BLOCKING NOTES`.
+
+
+## P1-T15-R03-RFIX3 — Team Leader Acceptance and Closeout
+
+**Team Leader decision: `ACCEPTED WITH NON-BLOCKING NOTES`.** RFIX3 is closed for the reviewed offline trusted-journal implementation and regression coverage only. This acceptance does not resolve or accept parent `P1-T15`. Earlier rejection and resubmission records remain historical and have not been rewritten as accepted at the time.
+
+- Branch: `p1-t15-r03-automation-readback-diagnostic`.
+- Reviewed HEAD: `cec600ec52e808560d32cbdb7718cb23eb916296`.
+- Implementation/regression-test commit: `cb9129a6235176ea5d74ffcfdac8d797ba81f995`.
+- Documentation closeout starting HEAD: `cec600ec52e808560d32cbdb7718cb23eb916296`.
+
+### Non-blocking review notes
+
+1. **CI evidence:** The Team Leader's GitHub review found no associated CI status checks or workflow runs for the reviewed final HEAD. This is a limitation in available evidence, not evidence that CI failed.
+2. **Independent verification:** Team Leader reviewed the remote source diff, regression-test definitions, and documentation, but did not independently rerun the local test commands or verify the local working tree. All counts/results below remain Senior Engineer-reported.
+3. **Live behavior:** No live Provider execution was authorized or performed as part of RFIX3. Acceptance is limited to the reviewed offline implementation and regression coverage; it is not evidence of live Provider behavior and does not resolve the parent P1-T15 objective.
+
+### Senior-reported verification evidence
+
+The following results were reported by the Senior Engineer after the final implementation/test changes. They were not independently rerun by Team Leader and were not rerun as part of this documentation-only closeout.
+
+```text
+npm test -- tests/provider-spike/p1-t15-r03.test.ts tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts
+exit code: 0 — 76 passed / 0 failed across 3 files; skipped: 0
+
+npm test
+exit code: 0 — 714 passed / 0 failed across 30 files; skipped: 0
+
+npm run typecheck
+exit code: 0 — PASS
+
+npm run build
+exit code: 0 — PASS
+
+git diff --check
+exit code: 0 — PASS at implementation verification
+
+git show --format= --check HEAD
+exit code: 0 — PASS at implementation commit
+```
+
+The documentation closeout `git diff --check` was executed after all final documentation edits and exited `0` (PASS). No Provider tests, R02 rerun, live CLI invocation, or live Provider request is required or permitted for this closeout.
+
+### State preservation
+
+- Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`.
+- `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
+- `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`; no P1-T14 request, fixture access, timing-gate change, or evidence change occurred.
+- No live authorization was granted. No live R03 CLI or Provider request occurred; R02 evidence remains unchanged.
+- Current execution state is maintained only in `PROGRESS.md`: no task is executing, and the next Phase-1 task remains unassigned pending explicit Team Leader task assignment. No R04 or other successor task was started.

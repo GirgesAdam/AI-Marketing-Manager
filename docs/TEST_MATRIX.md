@@ -3603,7 +3603,7 @@ The shared diagnostic boundary requires actual process-level `P1_T15_R03_LIVE_AU
 
 ## P1-T15-R03-RFIX3 — Trusted Journal Provenance
 
-Status: `IMPLEMENTED OFFLINE / RESUBMITTED FOR TEAM LEADER REVIEW`. These results are implementation evidence, not Team Leader acceptance.
+Team Leader decision: `ACCEPTED WITH NON-BLOCKING NOTES`. The documented implementation/test results below remain Senior Engineer-reported evidence; the Team Leader reviewed the remote source diff, regression-test definitions, and documentation but did not independently rerun local test commands or verify the local working tree.
 
 | Test ID | Coverage | Result |
 |---|---|---|
@@ -3648,3 +3648,47 @@ Implementation/test commit: `cb9129a6235176ea5d74ffcfdac8d797ba81f995`.
 The trust guard uses a private `WeakSet<object>` populated only by the genuine fixed journal constructor in the shared module. The exported marker remains available to construct spoofing regressions but is not read as authority. The fixed journal instance, prototype, and constructor are frozen; subclass construction is rejected. No `transport.kind` value can make a custom journal trusted.
 
 The real process authorization gate is unchanged. No live CLI command was run; every transport used in tests was a mock; real Provider requests and external mutations were zero. R02 evidence was unchanged. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; Comment-to-DM and delayed DM/reply remain `SPIKE_PENDING`.
+
+
+## P1-T15-R03-RFIX3 — Team Leader Acceptance and Evidence Provenance
+
+**Team Leader decision: `ACCEPTED WITH NON-BLOCKING NOTES`.** This closes RFIX3 only. The test IDs and PASS results in the preceding RFIX3 matrix remain Senior Engineer-reported test evidence; they were not independently rerun by Team Leader.
+
+### Evidence provenance and non-blocking notes
+
+1. **CI evidence limitation:** The Team Leader's GitHub review found no associated CI status checks or workflow runs for the reviewed final HEAD. This is absence of associated CI evidence, not a claim that CI failed.
+2. **Independent verification limitation:** Team Leader reviewed the remote source diff, regression-test definitions, and documentation. Team Leader did not independently rerun local test commands or verify the local working tree. Reported counts/results remain attributable to the Senior Engineer.
+3. **Live behavior limitation:** No live Provider execution was authorized or performed for RFIX3. Acceptance applies only to the reviewed offline implementation and regression coverage, not live Provider behavior or the parent `P1-T15` objective.
+
+### Preserved Senior-reported commands and counts
+
+```text
+npm test -- tests/provider-spike/p1-t15-r03.test.ts tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts
+exit code: 0 — 76 passed / 0 failed across 3 files; skipped: 0
+
+npm test
+exit code: 0 — 714 passed / 0 failed across 30 files; skipped: 0
+
+npm run typecheck
+exit code: 0 — PASS
+
+npm run build
+exit code: 0 — PASS
+
+git diff --check
+exit code: 0 — PASS at implementation verification
+
+git show --format= --check HEAD
+exit code: 0 — PASS at implementation commit
+```
+
+These test/typecheck/build results are not claimed as independently re-executed during the documentation-only closeout. The closeout's final documentation `git diff --check` is recorded in `PROGRESS.md` and this section: exit code `0`, PASS, executed after all final documentation edits and before commit.
+
+### Canonical status preservation
+
+- RFIX3: `ACCEPTED WITH NON-BLOCKING NOTES`.
+- Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`.
+- `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
+- `P1-T14 = WAITING_TIME_GATE`; Observation A remains not yet eligible, and no request, evidence, fixture, or timing gate was changed by this closeout.
+- No live authorization, live R03 CLI invocation, or Provider request occurred. R02 evidence was not rerun or modified.
+- Current Task / Current Executing Task are governed by `PROGRESS.md`: no task is executing, no successor has been assigned, and the project awaits an explicit Team Leader task assignment. R04 and all other successor tasks remain unstarted.
