@@ -4756,9 +4756,9 @@ Canonical `Media Upload` remains `PARTIALLY_VERIFIED`; it is not `SPIKE_PASS`. `
 P1-T13-CLOSEOUT-01 safety boundary: Provider calls `0`; credentials `0`; presigns `0`; media PUTs `0`; public GETs `0`; source/test/runtime changes `0`; external mutations `0`. Documentation only.
 
 
-## P1-T15-R03 — Diagnose Exact Comment Automation Read-back Contract
+## P1-T15-R03 — Initial Implementation (REJECTED; Historical)
 
-Task state: `IMPLEMENTED OFFLINE / AWAITING TEAM LEADER REVIEW`. Current task remains R03; no R04 or other subsequent task is started.
+Task state for this initial implementation: `REJECTED — FIX REQUIRED` by Team Leader. The repair and current R03 status are recorded in the following `P1-T15-R03 — Team Leader Rejection Remediation` section. Current task remains R03; no R04 or other subsequent task is started.
 
 Starting HEAD: `ef5e1890ff2279e5df4c6ed4e52fc5061aa5e3b3`. Branch: `p1-t15-r03-automation-readback-diagnostic`.
 
@@ -4796,12 +4796,14 @@ Repair implemented on the same branch, `p1-t15-r03-automation-readback-diagnosti
 - Matching read-back only returns PASS after exact DELETE succeeds and final GET returns 404. DELETE failure remains unknown even if final GET later returns 404; unresolved final GET also fails. Successful create without an addressable ID fails with cleanup unknown.
 - Kept frozen target constants and create body unchanged. R03 journal omits raw automation name/keyword, and diagnostics never persist raw configuration values, DM content, or person data.
 
-Offline results before closeout commit:
+Offline results from the final pre-commit verification run:
 - Focused command `npm test -- tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts tests/provider-spike/p1-t15-r03.test.ts`: `65 / 65 PASS` across 3 files.
 - Full `npm test`: `703 / 703 PASS` across 30 files.
 - `npm run typecheck`: PASS.
 - `npm run build`: PASS.
 - `git diff --check`: PASS.
+- Implementation commit: `1339c2765da7a38ef60d764f7b63187e86ac9702`; `git show --format= --check HEAD`: PASS.
+- Push: PASS to `origin/p1-t15-r03-automation-readback-diagnostic`; local HEAD and remote-tracking HEAD both `1339c2765da7a38ef60d764f7b63187e86ac9702`; working tree clean after push. A separate docs-only closeout commit follows.
 
 Safety boundary: no live authorization was issued. CLI gate rerun `npm run p1-t15-r03 -- --live` with `P1_T15_R03_LIVE_AUTHORIZED` unset returned `R03_LIVE_AUTHORIZATION_REQUIRED`, exit code `2`, and `providerRequests=0`. All execution-path tests used injected mock transport. Actual Provider requests `0`; actual create/PATCH/DELETE `0 / 0 / 0`; comments/DMs/conversations/Ads/media/webhook mutations `0`. No R02 rerun or evidence modification occurred. No P1-T14 request and no R04 or later task was started.
 

@@ -3384,7 +3384,7 @@ npm test
 703 passed / 0 failed across 30 files
 ```
 
-Additional gates: `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS. Post-commit `git show --format= --check HEAD`, final branch/remote SHAs, push result, and clean-tree state are recorded after commit below.
+Additional gates: `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS; `git show --format= --check HEAD` PASS at implementation commit. Implementation commit `1339c2765da7a38ef60d764f7b63187e86ac9702` was pushed to `origin/p1-t15-r03-automation-readback-diagnostic`; local and remote-tracking HEAD matched and the working tree was clean after push. The final documentation closeout commit and HEAD are reported in the handoff summary.
 
 R03 mock coverage now explicitly proves: matching configuration never PATCHes and only passes after DELETE plus final 404; mismatch logs the safe projection before cleanup; active create/read-back paths never PATCH; budget 6 blocks before any request; budget 7 preserves both cleanup slots; failed DELETE cannot claim absence even if final GET returns 404; unresolved final GET cannot pass; create-success-without-ID fails without claiming cleanup; and the frozen create body is unchanged. All tests use an injected mock transport.
 
