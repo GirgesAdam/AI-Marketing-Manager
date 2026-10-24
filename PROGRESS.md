@@ -51,7 +51,7 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `P1-T15-R02 — Fix Frozen Post Attestation and Re-run Native Automation Lifecycle`
+Current Executing Task = `P1-T15-R03 — Diagnose Exact Comment Automation Read-back Contract`
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
@@ -61,13 +61,13 @@ Open Senior Tasks = `2 / 2`
 
 Executing Senior Tasks = `1 / 1`
 
-Current Task = `P1-T15-R02 — Fix Frozen Post Attestation and Re-run Native Automation Lifecycle`
+Current Task = `P1-T15-R03 — Diagnose Exact Comment Automation Read-back Contract`
 
 P1-T15 = **UNRESOLVED / FIX REQUIRED**
 
 P1-T15 safety stop = `ACCEPTED — fail-closed behavior correct`.
 
-P1-T15 unresolved reason = `SAFETY_FROZEN_POST_MISMATCH prevented the lifecycle probe from reaching any automation mutation.`
+P1-T15 unresolved reason = `SAFETY_DISABLED_READBACK_CONFIG_MISMATCH stopped the R02 lifecycle probe before enable; the exact mismatching field remains unknown.`
 
 P1-T15-R01 = **DONE / ACCEPTED**
 
@@ -85,7 +85,7 @@ P1-T15-R01 accepted evidence HEAD = `6b4b36fbc84a17c7fbdc30bd4cc793faea008d3e`.
 
 P1-T15-R01 accepted classification = `FROZEN_POST_RESPONSE_SHAPE_DRIFT_CONFIRMED`.
 
-P1-T15-R02 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
+P1-T15-R02 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
 P1-T15-R02 starting HEAD = `6b4b36fbc84a17c7fbdc30bd4cc793faea008d3e`; branch = `p1-t15-r02-automation-lifecycle-retry`.
 
@@ -115,7 +115,7 @@ P1-T15-R02 safety totals = Provider requests `7 / 12`; creates `1`; enable PATCH
 
 P1-T15-R02 durable evidence = fixed gitignored `artifacts/provider-spike/p1-t15-r02-evidence.jsonl`; reached checkpoints exactly `RUN_STARTED → IDENTITY_VERIFIED → TARGET_VERIFIED → CREATE_ATTEMPT_COMPLETED → CLEANUP_COMPLETED → RUN_FINALIZED`.
 
-P1-T15-R02 interpretation = the proven frozen-post parser defect is remediated and target preflight now passes. Provider accepted explicit disabled create and reported `isActive=false` in the create response, but the mandatory exact disabled read-back configuration attestation failed, so the create-disabled → enable → disable lifecycle is **not verified**. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; canonical `Comment-to-DM` remains `SPIKE_PENDING`; `Delayed Native DM` and `Delayed Native Reply` remain `SPIKE_PENDING`. No PARTIALLY_VERIFIED recommendation is made under classification F.
+P1-T15-R02 interpretation = the proven frozen-post parser defect is remediated and target preflight now passes. Provider accepted explicit disabled create and reported `isActive=false` in the create response, but the mandatory exact disabled read-back configuration attestation failed, so the create-disabled → enable → disable lifecycle is **not verified**. Team Leader decision = `ACCEPTED WITH NON-BLOCKING NOTES` for R02 implementation only; the field-level mismatch remains unresolved. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; canonical `Comment-to-DM` remains `SPIKE_PENDING`; `Delayed Native DM` and `Delayed Native Reply` remain `SPIKE_PENDING`. No PARTIALLY_VERIFIED recommendation is made under classification F.
 
 P1-T15-R01 cause = all frozen controlled identity/content facts still matched, but the Facebook platform account identifier was exposed at safe bounded path `platform.accountId._id`; legacy P1-T15 attestation expected a direct scalar `platform.accountId`, so `legacyP1T15AttestationWouldPass=false`. This is response-shape/parser drift, not confirmed target/content drift.
 
@@ -4754,3 +4754,29 @@ Interpretation: P1-T13 proves that the independently retained approved original 
 Canonical `Media Upload` remains `PARTIALLY_VERIFIED`; it is not `SPIKE_PASS`. `APPROVED_ORIGINAL_REUPLOAD = VERIFIED`. `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED` is the only remaining Media Phase-1 gap and remains `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`. Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`. PHASE 1 remains **IN PROGRESS**. No retention/deletion experiment, publishing, Ads work, successor Phase-1 task, or Phase 2 work was started.
 
 P1-T13-CLOSEOUT-01 safety boundary: Provider calls `0`; credentials `0`; presigns `0`; media PUTs `0`; public GETs `0`; source/test/runtime changes `0`; external mutations `0`. Documentation only.
+
+
+## P1-T15-R03 — Diagnose Exact Comment Automation Read-back Contract
+
+Task state: `IMPLEMENTED OFFLINE / AWAITING TEAM LEADER REVIEW`. Current task remains R03; no R04 or other subsequent task is started.
+
+Starting HEAD: `ef5e1890ff2279e5df4c6ed4e52fc5061aa5e3b3`. Branch: `p1-t15-r03-automation-readback-diagnostic`.
+
+R02 review disposition: `ACCEPTED WITH NON-BLOCKING NOTES` for R02 implementation only. R02's exact read-back field mismatch remains unknown; no claim is made that the Provider lifecycle passed.
+
+R03 implementation: added deterministic `diagnoseP1T15ExactConfig`, delegated the existing `exactConfig` boolean result to the same projection, added optional safe diagnostic capture to the disabled-read-back failure path, created an R03-specific fixed evidence journal, added a separate runner and explicit task authorization gate, capped R03 at 9 Provider requests, and reserved the final two request slots for exact-resource cleanup when no-trigger evidence is unavailable during emergency containment. Frozen target constants, post content hash, and create body were not changed. No recursive response search or raw response persistence was introduced.
+
+Provider documentation review: the official GET response example documents common automation fields but does not show `profileId` and does not establish the actual defaults returned for this frozen create configuration. Existing R02 evidence records only GET HTTP `200` plus `SAFETY_DISABLED_READBACK_CONFIG_MISMATCH`; it contains no field-level values. Actual mismatch diagnosis remains unresolved until a separately authorized live R03 observation.
+
+Offline gates:
+- Focused command `npm test -- tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts tests/provider-spike/p1-t15-r03.test.ts`: `60 / 60 PASS` across 3 files.
+- Full `npm test`: `698 / 698 PASS` across 30 files.
+- `npm run typecheck`: PASS.
+- `npm run build`: PASS.
+- Final `git diff --check`, commit SHAs, push status, and post-commit checks are to be recorded after review of the final diff.
+
+Live authorization: `NOT ISSUED`. Actual R03 Provider requests `0`; actual create/PATCH/DELETE `0 / 0 / 0`; actual comments/DMs/conversations `0 / 0 / 0`; actual Ads/media/webhook mutations `0`. All R03 lifecycle-like tests use an injected mock transport only. No R02 rerun, no real automation was created, and no P1-T14 request occurred.
+
+Safety/cleanup: synthetic disabled-read-back mismatch path verifies the projection and exact-resource cleanup in mock tests; synthetic active-create path exercises emergency disable and remains within 9 mock requests; a synthetic failed cleanup is classified unresolved. These are test evidence only, not real Provider cleanup evidence.
+
+Canonical states remain unchanged: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`. R03 stops here for Team Leader review. No live diagnostic will run without explicit independent authorization.

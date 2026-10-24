@@ -3502,3 +3502,47 @@ Automated suites: `tests/provider-spike/p1-t15.test.ts` and `tests/provider-spik
 Live checkpoint sequence: `RUN_STARTED → IDENTITY_VERIFIED → TARGET_VERIFIED → CREATE_ATTEMPT_COMPLETED → CLEANUP_COMPLETED → RUN_FINALIZED`.
 
 The exact frozen-post parser remediation is proven by offline regressions and successful live target preflight. The native automation lifecycle itself remains unverified because the mandatory exact disabled automation read-back config gate failed before enable. No speculative parser change or second live run is permitted/performed in P1-T15-R02.
+
+
+## P1-T15-R03 — Exact Comment Automation Read-back Diagnostic
+
+Status: `IMPLEMENTED OFFLINE / AWAITING TEAM LEADER REVIEW`. No live Provider authorization or invocation occurred.
+
+| Test ID | Coverage | Result |
+|---|---|---|
+| R03-01 | Deterministic fixed-path projection; no raw values, IDs, keyword, or DM message | PASS |
+| R03-01a | Representative synthetic shape variants preserve the pre-R03 `exactConfig` accept/reject outcome | PASS |
+| R03-02 | Required string field: missing, null, wrong type, empty, value mismatch | PASS |
+| R03-02a | Required keyword array; optional platform; bounded Profile ID; strict bool/number state | PASS |
+| R03-03 | Every required configuration predicate rejects a synthetic mismatch | PASS |
+| R03-04 | Profile ID scalar and bounded `_id` / `id` / `accountId` forms; no recursive traversal | PASS |
+| R03-05 | Existing optional `id` / `_id` and `platform` semantics remain unchanged | PASS |
+| R03-06 | Optional buttons/commentReply and absent-versus-null template/audience/followGate semantics | PASS |
+| R03-07 | Multiple independent mismatches and privacy-safe projection | PASS |
+| R03-08 | Missing/non-object automation envelope fails closed | PASS |
+| R03-09a | Default execution remains offline with zero transport calls | PASS |
+| R03-09 | `live=true` without explicit R03 authorization blocks before transport | PASS |
+| R03-10 | Synthetic disabled read-back mismatch records safe field-level projection and exact cleanup | PASS |
+| R03-11 | Synthetic active-create response uses only emergency disable and remains within 9 requests | PASS |
+| R03-11a | Immediate-active read-back with missing trigger evidence reserves DELETE/final GET, returns BLOCKED, and stays within 9 requests | PASS |
+| R03-12 | Cleanup uncertainty is never reported as verified | PASS |
+| R03-13 | Fixed R03 journal rejects credential and private-field material before persistence | PASS |
+| Regression | All previously accepted P1-T15 and R02 safety tests | PASS |
+
+### Exact executed commands
+
+```text
+npm test -- tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts tests/provider-spike/p1-t15-r03.test.ts
+60 passed / 0 failed across 3 files
+
+npm test
+698 passed / 0 failed across 30 files
+
+npm run typecheck
+PASS
+
+npm run build
+PASS
+```
+
+The R03 tests that pass an authorization flag use only an injected mock transport. They are offline simulations, not Provider calls or live authorization. Actual R03 Provider requests and mutations: `0`. Final `git diff --check`, commit checks, and branch publication are recorded in the R03 closeout in `PROGRESS.md`.

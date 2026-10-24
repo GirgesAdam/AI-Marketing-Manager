@@ -3273,3 +3273,82 @@ Durable evidence path: fixed gitignored `artifacts/provider-spike/p1-t15-r02-evi
 Canonical capability state is unchanged pending Team Leader review: `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`. Classification A was not reached, so no `PARTIALLY_VERIFIED` recommendation is made. The remaining native-automation gaps include a trustworthy exact disabled automation read-back/config contract, the complete enable/active-read/disable/disabled-read lifecycle, actual trigger/delivery behavior, and delayed behavior.
 
 P1-T14 preservation remains exact: `WAITING_TIME_GATE`, `fixtureUploadedAt = 2026-10-23T15:01:20.743Z`, Observation A earliest `2026-10-30T16:01:20.743Z`, Observation B earliest `2026-10-31T21:01:20.743Z`, public GET budget `0 / 2`, and no retention evidence/request.
+
+
+## P1-T15-R03 — Diagnose Exact Comment Automation Read-back Contract
+
+Task state: `IMPLEMENTED OFFLINE / AWAITING TEAM LEADER REVIEW`. The R03 live diagnostic was **NOT AUTHORIZED and NOT RUN**. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
+
+Starting HEAD: `ef5e1890ff2279e5df4c6ed4e52fc5061aa5e3b3`. Branch: `p1-t15-r03-automation-readback-diagnostic`.
+
+### Documentation and existing-evidence review
+
+Reviewed the official [Get automation details API reference](https://docs.zernio.com/comment-automations/get-comment-automation) and [Update automation settings API reference](https://docs.zernio.com/comment-automations/update-comment-automation), alongside `PROVIDER_CAPABILITIES.md`, the existing R01/R02 implementation/tests, and the fixed R02 evidence journal.
+
+The GET reference's illustrative response documents fields including `id`, `name`, `platform`, `trigger`, `accountId`, `platformPostId`, `postId`, `keywords`, `matchMode`, `dmMessage`, `buttons`, `template`, `commentReply`, `dmDelaySeconds`, `audience`, `followGate`, `alsoMatchInDms`, `isActive`, stats, and recent logs. Its example does **not** document `profileId` on the returned automation object. The response example includes illustrative non-empty values for several optional configuration fields; it does not establish the actual default values returned for this frozen create request. The PATCH reference describes update fields and clearing semantics but likewise does not establish the R02 read-back values.
+
+R02's only retained read-back facts are HTTP `200`, request ID `b9f61ec6-183d-408d-9acf-4f3738294fbe`, and failure of the existing `exactConfig` attestation. The response's field values were not persisted. Neither the public schema example nor the safe R02 evidence identifies the actual field that failed. The real Provider mismatch therefore remains **UNKNOWN**, not diagnosed by the synthetic tests below.
+
+### Existing validator predicate map
+
+The new exported `diagnoseP1T15ExactConfig` projection mirrors the current validator rather than changing which configurations it accepts.
+
+| Predicate / exact path | Existing implementation behavior |
+|---|---|
+| `id` then `_id` | Uses the first non-empty scalar string; if present, it must equal the invocation's automation ID. Missing or non-string identifiers are not rejected by this predicate today. |
+| `name`, `trigger`, `accountId`, `platformPostId`, `postId` | Required exact non-empty strings equal to frozen expected values. |
+| `profileId` | Optional only when undefined/absent; if present, bounded `valueId()` must equal the frozen Profile ID. Bounded object keys are `_id`, `id`, and `accountId`; no recursive search. Explicit null fails. |
+| `platform` | Optional when absent; if present, must equal `facebook`. |
+| `keywords` | Required array with exactly one item equal to the frozen keyword. |
+| `matchMode`, `dmMessage` | Required exact values; diagnostic output never contains the message or keyword value. |
+| `alsoMatchInDms`, `dmDelaySeconds` | Must be boolean `false` and finite number `0`, respectively. |
+| `buttons` | Current predicate rejects a non-empty array; absent, null, and non-array values are not rejected by this predicate. |
+| `commentReply` | Current predicate rejects a non-empty string; absent, null, empty string, and non-string values are not rejected by this predicate. |
+| `template`, `audience`, `followGate` | Must be absent/undefined or explicit null; any other non-null value fails. |
+| `isActive` | Not part of `exactConfig`; the runner validates activation state separately after the configuration gate. |
+
+These are descriptions of current code predicates, **not** claims that Zernio guarantees those response shapes. In particular, the optional identifier handling and accepted wrong-type cases above are preserved for faithful diagnosis; this task does not silently tighten or relax the accepted configuration contract.
+
+### Diagnostic implementation
+
+- Added `diagnoseP1T15ExactConfig`; `exactConfig` now delegates to the same projection so diagnosis and acceptance cannot drift.
+- Each fixed known field records its path, missing/null/wrong-type/present state, JSON type, whether the predicate was evaluated, whether the existing predicate accepts it, and a safe mismatch category.
+- Identifier checks report bounded source and comparison outcome only; no raw identifier values are included in the projection.
+- No arbitrary nested traversal, raw Provider response persistence, message content, credentials, commenter/recipient details, or unknown response fields are included.
+- R03 uses its own fixed gitignored evidence path: `artifacts/provider-spike/p1-t15-r03-evidence.jsonl`.
+- R03 live mode is OFF by default and additionally requires `P1_T15_R03_LIVE_AUTHORIZED=true` with the explicit `--live` CLI argument. Its runner clamps the total request budget to at most 9 and reserves the final two request slots for exact-resource DELETE plus final read-back. If trigger evidence is unavailable and a logs GET would consume those cleanup slots, the runner skips that optional evidence request, reports `BLOCKED / NO_TRIGGER_EVIDENCE_UNAVAILABLE`, and performs cleanup rather than reporting PASS. This environment gate was not enabled for this work.
+
+### Offline verification
+
+Focused regression command:
+
+```text
+npm test -- tests/provider-spike/p1-t15.test.ts tests/provider-spike/p1-t15-r02.test.ts tests/provider-spike/p1-t15-r03.test.ts
+60 passed / 0 failed across 3 files
+```
+
+Full suite:
+
+```text
+npm test
+698 passed / 0 failed across 30 files
+```
+
+Additional gates: `npm run typecheck` PASS; `npm run build` PASS. `git diff --check` and committed-diff checks are recorded after final documentation/commit review.
+
+R03 synthetic mock tests exercise deterministic field projection, missing/null/wrong-type/value mismatch distinctions, bounded identifier semantics, optional-field behavior, parity with the pre-R03 exactConfig predicate across synthetic shape variants, multiple independent mismatches, value/PII redaction, default-off behavior, explicit authorization gating, the disabled-read-back failure path, active-create emergency-disable path, cleanup-slot reservation when trigger evidence is unavailable, the nine-request cap, and unresolved cleanup classification. These tests use an injected mock transport only and are not Provider observations.
+
+### Live execution and safety boundary
+
+- R03 live authorization: **NOT ISSUED**.
+- Actual Zernio requests during R03: `0`.
+- Actual automation creates / PATCHes / deletes: `0 / 0 / 0`.
+- Actual comments / DMs / conversations: `0 / 0 / 0`.
+- Actual Ads/media/webhook mutations: `0`.
+- R02 evidence was not overwritten, and no R02 or lifecycle rerun occurred.
+- The mock mismatch test's create/read-back/delete sequence is synthetic; it does not establish cleanup of any real Provider resource.
+- The frozen target and create body remain unchanged. No normal enable, trigger, comment, DM, delayed action, P1-T14 request, or unrelated endpoint was exercised.
+
+### R03 conclusion / remaining blocker
+
+The diagnostic implementation is ready for Team Leader review, but the actual R02 read-back mismatch remains unresolved because live field-level evidence is unavailable and no R03 live authorization was issued. No Provider capability state is promoted. Stop here pending review and, if desired, explicit separate authorization for the single bounded R03 live diagnostic. Do not start R04.
