@@ -3527,6 +3527,7 @@ Status: `IMPLEMENTED OFFLINE / AWAITING TEAM LEADER REVIEW`. No live Provider au
 | R03-11a | Immediate-active read-back with missing trigger evidence reserves DELETE/final GET, returns BLOCKED, and stays within 9 requests | PASS |
 | R03-12 | Cleanup uncertainty is never reported as verified | PASS |
 | R03-13 | Fixed R03 journal rejects credential and private-field material before persistence | PASS |
+| R03-14 (manual CLI gate) | `npm run p1-t15-r03 -- --live` without the task authorization marker returns `R03_LIVE_AUTHORIZATION_REQUIRED`, exit code 2, and zero Provider requests | PASS |
 | Regression | All previously accepted P1-T15 and R02 safety tests | PASS |
 
 ### Exact executed commands

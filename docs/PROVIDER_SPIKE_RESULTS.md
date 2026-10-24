@@ -3334,7 +3334,7 @@ npm test
 698 passed / 0 failed across 30 files
 ```
 
-Additional gates: `npm run typecheck` PASS; `npm run build` PASS. `git diff --check` and committed-diff checks are recorded after final documentation/commit review.
+Additional gates: `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS; `git show --format= --check HEAD` PASS at the implementation commit. Implementation commit `8abe2b3055de87b21ab884b45d5ed33a33ec90a8` was pushed to `origin/p1-t15-r03-automation-readback-diagnostic`; remote-tracking HEAD matched and the working tree was clean after push.
 
 R03 synthetic mock tests exercise deterministic field projection, missing/null/wrong-type/value mismatch distinctions, bounded identifier semantics, optional-field behavior, parity with the pre-R03 exactConfig predicate across synthetic shape variants, multiple independent mismatches, value/PII redaction, default-off behavior, explicit authorization gating, the disabled-read-back failure path, active-create emergency-disable path, cleanup-slot reservation when trigger evidence is unavailable, the nine-request cap, and unresolved cleanup classification. These tests use an injected mock transport only and are not Provider observations.
 

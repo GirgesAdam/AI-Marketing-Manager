@@ -4773,9 +4773,9 @@ Offline gates:
 - Full `npm test`: `698 / 698 PASS` across 30 files.
 - `npm run typecheck`: PASS.
 - `npm run build`: PASS.
-- Final `git diff --check`, commit SHAs, push status, and post-commit checks are to be recorded after review of the final diff.
+- Final `git diff --check`: PASS; `git show --format= --check HEAD` at implementation commit: PASS. Implementation commit = `8abe2b3055de87b21ab884b45d5ed33a33ec90a8`. Branch push = PASS; `origin/p1-t15-r03-automation-readback-diagnostic` equals the implementation commit; working tree clean after push. The final progress closeout is committed separately.
 
-Live authorization: `NOT ISSUED`. Actual R03 Provider requests `0`; actual create/PATCH/DELETE `0 / 0 / 0`; actual comments/DMs/conversations `0 / 0 / 0`; actual Ads/media/webhook mutations `0`. All R03 lifecycle-like tests use an injected mock transport only. No R02 rerun, no real automation was created, and no P1-T14 request occurred.
+Live authorization: `NOT ISSUED`. CLI gate smoke test `npm run p1-t15-r03 -- --live` with `P1_T15_R03_LIVE_AUTHORIZED` absent returned `R03_LIVE_AUTHORIZATION_REQUIRED`, exit code `2`, and `providerRequests=0`. Actual R03 Provider requests `0`; actual create/PATCH/DELETE `0 / 0 / 0`; actual comments/DMs/conversations `0 / 0 / 0`; actual Ads/media/webhook mutations `0`. All R03 lifecycle-like tests use an injected mock transport only. No R02 rerun, no real automation was created, and no P1-T14 request occurred.
 
 Safety/cleanup: synthetic disabled-read-back mismatch path verifies the projection and exact-resource cleanup in mock tests; synthetic active-create path exercises emergency disable and remains within 9 mock requests; a synthetic failed cleanup is classified unresolved. These are test evidence only, not real Provider cleanup evidence.
 
