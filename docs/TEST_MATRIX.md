@@ -3363,3 +3363,71 @@ Automated focused suite: `tests/provider-spike/p1-t15.test.ts`.
 | P1-T14 preservation | PASS — remains `WAITING_TIME_GATE`, GET `0 / 2`, timestamps unchanged |
 
 The one live run stopped before automation creation because the exact frozen-post precondition was not established. The result does not determine whether create-time `isActive=false` is supported or honored. No second live run or alternate target is authorized/performed under P1-T15.
+
+## P1-T15-R01 — Read-Only Frozen Post Attestation Diagnostic
+
+Task state: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Automated focused suite: `tests/provider-spike/p1-t15-r01.test.ts`.
+
+| Gate / evidence | Result |
+|---|---|
+| Live defaults OFF | PASS — zero Provider requests |
+| CLI surface | PASS — only explicit `--live`; no arbitrary URL/target input |
+| Frozen Profile/account/Page/post/platform-post/content hash | PASS — exact constants |
+| Provider request maximum | PASS — `3` |
+| Allowed request classes | PASS — exact auth/account/post GETs only |
+| Mutation methods | NOT CALLABLE |
+| Comment Automation endpoint | NOT AVAILABLE |
+| Alternate post / list-post exploration | NOT AVAILABLE |
+| Automatic retry | PASS — `0` |
+| Raw Provider post body persistence | PASS — `0` |
+| Returned post text persistence | PASS — `0` |
+| Unexpected mismatched identifier persistence | PASS — reduced to match boolean only |
+| API key / Authorization persistence | PASS — `0` |
+| Safe field-level projection | PASS |
+| Direct Page ID candidate | PASS |
+| Nested `platformSpecificData.pageId` candidate | PASS |
+| Page derivation from expected-format platform post ID | PASS |
+| Root / `post` envelope variation | PASS — bounded only |
+| Recursive response traversal | NOT IMPLEMENTED |
+| Nested account-ID bounded candidate | PASS — supports safe source label such as `platform.accountId._id` |
+| P1-T14 target/evidence access | NOT AVAILABLE |
+| Focused P1-T15-R01 suite | PASS — `25 / 25` |
+| Full `npm test` | PASS — `668 / 668` across `28` files |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| `git diff --check` | PASS |
+| Actual live diagnostic invocation | PASS — exactly `1` |
+| Live Provider request count | PASS — `3 / 3` |
+| Live retries | PASS — `0` |
+| Trusted identity live | HTTP `200`; request `1921037c-98c5-4da7-b6b2-86b266a00b46` |
+| Account scope live | HTTP `200`; request `c56e41bc-e5c7-40c7-b176-c7d90fb80fef`; exact match count `1`; ownership PASS |
+| Frozen post live | HTTP `200`; request `e4ecbe71-7a16-469a-8178-aefa64908e72` |
+| Post envelope source | `post` |
+| Post ID present / match | `true / true`; source `post._id` |
+| Content present / exact SHA match | `true / true`; UTF-8 bytes `65` |
+| Facebook platform entries | `1`; present `true` |
+| Account ID present / match | `true / true`; source `platform.accountId._id` |
+| Platform post ID present / match | `true / true`; source `platform.platformPostId` |
+| Page direct field | `false` |
+| Page nested field | `true`; source `platform.platformSpecificData.pageId` |
+| Page derivable from platform post ID | `true` |
+| Page match | `true` |
+| Platform present / Facebook match | `true / true`; source `platform.platform` |
+| Legacy P1-T15 attestation would pass | `false` |
+| Final classification | `FROZEN_POST_RESPONSE_SHAPE_DRIFT_CONFIRMED` |
+| Frozen fixture safely usable | `true` for corrected bounded attestation parser; lifecycle still unverified |
+| Parser fix appears sufficient | `true` for diagnosed preflight mismatch; Team Leader review required |
+| Provider mutations | `0` |
+| Automation calls | `0` |
+| Comments / DMs | `0 / 0` |
+| Ads/media/webhook mutations | `0` |
+| P1-T14 requests | `0` |
+| Secrets persisted | `0` |
+| Raw Provider payloads persisted | `0` |
+| Lifecycle rerun | `0` |
+
+Live checkpoint sequence: `RUN_STARTED → IDENTITY_VERIFIED → ACCOUNT_SCOPE_VERIFIED → POST_DIAGNOSTIC_CAPTURED → RUN_FINALIZED`.
+
+The diagnostic confirms response-shape/parser drift only. It does not change the original P1-T15 safety-stop evidence or certify Comment-to-DM lifecycle behavior. P1-T15 remains `UNRESOLVED / FIX REQUIRED` and Comment-to-DM remains `SPIKE_PENDING` pending Team Leader review and any separately authorized parser remediation/lifecycle rerun.

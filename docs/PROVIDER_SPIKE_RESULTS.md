@@ -3152,3 +3152,78 @@ P1-T15 therefore does **not** establish whether `POST /v1/comment-automations` h
 Canonical capability state is unchanged pending Team Leader review: `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`. `PROVIDER_CAPABILITIES.md` is intentionally unchanged.
 
 D-043 parallel waiting state is preserved: P1-T14 remains `WAITING_TIME_GATE`; P1-T15 made no P1-T14 request, did not access the retention object, did not create P1-T14 evidence, and did not alter the P1-T14 Observation A/B timestamps or `0 / 2` GET budget.
+
+## P1-T15-R01 — Read-Only Frozen Post Attestation Diagnostic
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW`.
+
+Parent disposition remains separate: `P1-T15 safety stop = ACCEPTED — fail-closed behavior correct`; `P1-T15 = UNRESOLVED / FIX REQUIRED`. The parent stopped at `SAFETY_FROZEN_POST_MISMATCH` before any Comment Automation mutation. P1-T15-R01 did not rerun the lifecycle and does not reinterpret the parent result as a Provider automation failure.
+
+Starting HEAD: `fccd095a8701419c8b0941c90af5f43412d44c75`. Branch: `p1-t15-r01-frozen-post-diagnostic`. Activation commit: `d9ba0169d421d9f0dc07560c313a84ac85c1b725`. Implementation/test commit: `54f210432f32642c2eddd84a51a782f2416a6d8b`.
+
+### Offline gates
+
+Focused P1-T15-R01 suite: `25 / 25` PASS. Full `npm test`: `668 / 668` PASS across `28` files. `npm run typecheck`, `npm run build`, and `git diff --check`: PASS before the live diagnostic. An initial local typecheck/build pass exposed only TypeScript narrowing on the bounded Facebook entry; it was corrected before live execution, followed by the complete successful gate rerun. Provider requests consumed during that correction: `0`.
+
+### Authorized live diagnostic
+
+Exactly one read-only diagnostic run executed. The request sequence was exactly:
+
+| Ordinal | Request | Status | Request ID |
+|---|---|---:|---|
+| 1 | `GET /v1/auth/verify` | `200` | `1921037c-98c5-4da7-b6b2-86b266a00b46` |
+| 2 | `GET /v1/accounts?profileId=<frozen-profile>` | `200` | `c56e41bc-e5c7-40c7-b176-c7d90fb80fef` |
+| 3 | `GET /v1/posts/<frozen-zernio-post-id>` | `200` | `e4ecbe71-7a16-469a-8178-aefa64908e72` |
+
+Provider requests `3 / 3`; retries `0`. No list-post exploration, alternate post lookup, Comment Automation endpoint, P1-T14 request, or additional Provider read occurred.
+
+### Safe normalized attestation projection
+
+No raw Provider post body or returned post text was persisted. The bounded diagnostic projection was:
+
+| Field | Safe observed value |
+|---|---|
+| `httpStatus` | `200` |
+| `requestId` | `e4ecbe71-7a16-469a-8178-aefa64908e72` |
+| `postEnvelopeSource` | `post` |
+| `postIdFieldPresent` | `true` |
+| `postIdMatch` | `true` |
+| `postIdSource` | `post._id` |
+| `contentFieldPresent` | `true` |
+| `contentUtf8Bytes` | `65` |
+| `contentSha256` | `db58ab9f9a09803d402dfe975d204baaeec1f9dc828c0f3c541833a84fc03113` |
+| `contentHashMatch` | `true` |
+| `contentSource` | `post.content` |
+| `facebookPlatformEntryCount` | `1` |
+| `facebookPlatformEntryPresent` | `true` |
+| `accountIdFieldPresent` | `true` |
+| `accountIdMatch` | `true` |
+| `accountIdSource` | `platform.accountId._id` |
+| `platformPostIdFieldPresent` | `true` |
+| `platformPostIdMatch` | `true` |
+| `platformPostIdSource` | `platform.platformPostId` |
+| `pageIdDirectFieldPresent` | `false` |
+| `pageIdNestedFieldPresent` | `true` |
+| `pageIdDerivableFromPlatformPostId` | `true` |
+| `pageIdMatch` | `true` |
+| `pageIdSource` | `platform.platformSpecificData.pageId` |
+| `platformFieldPresent` | `true` |
+| `platformFacebookMatch` | `true` |
+| `platformSource` | `platform.platform` |
+| `legacyP1T15AttestationWouldPass` | `false` |
+
+Account-scope projection: HTTP `200`; request ID `c56e41bc-e5c7-40c7-b176-c7d90fb80fef`; frozen account match count `1`; frozen Profile match `true`; Facebook platform match `true`; ownership gate PASS.
+
+### Classification and interpretation
+
+Final classification: `FROZEN_POST_RESPONSE_SHAPE_DRIFT_CONFIRMED`.
+
+All underlying controlled target/content facts still match: exact post identity, expected content hash, Facebook account, platform post ID, Page, and platform. The field that explains the prior P1-T15 rejection is the Facebook platform account identifier response shape: the accepted diagnostic found the expected account value at bounded path `platform.accountId._id`, while the legacy P1-T15 attestation treated `platform.accountId` as a direct scalar string. Therefore the earlier `SAFETY_FROZEN_POST_MISMATCH` was a correct fail-closed safety response to parser/attestation-shape drift, not evidence of content drift or target-identity drift.
+
+The frozen fixture remains safely usable for a corrected bounded attestation parser. A parser/attestation fix appears sufficient to remediate this diagnosed P1-T15 preflight mismatch, subject to Team Leader review. This does not establish Comment Automation create-disabled behavior, enable/disable lifecycle behavior, DM delivery, or delay behavior. Comment-to-DM remains `SPIKE_PENDING`, and no P1-T15 lifecycle rerun occurred.
+
+### Safety / evidence boundary
+
+Durable evidence: fixed gitignored `artifacts/provider-spike/p1-t15-r01-evidence.jsonl`. Checkpoint order: `RUN_STARTED → IDENTITY_VERIFIED → ACCOUNT_SCOPE_VERIFIED → POST_DIAGNOSTIC_CAPTURED → RUN_FINALIZED`.
+
+Mutations `0`; automation calls `0`; comments `0`; DMs `0`; Ads/media/webhook mutations `0`; P1-T14 requests `0`; retries `0`; secrets persisted `0`; raw Provider payloads persisted `0`; lifecycle reruns `0`.

@@ -69,11 +69,29 @@ P1-T15 safety stop = `ACCEPTED — fail-closed behavior correct`.
 
 P1-T15 unresolved reason = `SAFETY_FROZEN_POST_MISMATCH prevented the lifecycle probe from reaching any automation mutation.`
 
-P1-T15-R01 = **ACTIVATED**
+P1-T15-R01 = **EXECUTED / AWAITING TEAM LEADER REVIEW**
 
 P1-T15-R01 starting HEAD = `fccd095a8701419c8b0941c90af5f43412d44c75`; branch = `p1-t15-r01-frozen-post-diagnostic`.
 
-P1-T15-R01 scope = `READ-ONLY PROVIDER DIAGNOSTIC — exact frozen post attestation only`; no Comment Automation endpoint or mutation is authorized.
+P1-T15-R01 activation commit = `d9ba0169d421d9f0dc07560c313a84ac85c1b725`; implementation/test commit = `54f210432f32642c2eddd84a51a782f2416a6d8b`.
+
+P1-T15-R01 scope = `READ-ONLY PROVIDER DIAGNOSTIC — exact frozen post attestation only`; no Comment Automation endpoint or mutation was authorized or performed.
+
+P1-T15-R01 offline gates = focused `25 / 25` PASS; full `npm test` `668 / 668` PASS across `28` files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
+
+P1-T15-R01 classification = `FROZEN_POST_RESPONSE_SHAPE_DRIFT_CONFIRMED`.
+
+P1-T15-R01 cause = all frozen controlled identity/content facts still matched, but the Facebook platform account identifier was exposed at safe bounded path `platform.accountId._id`; legacy P1-T15 attestation expected a direct scalar `platform.accountId`, so `legacyP1T15AttestationWouldPass=false`. This is response-shape/parser drift, not confirmed target/content drift.
+
+P1-T15-R01 Provider reads = exactly `3 / 3`, all HTTP `200`: trusted identity request `1921037c-98c5-4da7-b6b2-86b266a00b46`; exact account-scope request `c56e41bc-e5c7-40c7-b176-c7d90fb80fef`; exact frozen-post request `e4ecbe71-7a16-469a-8178-aefa64908e72`; retries `0`.
+
+P1-T15-R01 safe projection = post envelope `post`; post ID source `post._id`, match=true; content source `post.content`, UTF-8 bytes `65`, SHA-256 `db58ab9f9a09803d402dfe975d204baaeec1f9dc828c0f3c541833a84fc03113`, match=true; Facebook platform entry count `1`; account ID source `platform.accountId._id`, match=true; platform post ID source `platform.platformPostId`, match=true; direct Page field absent; nested Page field present at `platform.platformSpecificData.pageId`, Page match=true; Page also derivable from platform post ID=true; platform source `platform.platform`, Facebook match=true.
+
+P1-T15-R01 durable evidence = fixed gitignored `artifacts/provider-spike/p1-t15-r01-evidence.jsonl`; checkpoints `RUN_STARTED → IDENTITY_VERIFIED → ACCOUNT_SCOPE_VERIFIED → POST_DIAGNOSTIC_CAPTURED → RUN_FINALIZED`; raw Provider payload persistence `0`; secrets persisted `0`.
+
+P1-T15-R01 safety totals = mutations `0`; automation calls `0`; comments `0`; DMs `0`; Ads/media/webhook mutations `0`; P1-T14 requests `0`; lifecycle reruns `0`.
+
+P1-T15-R01 interpretation = frozen fixture remains safely usable for a corrected bounded attestation parser, and a P1-T15 parser/attestation fix appears sufficient for the diagnosed preflight mismatch; this does NOT prove the Comment Automation lifecycle, and no lifecycle rerun occurred. Parent P1-T15 therefore remains `UNRESOLVED / FIX REQUIRED` pending Team Leader review/remediation authorization, while Comment-to-DM remains `SPIKE_PENDING`.
 
 P1-T15 starting HEAD = `b6f191ca535c871385d1fc1a2162acdb730d1c7f`; branch = `p1-t15-zernio-comment-automation-lifecycle`.
 
