@@ -51,7 +51,7 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `P1-T15-R02 ? Fix Frozen Post Attestation and Re-run Native Automation Lifecycle`
+Current Executing Task = `P1-T15-R02 — Fix Frozen Post Attestation and Re-run Native Automation Lifecycle`
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
@@ -61,7 +61,7 @@ Open Senior Tasks = `2 / 2`
 
 Executing Senior Tasks = `1 / 1`
 
-Current Task = `P1-T15-R02 ? Fix Frozen Post Attestation and Re-run Native Automation Lifecycle`
+Current Task = `P1-T15-R02 — Fix Frozen Post Attestation and Re-run Native Automation Lifecycle`
 
 P1-T15 = **UNRESOLVED / FIX REQUIRED**
 
