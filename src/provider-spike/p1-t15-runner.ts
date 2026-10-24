@@ -16,6 +16,7 @@ export const P1_T15_KEYWORD='marketlyai_p1_t15_7f3c9b2e_no_action';
 export const P1_T15_AUTOMATION_NAME='MarketlyAI P1-T15 Internal Lifecycle Fixture';
 export const P1_T15_DM_MESSAGE='MarketlyAI internal automation test. No action required.';
 export const P1_T15_EVIDENCE_PATH='artifacts/provider-spike/p1-t15-evidence.jsonl';
+export const P1_T15_R03_EVIDENCE_PATH='artifacts/provider-spike/p1-t15-r03-evidence.jsonl';
 export const P1_T15_REQUEST_MAX=12;
 
 type Obj=Record<string,unknown>; type Result='PASS'|'BLOCKED'|'FAIL';
@@ -26,7 +27,8 @@ export interface P1T15RequestEvidence{ordinal:number;method:string;path:string;s
 export interface P1T15Journal{initialize(forbidden:string[]):Promise<void>;append(stage:P1T15Stage,fields:Obj,forbidden:string[]):Promise<void>;}
 export const P1_T15_R03_JOURNAL_BRAND:unique symbol=Symbol('P1_T15_R03_JOURNAL_BRAND');
 export interface P1T15R03Journal extends P1T15Journal{readonly [P1_T15_R03_JOURNAL_BRAND]:'fixed'|'test-memory';}
-function isP1T15R03Journal(journal:P1T15Journal|undefined,transport:ProviderTransport|undefined):journal is P1T15R03Journal{if(!journal)return false;const scope=(journal as Partial<P1T15R03Journal>)[P1_T15_R03_JOURNAL_BRAND];return scope==='fixed'||(scope==='test-memory'&&transport?.kind==='mock');}
+const trustedP1T15R03Journals=new WeakSet<object>();
+function isP1T15R03Journal(journal:P1T15Journal|undefined):journal is P1T15R03Journal{return typeof journal==='object'&&journal!==null&&trustedP1T15R03Journals.has(journal);}
 export interface P1T15RunOptions{live?:boolean;env?:NodeJS.ProcessEnv;transport?:ProviderTransport;journal?:P1T15Journal;maxRequests?:number;captureReadbackDiagnostics?:boolean;}
 export interface P1T15RunResult{liveEnabled:boolean;result:Result;classification:P1T15Classification;errorCategory:string|null;recommendation:'Comment-to-DM remains SPIKE_PENDING'|'Comment-to-DM -> PARTIALLY_VERIFIED - lifecycle verified; trigger/delivery/delay behavior still pending - AWAITING TEAM LEADER REVIEW';automationId:string|null;createDisabledAccepted:boolean|null;createdState:boolean|null;enabledState:boolean|null;finalDisabledState:boolean|null;triggerCount:number|null;sendCount:number|null;cleanup:'NOT_APPLICABLE'|'CLEANUP_VERIFIED'|'DISABLED_RESIDUAL_AUTOMATION_CLEANUP_BLOCKED'|'CLEANUP_UNSAFE_OR_UNKNOWN';counters:P1T15Counters;requests:P1T15RequestEvidence[];secretsPersisted:0;privatePiiPersisted:0;}
 
@@ -41,6 +43,29 @@ const safeError=(e:unknown)=>{const m=e instanceof Error?e.message:'PROVIDER_TRA
 function sensitive(s:string,forbidden:string[]){return /Authorization\s*[:=]|Bearer\s+[A-Za-z0-9._~+\/-]+|commenter(?:Id|Name)|recipient(?:Id|Name)|commentText/i.test(s)||forbidden.filter(Boolean).some(v=>s.includes(v));}
 
 export class FixedP1T15Journal implements P1T15Journal{private seq=0;async initialize(forbidden:string[]){await mkdir(dirname(P1_T15_EVIDENCE_PATH),{recursive:true});try{const h=await open(P1_T15_EVIDENCE_PATH,'wx');await h.sync();await h.close();}catch(e){throw new Error((e as NodeJS.ErrnoException).code==='EEXIST'?'SAFETY_EVIDENCE_FILE_ALREADY_EXISTS':'EVIDENCE_FILE_INIT_FAILED');}if(sensitive(P1_T15_EVIDENCE_PATH,forbidden))throw new Error('SAFETY_EVIDENCE_PATH_INVALID');}async append(stage:P1T15Stage,fields:Obj,forbidden:string[]){const line=JSON.stringify({sequence:++this.seq,utcTimestamp:new Date().toISOString(),stage,...fields});if(sensitive(line,forbidden))throw new Error('SAFETY_EVIDENCE_SECRET_OR_PII_LEAK_PREVENTED');const h=await open(P1_T15_EVIDENCE_PATH,'a');const b=Buffer.from(`${line}\n`,'utf8');const w=await h.write(b,0,b.length,null);if(w.bytesWritten!==b.length){await h.close();throw new Error('EVIDENCE_PARTIAL_WRITE');}await h.sync();await h.close();}}
+
+export class FixedP1T15R03Journal implements P1T15R03Journal{
+  readonly [P1_T15_R03_JOURNAL_BRAND]='fixed' as const;
+  #sequence=0;
+  constructor(){if(new.target!==FixedP1T15R03Journal)throw new Error('SAFETY_R03_JOURNAL_CONSTRUCTOR_INVALID');trustedP1T15R03Journals.add(this);Object.freeze(this);}
+  async initialize(forbidden:string[]){
+    await mkdir(dirname(P1_T15_R03_EVIDENCE_PATH),{recursive:true});
+    try{const handle=await open(P1_T15_R03_EVIDENCE_PATH,'wx');await handle.sync();await handle.close();}
+    catch(error){throw new Error((error as NodeJS.ErrnoException).code==='EEXIST'?'SAFETY_EVIDENCE_FILE_ALREADY_EXISTS':'EVIDENCE_FILE_INIT_FAILED');}
+    if(sensitive(P1_T15_R03_EVIDENCE_PATH,forbidden))throw new Error('SAFETY_EVIDENCE_PATH_INVALID');
+  }
+  async append(stage:P1T15Stage,fields:Obj,forbidden:string[]){
+    const line=JSON.stringify({sequence:++this.#sequence,utcTimestamp:new Date().toISOString(),stage,...fields});
+    if(sensitive(line,forbidden))throw new Error('SAFETY_EVIDENCE_SECRET_OR_PII_LEAK_PREVENTED');
+    const handle=await open(P1_T15_R03_EVIDENCE_PATH,'a');
+    const bytes=Buffer.from(`${line}\n`,'utf8');
+    const write=await handle.write(bytes,0,bytes.length,null);
+    if(write.bytesWritten!==bytes.length){await handle.close();throw new Error('EVIDENCE_PARTIAL_WRITE');}
+    await handle.sync();await handle.close();
+  }
+}
+Object.freeze(FixedP1T15R03Journal.prototype);
+Object.freeze(FixedP1T15R03Journal);
 export function parseP1T15Args(argv:string[]){if(argv.length===0)return{ok:true as const,live:false};if(argv.length===1&&argv[0]==='--live')return{ok:true as const,live:true};return{ok:false as const,live:false};}
 export function p1T15CreateBody(){return{profileId:P1_T15_PROFILE_ID,accountId:P1_T15_ACCOUNT_ID,trigger:'comment',platformPostId:P1_T15_PLATFORM_POST_ID,postId:P1_T15_ZERNIO_POST_ID,name:P1_T15_AUTOMATION_NAME,keywords:[P1_T15_KEYWORD],matchMode:'exact',dmMessage:P1_T15_DM_MESSAGE,buttons:[],alsoMatchInDms:false,dmDelaySeconds:0,isActive:false};}
 export type P1T15DiagnosticFieldState='missing'|'null'|'wrong_type'|'present';
@@ -102,7 +127,7 @@ async function runP1T15Internal(options:P1T15RunOptions={},mode:P1T15ExecutionMo
  const finish=():P1T15RunResult=>({liveEnabled:live,result,classification,errorCategory,recommendation:classification==='COMMENT_AUTOMATION_DISABLED_CREATE_ENABLE_DISABLE_LIFECYCLE_VERIFIED'?'Comment-to-DM -> PARTIALLY_VERIFIED - lifecycle verified; trigger/delivery/delay behavior still pending - AWAITING TEAM LEADER REVIEW':'Comment-to-DM remains SPIKE_PENDING',automationId,createDisabledAccepted,createdState,enabledState,finalDisabledState,triggerCount,sendCount,cleanup,counters:{...counters},requests,secretsPersisted:0,privatePiiPersisted:0});
  if(!live){errorCategory='LIVE_OPT_IN_REQUIRED';return finish();}
  if(diagnosticOnly&&process.env.P1_T15_R03_LIVE_AUTHORIZED?.trim()!=='true'){errorCategory='R03_LIVE_AUTHORIZATION_REQUIRED';return finish();}
- if(diagnosticOnly&&!isP1T15R03Journal(options.journal,options.transport)){errorCategory=options.journal?'SAFETY_R03_JOURNAL_SCOPE_INVALID':'R03_JOURNAL_REQUIRED';return finish();}
+ if(diagnosticOnly&&!isP1T15R03Journal(options.journal)){errorCategory=options.journal?'SAFETY_R03_JOURNAL_SCOPE_INVALID':'R03_JOURNAL_REQUIRED';return finish();}
  if(diagnosticOnly&&max<7){errorCategory='R03_REQUEST_BUDGET_INSUFFICIENT_FOR_CLEANUP_RESERVATION';return finish();}
  if(hash(P1_T15_POST_CONTENT)!==P1_T15_POST_SHA256){classification='NATIVE_AUTOMATION_SAFETY_FAILURE';result='FAIL';errorCategory='SAFETY_FROZEN_POST_HASH_MISMATCH';return finish();}
  const apiKey=env.ZERNIO_API_KEY?.trim(),expected=env.ZERNIO_EXPECTED_USER_EMAIL?.trim().toLowerCase();

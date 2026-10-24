@@ -134,6 +134,8 @@ function mockProvider(options:MockOptions={}){
   return {transport,requests,get exists(){return exists;}};
 }
 
+async function readEvidenceRows():Promise<JournalRow[]>{const contents=await readFile(P1_T15_R03_EVIDENCE_PATH,'utf8');return contents.trim().split(/\r?\n/).filter(Boolean).map(line=>JSON.parse(line) as JournalRow);}
+
 afterEach(async()=>{await rm(P1_T15_R03_EVIDENCE_PATH,{force:true});});
 
 describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
@@ -331,14 +333,14 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
 
   it('AUTH-04 process authorization permits the intended direct diagnostic path with mock transport',async()=>{
     const provider=mockProvider();
-    const journal=new MemoryJournal();
+    const journal=new FixedP1T15R03Journal();
     const result=await withR03Authorization(()=>runP1T15ReadbackDiagnostic({live:true,env:env(),transport:provider.transport,journal,maxRequests:7}));
     expect(result.result).toBe('PASS');
     expect(result.cleanup).toBe('CLEANUP_VERIFIED');
     expect(result.counters.providerRequests).toBe(7);
     expect(provider.transport.kind).toBe('mock');
     expect(provider.requests.some(request=>request.method==='PATCH')).toBe(false);
-    expect(journal.initialized).toBe(true);
+    await expect(readFile(P1_T15_R03_EVIDENCE_PATH,'utf8')).resolves.toContain('CLEANUP_COMPLETED');
   });
 
   it('JOURNAL-01 direct diagnostic with no journal fails closed without fallback',async()=>{
@@ -375,15 +377,64 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
     await expect(readFile(P1_T15_R03_EVIDENCE_PATH,'utf8')).rejects.toMatchObject({code:'ENOENT'});
   });
 
-  it('JOURNAL-02b test-memory journal is rejected for a live-kind transport',async()=>{
+  it('JOURNAL-02b test-memory journal is rejected regardless of caller-controlled transport kind',async()=>{
     const journal=new MemoryJournal();
-    const transport:ProviderTransport={kind:'live',send:vi.fn(async()=>rsp(200,{valid:true,email:EMAIL},'should-not-send'))};
+    for(const kind of ['mock','live'] as const){
+      const send=vi.fn(async()=>rsp(200,{valid:true,email:EMAIL},'should-not-send'));
+      const transport:ProviderTransport={kind,send};
+      const result=await withR03Authorization(()=>runP1T15ReadbackDiagnostic({live:true,env:env(),transport,journal,maxRequests:7}));
+      expect(result.result).toBe('BLOCKED');
+      expect(result.errorCategory).toBe('SAFETY_R03_JOURNAL_SCOPE_INVALID');
+      expect(result.counters.providerRequests).toBe(0);
+      expect(send).not.toHaveBeenCalled();
+      expect(journal.initialized).toBe(false);
+    }
+    await expect(readFile(P1_T15_R03_EVIDENCE_PATH,'utf8')).rejects.toMatchObject({code:'ENOENT'});
+  });
+
+  it('JOURNAL-05 a custom journal cannot impersonate the fixed R03 journal by copying the exported brand',async()=>{
+    const initialize=vi.fn(async()=>{});
+    const append=vi.fn(async()=>{});
+    const journal:P1T15R03Journal={ [P1_T15_R03_JOURNAL_BRAND]:'fixed',initialize,append };
+    const send=vi.fn(async()=>rsp(200,{valid:true,email:EMAIL},'must-not-send'));
+    const transport:ProviderTransport={kind:'mock',send};
     const result=await withR03Authorization(()=>runP1T15ReadbackDiagnostic({live:true,env:env(),transport,journal,maxRequests:7}));
     expect(result.result).toBe('BLOCKED');
     expect(result.errorCategory).toBe('SAFETY_R03_JOURNAL_SCOPE_INVALID');
     expect(result.counters.providerRequests).toBe(0);
-    expect(transport.send).not.toHaveBeenCalled();
-    expect(journal.initialized).toBe(false);
+    expect(initialize).not.toHaveBeenCalled();
+    expect(append).not.toHaveBeenCalled();
+    expect(send).not.toHaveBeenCalled();
+    await expect(readFile(P1_T15_R03_EVIDENCE_PATH,'utf8')).rejects.toMatchObject({code:'ENOENT'});
+  });
+
+  it('JOURNAL-06 test-memory journal cannot spoof fixed identity or rely on transport.kind',async()=>{
+    const journal=new MemoryJournal();
+    Object.defineProperty(journal,P1_T15_R03_JOURNAL_BRAND,{value:'fixed',writable:true,configurable:true});
+    for(const kind of ['mock','live'] as const){
+      const send=vi.fn(async()=>rsp(200,{valid:true,email:EMAIL},'must-not-send'));
+      const transport:ProviderTransport={kind,send};
+      const result=await withR03Authorization(()=>runP1T15ReadbackDiagnostic({live:true,env:env(),transport,journal,maxRequests:7}));
+      expect(result.result).toBe('BLOCKED');
+      expect(result.errorCategory).toBe('SAFETY_R03_JOURNAL_SCOPE_INVALID');
+      expect(result.counters.providerRequests).toBe(0);
+      expect(journal.initialized).toBe(false);
+      expect(send).not.toHaveBeenCalled();
+    }
+    await expect(readFile(P1_T15_R03_EVIDENCE_PATH,'utf8')).rejects.toMatchObject({code:'ENOENT'});
+  });
+
+  it('JOURNAL-07 genuine FixedP1T15R03Journal remains accepted and cleanup is verified',async()=>{
+    const provider=mockProvider();
+    const journal=new FixedP1T15R03Journal();
+    const result=await withR03Authorization(()=>runP1T15ReadbackDiagnostic({live:true,env:env(),transport:provider.transport,journal,maxRequests:7}));
+    expect(result.result).toBe('PASS');
+    expect(result.cleanup).toBe('CLEANUP_VERIFIED');
+    expect(result.counters.providerRequests).toBe(7);
+    expect(provider.requests.map(request=>request.method)).not.toContain('PATCH');
+    expect(provider.exists).toBe(false);
+    const rows=await readEvidenceRows();
+    expect(rows.find(row=>row.stage==='CLEANUP_COMPLETED')).toMatchObject({deleteStatus:200,finalGetStatus:404,residualState:'ABSENT'});
   });
 
   it('JOURNAL-03 default R03 entry point uses the R03 journal, never the generic parent journal',async()=>{
@@ -410,8 +461,8 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
 
   it('R03-10a matching read-back uses no PATCH, reserves cleanup slots, and only passes after DELETE plus final 404',async()=>{
     const provider=mockProvider();
-    const journal=new MemoryJournal();
-    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal,maxRequests:7});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,maxRequests:7});
+    const rows=await readEvidenceRows();
     expect(result.result).toBe('PASS');
     expect(result.classification).toBe('COMMENT_AUTOMATION_READBACK_DIAGNOSTIC_COMPLETED');
     expect(result.errorCategory).toBeNull();
@@ -425,30 +476,30 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
     expect(provider.requests.at(-1)?.url).toBe(`/v1/comment-automations/${AUTO}`);
     expect(provider.exists).toBe(false);
     expect(provider.requests.find(r=>r.method==='POST')?.body).toEqual(p1T15CreateBody());
-    expect(journal.rows.find(row=>row.stage==='CLEANUP_COMPLETED')).toMatchObject({deleteStatus:200,finalGetStatus:404,residualState:'ABSENT'});
-    expect(journal.rows.findIndex(row=>row.stage==='READBACK_DIAGNOSTIC_CAPTURED')).toBeLessThan(journal.rows.findIndex(row=>row.stage==='CLEANUP_COMPLETED'));
-    const evidence=JSON.stringify(journal.rows);
+    expect(rows.find(row=>row.stage==='CLEANUP_COMPLETED')).toMatchObject({deleteStatus:200,finalGetStatus:404,residualState:'ABSENT'});
+    expect(rows.findIndex(row=>row.stage==='READBACK_DIAGNOSTIC_CAPTURED')).toBeLessThan(rows.findIndex(row=>row.stage==='CLEANUP_COMPLETED'));
+    const evidence=JSON.stringify(rows);
     for(const value of [P1_T15_DM_MESSAGE,P1_T15_KEYWORD,P1_T15_AUTOMATION_NAME,API,EMAIL])expect(evidence).not.toContain(value);
     expect(result.counters.providerRequests).toBeLessThanOrEqual(7);
   });
 
   it('R03-10 synthetic mock read-back mismatch captures only safe field-level diagnostics and cleans up',async()=>{
     const provider=mockProvider({readbackMismatch:'name'});
-    const journal=new MemoryJournal();
-    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport});
+    const rows=await readEvidenceRows();
     expect(result.errorCategory).toBe('SAFETY_DISABLED_READBACK_CONFIG_MISMATCH');
     expect(result.result).toBe('FAIL');
     expect(result.cleanup).toBe('CLEANUP_VERIFIED');
     expect(result.counters).toMatchObject({providerRequests:7,creates:1,enablePatches:0,disablePatches:0,deletes:1,retries:0});
     expect(result.requests).toHaveLength(7);
-    const diagnostic=journal.rows.find(row=>row.stage==='READBACK_DIAGNOSTIC_CAPTURED');
+    const diagnostic=rows.find(row=>row.stage==='READBACK_DIAGNOSTIC_CAPTURED');
     expect(diagnostic).toBeDefined();
     expect(diagnostic?.requestId).toBe('readback-r03');
     expect((diagnostic?.diagnostic as ReturnType<typeof diag>).accepted).toBe(false);
     expect(field(diagnostic?.diagnostic as ReturnType<typeof diag>,'name')).toMatchObject({accepted:false,mismatchCategory:'VALUE_MISMATCH'});
-    expect(journal.rows.map(row=>row.stage)).toContain('CLEANUP_COMPLETED');
-    expect(journal.rows.findIndex(row=>row.stage==='READBACK_DIAGNOSTIC_CAPTURED')).toBeLessThan(journal.rows.findIndex(row=>row.stage==='CLEANUP_COMPLETED'));
-    const serialized=JSON.stringify(journal.rows);
+    expect(rows.map(row=>row.stage)).toContain('CLEANUP_COMPLETED');
+    expect(rows.findIndex(row=>row.stage==='READBACK_DIAGNOSTIC_CAPTURED')).toBeLessThan(rows.findIndex(row=>row.stage==='CLEANUP_COMPLETED'));
+    const serialized=JSON.stringify(rows);
     expect(serialized).not.toContain('R03_SYNTHETIC_MISMATCH_SENTINEL');
     expect(serialized).not.toContain(P1_T15_DM_MESSAGE);
     expect(serialized).not.toContain(API);
@@ -460,21 +511,20 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
 
   it('R03-10b successful create without an addressable ID fails with cleanup UNKNOWN, never PASS',async()=>{
     const provider=mockProvider({createWithoutId:true});
-    const journal=new MemoryJournal();
-    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal,maxRequests:7});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,maxRequests:7});
+    const rows=await readEvidenceRows();
     expect(result.result).toBe('FAIL');
     expect(result.errorCategory).toBe('SAFETY_CREATE_SUCCEEDED_WITHOUT_AUTOMATION_ID');
     expect(result.cleanup).toBe('CLEANUP_UNSAFE_OR_UNKNOWN');
     expect(result.counters.providerRequests).toBe(4);
     expect(provider.requests.some(r=>r.method==='PATCH'||r.method==='DELETE')).toBe(false);
     expect(provider.exists).toBe(true);
-    expect(journal.rows.some(row=>row.stage==='CLEANUP_COMPLETED'&&row.residualState==='ABSENT')).toBe(false);
+    expect(rows.some(row=>row.stage==='CLEANUP_COMPLETED'&&row.residualState==='ABSENT')).toBe(false);
   });
 
   it('R03-11 active create response performs immediate DELETE/final read-back and never PATCHes',async()=>{
     const provider=mockProvider({createActive:true});
-    const journal=new MemoryJournal();
-    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal,maxRequests:99});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,maxRequests:99});
     expect(result.classification).toBe('NATIVE_AUTOMATION_SAFETY_FAILURE');
     expect(result.result).toBe('FAIL');
     expect(result.errorCategory).toBe('R03_CREATE_RESPONSE_ACTIVE');
@@ -489,8 +539,7 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
 
   it('R03-11a active read-back is rejected and cleaned up without any PATCH',async()=>{
     const provider=mockProvider({readbackActiveAfterCreate:true,missingTriggerEvidence:true});
-    const journal=new MemoryJournal();
-    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal,maxRequests:99});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,maxRequests:99});
     expect(result.classification).toBe('NATIVE_AUTOMATION_SAFETY_FAILURE');
     expect(result.result).toBe('FAIL');
     expect(result.errorCategory).toBe('R03_READBACK_ACTIVE');
@@ -505,7 +554,7 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
 
   it('R03-11b insufficient caller budget blocks before any request and preserves cleanup reservation',async()=>{
     const provider=mockProvider();
-    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal:new MemoryJournal(),maxRequests:6});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,maxRequests:6});
     expect(result.result).toBe('BLOCKED');
     expect(result.errorCategory).toBe('R03_REQUEST_BUDGET_INSUFFICIENT_FOR_CLEANUP_RESERVATION');
     expect(result.counters.providerRequests).toBe(0);
@@ -514,41 +563,41 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
 
   it('R03-12 cleanup uncertainty is not misreported as verified',async()=>{
     const provider=mockProvider({readbackMismatch:'name',deleteStatus:500});
-    const journal=new MemoryJournal();
-    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport});
+    const rows=await readEvidenceRows();
     expect(result.cleanup).toBe('CLEANUP_UNSAFE_OR_UNKNOWN');
     expect(result.classification).toBe('NATIVE_AUTOMATION_SAFETY_FAILURE');
     expect(result.result).toBe('FAIL');
     expect(result.counters.providerRequests).toBeLessThanOrEqual(9);
-    expect(journal.rows.some(row=>row.stage==='CLEANUP_COMPLETED'&&(row.residualState==='ABSENT'||row.residualState==='DISABLED'))).toBe(false);
+    expect(rows.some(row=>row.stage==='CLEANUP_COMPLETED'&&(row.residualState==='ABSENT'||row.residualState==='DISABLED'))).toBe(false);
   });
 
   it('R03-12a successful DELETE with unresolved final read-back never claims absence or success',async()=>{
     const provider=mockProvider({finalGetStatus:503});
-    const journal=new MemoryJournal();
-    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal,maxRequests:7});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,maxRequests:7});
+    const rows=await readEvidenceRows();
     expect(result.result).toBe('FAIL');
     expect(result.cleanup).toBe('CLEANUP_UNSAFE_OR_UNKNOWN');
     expect(result.errorCategory).toBe('R03_CLEANUP_FINAL_READBACK_UNRESOLVED');
     expect(result.counters.providerRequests).toBe(7);
     expect(provider.requests.some(r=>r.method==='PATCH')).toBe(false);
-    expect(journal.rows.some(row=>row.stage==='CLEANUP_COMPLETED'&&row.residualState==='ABSENT')).toBe(false);
-    expect(journal.rows.find(row=>row.stage==='CLEANUP_COMPLETED')).toMatchObject({deleteStatus:200,finalGetStatus:503,residualState:'UNKNOWN'});
+    expect(rows.some(row=>row.stage==='CLEANUP_COMPLETED'&&row.residualState==='ABSENT')).toBe(false);
+    expect(rows.find(row=>row.stage==='CLEANUP_COMPLETED')).toMatchObject({deleteStatus:200,finalGetStatus:503,residualState:'UNKNOWN'});
   });
 
   it('R03-12b failed DELETE cannot claim absence even when a later GET returns 404',async()=>{
     const provider=mockProvider({readbackMismatch:'name',deleteStatus:500,deleteRemovesDespiteFailure:true});
-    const journal=new MemoryJournal();
-    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,journal,maxRequests:7});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,maxRequests:7});
+    const rows=await readEvidenceRows();
     expect(result.result).toBe('FAIL');
     expect(result.cleanup).toBe('CLEANUP_UNSAFE_OR_UNKNOWN');
     expect(result.errorCategory).toBe('R03_CLEANUP_DELETE_FAILED');
     expect(result.counters.providerRequests).toBe(7);
-    expect(journal.rows.some(row=>row.stage==='CLEANUP_COMPLETED'&&row.residualState==='ABSENT')).toBe(false);
-    expect(journal.rows.find(row=>row.stage==='CLEANUP_COMPLETED')).toMatchObject({deleteStatus:500,finalGetStatus:404,residualState:'UNKNOWN',deleteFailed:true});
+    expect(rows.some(row=>row.stage==='CLEANUP_COMPLETED'&&row.residualState==='ABSENT')).toBe(false);
+    expect(rows.find(row=>row.stage==='CLEANUP_COMPLETED')).toMatchObject({deleteStatus:500,finalGetStatus:404,residualState:'UNKNOWN',deleteFailed:true});
   });
 
-  it('R03-13 fixed journal refuses secrets and private fields before persistence',async()=>{
+  it('JOURNAL-04 / R03-13 fixed journal refuses secrets and private fields before persistence',async()=>{
     const journal=new FixedP1T15R03Journal();
     await journal.initialize([API,EMAIL]);
     await expect(journal.append('READBACK_DIAGNOSTIC_CAPTURED',{apiKey:API},[API,EMAIL])).rejects.toThrow('SAFETY_EVIDENCE_SECRET_OR_PII_LEAK_PREVENTED');
