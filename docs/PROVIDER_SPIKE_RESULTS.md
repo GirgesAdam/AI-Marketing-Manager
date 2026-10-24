@@ -3554,3 +3554,189 @@ The documentation closeout `git diff --check` was executed after all final docum
 - `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`; no P1-T14 request, fixture access, timing-gate change, or evidence change occurred.
 - No live authorization was granted. No live R03 CLI or Provider request occurred; R02 evidence remains unchanged.
 - Current execution state is maintained only in `PROGRESS.md`: no task is executing, and the next Phase-1 task remains unassigned pending explicit Team Leader task assignment. No R04 or other successor task was started.
+
+
+## P1-T15-R04 — Prepare Live Diagnostic Authorization Packet
+
+**Status: `IMPLEMENTED OFFLINE / AUTHORIZATION PACKET READY / AWAITING TEAM LEADER REVIEW`.** This is documentation-only preparation for a possible separately authorized R03 diagnostic. It is not live authorization and does not resolve parent `P1-T15`.
+
+### Starting point and inspected source
+
+- Required starting branch verified: `p1-t15-r03-automation-readback-diagnostic`.
+- Required starting HEAD verified: `4c4ca21d6f918915919e0547487993b343e9370a`.
+- Starting working tree verified clean.
+- Task branch created from that exact HEAD: `p1-t15-r04-live-diagnostic-authorization-packet`.
+- Source inspected: `src/provider-spike/p1-t15-r03-runner.ts`, `src/provider-spike/p1-t15-runner.ts`, `src/provider-spike/p1-t02-zernio.ts`, `tests/provider-spike/p1-t15-r03.test.ts`, and `package.json`.
+- Source/test/package comparison against the starting HEAD returned no differences. No source, test, package, configuration, or evidence file was changed.
+- Existing R03 evidence path `artifacts/provider-spike/p1-t15-r03-evidence.jsonl` was absent at inspection time. No evidence file was created or modified.
+
+### Purpose and expected result
+
+The diagnostic is intended to record safe field-level evidence from the exact disabled-automation read-back and distinguish a confirmed field mismatch from an unverified hypothesis. It must not persist raw configuration values or response bodies. A mismatch observation is not proof of the underlying Provider implementation's defaults beyond the exact response observed in that separately authorized run.
+
+- Expected mismatch finding: `SAFETY_DISABLED_READBACK_CONFIG_MISMATCH`, with `READBACK_DIAGNOSTIC_CAPTURED` containing field metadata only; cleanup must still be independently verified.
+- If the exact configuration is accepted and the read-back explicitly reports `isActive: false`, the diagnostic can classify `COMMENT_AUTOMATION_READBACK_DIAGNOSTIC_COMPLETED` / `PASS`, but only after verified cleanup.
+- No field-level live observation exists from this task. The exact mismatch remains unresolved until a separate authorization is granted and a live observation actually occurs.
+
+### Frozen target and create configuration derived from source
+
+| Field | Source-defined value / rule |
+|---|---|
+| Profile ID | `6ac5a45a8e4ca44f355033ae` |
+| Account ID | `6ac64f8740364f4695dd3077` |
+| Facebook Page ID | `1387424501114639` |
+| Zernio post ID | `6ada5bc404775bbecc763501` |
+| Facebook platform post ID | `1387424501114639_122110940457502015` |
+| Platform | `facebook` |
+| Frozen post integrity | SHA-256 `db58ab9f9a09803d402dfe975d204baaeec1f9dc828c0f3c541833a84fc03113`; raw post text is intentionally not copied here |
+| `trigger` | `comment` |
+| `name` | `P1_T15_AUTOMATION_NAME` source constant; literal intentionally not duplicated |
+| `keywords` | `[P1_T15_KEYWORD]` source constant; literal intentionally not duplicated |
+| `matchMode` | `exact` |
+| `dmMessage` | `P1_T15_DM_MESSAGE` source constant; raw message text intentionally not copied |
+| `buttons` | `[]` |
+| `alsoMatchInDms` | `false` |
+| `dmDelaySeconds` | `0` |
+| `isActive` | `false` |
+| `profileId`, `accountId`, `postId`, `platformPostId` | The exact fixed IDs listed above |
+
+The create body is built only by `p1T15CreateBody()`; the request sender checks that the body exactly matches that function's output. These source constants, the frozen target, and the body are unchanged from the verified starting HEAD. The R03 path does not send a `platform` field in the create body and does not enable the automation.
+
+### Authorization and non-Provider preflight
+
+The CLI accepts no arguments (non-live) or exactly `--live`. The documented future live command is not authorized by this task.
+
+1. The wrapper and shared diagnostic core both require `live: true` and the actual process environment value `process.env.P1_T15_R03_LIVE_AUTHORIZED?.trim() === 'true'`. Caller-provided `liveAuthorized` and `options.env` cannot grant this authorization.
+2. The shared core requires the genuine `FixedP1T15R03Journal` instance registered in its private `WeakSet`; a missing or untrusted journal blocks before transport or journal initialization.
+3. The effective request budget must be at least `7`; otherwise the runner blocks before transport with `R03_REQUEST_BUDGET_INSUFFICIENT_FOR_CLEANUP_RESERVATION`.
+4. The hard-coded frozen post content must hash to the source constant. Credential variables `ZERNIO_API_KEY` and `ZERNIO_EXPECTED_USER_EMAIL` must be non-empty. Values must never be printed or copied into the packet.
+5. The fixed journal creates `artifacts/provider-spike/p1-t15-r03-evidence.jsonl` with exclusive `open(..., 'wx')`. An existing file blocks with `SAFETY_EVIDENCE_FILE_ALREADY_EXISTS`; it is not overwritten. The path was absent during this task. Journal initialization occurs before the first Provider request.
+6. The live transport uses API base `https://zernio.com/api`, a Bearer credential header, JSON request bodies, and a 7,000 ms abort timeout per request. The transport parses response JSON in memory but the R03 journal does not persist raw response bodies.
+
+
+### Exact R03 request sequence derived from the diagnostic branch
+
+The transport's base URL is `https://zernio.com/api`; paths below are the exact request paths passed by the runner. Requests are sequential; no automatic retry is implemented.
+
+| Ordinal | Method and endpoint | Purpose / gate |
+|---:|---|---|
+| 1 | `GET /v1/auth/verify` | Requires HTTP 200, `valid === true`, and normalized returned email equal to the configured expected identity. Failure stops before mutation. |
+| 2 | `GET /v1/accounts?profileId=6ac5a45a8e4ca44f355033ae` (profile ID URL-encoded by source) | Requires HTTP 200 and an `accounts` array; exactly one target account must match the fixed account ID, profile ID, and Facebook platform. A returned account with a non-null profile ID different from the fixed profile also fails. |
+| 3 | `GET /v1/posts/6ada5bc404775bbecc763501` | Requires HTTP 200, exact provider post ID, exact frozen content and hash, exactly one Facebook platform entry, exact account ID and platform post ID, and the derived Page ID to match the fixed Page ID. Only then is `targetVerified` set. |
+| 4 | `POST /v1/comment-automations` | One create attempt only, with the exact source-defined body above and `isActive: false`. A sender guard rejects any body that differs from `p1T15CreateBody()`. |
+| 5 | `GET /v1/comment-automations/{returnedAutomationId}` | Issued only when create returned a 2xx response with an addressable ID and the create response did not already report `isActive: true`. The response is projected into safe field-level diagnostic metadata. |
+| 6 | `DELETE /v1/comment-automations/{returnedAutomationId}` | Exact-resource cleanup only; entered immediately after a stop condition or after the diagnostic decision when an ID is known. |
+| 7 | `GET /v1/comment-automations/{returnedAutomationId}` | Final exact-resource cleanup verification. No other request is permitted once cleanup starts. |
+
+**Diagnostic mode never issues `PATCH`.** The shared sender rejects it with `SAFETY_R03_PATCH_FORBIDDEN`. The `GET /v1/comment-automations/{id}/logs?limit=1&skip=0` helper exists for the separate lifecycle path but is not called by `runP1T15ReadbackDiagnostic`; R03 does not inspect logs or send trigger traffic.
+
+### Request budget and possible branch counts
+
+| Control | Source-derived value |
+|---|---|
+| Wrapper hard request ceiling | `9` requests maximum |
+| Minimum budget accepted before transport | `7`; any smaller value blocks before requests |
+| Cleanup reservation | Final `2` slots reserved for exact-resource `DELETE` and final `GET` |
+| Maximum requests on the current R03 diagnostic control flow | `7` (three preflight GETs + one POST + optional read-back GET + two cleanup requests) |
+| Early stop before create | `1`, `2`, or `3` requests, depending on which preflight fails |
+| Create rejection / ambiguous create without ID | `4` requests; cleanup cannot safely address an unknown ID |
+| Create response non-2xx with an addressable ID, or create reports active | At most `6` requests: the first four followed by cleanup DELETE + final GET |
+| Addressable create followed by read-back or configuration decision | At most `7` requests: first five followed by cleanup DELETE + final GET |
+| Retries / PATCH / comment / DM / trigger requests in diagnostic mode | `0` |
+
+The hard ceiling is `9`, but current R03 diagnostic control flow returns after at most `7` requests because it does not call the optional log-read helper. Do not infer permission to add requests from the unused two-request headroom. The last two slots remain reserved, and the cleanup-only guard blocks any request other than the exact-resource DELETE/final GET pair.
+
+
+### Stop conditions, cleanup and failure handling
+
+- **Before mutation:** Any authorization/journal/budget/hash/credential gate failure stops before Provider transport. Identity failure stops before account/post checks; account failure stops before post check; any account or frozen-post mismatch stops before POST. The sender independently refuses a mutation before `targetVerified`.
+- **Create returns HTTP 400 without an ID:** stop as `R03_READBACK_UNAVAILABLE_CREATE_REJECTED`; no resource ID exists to clean up.
+- **Create returns another non-2xx status without an ID:** stop. For timeout/no status or HTTP 5xx, report `R03_CREATE_OUTCOME_UNKNOWN_NO_AUTOMATION_ID` and `CLEANUP_UNSAFE_OR_UNKNOWN`; for other non-2xx responses report the corresponding create status/block. Do not retry and do not guess an ID.
+- **Create returns 2xx without an addressable `id` or `_id`:** fail closed as `SAFETY_CREATE_SUCCEEDED_WITHOUT_AUTOMATION_ID`, cleanup unknown; no safe exact-resource DELETE can be constructed. If POST times out or has an ambiguous outcome without an ID, the resource state is unknown. Do not retry POST or use broad listing/deletion to guess.
+- **Create returns a non-2xx response but includes an ID:** perform only the exact-resource cleanup pair; the overall result remains blocked/failed as classified.
+- **Create response says `isActive: true`:** immediately enter cleanup; no read-back or PATCH is attempted first.
+- **Malformed/non-200 read-back, config mismatch, read-back reports active, or disabled state is not explicitly `false`:** immediately enter cleanup. A status-200 response without a valid automation envelope becomes an `AUTOMATION_ENVELOPE_MISSING` diagnostic and cleanup is attempted for the known exact ID.
+- **Timeout/network error before create:** stop without mutation. Timeout/ambiguous POST without an ID leaves create outcome unknown. Timeout after an addressable ID is known enters the existing bounded cleanup path when no DELETE has yet been sent.
+- **Cleanup:** send one `DELETE /v1/comment-automations/{id}`, then one final `GET /v1/comment-automations/{id}`, even if DELETE fails. Confirm cleanup only if DELETE is 2xx **and** final exact-resource GET is 404. A failed DELETE followed by GET 404 is still `R03_CLEANUP_DELETE_FAILED` / residual `UNKNOWN`; a successful DELETE followed by GET 200 means the resource remains or its state is not safely absent; a failed/unavailable final GET is `R03_CLEANUP_FINAL_READBACK_UNRESOLVED` unless DELETE failure takes precedence. No third cleanup request or retry is allowed.
+- If cleanup cannot be confirmed, report `CLEANUP_UNSAFE_OR_UNKNOWN` and residual state `UNKNOWN`; never report `CLEANUP_VERIFIED` merely because final GET is 404.
+- R03 does not send a disable PATCH if an active resource is observed. It uses immediate exact DELETE/final GET cleanup. No comments, DMs, trigger traffic, or log reads are part of this diagnostic.
+
+### Field-level diagnostic and evidence privacy
+
+The R03 journal path is `artifacts/provider-spike/p1-t15-r03-evidence.jsonl`. Each row is JSONL with sequence, UTC timestamp, stage, and approved metadata. The source-defined checkpoints include:
+
+- `RUN_STARTED`: fixed target IDs, frozen post hash, DM-message hash, and request maximum; diagnostic mode omits raw automation name and keyword.
+- `IDENTITY_VERIFIED`: HTTP status, request ID, and Boolean expected-identity match only.
+- `TARGET_VERIFIED`: account/post statuses and request IDs, fixed IDs, and frozen post hash.
+- `CREATE_ATTEMPT_COMPLETED`: create status/request ID, returned automation ID, requested inactive state, and returned active Boolean; no raw response body.
+- `READBACK_DIAGNOSTIC_CAPTURED`: read-back status/request ID and diagnostic metadata only.
+- `CREATED_DISABLED_VERIFIED`: status/request ID, `isActive: false`, accepted Boolean, and mismatch count.
+- `CLEANUP_COMPLETED`: DELETE/final-GET statuses and request IDs plus residual state (`ABSENT` only on confirmed cleanup; otherwise `UNKNOWN`).
+- `RUN_FINALIZED`: result/classification/error category/cleanup state and request counters.
+
+Each diagnostic field reports `path`, `requiredness`, `fieldState`, `jsonType`, `evaluated`, `accepted`, and `mismatchCategory` where applicable. Safe shape metadata may include `valueSource`, `arrayLength`, and `firstElementType`. It does not store actual field values. The runner result includes request ordinal, method, path without query string, status, and safe request/correlation ID, but not response bodies. The fixed journal rejects credential/expected-email leakage and known person-data patterns; raw credentials and raw message content must never be copied to notes, console transcripts, or evidence.
+
+### Known source limitations to present to Team Leader (no code changes made)
+
+These are limitations of the current implementation, not verified Provider behavior:
+
+1. Frozen-post attestation checks the fixed post ID, exact content/hash, one Facebook platform entry, account ID, platform-post ID, and derived Page ID. It does **not** assert the post's current `status` or the platform entry's publication status.
+2. Account ownership requires exactly one target account matching the fixed account/profile/Facebook tuple and rejects any returned account with a different non-null profile ID. Other account entries whose profile ID cannot be resolved are not independently rejected by that last predicate.
+3. The read-back diagnostic treats `id` and `_id` as optional metadata; a present chosen string ID must match the created ID, but missing IDs do not themselves fail the projection. The separate `isActive` gate is checked after the projection and is not one of its diagnostic field entries.
+4. `profileId` and `platform` are optional in the projection. When present, they must resolve/match the expected profile and Facebook platform.
+5. The current projection accepts `buttons` when absent or an empty array; a non-empty array is rejected. A non-array `buttons` value is currently marked not evaluated and can still be accepted even if its reported JSON type is wrong.
+6. `commentReply` is rejected only when it is a non-empty string; a non-string value can be accepted despite a `wrong_type` state. `template`, `audience`, and `followGate` are accepted only when absent or null.
+7. The credential preflight checks non-empty API key and expected-email strings but does not independently validate the expected email's syntax. Actual identity is checked against the Provider response before any mutation.
+
+Team Leader should explicitly decide whether these bounded implementation limitations are acceptable for a one-shot diagnostic or require a separate implementation task before any live authorization. This task does not silently repair them, alter source behavior, or grant authorization.
+
+
+### Future operator runbook — NOT AUTHORIZED / DO NOT EXECUTE
+
+**The command below is documented for a possible future, separately authorized run only. It was not executed for P1-T15-R04. No authorization is granted by this packet.**
+
+```text
+npm run p1-t15-r03 -- --live
+```
+
+Required process environment names (values must never be printed): `ZERNIO_API_KEY`, `ZERNIO_EXPECTED_USER_EMAIL`, and — only after an explicit separate Team Leader decision — `P1_T15_R03_LIVE_AUTHORIZED=true`. This task did not set the authorization variable. Do not use `liveAuthorized` or an injected `options.env` as an authorization substitute.
+
+Before any future authorized run, the operator must:
+
+1. Confirm the exact Team Leader authorization scope, branch/HEAD, target IDs, request budget, run window, and cleanup responsibility. Re-check the reviewed source has not changed.
+2. Run offline checks approved for that execution (typecheck/build and the existing mock-only R03 regressions) before considering Provider access. Never use a test helper's process-variable changes as live authorization.
+3. Confirm the required credentials and expected identity are available in the process environment without echoing them. The runner itself must verify the authenticated Provider email before mutation.
+4. Confirm `Test-Path artifacts/provider-spike/p1-t15-r03-evidence.jsonl` is `False`. If it is `True`, stop; do not delete, truncate, overwrite, or rename the existing evidence without a separate decision. The runner's exclusive-create check remains the final no-overwrite guard.
+5. Confirm the frozen target/source constants and create body are unchanged, and that the account/post preflight is expected to pass. Do not modify the target or body to get past a failed gate.
+6. Execute only the exact command above after authorization; do not add a retry, alternate endpoint, PATCH, trigger, log-read, or cleanup request.
+7. Review sanitized stdout and the dedicated JSONL evidence for ordered request metadata, preflight checkpoints, diagnostic field metadata, and exact cleanup statuses. Do not seek, dump, or persist raw response bodies or secrets.
+8. Before Team Leader review, reconcile the reported request count with the request list and ensure the final two calls were the exact-resource DELETE and GET. Accept cleanup as confirmed only for DELETE 2xx plus final GET 404. Otherwise record residual/unknown state and stop; do not rerun automatically.
+
+No command in this runbook is authorized by R04. Any live execution requires a separate explicit Team Leader authorization and must stop immediately on a failed preflight or uncertain resource state.
+
+
+### Complete safe field diagnostic inventory
+
+The `diagnoseP1T15ExactConfig` projection contains these field paths; values are compared in memory and are not written to the journal:
+
+| Path | Current source rule |
+|---|---|
+| `id`, `_id` | Optional metadata entries; string type/presence is reported. They do not independently require presence. |
+| `identity` | Uses a non-empty string `id` first, otherwise a non-empty string `_id`; absent identity is accepted, but a selected present identifier must equal the returned create ID. |
+| `name` | Required exact source-constant string. |
+| `trigger` | Required exact string `comment`. |
+| `accountId` | Required exact fixed account ID. |
+| `platformPostId` | Required exact fixed Facebook platform-post ID. |
+| `postId` | Required exact fixed Zernio post ID. |
+| `profileId` | Optional; if present, the source's scalar/object ID resolver must equal the fixed profile ID. |
+| `platform` | Optional; if present, exact string `facebook`. |
+| `keywords` | Required array with exactly one item equal to the fixed keyword constant; only array length and first-item JSON type are emitted. |
+| `matchMode` | Required exact string `exact`. |
+| `dmMessage` | Required exact source-constant message; the message value is never emitted. |
+| `alsoMatchInDms` | Required Boolean `false`. |
+| `dmDelaySeconds` | Required number `0`. |
+| `buttons` | Optional; absent or empty array is accepted; a non-empty array is rejected. Non-array values have the implementation limitation documented above. |
+| `commentReply` | Optional; a non-empty string is rejected. Other values are handled as described in the known limitations above. |
+| `template`, `audience`, `followGate` | Optional; absent or `null` accepted, non-null values rejected. |
+
+The separate state gate requires `isActive === false` after the projection accepts. No `isActive` value is included as a field entry in `diagnoseP1T15ExactConfig`. The projection's `mismatchCount` counts entries with `accepted === false`; a mismatch category is one of the source-generated safe labels (for example, missing/null required field, wrong type, value mismatch, identifier mismatch, array length/value mismatch, or missing automation envelope). This table documents current source behavior, including the limitations above; it does not broaden the diagnostic contract.

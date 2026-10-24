@@ -51,17 +51,17 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NONE — NO TASK CURRENTLY EXECUTING`; RFIX3 closeout is complete and no successor has been assigned.
+Current Executing Task = `NONE — R04 PACKET PREPARED / AWAITING TEAM LEADER REVIEW`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; no P1-T14 request or evidence access in this closeout).
 
-Open Senior Tasks = `1 / 1` (P1-T14 remains independently waiting).
+Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R04 awaits Team Leader review).
 
-Executing Senior Tasks = `0 / 0`.
+Executing Senior Tasks = `0 / 0` (R04 preparation is complete and awaiting review; no Provider execution is active).
 
-Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES EXPLICIT TEAM LEADER ASSIGNMENT`.
+Current Task = `P1-T15-R04 — Prepare Live Diagnostic Authorization Packet — IMPLEMENTED OFFLINE / AWAITING TEAM LEADER REVIEW`.
 
 P1-T15-R03-RFIX3 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES** (Team Leader decision recorded in the closeout below).
 
@@ -4950,3 +4950,37 @@ Implementation/test commit: `cb9129a6235176ea5d74ffcfdac8d797ba81f995`.
 - No live authorization was granted, no live R03 CLI command or Provider request occurred, R02 evidence was not rerun or changed, and no R04 or other successor task was started.
 
 Expected closeout status: `DOCUMENTATION CLOSEOUT COMPLETE — R03 RFIX3 ACCEPTED WITH NON-BLOCKING NOTES — P1-T15 UNRESOLVED / FIX REQUIRED — NO SUCCESSOR TASK STARTED`.
+
+
+## P1-T15-R04 — Prepare Live Diagnostic Authorization Packet
+
+**Status: `IMPLEMENTED OFFLINE / AUTHORIZATION PACKET READY / AWAITING TEAM LEADER REVIEW`.** This task prepares a decision packet only; it does not grant live authorization or resolve parent `P1-T15`.
+
+- Required starting branch verified: `p1-t15-r03-automation-readback-diagnostic`.
+- Required starting HEAD verified: `4c4ca21d6f918915919e0547487993b343e9370a`; working tree clean.
+- Created dedicated branch from that exact HEAD: `p1-t15-r04-live-diagnostic-authorization-packet`.
+- Inspected the current R03 wrapper/shared runner, Zernio live transport, R03 mock regression tests, package scripts, and prior R03 documentation. Source/test/package diff from the starting HEAD is empty.
+- Detailed source-derived authorization packet, exact request paths/order/conditional branches, request budget, preflight, cleanup rules, privacy schema, known implementation limitations, and NOT AUTHORIZED operator runbook are appended to `docs/PROVIDER_SPIKE_RESULTS.md`.
+- Fixed target and create configuration are documented using the source constants; raw post/DM message content, keyword/name literals, credentials, and raw Provider bodies are not copied into the packet.
+- Source-derived request limits: hard ceiling `9`; minimum accepted budget `7`; final `2` slots reserved for exact DELETE + final GET; current diagnostic branch uses at most `7` requests because it does not call the optional log-read helper. Diagnostic mode has a hard no-PATCH guard.
+- The R03 evidence path `artifacts/provider-spike/p1-t15-r03-evidence.jsonl` was absent at inspection time. No evidence file was created or changed.
+- Known implementation limitations are explicitly disclosed for Team Leader decision; no source behavior was changed to hide them.
+
+### Exact offline verification and command results
+
+- Initial gate commands: `git branch --show-current` → `p1-t15-r03-automation-readback-diagnostic`; `git rev-parse HEAD` → `4c4ca21d6f918915919e0547487993b343e9370a`; `git status --porcelain` → empty. Gate passed.
+- Branch creation: `git switch -c p1-t15-r04-live-diagnostic-authorization-packet 4c4ca21d6f918915919e0547487993b343e9370a` → success.
+- Source/test/package immutability check: `git diff --exit-code 4c4ca21d6f918915919e0547487993b343e9370a -- src/provider-spike/p1-t15-r03-runner.ts src/provider-spike/p1-t15-runner.ts src/provider-spike/p1-t02-zernio.ts tests/provider-spike/p1-t15-r03.test.ts package.json` → exit code `0`, no differences.
+- Evidence path check: `Test-Path artifacts/provider-spike/p1-t15-r03-evidence.jsonl` → `False`; no file was created or touched.
+- Final documentation `git diff --check` → exit code `0`, PASS; the complete documentation diff was reviewed and only `PROGRESS.md` plus `docs/PROVIDER_SPIKE_RESULTS.md` are changed.
+- Source inspection used `git ls-files`, `git grep`, `Select-String`, and `Get-Content` against the source, regression-test, package, and current R03 documentation paths. No live command was invoked.
+- No npm tests, typecheck, or build were run for this documentation-only task. Existing RFIX3 test evidence remains in the accepted historical section; it is not represented as newly rerun. `docs/TEST_MATRIX.md` is unchanged.
+
+### Safety and canonical state
+
+- Live Provider requests: `0`; external mutations: `0`; automation create/PATCH/DELETE: `0 / 0 / 0`; comments, DMs, trigger traffic, Ads/media/webhook mutations: `0`.
+- `P1_T15_R03_LIVE_AUTHORIZED` was not set. `npm run p1-t15-r03 -- --live` is documented in the packet as **NOT AUTHORIZED — DO NOT EXECUTE** and was not run.
+- No R02 rerun/evidence change, P1-T14 request, live cleanup, code change, or successor task occurred.
+- Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
+- P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`, unchanged.
+- No live authorization is granted by this task. Stop after commit/push and submit the packet for Team Leader review.
