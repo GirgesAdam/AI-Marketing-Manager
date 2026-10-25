@@ -51,17 +51,17 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NONE — P1-T15-R05 ASSIGNED / NOT STARTED; NO PROVIDER EXECUTION ACTIVE`.
+Current Executing Task = `NONE — P1-T15-R05 IMPLEMENTED OFFLINE / AWAITING TEAM LEADER REVIEW; NO PROVIDER EXECUTION ACTIVE`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; no P1-T14 request or evidence access in this closeout).
 
-Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R05 is assigned but not started).
+Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R05 is awaiting Team Leader review).
 
-Executing Senior Tasks = `0 / 0` (no Senior implementation task is executing; no Provider execution is active).
+Executing Senior Tasks = `0 / 0` (R05 implementation and verification are complete; no Provider execution is active).
 
-Current Task = `P1-T15-R05 — Fail-Closed R03 Read-Back Validation — ASSIGNED / NOT STARTED`.
+Current Task = `P1-T15-R05 — Fail-Closed R03 Read-Back Validation — IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.
 
 P1-T15-R03-RFIX3 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES** (Team Leader decision recorded in the closeout below).
 
@@ -5050,3 +5050,40 @@ Update `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, and `docs/TEST_MATRIX.md
 - No Provider requests, external mutations, live authorization environment changes, or evidence overwrite occurs.
 - Diff contains only the scoped read-back validation, tests, and required documentation.
 - Senior Engineer commits/pushes and stops for Team Leader review. Do not start any successor task or live run.
+
+
+## P1-T15-R05 — Fail-Closed R03 Read-Back Validation
+
+**Status: `IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.** Live Provider authorization remains `NOT GRANTED`. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`.
+
+### Starting point and implementation
+
+- Latest reviewed R04 branch: `p1-t15-r04-live-diagnostic-authorization-packet`.
+- Latest reviewed R04 HEAD / R05 base: `cdeec307630ed8d13381d8cbd18171d3c3cbba96`.
+- Dedicated task branch: `p1-t15-r05-fail-closed-readback-validation`.
+- Implementation commit: `3230145b29eae783947d0eeb44d03c12d409ee62`.
+- `profileId` is now required for diagnostic acceptance and accepts only the exact non-empty scalar ID or exact identifier resolved through bounded `valueId` semantics. Missing/null/wrong-type/unresolved/mismatched cases are rejected with safe field metadata.
+- `buttons`: only missing or empty array is accepted; non-empty arrays and present null/non-array types are rejected.
+- `commentReply`: only missing, null, or empty string is accepted; non-empty strings and other non-null/non-string types are rejected.
+- `platform` remains optional but must equal `facebook` when present. Optional `id`/`_id` metadata remains accepted, but any present selected identifier must match the exact create ID.
+- PASS still requires accepted configuration, explicit `isActive === false`, and verified exact-resource DELETE 2xx plus final GET 404. Missing disabled state is BLOCKED.
+- Lifecycle mock fixture in `tests/provider-spike/p1-t15.test.ts` now includes the already-requested `profileId` from the fixed create contract. No production lifecycle code changed.
+- Authorization, fixed target/body, genuine fixed journal identity, request ceiling/cleanup reservation, no-PATCH, exact cleanup, and evidence privacy controls were not changed.
+
+### Exact commands and results
+
+- `npm test -- tests/provider-spike/p1-t15-r03.test.ts` — final exit code `0`, `40 passed / 0 failed` (1 file). First attempt exited `1` (`38 passed / 1 failed`) because the test expected `valueSource: scalar` for an empty string while the bounded resolver returns `none`; expectation corrected. Intermediate rerun passed `39/39` before the explicit missing-`isActive` regression was added.
+- `npm test` — final exit code `0`, `721 passed / 0 failed` across `30` files. First attempt exited `1` (`707 passed / 13 failed`) because the shared validator correctly rejected existing P1-T15 lifecycle mock read-backs that omitted `profileId`; the fixture was updated to match the fixed create body. Intermediate full-suite rerun passed `720/720` before the final R03-10d test was added.
+- `npm run typecheck` — final exit code `0`, PASS.
+- `npm run build` — final exit code `0`, PASS.
+- `git diff --check` — code/test-only pre-documentation check exit code `0`, PASS; final post-documentation check after all three documentation edits also exited `0`, PASS.
+- `git show --format= --check HEAD` on implementation commit `3230145b29eae783947d0eeb44d03c12d409ee62` — exit code `0`, PASS.
+
+### Safety, evidence and handoff
+
+- All end-to-end R03 tests use mock transport. Actual live Provider requests: `0`; external mutations: `0`; no live R03 CLI run, activation, PATCH, trigger traffic, comment, DM, log read, or Provider cleanup occurred.
+- `P1_T15_R03_LIVE_AUTHORIZED` is absent from the operator process environment. R03 and parent evidence files remained absent after tests; no durable Provider evidence was created.
+- `docs/PROVIDER_SPIKE_RESULTS.md` records the corrected contract, limitations, test history, and actual command results. `docs/TEST_MATRIX.md` records field matrix and safety regression evidence.
+- Remaining blocker: actual Provider behavior has not been tested and no live authorization is granted. Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
+- `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`, unchanged; no P1-T14 branch or evidence was modified.
+- Stop after documentation verification and commit/push; submit R05 for Team Leader review. Do not start a successor task.

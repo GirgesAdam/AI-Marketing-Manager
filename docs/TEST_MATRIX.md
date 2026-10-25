@@ -3692,3 +3692,56 @@ These test/typecheck/build results are not claimed as independently re-executed 
 - `P1-T14 = WAITING_TIME_GATE`; Observation A remains not yet eligible, and no request, evidence, fixture, or timing gate was changed by this closeout.
 - No live authorization, live R03 CLI invocation, or Provider request occurred. R02 evidence was not rerun or modified.
 - Current Task / Current Executing Task are governed by `PROGRESS.md`: no task is executing, no successor has been assigned, and the project awaits an explicit Team Leader task assignment. R04 and all other successor tasks remain unstarted.
+
+
+## P1-T15-R05 — Fail-Closed R03 Read-Back Validation (2026-10-25)
+
+### Validation contract and regression mapping
+
+| Area | Regression coverage | Expected safety result |
+|---|---|---|
+| Required `profileId` | R03-04 exact scalar, `{_id}`, `{id}`, `{accountId}`; missing, null, empty scalar, wrong primitive/array type, unresolved object, mismatch | Only an exact supported identifier is accepted; missing and malformed values increment mismatch count with safe categories |
+| `buttons` | R03-06 missing, empty array, non-empty array, null, string, number, object, Boolean | Missing/empty array accepted; non-empty array and every present non-array type rejected |
+| `commentReply` | R03-06 missing, null, empty string, non-empty string, Boolean, number, array, object | Only missing/null/empty string accepted; unexpected values rejected with safe categories |
+| End-to-end malformed read-back | R03-10c missing/wrong-type `profileId`, null/string `buttons`, number/object `commentReply` | FAIL; exact DELETE plus final GET; no PATCH; raw sentinel values absent from evidence |
+| Disabled-state gate | R03-10d missing `isActive`; existing R03-11a active read-back | BLOCKED/FAIL, never PASS; bounded exact cleanup |
+| Cleanup/PASS invariant | Existing R03-10a, R03-12, R03-12a, R03-12b | PASS requires accepted config, explicit `isActive === false`, DELETE 2xx and final exact GET 404; uncertainty or failed DELETE cannot be overridden by 404 |
+| Authorization and journal integrity | Existing AUTH-01..04, JOURNAL-01..07 and JOURNAL-04/R03-13 | Process authorization and genuine fixed journal identity remain enforced; secrets/PII rejected or excluded |
+| No-PATCH/request budget | Existing R03-10a, R03-11, R03-11a, R03-11b, R03-12* | Diagnostic path has no PATCH; cleanup reservation remains bounded |
+
+### Exact verification evidence
+
+```text
+npm test -- tests/provider-spike/p1-t15-r03.test.ts
+final exit code: 0 — 40 passed / 0 failed, 1 file
+initial attempt: exit code 1 — 38 passed / 1 failed; test expectation corrected to existing empty-scalar valueSource semantics
+intermediate rerun: exit code 0 — 39 passed / 0 failed before R03-10d was added
+
+npm test
+final exit code: 0 — 721 passed / 0 failed across 30 files
+initial attempt: exit code 1 — 707 passed / 13 failed because existing P1-T15 lifecycle mock read-back omitted profileId
+fixture correction: add the already-requested profileId to the lifecycle mock; no production lifecycle code changed
+intermediate rerun: exit code 0 — 720 passed / 0 failed before R03-10d was added
+
+npm run typecheck
+final exit code: 0 — PASS
+
+npm run build
+final exit code: 0 — PASS
+
+git diff --check
+code/test-only pre-documentation check exit code: 0 — PASS
+final post-documentation check: recorded in PROGRESS.md after all documentation edits
+
+git show --format= --check HEAD
+implementation commit 3230145b29eae783947d0eeb44d03c12d409ee62: exit code 0 — PASS
+```
+
+### Scope and provenance
+
+- Latest reviewed R04 base: `cdeec307630ed8d13381d8cbd18171d3c3cbba96`.
+- Task branch: `p1-t15-r05-fail-closed-readback-validation`.
+- Implementation commit: `3230145b29eae783947d0eeb44d03c12d409ee62`.
+- Changed production behavior is confined to the shared exact-config diagnostic projection. Tests were expanded in the R03 suite and the lifecycle fixture was corrected to reflect the existing create-body contract.
+- All Provider-like calls in this evidence are mock transport. Actual live Provider requests: `0`; external mutations: `0`; no live authorization was granted. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`.
+- This matrix records Senior Engineer execution results; it is not Team Leader acceptance or proof of live Provider behavior.

@@ -3753,3 +3753,57 @@ A separate Senior Engineer task, `P1-T15-R05 — Fail-Closed R03 Read-Back Valid
 The remaining documented limitations are accepted only for this fixed-target, disabled-create/read-back/delete diagnostic: current post status is not checked because exact post/account/platform IDs and content are attested and no trigger traffic is sent; unresolved profile identifiers on non-target account rows do not select the target, whose own account/profile/platform must match; missing `id`/`_id` in detail read-back is acceptable because the GET addresses the exact ID returned by create and any present ID must match; expected-email syntax validation is non-blocking because actual Provider identity must match exactly before mutation. `platform` may remain absent in automation read-back because it is not sent in the create body, but any present value must match Facebook.
 
 No live run is authorized. Do not set `P1_T15_R03_LIVE_AUTHORIZED=true`, execute `npm run p1-t15-r03 -- --live`, or send Provider requests. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; `P1-T14` remains `WAITING_TIME_GATE`.
+
+
+## P1-T15-R05 — Fail-Closed R03 Read-Back Validation
+
+**Status: `IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.** This change tightens the shared exact-configuration projection used by the R03 read-back diagnostic. It does not grant live authorization or resolve parent `P1-T15`.
+
+### Starting point and changed implementation
+
+- Latest reviewed R04 base: `cdeec307630ed8d13381d8cbd18171d3c3cbba96`, from `p1-t15-r04-live-diagnostic-authorization-packet`.
+- Dedicated task branch: `p1-t15-r05-fail-closed-readback-validation`.
+- Implementation commit: `3230145b29eae783947d0eeb44d03c12d409ee62`.
+- Production change is limited to `src/provider-spike/p1-t15-runner.ts`, function `diagnoseP1T15ExactConfig`.
+- Test changes: `tests/provider-spike/p1-t15-r03.test.ts` adds strict shape and mock end-to-end cases; `tests/provider-spike/p1-t15.test.ts` adds the required `profileId` to its shared lifecycle mock read-back/create fixture because the fixed create body already includes that field. No lifecycle production code was changed.
+- `platform` remains optional in read-back; when present it must equal `facebook`. `id`/`_id` remain optional metadata; any selected present identifier must match the create ID. The fixed target and create body are unchanged.
+
+### Corrected validation contract
+
+| Field | Accepted shapes | Rejected shapes and safe categories |
+|---|---|---|
+| `profileId` | Exact non-empty scalar profile ID, or object resolving to the exact ID via existing bounded `valueId` semantics (`_id`, `id`, or `accountId`) | Missing → `MISSING_REQUIRED_FIELD`; null → `NULL_IDENTIFIER`; primitive/array wrong type → `WRONG_TYPE`; unresolved object/empty scalar → `UNRESOLVED_IDENTIFIER`; resolved mismatch → `IDENTIFIER_MISMATCH`. Requiredness is now `required`. |
+| `buttons` | Missing, or an empty array | Non-empty array → `UNEXPECTED_NON_EMPTY_ARRAY`; present null → `UNEXPECTED_NULL`; any other present non-array type → `WRONG_TYPE`. |
+| `commentReply` | Missing, null, or empty string | Non-empty string → `UNEXPECTED_NON_EMPTY_STRING`; Boolean/number/array/object/other non-string non-null type → `WRONG_TYPE`. |
+
+The field-level diagnostic still emits metadata only (path, requiredness, state, JSON type, evaluation/acceptance, safe mismatch category and safe shape/source metadata); it does not emit raw field values. Missing or malformed required configuration cannot be accepted.
+
+### PASS contract and preserved controls
+
+R03 returns `PASS` only when the projected configuration is accepted, the read-back explicitly has `isActive === false`, and cleanup is verified by exact-resource `DELETE` returning 2xx followed by final exact-resource `GET` returning 404. Missing `isActive` is `BLOCKED`; active state/config mismatch fails closed; uncertain cleanup cannot become PASS.
+
+Preserved without production changes: process-environment authorization guard; genuine `FixedP1T15R03Journal` identity validation; fixed target and exact create-body validation; request ceiling and final-two-request cleanup reservation; no-`PATCH` restriction in R03 diagnostic mode; exact-resource cleanup/final read-back; secret/PII filtering and durable evidence path. No change was made to the target, create body, authorization mechanism, request budget, cleanup contract, or P1-T14.
+
+### Regression coverage
+
+- R03-04: exact scalar ID and supported object ID forms; missing, null, empty scalar, wrong type, unresolved object and mismatched identifier.
+- R03-06: missing/empty/non-empty-array/null/string/number/object/Boolean `buttons`; missing/null/empty/non-empty-string/Boolean/number/array/object `commentReply`.
+- R03-10c: mock-only end-to-end missing/wrong-type `profileId`, null/string `buttons`, and number/object `commentReply`; every case fails, captures safe mismatch metadata, performs the bounded DELETE/final GET pair, and never PATCHes or persists sentinels.
+- R03-10d: accepted field configuration with missing `isActive` is BLOCKED, never PASS, and still cleans up.
+- Existing R03 tests continue to cover authorization bypass attempts, genuine journal identity, no-PATCH, request budget, create ambiguity, cleanup uncertainty, failed DELETE plus final 404, and PII/secret filtering.
+- The P1-T15 lifecycle fixture now reflects the existing fixed create contract by including `profileId`; no production lifecycle implementation changed.
+
+### Exact verification commands and actual results
+
+- `npm test -- tests/provider-spike/p1-t15-r03.test.ts` — final exit code `0`; `40 passed / 0 failed` (1 file). An earlier run exited `1` with `38 passed / 1 failed` because the empty-string test expected `valueSource: scalar` while the existing bounded resolver reports `none`; the test expectation was corrected. An intermediate rerun passed `39/39` before R03-10d was added.
+- `npm test` — final exit code `0`; `721 passed / 0 failed` across `30` files. An earlier full-suite run exited `1` with `707 passed / 13 failed`: lifecycle mocks omitted `profileId` and therefore correctly failed the tightened shared validator. The lifecycle mock fixture was updated to match the fixed create body; the final full suite passed. An intermediate rerun before R03-10d passed `720/720`.
+- `npm run typecheck` — final exit code `0`, PASS.
+- `npm run build` — final exit code `0`, PASS.
+- `git diff --check` — code/test-only pre-documentation check exited `0`, PASS. A final check after the documentation edits is recorded in the R05 handoff in `PROGRESS.md`.
+- `git show --format= --check HEAD` on implementation commit `3230145b29eae783947d0eeb44d03c12d409ee62` — exit code `0`, PASS.
+
+### Remaining blockers and safety status
+
+No live Provider requests or external mutations occurred; all diagnostic transport cases were mock-only. `P1_T15_R03_LIVE_AUTHORIZED` remains absent from the operator process environment. No live R03 command, automation activation, PATCH, trigger traffic, comment, DM, log read, or Provider cleanup was run by R05. No R02 evidence was changed.
+
+Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`. `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. R05 only tightens offline validation and regression coverage; actual Provider read-back behavior remains unverified. Stop for Team Leader review; do not start a successor task.
