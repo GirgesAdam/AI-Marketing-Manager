@@ -3740,3 +3740,16 @@ The `diagnoseP1T15ExactConfig` projection contains these field paths; values are
 | `template`, `audience`, `followGate` | Optional; absent or `null` accepted, non-null values rejected. |
 
 The separate state gate requires `isActive === false` after the projection accepts. No `isActive` value is included as a field entry in `diagnoseP1T15ExactConfig`. The projection's `mismatchCount` counts entries with `accepted === false`; a mismatch category is one of the source-generated safe labels (for example, missing/null required field, wrong type, value mismatch, identifier mismatch, array length/value mismatch, or missing automation envelope). This table documents current source behavior, including the limitations above; it does not broaden the diagnostic contract.
+
+
+## Team Leader Decision — P1-T15-R04 (2026-10-25)
+
+**R04 task decision: `ACCEPTED WITH NON-BLOCKING NOTES` for offline packet preparation only. Live authorization decision: OPTION B — NOT GRANTED.**
+
+Source review confirmed the current read-back projection can accept an absent `profileId`, a non-array `buttons` value, or a non-string `commentReply` value without recording a mismatch. These are sufficient to prevent authorizing the proposed live diagnostic: the exact-configuration diagnostic must not classify incomplete or malformed configuration as accepted.
+
+A separate Senior Engineer task, `P1-T15-R05 — Fail-Closed R03 Read-Back Validation`, is assigned but has not started. It must require an exact `profileId`, fail closed on unexpected `buttons`/`commentReply` types, add mock-only regression coverage, update the test matrix and progress record, and stop for Team Leader review. The full contract is recorded in `PROGRESS.md`.
+
+The remaining documented limitations are accepted only for this fixed-target, disabled-create/read-back/delete diagnostic: current post status is not checked because exact post/account/platform IDs and content are attested and no trigger traffic is sent; unresolved profile identifiers on non-target account rows do not select the target, whose own account/profile/platform must match; missing `id`/`_id` in detail read-back is acceptable because the GET addresses the exact ID returned by create and any present ID must match; expected-email syntax validation is non-blocking because actual Provider identity must match exactly before mutation. `platform` may remain absent in automation read-back because it is not sent in the create body, but any present value must match Facebook.
+
+No live run is authorized. Do not set `P1_T15_R03_LIVE_AUTHORIZED=true`, execute `npm run p1-t15-r03 -- --live`, or send Provider requests. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; `P1-T14` remains `WAITING_TIME_GATE`.
