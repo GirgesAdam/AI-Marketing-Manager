@@ -4999,7 +4999,7 @@ Expected closeout status: `DOCUMENTATION CLOSEOUT COMPLETE — R03 RFIX3 ACCEPTE
 - `P1-T15-R04 = DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
 - `P1-T15-R05 = ASSIGNED / NOT STARTED`.
 - Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; Comment-to-DM, Delayed Native DM, and Delayed Native Reply remain `SPIKE_PENDING`.
-- Live authorization remains `NOT GRANTED`. Do not set `P1_T15_R03_LIVE_AUTHORIZED=true), run `npm run p1-t15-r03 -- --live`, or send Provider requests under this decision.
+- Live authorization remains `NOT GRANTED`. Do not set `P1_T15_R03_LIVE_AUTHORIZED=true`, run `npm run p1-t15-r03 -- --live`, or send Provider requests under this decision.
 - `P1-T14` remains `WAITING_TIME_GATE`; its schedule, request budget, and evidence boundary are unchanged.
 
 ## P1-T15-R05 — Fail-Closed R03 Read-Back Validation
