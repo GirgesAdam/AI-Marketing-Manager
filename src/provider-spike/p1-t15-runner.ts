@@ -93,8 +93,9 @@ export function diagnoseP1T15ExactConfig(a:Obj|null,id:string):P1T15ConfigDiagno
  fields.push(requiredStringDiagnostic(a,'accountId',P1_T15_ACCOUNT_ID));
  fields.push(requiredStringDiagnostic(a,'platformPostId',P1_T15_PLATFORM_POST_ID));
  fields.push(requiredStringDiagnostic(a,'postId',P1_T15_ZERNIO_POST_ID));
- const profileExists=hasField(a,'profileId'),profileValue=valueId(a.profileId),profileState=diagnosticFieldState(a,'profileId'),profileFieldState=profileExists&&a.profileId!==null&&typeof a.profileId!=='string'&&obj(a.profileId)===null?'wrong_type':profileState,profileAccepted=!profileExists||profileValue===P1_T15_PROFILE_ID;
- fields.push(diagnosticEntry(a,'profileId','optional',undefined,profileAccepted,profileExists,profileAccepted?null:profileFieldState==='null'?'NULL_IDENTIFIER':profileFieldState==='wrong_type'?'WRONG_TYPE':profileValue===null?'UNRESOLVED_IDENTIFIER':'IDENTIFIER_MISMATCH',{fieldState:profileFieldState,valueSource:profileExists?valueIdSource(a.profileId):'absent'}));
+ const profileExists=hasField(a,'profileId'),profileValue=valueId(a.profileId),profileState=diagnosticFieldState(a,'profileId'),profileFieldState=profileExists&&a.profileId!==null&&typeof a.profileId!=='string'&&obj(a.profileId)===null?'wrong_type':profileState,profileAccepted=profileExists&&profileValue===P1_T15_PROFILE_ID;
+ const profileMismatch=profileAccepted?null:!profileExists?'MISSING_REQUIRED_FIELD':a.profileId===null?'NULL_IDENTIFIER':profileFieldState==='wrong_type'?'WRONG_TYPE':profileValue===null?'UNRESOLVED_IDENTIFIER':'IDENTIFIER_MISMATCH';
+ fields.push(diagnosticEntry(a,'profileId','required',undefined,profileAccepted,profileExists,profileMismatch,{fieldState:profileFieldState,valueSource:profileExists?valueIdSource(a.profileId):'absent'}));
  fields.push(optionalExactStringDiagnostic(a,'platform','facebook'));
  const keywordState=diagnosticFieldState(a,'keywords','array'),keywords=a.keywords,keywordArray=Array.isArray(keywords)?keywords:[],keywordsAccepted=Array.isArray(keywords)&&keywordArray.length===1&&keywordArray[0]===P1_T15_KEYWORD;
  const keywordMismatch=keywordsAccepted?null:keywordState!=='present'?mismatchForState(keywordState):keywordArray.length!==1?'ARRAY_LENGTH_MISMATCH':diagnosticJsonType(keywordArray[0])!=='string'?'WRONG_TYPE':'ARRAY_VALUE_MISMATCH';
@@ -105,10 +106,10 @@ export function diagnoseP1T15ExactConfig(a:Obj|null,id:string):P1T15ConfigDiagno
  fields.push(diagnosticEntry(a,'alsoMatchInDms','required','boolean',dmScopeAccepted,true,dmScopeAccepted?null:dmScopeState!=='present'?mismatchForState(dmScopeState):'VALUE_MISMATCH'));
  const delayState=diagnosticFieldState(a,'dmDelaySeconds','number'),delayAccepted=num(a.dmDelaySeconds)===0;
  fields.push(diagnosticEntry(a,'dmDelaySeconds','required','number',delayAccepted,true,delayAccepted?null:delayState!=='present'?mismatchForState(delayState):'VALUE_MISMATCH'));
- const buttonArray=Array.isArray(a.buttons)?a.buttons:null,buttonsEvaluated=buttonArray!==null,buttonsAccepted=buttonArray===null||buttonArray.length===0;
- fields.push(diagnosticEntry(a,'buttons','optional','array',buttonsAccepted,buttonsEvaluated,buttonsAccepted?null:'UNEXPECTED_NON_EMPTY_ARRAY',{...(buttonArray!==null?{arrayLength:buttonArray.length}:{})}));
- const commentReplyEvaluated=typeof a.commentReply==='string'&&a.commentReply.length>0,commentReplyAccepted=!commentReplyEvaluated;
- fields.push(diagnosticEntry(a,'commentReply','optional','string',commentReplyAccepted,commentReplyEvaluated,commentReplyAccepted?null:'UNEXPECTED_NON_EMPTY_STRING'));
+ const buttonsExists=hasField(a,'buttons'),buttonArray=Array.isArray(a.buttons)?a.buttons:null,buttonsAccepted=!buttonsExists||(buttonArray!==null&&buttonArray.length===0),buttonsMismatch=buttonsAccepted?null:a.buttons===null?'UNEXPECTED_NULL':buttonArray===null?'WRONG_TYPE':'UNEXPECTED_NON_EMPTY_ARRAY';
+ fields.push(diagnosticEntry(a,'buttons','optional','array',buttonsAccepted,buttonsExists,buttonsMismatch,{...(buttonArray!==null?{arrayLength:buttonArray.length}:{})}));
+ const commentReplyExists=hasField(a,'commentReply'),commentReply=a.commentReply,commentReplyAccepted=!commentReplyExists||commentReply===null||(typeof commentReply==='string'&&commentReply.length===0),commentReplyMismatch=commentReplyAccepted?null:typeof commentReply==='string'?'UNEXPECTED_NON_EMPTY_STRING':'WRONG_TYPE';
+ fields.push(diagnosticEntry(a,'commentReply','optional','string',commentReplyAccepted,commentReplyExists,commentReplyMismatch));
  for(const path of ['template','audience','followGate']){const exists=hasField(a,path),v=a[path],accepted=!exists||v===null;fields.push(diagnosticEntry(a,path,'optional',undefined,accepted,exists,accepted?null:'UNEXPECTED_NON_NULL_VALUE'));}
  const mismatchCount=fields.filter(f=>f.accepted===false).length;
  return{accepted:mismatchCount===0,mismatchCount,fields};

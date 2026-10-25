@@ -64,12 +64,12 @@ function referenceExactConfig(a:Obj|null,id:string):boolean{
   const automationId=refText(a.id)??refText(a._id);
   if(automationId&&automationId!==id)return false;
   if(refText(a.name)!==P1_T15_AUTOMATION_NAME||refText(a.trigger)!=='comment'||refText(a.accountId)!==P1_T15_ACCOUNT_ID||refText(a.platformPostId)!==P1_T15_PLATFORM_POST_ID||refText(a.postId)!==P1_T15_ZERNIO_POST_ID)return false;
-  if(a.profileId!==undefined&&refValueId(a.profileId)!==P1_T15_PROFILE_ID)return false;
+  if(refValueId(a.profileId)!==P1_T15_PROFILE_ID)return false;
   if(a.platform!==undefined&&refText(a.platform)!=='facebook')return false;
   const keywords=Array.isArray(a.keywords)?a.keywords:[];
   if(keywords.length!==1||keywords[0]!==P1_T15_KEYWORD||refText(a.matchMode)!=='exact'||refText(a.dmMessage)!==P1_T15_DM_MESSAGE||a.alsoMatchInDms!==false||refNum(a.dmDelaySeconds)!==0)return false;
-  if(Array.isArray(a.buttons)&&a.buttons.length!==0)return false;
-  if(typeof a.commentReply==='string'&&a.commentReply.length>0)return false;
+  if(a.buttons!==undefined&&(!Array.isArray(a.buttons)||a.buttons.length!==0))return false;
+  if(a.commentReply!==undefined&&a.commentReply!==null&&(typeof a.commentReply!=='string'||a.commentReply.length>0))return false;
   if(a.template!==undefined&&a.template!==null)return false;
   if(a.audience!==undefined&&a.audience!==null)return false;
   if(a.followGate!==undefined&&a.followGate!==null)return false;
@@ -82,7 +82,7 @@ async function withR03Authorization<T>(action:()=>Promise<T>):Promise<T>{const p
 async function withoutR03Authorization<T>(action:()=>Promise<T>):Promise<T>{const previous=process.env[R03_AUTH_ENV];delete process.env[R03_AUTH_ENV];try{return await action();}finally{if(previous===undefined)delete process.env[R03_AUTH_ENV];else process.env[R03_AUTH_ENV]=previous;}}
 async function runAuthorizedR03(options:Parameters<typeof runP1T15R03>[0]){return withR03Authorization(()=>runP1T15R03(options));}
 
-type MockOptions={createActive?:boolean;createWithoutId?:boolean;readbackActiveAfterCreate?:boolean;missingTriggerEvidence?:boolean;readbackMismatch?:string|null;deleteStatus?:number;deleteRemovesDespiteFailure?:boolean;finalGetStatus?:number};
+type MockOptions={createActive?:boolean;createWithoutId?:boolean;readbackActiveAfterCreate?:boolean;missingTriggerEvidence?:boolean;readbackMismatch?:string|null;readbackOverride?:{field:string;value?:unknown;omit?:boolean};deleteStatus?:number;deleteRemovesDespiteFailure?:boolean;finalGetStatus?:number};
 function mockProvider(options:MockOptions={}){
   const requests:ProviderTransportRequest[]=[];
   let exists=false;
@@ -114,6 +114,10 @@ function mockProvider(options:MockOptions={}){
       if(options.missingTriggerEvidence){delete current.stats;delete current.logs;}
       if(!options.createActive&&options.readbackMismatch&&detailReadCount===1){
         current[options.readbackMismatch]='R03_SYNTHETIC_MISMATCH_SENTINEL';
+      }
+      if(options.readbackOverride&&detailReadCount===1){
+        if(options.readbackOverride.omit)delete current[options.readbackOverride.field];
+        else current[options.readbackOverride.field]=options.readbackOverride.value;
       }
       return rsp(200,{success:true,automation:current},'readback-r03');
     }
@@ -151,7 +155,7 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
     for(const secret of [API,EMAIL,P1_T15_ACCOUNT_ID,P1_T15_PROFILE_ID,P1_T15_ZERNIO_POST_ID,P1_T15_PLATFORM_POST_ID,P1_T15_AUTOMATION_NAME,P1_T15_DM_MESSAGE,P1_T15_KEYWORD])expect(serialized).not.toContain(secret);
   });
 
-  it('R03-01a projection preserves every accepted/rejected outcome of the pre-R03 exactConfig predicate',()=>{
+  it('R03-01a projection matches the current reference predicate including strict read-back field shapes',()=>{
     const variants:Record<string,unknown[]>={
       id:[undefined,null,17,'',AUTO,'wrong',{_id:AUTO}],_id:[undefined,null,17,'',AUTO,'wrong',{_id:AUTO}],
       name:[undefined,null,17,'',P1_T15_AUTOMATION_NAME,'wrong'],trigger:[undefined,null,false,'','comment','story_reply'],
@@ -216,9 +220,15 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
     const unrelated=diag({...baseAutomation(),profileId:{metadata:{_id:P1_T15_PROFILE_ID}}});
     expect(field(unrelated,'profileId')).toMatchObject({fieldState:'present',accepted:false,mismatchCategory:'UNRESOLVED_IDENTIFIER',valueSource:'unresolved_object'});
     expect(diag({...baseAutomation(),profileId:{_id:'wrong',metadata:{_id:P1_T15_PROFILE_ID}}}).accepted).toBe(false);
-    expect(field(diag({...baseAutomation(),profileId:null}),'profileId')).toMatchObject({fieldState:'null',accepted:false,mismatchCategory:'NULL_IDENTIFIER'});
+    expect(field(diag({...baseAutomation(),profileId:null}),'profileId')).toMatchObject({requiredness:'required',fieldState:'null',accepted:false,mismatchCategory:'NULL_IDENTIFIER'});
+    expect(field(diag({...baseAutomation(),profileId:''}),'profileId')).toMatchObject({requiredness:'required',fieldState:'present',jsonType:'string',accepted:false,mismatchCategory:'UNRESOLVED_IDENTIFIER',valueSource:'none'});
+    expect(field(diag({...baseAutomation(),profileId:[]}),'profileId')).toMatchObject({fieldState:'wrong_type',accepted:false,mismatchCategory:'WRONG_TYPE'});
+    expect(field(diag({...baseAutomation(),profileId:false}),'profileId')).toMatchObject({fieldState:'wrong_type',accepted:false,mismatchCategory:'WRONG_TYPE'});
+    const mismatched=diag({...baseAutomation(),profileId:{_id:'wrong'}});
+    expect(field(mismatched,'profileId')).toMatchObject({requiredness:'required',fieldState:'present',accepted:false,mismatchCategory:'IDENTIFIER_MISMATCH'});
+    expect(mismatched.accepted).toBe(false);
     const missing=baseAutomation(); delete missing.profileId;
-    expect(field(diag(missing),'profileId')).toMatchObject({fieldState:'missing',accepted:true,valueSource:'absent'});
+    expect(field(diag(missing),'profileId')).toMatchObject({requiredness:'required',fieldState:'missing',jsonType:'missing',accepted:false,mismatchCategory:'MISSING_REQUIRED_FIELD',valueSource:'absent'});
   });
 
   it('R03-05 optional identifier and platform predicates preserve current validator semantics',()=>{
@@ -238,17 +248,25 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
     expect(field(diag({...baseAutomation(),accountId:{_id:P1_T15_ACCOUNT_ID}}),'accountId')).toMatchObject({fieldState:'wrong_type',accepted:false,mismatchCategory:'WRONG_TYPE'});
   });
 
-  it('R03-06 optional buttons/commentReply and absent-versus-null constraints mirror exactConfig',()=>{
-    for(const value of [undefined,null,'not-an-array',7]){
-      const a=baseAutomation(); if(value===undefined)delete a.buttons; else a.buttons=value;
-      expect(field(diag(a),'buttons').accepted).toBe(true);
+  it('R03-06 optional buttons/commentReply accept only the specified absent/null/empty shapes',()=>{
+    const missingButtons=baseAutomation(); delete missingButtons.buttons;
+    expect(field(diag(missingButtons),'buttons')).toMatchObject({requiredness:'optional',fieldState:'missing',jsonType:'missing',evaluated:false,accepted:true,mismatchCategory:null});
+    expect(field(diag({...baseAutomation(),buttons:[]}),'buttons')).toMatchObject({fieldState:'present',jsonType:'array',evaluated:true,accepted:true,mismatchCategory:null,arrayLength:0});
+    expect(field(diag({...baseAutomation(),buttons:[{}]}),'buttons')).toMatchObject({accepted:false,mismatchCategory:'UNEXPECTED_NON_EMPTY_ARRAY',arrayLength:1});
+    for(const value of [null,'not-an-array',7,{},false]){
+      const result=diag({...baseAutomation(),buttons:value});
+      expect(field(result,'buttons').accepted).toBe(false);
+      expect(field(result,'buttons').mismatchCategory).toBe(value===null?'UNEXPECTED_NULL':'WRONG_TYPE');
     }
-    expect(field(diag({...baseAutomation(),buttons:[{}]}),'buttons')).toMatchObject({accepted:false,mismatchCategory:'UNEXPECTED_NON_EMPTY_ARRAY'});
-    for(const value of [undefined,null,7,{},'']){
-      const a=baseAutomation(); if(value===undefined)delete a.commentReply; else a.commentReply=value;
-      expect(field(diag(a),'commentReply').accepted).toBe(true);
-    }
+    const missingCommentReply=baseAutomation(); delete missingCommentReply.commentReply;
+    expect(field(diag(missingCommentReply),'commentReply')).toMatchObject({fieldState:'missing',evaluated:false,accepted:true,mismatchCategory:null});
+    expect(field(diag({...baseAutomation(),commentReply:null}),'commentReply')).toMatchObject({fieldState:'null',jsonType:'null',evaluated:true,accepted:true,mismatchCategory:null});
+    expect(field(diag({...baseAutomation(),commentReply:''}),'commentReply')).toMatchObject({fieldState:'present',jsonType:'string',evaluated:true,accepted:true,mismatchCategory:null});
     expect(field(diag({...baseAutomation(),commentReply:'public reply'}),'commentReply')).toMatchObject({accepted:false,mismatchCategory:'UNEXPECTED_NON_EMPTY_STRING'});
+    for(const value of [true,17,[],{}]){
+      const result=diag({...baseAutomation(),commentReply:value});
+      expect(field(result,'commentReply')).toMatchObject({fieldState:'wrong_type',accepted:false,mismatchCategory:'WRONG_TYPE'});
+    }
     for(const path of ['template','audience','followGate']){
       const missing=baseAutomation(); delete missing[path];
       expect(field(diag(missing),path).accepted).toBe(true);
@@ -507,6 +525,53 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
     expect(provider.requests.some(r=>r.method==='PATCH')).toBe(false);
     expect(provider.requests.filter(r=>r.method==='POST')).toHaveLength(1);
     expect(provider.requests.some(r=>(r.url??'').includes('/logs'))).toBe(false);
+  });
+
+  const invalidReadbackCases:Array<{label:string;field:string;value?:unknown;omit?:boolean;expectedCategory:string}>=[
+    {label:'missing required profileId',field:'profileId',omit:true,expectedCategory:'MISSING_REQUIRED_FIELD'},
+    {label:'wrong-type profileId',field:'profileId',value:17,expectedCategory:'WRONG_TYPE'},
+    {label:'null buttons',field:'buttons',value:null,expectedCategory:'UNEXPECTED_NULL'},
+    {label:'string buttons',field:'buttons',value:'R03_PRIVATE_BUTTONS_SENTINEL',expectedCategory:'WRONG_TYPE'},
+    {label:'number commentReply',field:'commentReply',value:17,expectedCategory:'WRONG_TYPE'},
+    {label:'object commentReply',field:'commentReply',value:{privateSentinel:'R03_PRIVATE_COMMENT_REPLY_SENTINEL'},expectedCategory:'WRONG_TYPE'},
+  ];
+
+  it.each(invalidReadbackCases)('R03-10c $label cannot produce diagnostic PASS and preserves exact cleanup',async(scenario)=>{
+    const readbackOverride={field:scenario.field,...(scenario.omit?{omit:true}:{value:scenario.value})};
+    const provider=mockProvider({readbackOverride});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,maxRequests:7});
+    const rows=await readEvidenceRows();
+    const diagnostic=rows.find(row=>row.stage==='READBACK_DIAGNOSTIC_CAPTURED');
+    const projection=diagnostic?.diagnostic as ReturnType<typeof diag>;
+    expect(result.result).toBe('FAIL');
+    expect(result.result).not.toBe('PASS');
+    expect(result.errorCategory).toBe('SAFETY_DISABLED_READBACK_CONFIG_MISMATCH');
+    expect(result.cleanup).toBe('CLEANUP_VERIFIED');
+    expect(result.counters).toMatchObject({providerRequests:7,creates:1,enablePatches:0,disablePatches:0,deletes:1,retries:0});
+    expect(result.requests).toHaveLength(7);
+    expect(field(projection,scenario.field)).toMatchObject({accepted:false,mismatchCategory:scenario.expectedCategory});
+    expect(provider.exists).toBe(false);
+    expect(provider.requests.at(-2)?.method).toBe('DELETE');
+    expect(provider.requests.at(-1)?.method).toBe('GET');
+    expect(provider.requests.some(request=>request.method==='PATCH')).toBe(false);
+    expect(provider.requests.filter(request=>request.method==='POST')).toHaveLength(1);
+    const serialized=JSON.stringify(rows);
+    expect(serialized).not.toContain('R03_PRIVATE_BUTTONS_SENTINEL');
+    expect(serialized).not.toContain('R03_PRIVATE_COMMENT_REPLY_SENTINEL');
+  });
+
+  it('R03-10d accepted configuration with missing isActive is BLOCKED, never PASS',async()=>{
+    const provider=mockProvider({readbackOverride:{field:'isActive',omit:true}});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,maxRequests:7});
+    expect(result.result).toBe('BLOCKED');
+    expect(result.result).not.toBe('PASS');
+    expect(result.errorCategory).toBe('R03_DISABLED_STATE_NOT_EXPOSED');
+    expect(result.cleanup).toBe('CLEANUP_VERIFIED');
+    expect(result.counters).toMatchObject({providerRequests:7,creates:1,enablePatches:0,disablePatches:0,deletes:1,retries:0});
+    expect(provider.exists).toBe(false);
+    expect(provider.requests.at(-2)?.method).toBe('DELETE');
+    expect(provider.requests.at(-1)?.method).toBe('GET');
+    expect(provider.requests.some(request=>request.method==='PATCH')).toBe(false);
   });
 
   it('R03-10b successful create without an addressable ID fails with cleanup UNKNOWN, never PASS',async()=>{
