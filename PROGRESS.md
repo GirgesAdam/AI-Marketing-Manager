@@ -51,17 +51,17 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NONE — R04 PACKET PREPARED / AWAITING TEAM LEADER REVIEW`.
+Current Executing Task = `NONE — P1-T15-R05 ASSIGNED / NOT STARTED; NO PROVIDER EXECUTION ACTIVE`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; no P1-T14 request or evidence access in this closeout).
 
-Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R04 awaits Team Leader review).
+Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R05 is assigned but not started).
 
-Executing Senior Tasks = `0 / 0` (R04 preparation is complete and awaiting review; no Provider execution is active).
+Executing Senior Tasks = `0 / 0` (no Senior implementation task is executing; no Provider execution is active).
 
-Current Task = `P1-T15-R04 — Prepare Live Diagnostic Authorization Packet — IMPLEMENTED OFFLINE / AWAITING TEAM LEADER REVIEW`.
+Current Task = `P1-T15-R05 — Fail-Closed R03 Read-Back Validation — ASSIGNED / NOT STARTED`.
 
 P1-T15-R03-RFIX3 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES** (Team Leader decision recorded in the closeout below).
 
@@ -4984,3 +4984,69 @@ Expected closeout status: `DOCUMENTATION CLOSEOUT COMPLETE — R03 RFIX3 ACCEPTE
 - Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
 - P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`, unchanged.
 - No live authorization is granted by this task. Stop after commit/push and submit the packet for Team Leader review.
+
+
+## Team Leader Review — P1-T15-R04 (2026-10-25)
+
+**Decision: `ACCEPTED WITH NON-BLOCKING NOTES` for the offline authorization-packet preparation only.** This acceptance does not approve a live run and does not resolve parent `P1-T15`.
+
+- Reviewed commit: `4fceb53dac1550d3279a9306b796021adeb160db` on `p1-t15-r04-live-diagnostic-authorization-packet`.
+- Commit comparison against starting HEAD `4c4ca21d6f918915919e0547487993b343e9370a` shows exactly two changed files: `PROGRESS.md` and `docs/PROVIDER_SPIKE_RESULTS.md`; no Source, Tests, Package, configuration, or evidence files changed.
+- R04 reported `git diff --check` PASS and no Provider requests/external mutations. No tests, typecheck, build, or CI status were newly evidenced for R04; this is acceptable for its documentation-only scope, not fresh implementation evidence.
+- Live diagnostic decision: **OPTION B — DO NOT AUTHORIZE LIVE EXECUTION; require a separate fail-closed read-back validation task first.**
+- Blocking limitations selected for R05: a missing `profileId` in the automation read-back can be accepted despite `profileId` being part of the create configuration; non-array `buttons` values can be accepted; non-string `commentReply` values can be accepted. These can allow an incomplete/malformed configuration projection to be classified as accepted.
+- Non-blocking for this exact one-shot diagnostic: current post status is not read, because exact fixed post/account/platform identifiers and content are attested and the diagnostic sends no trigger traffic; unresolved profile identifiers on non-target account rows do not select the target, whose account ID/profile/platform must match; missing `id`/`_id` in detail read-back is acceptable because the GET uses the exact ID returned by create and any present ID must match; expected-email syntax validation is non-blocking because the actual Provider identity must match exactly before mutation. `platform` remains optional in automation read-back because the create body does not send it; if present, it must match Facebook.
+- `P1-T15-R04 = DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
+- `P1-T15-R05 = ASSIGNED / NOT STARTED`.
+- Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; Comment-to-DM, Delayed Native DM, and Delayed Native Reply remain `SPIKE_PENDING`.
+- Live authorization remains `NOT GRANTED`. Do not set `P1_T15_R03_LIVE_AUTHORIZED=true), run `npm run p1-t15-r03 -- --live`, or send Provider requests under this decision.
+- `P1-T14` remains `WAITING_TIME_GATE`; its schedule, request budget, and evidence boundary are unchanged.
+
+## P1-T15-R05 — Fail-Closed R03 Read-Back Validation
+
+**Status: ASSIGNED / NOT STARTED. Owner: Senior Engineer. Phase: 1. Parent: P1-T15.**
+
+### Goal
+Prevent the R03 diagnostic from reporting a successful exact-configuration read-back when required scope data is absent or optional fields have unexpected types.
+
+### Dependencies and starting point
+- R04 packet review is complete. Create a dedicated branch from the latest R04 review-record HEAD; do not work on the P1-T14 waiting branch.
+- Preserve the fixed target, create body, R03 authorization guard, private WeakSet journal identity, request ceiling, cleanup reservation, no-PATCH guard, and evidence privacy behavior.
+- Parent P1-T15 remains unresolved. This task grants no live Provider authorization.
+
+### In scope
+1. In `diagnoseP1T15ExactConfig`, make `profileId` mandatory for a PASS. Accept only a scalar/object form that resolves through the existing bounded `valueId` semantics to the exact fixed profile ID. Missing, null, wrong-type, unresolved, or mismatched values must produce a failed diagnostic with a safe field-level category.
+2. For `buttons`, allow absence or an empty array. If present, require an array; reject null/non-array values and non-empty arrays. Do not let an unexpected JSON type count as accepted.
+3. For `commentReply`, allow only absence, null, or an empty string. Reject a non-empty string and reject every non-string, non-null value as a wrong type.
+4. Preserve the existing rule that `platform`, if present, must equal `facebook`; it may remain optional because the create body does not send it. Preserve optional `id`/`_id` metadata because the detail GET is addressed to the exact ID returned by create; if either is present, the selected ID must match.
+5. Keep read-back acceptance fail-closed: the run may PASS only if the diagnostic accepts the required configuration, `isActive === false`, and exact-resource cleanup is verified by DELETE 2xx plus final GET 404.
+
+### Required regression tests
+- `profileId`: exact scalar and supported exact object forms; missing, null, wrong type, unresolved object, and mismatched identifier.
+- `buttons`: absent, empty array, non-empty array, null, string, number, and object.
+- `commentReply`: absent, null, empty string, non-empty string, boolean, number, array, and object.
+- Prove malformed/missing values cannot produce diagnostic PASS; cleanup remains bounded and the final result cannot be PASS when cleanup is uncertain.
+- Tests must use mock transport only. No live Provider request or external mutation is permitted.
+
+### Exact verification commands
+```text
+npm test -- tests/provider-spike/p1-t15-r03.test.ts
+npm test
+npm run typecheck
+npm run build
+git diff --check
+```
+
+### Required documentation
+Update `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, and `docs/TEST_MATRIX.md` as needed to record the corrected contract, regression coverage, exact commands/results, and remaining non-blocking limitations.
+
+### Out of scope
+- Any live R03 diagnostic, automation lifecycle run, activation, PATCH, trigger traffic, comment, DM, log read, or retry.
+- Changes to the frozen target/create configuration, request ceilings, authorization mechanism, cleanup contract, P1-T14, or any other task.
+- Resolving or claiming completion of parent P1-T15 or Native Automation behavior.
+
+### Acceptance criteria and stop condition
+- All required regression tests and exact commands pass with results recorded.
+- No Provider requests, external mutations, live authorization environment changes, or evidence overwrite occurs.
+- Diff contains only the scoped read-back validation, tests, and required documentation.
+- Senior Engineer commits/pushes and stops for Team Leader review. Do not start any successor task or live run.
