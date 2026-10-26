@@ -3676,16 +3676,18 @@ The R03 journal path is `artifacts/provider-spike/p1-t15-r03-evidence.jsonl`. Ea
 
 Each diagnostic field reports `path`, `requiredness`, `fieldState`, `jsonType`, `evaluated`, `accepted`, and `mismatchCategory` where applicable. Safe shape metadata may include `valueSource`, `arrayLength`, and `firstElementType`. It does not store actual field values. The runner result includes request ordinal, method, path without query string, status, and safe request/correlation ID, but not response bodies. The fixed journal rejects credential/expected-email leakage and known person-data patterns; raw credentials and raw message content must never be copied to notes, console transcripts, or evidence.
 
-### Known source limitations to present to Team Leader (no code changes made)
+### Known source limitations to present to Team Leader (historical R04 snapshot; partially superseded by accepted R05)
 
-These are limitations of the current implementation, not verified Provider behavior:
+**Historical/superseded note:** this section records the validator behavior as it existed during R04 packet preparation. Accepted R05 later changed the validator contract for `profileId`, `buttons`, and `commentReply`; therefore R04 items describing those three fields as permissive are historical only and must not be read as current behavior. The remaining R04 limitations that R05 did not change remain historical context. No historical evidence is deleted or rewritten.
+
+These were limitations of the implementation at the R04 snapshot, not verified Provider behavior:
 
 1. Frozen-post attestation checks the fixed post ID, exact content/hash, one Facebook platform entry, account ID, platform-post ID, and derived Page ID. It does **not** assert the post's current `status` or the platform entry's publication status.
 2. Account ownership requires exactly one target account matching the fixed account/profile/Facebook tuple and rejects any returned account with a different non-null profile ID. Other account entries whose profile ID cannot be resolved are not independently rejected by that last predicate.
 3. The read-back diagnostic treats `id` and `_id` as optional metadata; a present chosen string ID must match the created ID, but missing IDs do not themselves fail the projection. The separate `isActive` gate is checked after the projection and is not one of its diagnostic field entries.
-4. `profileId` and `platform` are optional in the projection. When present, they must resolve/match the expected profile and Facebook platform.
-5. The current projection accepts `buttons` when absent or an empty array; a non-empty array is rejected. A non-array `buttons` value is currently marked not evaluated and can still be accepted even if its reported JSON type is wrong.
-6. `commentReply` is rejected only when it is a non-empty string; a non-string value can be accepted despite a `wrong_type` state. `template`, `audience`, and `followGate` are accepted only when absent or null.
+4. **Historical R04 behavior, superseded by accepted R05 for `profileId`:** at the R04 snapshot, `profileId` and `platform` were optional in the projection. R05 later made `profileId` required for acceptance; `platform` remains optional but must match Facebook when present.
+5. **Historical R04 behavior, superseded by accepted R05 for `buttons`:** at the R04 snapshot, non-array `buttons` values could be accepted. R05 later made any present non-array value fail closed; only absence or an empty array is accepted.
+6. **Historical R04 behavior, superseded by accepted R05 for `commentReply`:** at the R04 snapshot, non-string values could be accepted. R05 later accepts only absence, null, or an empty string; other values fail closed. `template`, `audience`, and `followGate` remain governed by their separate absent/null contract.
 7. The credential preflight checks non-empty API key and expected-email strings but does not independently validate the expected email's syntax. Actual identity is checked against the Provider response before any mutation.
 
 Team Leader should explicitly decide whether these bounded implementation limitations are acceptable for a one-shot diagnostic or require a separate implementation task before any live authorization. This task does not silently repair them, alter source behavior, or grant authorization.
@@ -3836,7 +3838,7 @@ Acceptance is limited to the reviewed offline validation fix and regression cove
 
 ## P1-T15-R06 — Single Authorized Live R03 Read-Back Diagnostic
 
-**Status: `EXECUTED / AWAITING TEAM LEADER REVIEW — LIVE AUTHORIZATION CONSUMED`.** Exactly one live invocation occurred at activation HEAD `8b7048521ab7c2eac4da4c76f8af3269de0d0761` on branch `p1-t15-r06-live-readback-diagnostic`; no rerun is authorized or performed.
+**Status: `DONE / ACCEPTED WITH NON-BLOCKING NOTES`.** Team Leader accepted the R06 execution/evidence quality for the exact bounded disabled-create/read-back/delete diagnostic only. Exactly one live invocation occurred at activation HEAD `8b7048521ab7c2eac4da4c76f8af3269de0d0761` on branch `p1-t15-r06-live-readback-diagnostic`; live authorization is `CONSUMED / NO RERUN AUTHORIZED`.
 
 ### Offline/evidence gates
 - Accepted R05 source/tests/package were unchanged from base `3d1bb6e763e8747b5fc39a51146cc47e9f4e05af` (diff exit `0`).
@@ -3871,4 +3873,14 @@ Only the safe diagnostic metadata above is retained. No raw Provider body or fie
 - P1-T14 was untouched.
 
 ### Interpretation
-This proves only the one disabled-create/read-back/delete diagnostic and the exact mismatch metadata above. It does not verify lifecycle enable/disable, trigger behavior, Comment-to-DM delivery, delayed DM, or delayed reply. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; all three downstream Native Automation capability items remain `SPIKE_PENDING` until Team Leader disposition.
+This proves only the one disabled-create/read-back/delete diagnostic and the exact mismatch metadata above. It does not verify lifecycle enable/disable, trigger behavior, Comment-to-DM delivery, delayed DM, or delayed reply. Team Leader accepted this bounded evidence with non-blocking notes, while parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED` and all three downstream Native Automation capability items remain `SPIKE_PENDING`.
+
+## P1-T15-R06 — Team Leader Acceptance Closeout
+
+**Decision: `ACCEPTED WITH NON-BLOCKING NOTES`.** Acceptance applies to the exact bounded Provider Behavior evidence from the single disabled-create/read-back/delete diagnostic. It does not accept or complete parent `P1-T15`, and it does not authorize a rerun or any lifecycle execution.
+
+Preserved live facts: exactly one live invocation; final harness result `FAIL`; classification `NATIVE_AUTOMATION_SAFETY_FAILURE`; error `SAFETY_DISABLED_READBACK_CONFIG_MISMATCH`; Provider requests `7`; PATCH `0`; comments `0`; DMs `0`; retries `0`; cleanup `DELETE 200 → final exact GET 404`; residual resource `ABSENT`. Safe read-back diagnostic metadata identified only these failed field observations: `profileId` missing, `dmDelaySeconds` missing, and `audience` present with JSON type `object`.
+
+No raw Provider values or semantic interpretation is inferred for those three fields. In particular, the evidence does not establish why the Provider omitted `profileId` or `dmDelaySeconds`, what the contents or business meaning of the `audience` object are, or whether these shapes apply outside this exact diagnostic.
+
+R06 live authorization is `CONSUMED / NO RERUN AUTHORIZED`. Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. The evidence does not verify enable/disable lifecycle, trigger behavior, Comment-to-DM delivery, delayed DM, or delayed reply. No successor task is selected or started by this closeout.

@@ -51,25 +51,33 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NONE — P1-T15-R06 LIVE INVOCATION CONSUMED / AWAITING TEAM LEADER REVIEW`.
+Current Executing Task = `NOT_STARTED — NEXT PHASE-1 EXECUTING TASK REQUIRES EXPLICIT TEAM LEADER SELECTION`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R06 did not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R06 awaits Team Leader review).
+Open Senior Tasks = `1 / 2` (P1-T14 remains independently waiting; P1-T15-R06 is closed and accepted).
 
-Executing Senior Tasks = `0 / 1` (the one authorized R06 live invocation is consumed; no Provider execution is active).
+Executing Senior Tasks = `0 / 1` (no Senior implementation task is executing; no Provider execution is active).
 
-Current Task = `P1-T15-R06 — Execute One Bounded Live R03 Read-Back Diagnostic — EXECUTED / AWAITING TEAM LEADER REVIEW`.
+Current Task = `NOT_STARTED — NEXT PHASE-1 EXECUTING TASK REQUIRES EXPLICIT TEAM LEADER SELECTION`.
 
-P1-T15-R06 = **EXECUTED / AWAITING TEAM LEADER REVIEW — LIVE AUTHORIZATION CONSUMED**
+P1-T15-R06 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
+
+P1-T15-R06 live authorization = `CONSUMED / NO RERUN AUTHORIZED`.
 
 P1-T15-R05 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
 P1-T15-R03-RFIX3 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES** (Team Leader decision recorded in the closeout below).
 
 P1-T15 = **UNRESOLVED / FIX REQUIRED**
+
+Comment-to-DM = `SPIKE_PENDING`.
+
+Delayed Native DM = `SPIKE_PENDING`.
+
+Delayed Native Reply = `SPIKE_PENDING`.
 
 P1-T15 safety stop = `ACCEPTED — fail-closed behavior correct`.
 
@@ -5131,7 +5139,7 @@ Update `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, and `docs/TEST_MATRIX.md
 
 ## P1-T15-R06 — Live Execution Result
 
-**Status: `EXECUTED / AWAITING TEAM LEADER REVIEW — LIVE AUTHORIZATION CONSUMED`.** Exactly one authorized R03 live invocation occurred. No retry or second run is authorized or performed.
+**Status: `DONE / ACCEPTED WITH NON-BLOCKING NOTES`.** Team Leader accepted the R06 execution/evidence quality for the exact bounded disabled-create/read-back/delete diagnostic only. Exactly one authorized R03 live invocation occurred; live authorization is `CONSUMED / NO RERUN AUTHORIZED`.
 
 ### Git / activation
 - Base HEAD: `3d1bb6e763e8747b5fc39a51146cc47e9f4e05af`.
@@ -5189,4 +5197,16 @@ These are live Provider read-back observations for this exact diagnostic only. N
 - P1-T14 requests/evidence/branch/timing/budget changes: `0`.
 
 ### Interpretation / parent state
-R06 establishes the exact disabled-create read-back mismatch fields and proves exact-resource cleanup for this one diagnostic. It does **not** verify enable/disable lifecycle, trigger behavior, Comment-to-DM delivery, delayed DM, or delayed reply. Parent `P1-T15` therefore remains `UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING` pending Team Leader review of this evidence. No capability promotion is made by the Senior Engineer.
+R06 establishes the exact disabled-create read-back mismatch fields and proves exact-resource cleanup for this one diagnostic. Team Leader accepted this bounded Provider Behavior evidence with non-blocking notes. It does **not** verify enable/disable lifecycle, trigger behavior, Comment-to-DM delivery, delayed DM, or delayed reply. Parent `P1-T15` therefore remains `UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. No capability promotion is made, no successor task is selected or started, and R06 live authorization remains consumed with no rerun authorized.
+
+## P1-T15-R06 — Team Leader Acceptance Closeout
+
+**Decision: `ACCEPTED WITH NON-BLOCKING NOTES`.** R06 is closed as `DONE / ACCEPTED WITH NON-BLOCKING NOTES`. Acceptance is limited to the exact bounded live disabled-create/read-back/delete diagnostic and its evidence quality; it does not resolve parent `P1-T15` or authorize any rerun/lifecycle execution.
+
+- Reviewed R06 evidence HEAD: `5450880a69271f11a44081150f7afb90266ba432` on `p1-t15-r06-live-readback-diagnostic`.
+- Exactly one live R03 invocation occurred. Result `FAIL`; classification `NATIVE_AUTOMATION_SAFETY_FAILURE`; error `SAFETY_DISABLED_READBACK_CONFIG_MISMATCH`; Provider requests `7`; PATCH/comments/DMs/retries `0`; cleanup verified by DELETE `200` followed by final exact-resource GET `404`; residual `ABSENT`.
+- Safe diagnostic facts remain: `profileId` missing, `dmDelaySeconds` missing, `audience` present with JSON type `object`. No raw values or semantic meaning is inferred.
+- R06 live authorization = `CONSUMED / NO RERUN AUTHORIZED`.
+- Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
+- `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`, unchanged.
+- No Senior implementation task is executing. No successor task is selected or started by this closeout.

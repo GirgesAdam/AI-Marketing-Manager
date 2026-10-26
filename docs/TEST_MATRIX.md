@@ -3776,7 +3776,7 @@ R05 acceptance is offline-only. Live Provider Authorization remains `NOT GRANTED
 
 ## P1-T15-R06 — Live Provider Read-Back Diagnostic Evidence
 
-Status: `EXECUTED / AWAITING TEAM LEADER REVIEW — LIVE AUTHORIZATION CONSUMED`.
+Status: `ACCEPTED WITH NON-BLOCKING NOTES — LIVE AUTHORIZATION CONSUMED / NO RERUN AUTHORIZED`.
 
 | Evidence | Result |
 |---|---|
@@ -3796,4 +3796,4 @@ Status: `EXECUTED / AWAITING TEAM LEADER REVIEW — LIVE AUTHORIZATION CONSUMED`
 | Cleanup | DELETE `200` + final exact GET `404` → `CLEANUP_VERIFIED`, residual `ABSENT` |
 | Final harness result | `FAIL / NATIVE_AUTOMATION_SAFETY_FAILURE` |
 
-This matrix records live Provider Behavior for the exact R06 diagnostic only. It does not prove lifecycle enable/disable, trigger/delivery, delayed DM/reply, or capability readiness. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED` pending Team Leader review.
+Team Leader decision: `ACCEPTED WITH NON-BLOCKING NOTES` for this exact Provider Behavior diagnostic evidence only. It proves only the bounded disabled-create/read-back/delete observation described above. It does **not** prove enable/disable lifecycle, Comment-to-DM delivery, trigger behavior, delayed DM, delayed reply, or broader capability readiness. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
