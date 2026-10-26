@@ -3815,3 +3815,20 @@ Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`. `Comment-to-DM`, `Delayed Native DM
 Senior-reported evidence preserved for acceptance: focused R03 tests `40 / 40`; full suite `721 / 721`; typecheck, build, and diff checks PASS. Team Leader did not independently re-execute those test/typecheck/build commands. GitHub had no CI/workflow result attached to the reviewed final HEAD; this records missing attached CI evidence, not a CI failure.
 
 Acceptance is limited to the reviewed offline validation fix and regression coverage. Live Provider Authorization remains `NOT GRANTED`; no live R03 diagnostic or Provider automation lifecycle action is authorized. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. `P1-T14` remains independently `WAITING_TIME_GATE` and unchanged.
+
+
+## P1-T15-R06 — Activation Record
+
+**Status: `ACTIVATED / ONE LIVE R03 DIAGNOSTIC AUTHORIZED`.** No live request has occurred at this activation checkpoint.
+
+- Base HEAD: `3d1bb6e763e8747b5fc39a51146cc47e9f4e05af`.
+- Branch: `p1-t15-r06-live-readback-diagnostic`.
+- Exact authorized command after all gates pass: `npm run p1-t15-r03 -- --live`, one invocation only.
+- Authorized mutation scope: one unchanged disabled Comment Automation create (`isActive=false`) and one exact cleanup DELETE for the created automation ID.
+- Existing safe read path only: trusted identity → exact Profile/account ownership → exact frozen post → exact created-automation read-back → exact cleanup DELETE → final exact-resource GET.
+- No PATCH, activation, trigger traffic, comment, DM, automation-log read, alternate endpoint, retry, second create, or third cleanup request is authorized.
+- Existing R03 bounds remain authoritative: request ceiling `9`; minimum budget `7`; final two request slots reserved for cleanup; no cleanup is confirmed unless DELETE returns 2xx and final exact-resource GET returns 404.
+- Evidence path is fixed to `artifacts/provider-spike/p1-t15-r03-evidence.jsonl` and must not exist before execution. Pre-existing evidence is a hard STOP and must not be modified.
+- Credentials and expected identity may be loaded only into process memory without printing values. `P1_T15_R03_LIVE_AUTHORIZED=true` is authorized only for the single live child process after every preflight gate passes and must not be persisted.
+- P1-T14 remains independently frozen in `WAITING_TIME_GATE`; no request, evidence, branch, fixture, timing or budget change is authorized by R06.
+- Parent `P1-T15` remains unresolved. R06 is diagnostic evidence only and does not prove enable/disable lifecycle, trigger/delivery behavior, delayed actions, or capability status.

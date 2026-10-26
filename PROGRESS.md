@@ -51,17 +51,19 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NOT_STARTED - NEXT PHASE-1 EXECUTING TASK REQUIRES TEAM LEADER SELECTION`.
+Current Executing Task = `P1-T15-R06 — Execute One Bounded Live R03 Read-Back Diagnostic — ACTIVATED / ONE LIVE R03 DIAGNOSTIC AUTHORIZED`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
-P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; no P1-T14 request or evidence access in this closeout).
+P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R06 does not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `1 / 2` (P1-T14 remains independently waiting; P1-T15-R05 is closed and accepted).
+Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R06 is the sole executing task).
 
-Executing Senior Tasks = `0 / 1` (no Senior implementation task is executing; no Provider execution is active).
+Executing Senior Tasks = `1 / 1` (P1-T15-R06 only; no second Senior task may execute concurrently).
 
-Current Task = `NOT_STARTED - NEXT PHASE-1 EXECUTING TASK REQUIRES TEAM LEADER SELECTION`.
+Current Task = `P1-T15-R06 — Execute One Bounded Live R03 Read-Back Diagnostic — ACTIVATED / ONE LIVE R03 DIAGNOSTIC AUTHORIZED`.
+
+P1-T15-R06 = **ACTIVATED / ONE LIVE R03 DIAGNOSTIC AUTHORIZED**
 
 P1-T15-R05 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -5105,3 +5107,23 @@ Update `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, and `docs/TEST_MATRIX.md
 - `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`.
 - `P1-T14 = WAITING_TIME_GATE`; its branch, schedule, evidence, request budget, and execution state are unchanged.
 - After this closeout there is no executing Senior implementation task. The next Phase-1 executing task requires separate Team Leader selection.
+
+
+## P1-T15-R06 — Activation Record
+
+**Status: `ACTIVATED / ONE LIVE R03 DIAGNOSTIC AUTHORIZED`.** This activation authorizes exactly one future invocation of the existing accepted R03 diagnostic and no other Provider experiment.
+
+- Base HEAD: `3d1bb6e763e8747b5fc39a51146cc47e9f4e05af`.
+- Branch: `p1-t15-r06-live-readback-diagnostic`.
+- Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`.
+- Authorized live command, exactly once after all pre-run gates pass: `npm run p1-t15-r03 -- --live`.
+- Authorization is consumed when that command is invoked once, regardless of outcome. No second run or retry is authorized.
+- Authorized Provider mutation scope: one exact Comment Automation create using the unchanged R03 body with `isActive=false`, plus one exact DELETE for the returned created automation ID.
+- Authorized reads: only the existing R03 harness reads needed for identity, exact Profile/account ownership, frozen-post attestation, exact created-automation read-back, and final exact-resource GET after DELETE.
+- Hard boundary: PATCH `0`; activation `0`; trigger traffic `0`; comments `0`; DMs `0`; automation-log reads `0`; alternate endpoints `0`; automatic/manual retries `0`; second create `0`; third cleanup request `0`.
+- Existing R03 hard request ceiling remains `9`; the current diagnostic path requires minimum budget `7` and reserves the final two request slots for exact DELETE + final GET cleanup verification.
+- Cleanup is verified only when DELETE is 2xx and the final exact-resource GET is 404. Any other state must remain `CLEANUP_UNSAFE_OR_UNKNOWN` or the exact harness failure classification; no retry is permitted.
+- Durable evidence path remains exclusively `artifacts/provider-spike/p1-t15-r03-evidence.jsonl`; any pre-existing file blocks execution and must not be deleted, renamed, truncated, overwritten, or replaced.
+- Process-level live authorization variable `P1_T15_R03_LIVE_AUTHORIZED=true` may be set only in the single authorized child execution environment after all offline/evidence/credential gates pass. It must not be persisted in repository files or configuration.
+- `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` remains untouched; R06 does not modify its branch, schedule, evidence, fixture, or request budget.
+- This activation does not verify lifecycle enable/disable, Comment-to-DM delivery, delayed DM, delayed reply, trigger behavior, or any canonical capability promotion.
