@@ -3748,7 +3748,7 @@ The separate state gate requires `isActive === false` after the projection accep
 
 Source review confirmed the current read-back projection can accept an absent `profileId`, a non-array `buttons` value, or a non-string `commentReply` value without recording a mismatch. These are sufficient to prevent authorizing the proposed live diagnostic: the exact-configuration diagnostic must not classify incomplete or malformed configuration as accepted.
 
-A separate Senior Engineer task, `P1-T15-R05 — Fail-Closed R03 Read-Back Validation`, is assigned but has not started. It must require an exact `profileId`, fail closed on unexpected `buttons`/`commentReply` types, add mock-only regression coverage, update the test matrix and progress record, and stop for Team Leader review. The full contract is recorded in `PROGRESS.md`.
+At the time of the R04 decision, a separate Senior Engineer task, `P1-T15-R05 — Fail-Closed R03 Read-Back Validation`, was assigned but had not started; that historical state is superseded by the R05 acceptance record below. It must require an exact `profileId`, fail closed on unexpected `buttons`/`commentReply` types, add mock-only regression coverage, update the test matrix and progress record, and stop for Team Leader review. The full contract is recorded in `PROGRESS.md`.
 
 The remaining documented limitations are accepted only for this fixed-target, disabled-create/read-back/delete diagnostic: current post status is not checked because exact post/account/platform IDs and content are attested and no trigger traffic is sent; unresolved profile identifiers on non-target account rows do not select the target, whose own account/profile/platform must match; missing `id`/`_id` in detail read-back is acceptable because the GET addresses the exact ID returned by create and any present ID must match; expected-email syntax validation is non-blocking because actual Provider identity must match exactly before mutation. `platform` may remain absent in automation read-back because it is not sent in the create body, but any present value must match Facebook.
 
@@ -3757,7 +3757,7 @@ No live run is authorized. Do not set `P1_T15_R03_LIVE_AUTHORIZED=true`, execute
 
 ## P1-T15-R05 — Fail-Closed R03 Read-Back Validation
 
-**Status: `IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.** This change tightens the shared exact-configuration projection used by the R03 read-back diagnostic. It does not grant live authorization or resolve parent `P1-T15`.
+**Status: `DONE / ACCEPTED WITH NON-BLOCKING NOTES`.** Team Leader accepted the offline R05 implementation and regression evidence. This acceptance does not grant live authorization or resolve parent `P1-T15`.
 
 ### Starting point and changed implementation
 
@@ -3807,3 +3807,11 @@ Preserved without production changes: process-environment authorization guard; g
 No live Provider requests or external mutations occurred; all diagnostic transport cases were mock-only. `P1_T15_R03_LIVE_AUTHORIZED` remains absent from the operator process environment. No live R03 command, automation activation, PATCH, trigger traffic, comment, DM, log read, or Provider cleanup was run by R05. No R02 evidence was changed.
 
 Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`. `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. R05 only tightens offline validation and regression coverage; actual Provider read-back behavior remains unverified. Stop for Team Leader review; do not start a successor task.
+
+## Team Leader Decision - P1-T15-R05 (2026-10-26)
+
+**Decision: `ACCEPTED WITH NON-BLOCKING NOTES`.** R05 is closed. The reviewed final Senior HEAD was `aa0eb9cfc7b58d7e95b9a98d091731f4bcc11a80` on `p1-t15-r05-fail-closed-readback-validation`.
+
+Senior-reported evidence preserved for acceptance: focused R03 tests `40 / 40`; full suite `721 / 721`; typecheck, build, and diff checks PASS. Team Leader did not independently re-execute those test/typecheck/build commands. GitHub had no CI/workflow result attached to the reviewed final HEAD; this records missing attached CI evidence, not a CI failure.
+
+Acceptance is limited to the reviewed offline validation fix and regression coverage. Live Provider Authorization remains `NOT GRANTED`; no live R03 diagnostic or Provider automation lifecycle action is authorized. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. `P1-T14` remains independently `WAITING_TIME_GATE` and unchanged.

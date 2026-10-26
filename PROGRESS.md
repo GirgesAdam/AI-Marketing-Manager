@@ -51,17 +51,19 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NONE — P1-T15-R05 IMPLEMENTED OFFLINE / AWAITING TEAM LEADER REVIEW; NO PROVIDER EXECUTION ACTIVE`.
+Current Executing Task = `NOT_STARTED - NEXT PHASE-1 EXECUTING TASK REQUIRES TEAM LEADER SELECTION`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; no P1-T14 request or evidence access in this closeout).
 
-Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R05 is awaiting Team Leader review).
+Open Senior Tasks = `1 / 2` (P1-T14 remains independently waiting; P1-T15-R05 is closed and accepted).
 
-Executing Senior Tasks = `0 / 0` (R05 implementation and verification are complete; no Provider execution is active).
+Executing Senior Tasks = `0 / 1` (no Senior implementation task is executing; no Provider execution is active).
 
-Current Task = `P1-T15-R05 — Fail-Closed R03 Read-Back Validation — IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.
+Current Task = `NOT_STARTED - NEXT PHASE-1 EXECUTING TASK REQUIRES TEAM LEADER SELECTION`.
+
+P1-T15-R05 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
 P1-T15-R03-RFIX3 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES** (Team Leader decision recorded in the closeout below).
 
@@ -4997,14 +4999,14 @@ Expected closeout status: `DOCUMENTATION CLOSEOUT COMPLETE — R03 RFIX3 ACCEPTE
 - Blocking limitations selected for R05: a missing `profileId` in the automation read-back can be accepted despite `profileId` being part of the create configuration; non-array `buttons` values can be accepted; non-string `commentReply` values can be accepted. These can allow an incomplete/malformed configuration projection to be classified as accepted.
 - Non-blocking for this exact one-shot diagnostic: current post status is not read, because exact fixed post/account/platform identifiers and content are attested and the diagnostic sends no trigger traffic; unresolved profile identifiers on non-target account rows do not select the target, whose account ID/profile/platform must match; missing `id`/`_id` in detail read-back is acceptable because the GET uses the exact ID returned by create and any present ID must match; expected-email syntax validation is non-blocking because the actual Provider identity must match exactly before mutation. `platform` remains optional in automation read-back because the create body does not send it; if present, it must match Facebook.
 - `P1-T15-R04 = DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
-- `P1-T15-R05 = ASSIGNED / NOT STARTED`.
+- At R04 closeout, `P1-T15-R05 = ASSIGNED / NOT STARTED`; this historical assignment state is superseded by the R05 acceptance closeout below.
 - Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; Comment-to-DM, Delayed Native DM, and Delayed Native Reply remain `SPIKE_PENDING`.
 - Live authorization remains `NOT GRANTED`. Do not set `P1_T15_R03_LIVE_AUTHORIZED=true`, run `npm run p1-t15-r03 -- --live`, or send Provider requests under this decision.
 - `P1-T14` remains `WAITING_TIME_GATE`; its schedule, request budget, and evidence boundary are unchanged.
 
 ## P1-T15-R05 — Fail-Closed R03 Read-Back Validation
 
-**Status: ASSIGNED / NOT STARTED. Owner: Senior Engineer. Phase: 1. Parent: P1-T15.**
+**Assignment snapshot (historical): ASSIGNED / NOT STARTED. Owner: Senior Engineer. Phase: 1. Parent: P1-T15.**
 
 ### Goal
 Prevent the R03 diagnostic from reporting a successful exact-configuration read-back when required scope data is absent or optional fields have unexpected types.
@@ -5054,7 +5056,7 @@ Update `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, and `docs/TEST_MATRIX.md
 
 ## P1-T15-R05 — Fail-Closed R03 Read-Back Validation
 
-**Status: `IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.** Live Provider authorization remains `NOT GRANTED`. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`.
+**Status: `DONE / ACCEPTED WITH NON-BLOCKING NOTES`.** Team Leader acceptance applies to the offline R05 implementation and regression evidence only. Live Provider authorization remains `NOT GRANTED`. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`.
 
 ### Starting point and implementation
 
@@ -5086,4 +5088,20 @@ Update `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, and `docs/TEST_MATRIX.md
 - `docs/PROVIDER_SPIKE_RESULTS.md` records the corrected contract, limitations, test history, and actual command results. `docs/TEST_MATRIX.md` records field matrix and safety regression evidence.
 - Remaining blocker: actual Provider behavior has not been tested and no live authorization is granted. Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
 - `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`, unchanged; no P1-T14 branch or evidence was modified.
-- Stop after documentation verification and commit/push; submit R05 for Team Leader review. Do not start a successor task.
+- Team Leader decision: `ACCEPTED WITH NON-BLOCKING NOTES`. R05 is closed. Do not start a successor task without a separate Team Leader task selection.
+
+## P1-T15-R05 - Team Leader Acceptance Closeout
+
+**Decision: `ACCEPTED WITH NON-BLOCKING NOTES`.** R05 is closed as `DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
+
+- Reviewed Senior final task HEAD: `aa0eb9cfc7b58d7e95b9a98d091731f4bcc11a80` on `p1-t15-r05-fail-closed-readback-validation`.
+- Senior-reported focused verification: `40 / 40` passed for `npm test -- tests/provider-spike/p1-t15-r03.test.ts`.
+- Senior-reported full suite: `721 / 721` passed for `npm test`.
+- Senior reported `npm run typecheck`, `npm run build`, and `git diff --check` passed.
+- Team Leader did **not** independently re-execute those test/typecheck/build commands. Acceptance is based on review of the submitted diff, test definitions, recorded Senior evidence, and documentation.
+- GitHub had **no CI/workflow result attached to the reviewed final HEAD**. This records absence of attached CI evidence, not a CI failure.
+- Live Provider Authorization remains `NOT GRANTED`. No live diagnostic, Provider request, Provider automation mutation, or external mutation is authorized by this acceptance.
+- Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`.
+- `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`.
+- `P1-T14 = WAITING_TIME_GATE`; its branch, schedule, evidence, request budget, and execution state are unchanged.
+- After this closeout there is no executing Senior implementation task. The next Phase-1 executing task requires separate Team Leader selection.

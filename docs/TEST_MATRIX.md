@@ -3745,3 +3745,30 @@ implementation commit 3230145b29eae783947d0eeb44d03c12d409ee62: exit code 0 — 
 - Changed production behavior is confined to the shared exact-config diagnostic projection. Tests were expanded in the R03 suite and the lifecycle fixture was corrected to reflect the existing create-body contract.
 - All Provider-like calls in this evidence are mock transport. Actual live Provider requests: `0`; external mutations: `0`; no live authorization was granted. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`.
 - This matrix records Senior Engineer execution results; it is not Team Leader acceptance or proof of live Provider behavior.
+
+## P1-T15-R05 - Team Leader Acceptance Record (2026-10-26)
+
+**Task decision: `ACCEPTED WITH NON-BLOCKING NOTES`.** Reviewed Senior final HEAD: `aa0eb9cfc7b58d7e95b9a98d091731f4bcc11a80`.
+
+The following results remain **Senior-reported execution evidence**, not independently re-executed Team Leader results:
+
+```text
+npm test -- tests/provider-spike/p1-t15-r03.test.ts
+40 passed / 0 failed
+
+npm test
+721 passed / 0 failed across 30 files
+
+npm run typecheck
+PASS
+
+npm run build
+PASS
+
+git diff --check
+PASS at Senior implementation/documentation verification
+```
+
+Team Leader reviewed the submitted implementation/test diff and recorded evidence but did not independently rerun the test/typecheck/build commands. GitHub had no CI/workflow result attached to the reviewed final HEAD; this is an evidence limitation, not a failed-CI result.
+
+R05 acceptance is offline-only. Live Provider Authorization remains `NOT GRANTED`; parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`; `P1-T14 = WAITING_TIME_GATE` remains unchanged.
