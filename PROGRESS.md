@@ -51,19 +51,19 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `P1-T15-R06 — Execute One Bounded Live R03 Read-Back Diagnostic — ACTIVATED / ONE LIVE R03 DIAGNOSTIC AUTHORIZED`.
+Current Executing Task = `NONE — P1-T15-R06 LIVE INVOCATION CONSUMED / AWAITING TEAM LEADER REVIEW`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
-P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R06 does not alter its branch, schedule, evidence, fixture, or request budget).
+P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R06 did not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R06 is the sole executing task).
+Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R06 awaits Team Leader review).
 
-Executing Senior Tasks = `1 / 1` (P1-T15-R06 only; no second Senior task may execute concurrently).
+Executing Senior Tasks = `0 / 1` (the one authorized R06 live invocation is consumed; no Provider execution is active).
 
-Current Task = `P1-T15-R06 — Execute One Bounded Live R03 Read-Back Diagnostic — ACTIVATED / ONE LIVE R03 DIAGNOSTIC AUTHORIZED`.
+Current Task = `P1-T15-R06 — Execute One Bounded Live R03 Read-Back Diagnostic — EXECUTED / AWAITING TEAM LEADER REVIEW`.
 
-P1-T15-R06 = **ACTIVATED / ONE LIVE R03 DIAGNOSTIC AUTHORIZED**
+P1-T15-R06 = **EXECUTED / AWAITING TEAM LEADER REVIEW — LIVE AUTHORIZATION CONSUMED**
 
 P1-T15-R05 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -73,7 +73,7 @@ P1-T15 = **UNRESOLVED / FIX REQUIRED**
 
 P1-T15 safety stop = `ACCEPTED — fail-closed behavior correct`.
 
-P1-T15 unresolved reason = `SAFETY_DISABLED_READBACK_CONFIG_MISMATCH stopped the R02 lifecycle probe before enable; the exact mismatching field remains unknown.`
+P1-T15 unresolved reason = `R06 live read-back diagnostic confirmed SAFETY_DISABLED_READBACK_CONFIG_MISMATCH on profileId (missing), dmDelaySeconds (missing), and audience (present non-null object). Cleanup was verified, but enable/disable lifecycle and trigger/delivery behavior were not executed or verified.`
 
 P1-T15-R01 = **DONE / ACCEPTED**
 
@@ -5127,3 +5127,66 @@ Update `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, and `docs/TEST_MATRIX.md
 - Process-level live authorization variable `P1_T15_R03_LIVE_AUTHORIZED=true` may be set only in the single authorized child execution environment after all offline/evidence/credential gates pass. It must not be persisted in repository files or configuration.
 - `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` remains untouched; R06 does not modify its branch, schedule, evidence, fixture, or request budget.
 - This activation does not verify lifecycle enable/disable, Comment-to-DM delivery, delayed DM, delayed reply, trigger behavior, or any canonical capability promotion.
+
+
+## P1-T15-R06 — Live Execution Result
+
+**Status: `EXECUTED / AWAITING TEAM LEADER REVIEW — LIVE AUTHORIZATION CONSUMED`.** Exactly one authorized R03 live invocation occurred. No retry or second run is authorized or performed.
+
+### Git / activation
+- Base HEAD: `3d1bb6e763e8747b5fc39a51146cc47e9f4e05af`.
+- Branch: `p1-t15-r06-live-readback-diagnostic`.
+- Activation commit / exact live-execution HEAD: `8b7048521ab7c2eac4da4c76f8af3269de0d0761`.
+- Activation commit was pushed and remote-HEAD matched before any Provider request.
+- Source/test immutability gate against the accepted R05 base returned exit code `0`; R03/shared source, R03/P1-T15 tests, and `package.json` were unchanged.
+
+### Offline preflight before live execution
+- `npm test -- tests/provider-spike/p1-t15-r03.test.ts` — exit code `0`; `40 / 40 PASS`.
+- `npm run typecheck` — exit code `0`, PASS.
+- `npm run build` — exit code `0`, PASS.
+- `git diff --check` — exit code `0`, PASS.
+- Working tree clean before evidence/credential preflight.
+- `artifacts/provider-spike/p1-t15-r03-evidence.jsonl` did not exist before execution.
+- Required `ZERNIO_API_KEY` and `ZERNIO_EXPECTED_USER_EMAIL` were available from the accepted ignored historical `.env`; values were not printed, copied into the repository, or placed on the CLI.
+- `P1_T15_R03_LIVE_AUTHORIZED` was absent before the run and was injected only into the single child live execution environment together with the two required credentials.
+
+### Single live invocation
+- Exact command invoked once: `npm run p1-t15-r03 -- --live`.
+- Live invocation count: `1`; authorization consumed: `YES`; second invocation/retry: `0`.
+- CLI exit code: `1` because the harness returned `FAIL`.
+- Result: `FAIL`.
+- Classification: `NATIVE_AUTOMATION_SAFETY_FAILURE`.
+- Error category: `SAFETY_DISABLED_READBACK_CONFIG_MISMATCH`.
+- Exact created automation ID: `6adeb03f3f68ec46a12a5395`.
+- Create requested `isActive=false`; create response exposed `isActive=false`; `createDisabledAccepted=true`.
+
+### Ordered safe Provider request evidence
+1. `GET /v1/auth/verify` → HTTP `200`, request `d70ad242-e029-4f07-a152-ad8cbb4b12e0`.
+2. `GET /v1/accounts` (runner used the fixed Profile query; safe result records queryless path) → HTTP `200`, request `085ac6e7-cad0-4051-87b9-f520c6e807d8`.
+3. `GET /v1/posts/6ada5bc404775bbecc763501` → HTTP `200`, request `b5957be3-cdb1-4935-8285-d8eebcb2df9f`; exact frozen-post attestation passed because create was reached.
+4. `POST /v1/comment-automations` → HTTP `200`, request `4353dfd6-b978-47ca-b426-a1722c0b7fef`; exactly one create.
+5. `GET /v1/comment-automations/6adeb03f3f68ec46a12a5395` → HTTP `200`, request `6284f5df-f7a6-4456-b63b-58496bac6a7e`; safe field-level diagnostic captured.
+6. `DELETE /v1/comment-automations/6adeb03f3f68ec46a12a5395` → HTTP `200`, request `7ce6f54b-4cb6-4e46-a20c-47bc3caa84ac`.
+7. Final `GET /v1/comment-automations/6adeb03f3f68ec46a12a5395` → HTTP `404`, request `284b0761-466d-4528-bea6-5f1402f54741`.
+
+### Confirmed safe read-back mismatch
+The durable `READBACK_DIAGNOSTIC_CAPTURED` projection contains exactly three failed fields (`mismatchCount=3`):
+- `profileId`: required; state `missing`; JSON type `missing`; evaluated `false`; category `MISSING_REQUIRED_FIELD`; value source `absent`.
+- `dmDelaySeconds`: required; state `missing`; JSON type `missing`; evaluated `true`; category `MISSING_REQUIRED_FIELD`.
+- `audience`: optional; state `present`; JSON type `object`; evaluated `true`; category `UNEXPECTED_NON_NULL_VALUE`.
+
+These are live Provider read-back observations for this exact diagnostic only. No raw values from the Provider response, raw response body, credentials, expected identity, message contents, commenter data, or recipient data are persisted or copied into documentation.
+
+### Cleanup / safety totals
+- Cleanup: `CLEANUP_VERIFIED`.
+- DELETE HTTP `200` + final exact-resource GET HTTP `404`; residual state `ABSENT`.
+- Provider requests: `7 / 9` hard ceiling.
+- Creates: `1`; DELETEs: `1`.
+- Enable PATCH: `0`; disable/emergency PATCH: `0`.
+- Comments: `0`; intentional DMs: `0`; conversations: `0`; Ads/media/webhook mutations: `0`; retries: `0`; automation log reads: `0`.
+- Durable evidence rows: `7`, stages exactly `RUN_STARTED → IDENTITY_VERIFIED → TARGET_VERIFIED → CREATE_ATTEMPT_COMPLETED → READBACK_DIAGNOSTIC_CAPTURED → CLEANUP_COMPLETED → RUN_FINALIZED`.
+- `P1_T15_R03_LIVE_AUTHORIZED` was absent again after the child process exited; it was not persisted.
+- P1-T14 requests/evidence/branch/timing/budget changes: `0`.
+
+### Interpretation / parent state
+R06 establishes the exact disabled-create read-back mismatch fields and proves exact-resource cleanup for this one diagnostic. It does **not** verify enable/disable lifecycle, trigger behavior, Comment-to-DM delivery, delayed DM, or delayed reply. Parent `P1-T15` therefore remains `UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING` pending Team Leader review of this evidence. No capability promotion is made by the Senior Engineer.

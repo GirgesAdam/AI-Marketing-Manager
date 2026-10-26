@@ -3772,3 +3772,28 @@ PASS at Senior implementation/documentation verification
 Team Leader reviewed the submitted implementation/test diff and recorded evidence but did not independently rerun the test/typecheck/build commands. GitHub had no CI/workflow result attached to the reviewed final HEAD; this is an evidence limitation, not a failed-CI result.
 
 R05 acceptance is offline-only. Live Provider Authorization remains `NOT GRANTED`; parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`; `P1-T14 = WAITING_TIME_GATE` remains unchanged.
+
+
+## P1-T15-R06 — Live Provider Read-Back Diagnostic Evidence
+
+Status: `EXECUTED / AWAITING TEAM LEADER REVIEW — LIVE AUTHORIZATION CONSUMED`.
+
+| Evidence | Result |
+|---|---|
+| Pre-live focused R03 suite | `40 / 40 PASS`, exit `0` |
+| Pre-live typecheck | PASS, exit `0` |
+| Pre-live build | PASS, exit `0` |
+| Pre-live `git diff --check` | PASS, exit `0` |
+| Live invocation count | Exactly `1` |
+| Provider request count | `7 / 9` |
+| Identity/account/frozen-post preflight | HTTP `200 / 200 / 200`; mutation reached only after target attestation |
+| Disabled create | HTTP `200`; one create; create response reported inactive |
+| Exact read-back | HTTP `200`; `SAFETY_DISABLED_READBACK_CONFIG_MISMATCH` |
+| `profileId` | missing → `MISSING_REQUIRED_FIELD` |
+| `dmDelaySeconds` | missing → `MISSING_REQUIRED_FIELD` |
+| `audience` | present object → `UNEXPECTED_NON_NULL_VALUE` |
+| PATCH / comments / DMs / retries / log reads | `0 / 0 / 0 / 0 / 0` |
+| Cleanup | DELETE `200` + final exact GET `404` → `CLEANUP_VERIFIED`, residual `ABSENT` |
+| Final harness result | `FAIL / NATIVE_AUTOMATION_SAFETY_FAILURE` |
+
+This matrix records live Provider Behavior for the exact R06 diagnostic only. It does not prove lifecycle enable/disable, trigger/delivery, delayed DM/reply, or capability readiness. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED` pending Team Leader review.

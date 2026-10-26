@@ -3832,3 +3832,43 @@ Acceptance is limited to the reviewed offline validation fix and regression cove
 - Credentials and expected identity may be loaded only into process memory without printing values. `P1_T15_R03_LIVE_AUTHORIZED=true` is authorized only for the single live child process after every preflight gate passes and must not be persisted.
 - P1-T14 remains independently frozen in `WAITING_TIME_GATE`; no request, evidence, branch, fixture, timing or budget change is authorized by R06.
 - Parent `P1-T15` remains unresolved. R06 is diagnostic evidence only and does not prove enable/disable lifecycle, trigger/delivery behavior, delayed actions, or capability status.
+
+
+## P1-T15-R06 — Single Authorized Live R03 Read-Back Diagnostic
+
+**Status: `EXECUTED / AWAITING TEAM LEADER REVIEW — LIVE AUTHORIZATION CONSUMED`.** Exactly one live invocation occurred at activation HEAD `8b7048521ab7c2eac4da4c76f8af3269de0d0761` on branch `p1-t15-r06-live-readback-diagnostic`; no rerun is authorized or performed.
+
+### Offline/evidence gates
+- Accepted R05 source/tests/package were unchanged from base `3d1bb6e763e8747b5fc39a51146cc47e9f4e05af` (diff exit `0`).
+- Focused R03: `40 / 40 PASS`, exit `0`; typecheck exit `0`; build exit `0`; pre-live `git diff --check` exit `0`.
+- Dedicated evidence file did not exist before execution. Required credential names were available from the accepted ignored historical `.env`; values were not printed or persisted. Process authorization was injected only for the one child execution and was absent again afterward.
+
+### Live result
+- Command invocation count: `1` — `npm run p1-t15-r03 -- --live`; CLI exit `1`.
+- Result/classification/error: `FAIL / NATIVE_AUTOMATION_SAFETY_FAILURE / SAFETY_DISABLED_READBACK_CONFIG_MISMATCH`.
+- Created automation: `6adeb03f3f68ec46a12a5395`; requested inactive; create response reported inactive.
+- Requests exactly `7`:
+  1. `GET /v1/auth/verify` → `200`, request `d70ad242-e029-4f07-a152-ad8cbb4b12e0`.
+  2. `GET /v1/accounts` → `200`, request `085ac6e7-cad0-4051-87b9-f520c6e807d8`.
+  3. `GET /v1/posts/6ada5bc404775bbecc763501` → `200`, request `b5957be3-cdb1-4935-8285-d8eebcb2df9f`.
+  4. `POST /v1/comment-automations` → `200`, request `4353dfd6-b978-47ca-b426-a1722c0b7fef`.
+  5. Exact automation GET → `200`, request `6284f5df-f7a6-4456-b63b-58496bac6a7e`.
+  6. Exact automation DELETE → `200`, request `7ce6f54b-4cb6-4e46-a20c-47bc3caa84ac`.
+  7. Final exact automation GET → `404`, request `284b0761-466d-4528-bea6-5f1402f54741`.
+
+### LIVE_PROVIDER_OBSERVED read-back mismatch
+Safe diagnostic mismatch count = `3`:
+- `profileId`: `missing`, type `missing`, required, `MISSING_REQUIRED_FIELD`, value source `absent`.
+- `dmDelaySeconds`: `missing`, type `missing`, required, `MISSING_REQUIRED_FIELD`.
+- `audience`: `present`, type `object`, optional, `UNEXPECTED_NON_NULL_VALUE`.
+
+Only the safe diagnostic metadata above is retained. No raw Provider body or field value is promoted from assumption to fact.
+
+### Cleanup and safety
+- `CLEANUP_VERIFIED`: DELETE `200` AND final exact GET `404`; residual `ABSENT`.
+- Provider requests `7 / 9`; create `1`; DELETE `1`; PATCH `0`; comments `0`; DMs `0`; conversations `0`; Ads/media/webhook mutations `0`; retries `0`; log reads `0`.
+- Evidence stages exactly: `RUN_STARTED → IDENTITY_VERIFIED → TARGET_VERIFIED → CREATE_ATTEMPT_COMPLETED → READBACK_DIAGNOSTIC_CAPTURED → CLEANUP_COMPLETED → RUN_FINALIZED`.
+- P1-T14 was untouched.
+
+### Interpretation
+This proves only the one disabled-create/read-back/delete diagnostic and the exact mismatch metadata above. It does not verify lifecycle enable/disable, trigger behavior, Comment-to-DM delivery, delayed DM, or delayed reply. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; all three downstream Native Automation capability items remain `SPIKE_PENDING` until Team Leader disposition.
