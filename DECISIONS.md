@@ -496,3 +496,27 @@ Parallel lanes never weaken tenant/Brand isolation, approval, policy, Usage Limi
 Dependency-gated successor tasks remain blocked until their dependency is accepted. Never execute two Senior tasks simultaneously.
 
 P1-T14 is the initial waiting-lane case under this decision. It remains `WAITING_TIME_GATE` and remains fully bound to its existing Observation A/B contract, timestamps, request ceiling, and zero-credential/no-presign/no-upload authorization boundary.
+
+
+---
+
+## D-044 — Provider Spike Live/Test Evidence Isolation
+
+**Status:** Accepted
+
+Live Provider spike evidence must be physically/logically isolated from test evidence and must never share a test cleanup path.
+
+For Phase-1 Provider spikes:
+
+- production/live evidence paths are immutable inputs to offline tests;
+- tests use dedicated test-only evidence paths;
+- offline test cleanup must never target a live evidence path;
+- accepted live evidence receives a tracked integrity record containing safe metadata and a cryptographic hash;
+- raw Provider evidence remains outside Git;
+- loss of a raw artifact is recorded explicitly and any reconstruction must never be represented as the original evidence;
+- previously accepted Provider facts and raw-artifact availability are separate states;
+- loss of raw evidence blocks any new task that explicitly depends on that raw artifact until Team Leader disposition.
+
+The tracked integrity record is limited to safe metadata such as task/run identifier, evidence path identifier, SHA-256, byte length, safe checkpoint count, capture timestamp, classification, and availability state. It must not contain secrets, expected user identity, PII, raw Provider bodies, signed URLs, tokens, or credentials.
+
+This decision is deliberately bounded to Phase-1 spike safety and does not introduce a general evidence-storage framework.

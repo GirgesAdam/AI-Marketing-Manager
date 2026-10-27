@@ -1,14 +1,20 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-const {R03_TEST_EVIDENCE_PATH}=vi.hoisted(()=>({R03_TEST_EVIDENCE_PATH:'artifacts/provider-spike/p1-t15-r03-test-evidence.jsonl'}));
+const {R03_LIVE_EVIDENCE_PATH,R03_TEST_EVIDENCE_PATH,r03FsAudit}=vi.hoisted(()=>({
+  R03_LIVE_EVIDENCE_PATH:'artifacts/provider-spike/p1-t15-r03-evidence.jsonl',
+  R03_TEST_EVIDENCE_PATH:'artifacts/provider-spike/p1-t15-r03-test-evidence.jsonl',
+  r03FsAudit:[] as Array<{operation:'open'|'readFile'|'rm';requestedPath:string;effectivePath:string;flags?:string}>,
+}));
 vi.mock('node:fs/promises',async(importOriginal)=>{
   const actual=await importOriginal<typeof import('node:fs/promises')>();
-  const remap=(path:unknown)=>path==='artifacts/provider-spike/p1-t15-r03-evidence.jsonl'?R03_TEST_EVIDENCE_PATH:path;
+  const remap=(path:unknown)=>path===R03_LIVE_EVIDENCE_PATH?R03_TEST_EVIDENCE_PATH:path;
+  const pathText=(path:unknown)=>typeof path==='string'?path:String(path);
+  const audit=(operation:'open'|'readFile'|'rm',path:unknown,effectivePath:unknown,flags?:unknown)=>r03FsAudit.push({operation,requestedPath:pathText(path),effectivePath:pathText(effectivePath),...(flags===undefined?{}:{flags:String(flags)})});
   return{
     ...actual,
-    open:((path:unknown,...args:unknown[])=>actual.open(remap(path) as any,...args as any)) as typeof actual.open,
-    readFile:((path:unknown,...args:unknown[])=>actual.readFile(remap(path) as any,...args as any)) as typeof actual.readFile,
-    rm:((path:unknown,...args:unknown[])=>actual.rm(remap(path) as any,...args as any)) as typeof actual.rm,
+    open:((path:unknown,...args:unknown[])=>{const effectivePath=remap(path);audit('open',path,effectivePath,args[0]);return actual.open(effectivePath as any,...args as any);}) as typeof actual.open,
+    readFile:((path:unknown,...args:unknown[])=>{const effectivePath=remap(path);audit('readFile',path,effectivePath);return actual.readFile(effectivePath as any,...args as any);}) as typeof actual.readFile,
+    rm:((path:unknown,...args:unknown[])=>{const effectivePath=remap(path);audit('rm',path,effectivePath);return actual.rm(effectivePath as any,...args as any);}) as typeof actual.rm,
   };
 });
 
@@ -170,6 +176,25 @@ async function readEvidenceRows():Promise<JournalRow[]>{const contents=await rea
 afterEach(async()=>{await rm(P1_T15_R03_EVIDENCE_PATH,{force:true});});
 
 describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
+  it('R07-R01-EVIDENCE-ISOLATION real fs open/read/remove resolve only to the dedicated test path',async()=>{
+    r03FsAudit.length=0;
+    const journal=new FixedP1T15R03Journal();
+    await journal.initialize([API,EMAIL]);
+    await journal.append('RUN_STARTED',{requestMax:7,readOnly:true},[API,EMAIL]);
+    const contents=await readFile(P1_T15_R03_EVIDENCE_PATH,'utf8');
+    expect(contents).toContain('RUN_STARTED');
+    await rm(P1_T15_R03_EVIDENCE_PATH,{force:true});
+    const relevant=r03FsAudit.filter(entry=>entry.requestedPath===R03_LIVE_EVIDENCE_PATH);
+    expect(relevant).toEqual([
+      {operation:'open',requestedPath:R03_LIVE_EVIDENCE_PATH,effectivePath:R03_TEST_EVIDENCE_PATH,flags:'wx'},
+      {operation:'open',requestedPath:R03_LIVE_EVIDENCE_PATH,effectivePath:R03_TEST_EVIDENCE_PATH,flags:'a'},
+      {operation:'readFile',requestedPath:R03_LIVE_EVIDENCE_PATH,effectivePath:R03_TEST_EVIDENCE_PATH},
+      {operation:'rm',requestedPath:R03_LIVE_EVIDENCE_PATH,effectivePath:R03_TEST_EVIDENCE_PATH},
+    ]);
+    expect(r03FsAudit.some(entry=>entry.effectivePath===R03_LIVE_EVIDENCE_PATH)).toBe(false);
+    await expect(readFile(P1_T15_R03_EVIDENCE_PATH,'utf8')).rejects.toMatchObject({code:'ENOENT'});
+    expect(r03FsAudit.some(entry=>entry.effectivePath===R03_LIVE_EVIDENCE_PATH)).toBe(false);
+  });
   it('R03-01 valid configuration produces deterministic, bounded, value-free output',()=>{
     const a=baseAutomation();
     const first=diagnoseP1T15ExactConfig(a,AUTO);
