@@ -51,21 +51,25 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NONE — P1-T15-R07 STOPPED ON R06 EVIDENCE-INTEGRITY BLOCKER / AWAITING TEAM LEADER REVIEW`.
+Current Executing Task = `NONE — P1-T15-R07-R01 IMPLEMENTED OFFLINE / TESTED / READY FOR TEAM LEADER REVIEW`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R07 did not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R07 remains open but stopped on an evidence-integrity blocker).
+Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R07-R01 remains open only for Team Leader review).
 
-Executing Senior Tasks = `0 / 1` (R07 implementation/testing is stopped for Team Leader review; no Provider execution is active).
+Executing Senior Tasks = `0 / 1` (R01 implementation/testing is complete; no Provider execution is authorized or active).
 
-Current Task = `P1-T15-R07 — SAFE READ-BACK CONTRACT RECONCILIATION — IMPLEMENTED OFFLINE / TESTED / BLOCKED ON R06 EVIDENCE INTEGRITY / AWAITING TEAM LEADER REVIEW`.
+Current Task = `P1-T15-R07-R01 — R06 EVIDENCE INTEGRITY RECOVERY & TEST ISOLATION HARDENING — IMPLEMENTED OFFLINE / TESTED / READY FOR TEAM LEADER REVIEW`.
+
+P1-T15-R07 = **REJECTED — FIX REQUIRED** (Team Leader decision: R07 implementation/offline verification passed, but historical R06 durable-evidence immutability was violated).
 
 P1-T15-R06 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
 P1-T15-R06 live authorization = `CONSUMED / NO RERUN AUTHORIZED`.
+
+Live Provider Authorization = `NOT GRANTED` for P1-T15-R07-R01; Provider requests `0 REQUIRED`; external mutations `0 REQUIRED`.
 
 P1-T15-R05 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -5245,3 +5249,21 @@ R06 establishes the exact disabled-create read-back mismatch fields and proves e
 - `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`; P1-T14 was untouched.
 
 **STOP FOR TEAM LEADER REVIEW.** No live diagnostic, lifecycle run, R08, or successor task is authorized by this handoff.
+
+
+## P1-T15-R07-R01 — Evidence Integrity Recovery & Test Isolation Hardening Closeout
+
+**Status: `IMPLEMENTED OFFLINE / TESTED / READY FOR TEAM LEADER REVIEW`.** Starting HEAD: `1795c918477377af85104691d8354d7856cd7329`; branch: `p1-t15-r07-readback-contract-reconciliation`. Parent Team Leader decision remains `P1-T15-R07 = REJECTED — FIX REQUIRED` pending review of R01.
+
+- Permanent incident record created at `docs/PROVIDER_EVIDENCE_INTEGRITY.md` as `EVID-INC-001`.
+- Historical R06 evidence path remains `ABSENT — KNOWN INCIDENT`; exact recorded pre-loss SHA-256 `e34f2d3f653a3109ba0c9c885bfd0a020f06d4a5e16f5e0c2f4c677a64d7a33c` is preserved. No replacement or reconstruction was written.
+- Accepted R06 findings remain `HISTORICALLY ACCEPTED PROVIDER BEHAVIOR — RAW DURABLE ARTIFACT NO LONGER AVAILABLE`; raw-artifact loss reduces auditability but does not silently rewrite the accepted Provider Behavior record.
+- D-044 records Phase-1 live/test evidence isolation and bounded integrity-record governance.
+- R03 tests retain test-only path `artifacts/provider-spike/p1-t15-r03-test-evidence.jsonl`. New regression `R07-R01-EVIDENCE-ISOLATION` audits requested/effective filesystem paths and proves real `open('wx')`, `open('a')`, `readFile`, and `rm` delegate only to the test path. No sentinel touches the historical path; test evidence cleans up to absent.
+- R07 reconciliation semantics and production runner source were unchanged.
+- Required verification: focused R03 `48 / 48 PASS`; parent P1-T15 `37 / 37 PASS`; full suite `729 / 729 PASS` across `30` files; typecheck PASS; build PASS; final `git diff --check` PASS, exit `0`.
+- Provider requests `0`; external mutations `0`; Live Provider Authorization `NOT GRANTED`; R06 authorization `CONSUMED / NO RERUN AUTHORIZED`.
+- `P1-T15 = UNRESOLVED / FIX REQUIRED`; Comment-to-DM, Delayed Native DM, and Delayed Native Reply remain `SPIKE_PENDING`.
+- P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and was not modified by R01.
+
+Stop condition: after final diff gate, commit, push, clean-tree/remote verification, stop for Team Leader review. No Provider traffic and no successor task.

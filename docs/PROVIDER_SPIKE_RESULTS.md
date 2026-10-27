@@ -3915,3 +3915,27 @@ The tests were corrected to remap only the R03 filesystem operations to `artifac
 - `P1-T15 = UNRESOLVED / FIX REQUIRED`.
 - `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`.
 - P1-T14 remained untouched in `WAITING_TIME_GATE`.
+
+
+## P1-T15-R07-R01 — R06 Evidence Integrity Recovery & Test Isolation Hardening
+
+**Result: `IMPLEMENTED OFFLINE / TESTED / READY FOR TEAM LEADER REVIEW`.** Parent `P1-T15-R07` remains `REJECTED — FIX REQUIRED` until Team Leader disposition of this repair.
+
+### Integrity incident disposition
+- Incident record: `docs/PROVIDER_EVIDENCE_INTEGRITY.md`, identifier `EVID-INC-001`.
+- Historical R06 path: `artifacts/provider-spike/p1-t15-r03-evidence.jsonl`.
+- Recorded pre-loss SHA-256 preserved exactly: `e34f2d3f653a3109ba0c9c885bfd0a020f06d4a5e16f5e0c2f4c677a64d7a33c`.
+- Current artifact state: `ABSENT — KNOWN INCIDENT`; original bytes remain unavailable.
+- No reconstructed, approximate, fixture-derived, or inferred replacement was written to the historical path.
+- Previously accepted R06 Provider Behavior remains classified `HISTORICALLY ACCEPTED PROVIDER BEHAVIOR — RAW DURABLE ARTIFACT NO LONGER AVAILABLE`.
+
+### Isolation hardening
+Vitest's R03 filesystem mock retains the dedicated test path `artifacts/provider-spike/p1-t15-r03-test-evidence.jsonl` and now audits each requested path versus the effective path passed to the real `node:fs/promises` delegate. Regression `R07-R01-EVIDENCE-ISOLATION real fs open/read/remove resolve only to the dedicated test path` proves initialization `open(...,'wx')`, append `open(...,'a')`, `readFile`, and `rm` are all physically delegated only to the test-only path. The historical live path is never passed to the real filesystem layer and no sentinel is created there. Test evidence is removed at completion.
+
+### Evidence governance
+`D-044 — Provider Spike Live/Test Evidence Isolation` records the Team Leader-authorized rule that live evidence is immutable input to offline tests, test cleanup cannot target live evidence, and accepted future Phase-1 live evidence receives a tracked safe integrity record. `docs/PROVIDER_EVIDENCE_INTEGRITY.md` provides the bounded tracked ledger strategy for task/run identifier, evidence path identifier, SHA-256, byte length, safe checkpoint count, capture timestamp, classification, and availability status; raw Provider evidence remains gitignored.
+
+### Safety state
+R01 executed no Provider transport. Provider requests = `0`; external mutations = `0`; Live Provider Authorization = `NOT GRANTED`; R06 live authorization remains `CONSUMED / NO RERUN AUTHORIZED`. No R03/R06 live rerun, lifecycle, PATCH, comment, DM, or successor task occurred. P1-T14 remains unchanged in `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`.
+
+R07 reconciliation semantics and runner source were not modified by R01. Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.

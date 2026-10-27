@@ -3825,3 +3825,30 @@ A separate integrity issue was then discovered: pre-existing R03 tests used `art
 
 ### Acceptance interpretation
 Behavioral and regression verification passes offline, including authorization/request/cleanup/no-PATCH protections. However, successful tests cannot override the R07 requirement that historical R06 durable evidence remain immutable. R07 therefore remains `BLOCKED ON R06 EVIDENCE INTEGRITY / AWAITING TEAM LEADER REVIEW`; no capability promotion or successor task is authorized.
+
+
+## P1-T15-R07-R01 — Evidence Isolation Repair Verification
+
+**Status: `ALL REQUIRED OFFLINE GATES PASS / READY FOR TEAM LEADER REVIEW`.** Provider requests and external mutations during R01: `0 / 0`.
+
+### Isolation regression
+`R07-R01-EVIDENCE-ISOLATION real fs open/read/remove resolve only to the dedicated test path` exercises the genuine `FixedP1T15R03Journal` through the Vitest filesystem wrapper and asserts the exact physical delegation sequence:
+
+- initialization `open('wx')`: requested historical path → effective test-only path;
+- append `open('a')`: requested historical path → effective test-only path;
+- `readFile`: requested historical path → effective test-only path;
+- cleanup `rm`: requested historical path → effective test-only path;
+- no audited operation ever has the historical path as its effective real-filesystem path;
+- post-cleanup logical read returns `ENOENT` from the test-only path.
+
+The regression does not create or write a sentinel at `artifacts/provider-spike/p1-t15-r03-evidence.jsonl`. After focused, parent, and full-suite execution: historical path = `ABSENT — KNOWN INCIDENT`; test-only path = `ABSENT — CLEANED UP`.
+
+### Exact required commands/results
+- `npm test -- tests/provider-spike/p1-t15-r03.test.ts` — exit `0`; Test Files `1 / 1 passed`; Tests `48 / 48 passed`.
+- `npm test -- tests/provider-spike/p1-t15.test.ts` — exit `0`; Test Files `1 / 1 passed`; Tests `37 / 37 passed`.
+- `npm test` — exit `0`; Test Files `30 / 30 passed`; Tests `729 / 729 passed`.
+- `npm run typecheck` — exit `0`.
+- `npm run build` — exit `0`.
+- `git diff --check` — exit `0` on the final documented diff.
+
+R01 changes no R07 reconciliation behavior and no production Provider runner behavior. P1-T14 is unchanged.
