@@ -1,7 +1,21 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+const {R03_TEST_EVIDENCE_PATH}=vi.hoisted(()=>({R03_TEST_EVIDENCE_PATH:'artifacts/provider-spike/p1-t15-r03-test-evidence.jsonl'}));
+vi.mock('node:fs/promises',async(importOriginal)=>{
+  const actual=await importOriginal<typeof import('node:fs/promises')>();
+  const remap=(path:unknown)=>path==='artifacts/provider-spike/p1-t15-r03-evidence.jsonl'?R03_TEST_EVIDENCE_PATH:path;
+  return{
+    ...actual,
+    open:((path:unknown,...args:unknown[])=>actual.open(remap(path) as any,...args as any)) as typeof actual.open,
+    readFile:((path:unknown,...args:unknown[])=>actual.readFile(remap(path) as any,...args as any)) as typeof actual.readFile,
+    rm:((path:unknown,...args:unknown[])=>actual.rm(remap(path) as any,...args as any)) as typeof actual.rm,
+  };
+});
+
 import { readFile, rm } from 'node:fs/promises';
 import type { ProviderTransport, ProviderTransportRequest, ProviderTransportResponse } from '../../src/provider-spike/types.js';
 import {
+  createP1T15MockVerificationContext,
   diagnoseP1T15ExactConfig,
   FixedP1T15Journal,
   P1_T15_R03_JOURNAL_BRAND,
@@ -53,7 +67,12 @@ const baseAutomation=():Obj=>({
   audience:null,
   followGate:null,
 });
-const diag=(a:Obj|null=baseAutomation())=>diagnoseP1T15ExactConfig(a,AUTO);
+const neutralAudience=()=>({followerStatus:'any',minFollowerCount:0,whenUnknown:'send'});
+const verificationContext=(overrides:Partial<{verified:boolean;accountId:string;profileId:string;platform:string;automationId:string;dmDelaySecondsState:'EXACT_ZERO'|'MISSING'|'WRONG_TYPE'|'NON_ZERO'}>={})=>createP1T15MockVerificationContext({
+  accountOwnership:{verified:overrides.verified??true,accountId:overrides.accountId??P1_T15_ACCOUNT_ID,profileId:overrides.profileId??P1_T15_PROFILE_ID,platform:overrides.platform??'facebook'},
+  createResponse:{automationId:overrides.automationId??AUTO,dmDelaySecondsState:overrides.dmDelaySecondsState??'EXACT_ZERO'},
+});
+const diag=(a:Obj|null=baseAutomation(),context?:Parameters<typeof diagnoseP1T15ExactConfig>[2])=>diagnoseP1T15ExactConfig(a,AUTO,context);
 const field=(a:ReturnType<typeof diag>,path:string)=>a.fields.find(item=>item.path===path)!;
 const refText=(value:unknown)=>typeof value==='string'&&value.length?value:null;
 const refNum=(value:unknown)=>typeof value==='number'&&Number.isFinite(value)?value:null;
@@ -82,7 +101,7 @@ async function withR03Authorization<T>(action:()=>Promise<T>):Promise<T>{const p
 async function withoutR03Authorization<T>(action:()=>Promise<T>):Promise<T>{const previous=process.env[R03_AUTH_ENV];delete process.env[R03_AUTH_ENV];try{return await action();}finally{if(previous===undefined)delete process.env[R03_AUTH_ENV];else process.env[R03_AUTH_ENV]=previous;}}
 async function runAuthorizedR03(options:Parameters<typeof runP1T15R03>[0]){return withR03Authorization(()=>runP1T15R03(options));}
 
-type MockOptions={createActive?:boolean;createWithoutId?:boolean;readbackActiveAfterCreate?:boolean;missingTriggerEvidence?:boolean;readbackMismatch?:string|null;readbackOverride?:{field:string;value?:unknown;omit?:boolean};deleteStatus?:number;deleteRemovesDespiteFailure?:boolean;finalGetStatus?:number};
+type MockOptions={createActive?:boolean;createWithoutId?:boolean;createDelayResponse?:'zero'|'missing'|'nonzero'|'wrong-type';readbackActiveAfterCreate?:boolean;missingTriggerEvidence?:boolean;readbackMismatch?:string|null;readbackOverride?:{field:string;value?:unknown;omit?:boolean};r06Readback?:boolean;r06Audience?:unknown;deleteStatus?:number;deleteRemovesDespiteFailure?:boolean;finalGetStatus?:number};
 function mockProvider(options:MockOptions={}){
   const requests:ProviderTransportRequest[]=[];
   let exists=false;
@@ -104,6 +123,9 @@ function mockProvider(options:MockOptions={}){
       automation={...baseAutomation(),isActive:active};
       const created:Obj={...automation};
       if(options.createWithoutId)delete created.id;
+      if(options.createDelayResponse==='missing')delete created.dmDelaySeconds;
+      if(options.createDelayResponse==='nonzero')created.dmDelaySeconds=5;
+      if(options.createDelayResponse==='wrong-type')created.dmDelaySeconds='0';
       return rsp(200,{success:true,automation:created},'create-r03');
     }
     if(method==='GET'&&path===`/v1/comment-automations/${AUTO}`){
@@ -118,6 +140,11 @@ function mockProvider(options:MockOptions={}){
       if(options.readbackOverride&&detailReadCount===1){
         if(options.readbackOverride.omit)delete current[options.readbackOverride.field];
         else current[options.readbackOverride.field]=options.readbackOverride.value;
+      }
+      if(options.r06Readback&&detailReadCount===1){
+        delete current.profileId;
+        delete current.dmDelaySeconds;
+        current.audience=options.r06Audience??neutralAudience();
       }
       return rsp(200,{success:true,automation:current},'readback-r03');
     }
@@ -218,7 +245,9 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
       expect(field(result,'profileId').accepted).toBe(true);
     }
     const unrelated=diag({...baseAutomation(),profileId:{metadata:{_id:P1_T15_PROFILE_ID}}});
-    expect(field(unrelated,'profileId')).toMatchObject({fieldState:'present',accepted:false,mismatchCategory:'UNRESOLVED_IDENTIFIER',valueSource:'unresolved_object'});
+    expect(field(unrelated,'profileId')).toMatchObject({fieldState:'present',accepted:false,mismatchCategory:'UNEXPECTED_IDENTIFIER_SHAPE',valueSource:'unresolved_object'});
+    expect(field(diag({...baseAutomation(),profileId:{_id:P1_T15_PROFILE_ID,metadata:{source:'unexpected'}}}),'profileId')).toMatchObject({accepted:false,mismatchCategory:'UNEXPECTED_IDENTIFIER_SHAPE',verificationSource:'READBACK'});
+    expect(field(diag({...baseAutomation(),profileId:{_id:P1_T15_PROFILE_ID,id:P1_T15_PROFILE_ID}}),'profileId')).toMatchObject({accepted:false,mismatchCategory:'UNEXPECTED_IDENTIFIER_SHAPE'});
     expect(diag({...baseAutomation(),profileId:{_id:'wrong',metadata:{_id:P1_T15_PROFILE_ID}}}).accepted).toBe(false);
     expect(field(diag({...baseAutomation(),profileId:null}),'profileId')).toMatchObject({requiredness:'required',fieldState:'null',accepted:false,mismatchCategory:'NULL_IDENTIFIER'});
     expect(field(diag({...baseAutomation(),profileId:''}),'profileId')).toMatchObject({requiredness:'required',fieldState:'present',jsonType:'string',accepted:false,mismatchCategory:'UNRESOLVED_IDENTIFIER',valueSource:'none'});
@@ -229,6 +258,60 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
     expect(mismatched.accepted).toBe(false);
     const missing=baseAutomation(); delete missing.profileId;
     expect(field(diag(missing),'profileId')).toMatchObject({requiredness:'required',fieldState:'missing',jsonType:'missing',accepted:false,mismatchCategory:'MISSING_REQUIRED_FIELD',valueSource:'absent'});
+  });
+
+  it('R07-PROFILE missing profileId requires trusted same-run ownership evidence and records provenance',()=>{
+    const missing=baseAutomation(); delete missing.profileId;
+    expect(field(diag(missing),'profileId')).toMatchObject({accepted:false,verificationSource:'UNVERIFIED',mismatchCategory:'MISSING_REQUIRED_FIELD'});
+    expect(field(diag(missing,verificationContext()),'profileId')).toMatchObject({accepted:true,verificationSource:'ACCOUNT_OWNERSHIP_PREFLIGHT',valueSource:'ownership_preflight'});
+    for(const context of [verificationContext({profileId:'wrong'}),verificationContext({accountId:'wrong'}),verificationContext({platform:'instagram'}),verificationContext({verified:false})]){
+      expect(field(diag(missing,context),'profileId')).toMatchObject({accepted:false,verificationSource:'UNVERIFIED'});
+    }
+    const forged={accountOwnership:{verified:true,accountId:P1_T15_ACCOUNT_ID,profileId:P1_T15_PROFILE_ID,platform:'facebook'},createResponse:{automationId:AUTO,dmDelaySecondsState:'EXACT_ZERO'}} as any;
+    expect(field(diag(missing,forged),'profileId')).toMatchObject({accepted:false,verificationSource:'UNVERIFIED'});
+    const wrongAccountReadback={...missing,accountId:'wrong-account'};
+    expect(field(diag(wrongAccountReadback,verificationContext()),'profileId')).toMatchObject({accepted:false,verificationSource:'UNVERIFIED'});
+  });
+
+  it('R07-DELAY missing dmDelaySeconds requires exact bound create-response evidence, never outbound intent',()=>{
+    expect(field(diag(baseAutomation()),'dmDelaySeconds')).toMatchObject({accepted:true,verificationSource:'READBACK'});
+    for(const value of [1,null,'0',false,{},[]]){
+      expect(field(diag({...baseAutomation(),dmDelaySeconds:value}),'dmDelaySeconds').accepted).toBe(false);
+    }
+    const missing=baseAutomation(); delete missing.dmDelaySeconds;
+    expect(field(diag(missing),'dmDelaySeconds')).toMatchObject({accepted:false,verificationSource:'UNVERIFIED',mismatchCategory:'UNVERIFIED_PROVIDER_OMISSION'});
+    expect(field(diag(missing,verificationContext()),'dmDelaySeconds')).toMatchObject({accepted:true,verificationSource:'CREATE_RESPONSE'});
+    expect(field(diag(missing,verificationContext({dmDelaySecondsState:'MISSING'})),'dmDelaySeconds')).toMatchObject({accepted:false,mismatchCategory:'UNVERIFIED_PROVIDER_OMISSION'});
+    expect(field(diag(missing,verificationContext({dmDelaySecondsState:'NON_ZERO'})),'dmDelaySeconds')).toMatchObject({accepted:false,mismatchCategory:'CREATE_RESPONSE_VALUE_MISMATCH'});
+    expect(field(diag(missing,verificationContext({dmDelaySecondsState:'WRONG_TYPE'})),'dmDelaySeconds')).toMatchObject({accepted:false,mismatchCategory:'CREATE_RESPONSE_WRONG_TYPE'});
+    expect(field(diag(missing,verificationContext({automationId:'wrong-auto'})),'dmDelaySeconds')).toMatchObject({accepted:false,mismatchCategory:'CREATE_RESPONSE_ID_MISMATCH'});
+    expect(p1T15CreateBody().dmDelaySeconds).toBe(0);
+    expect(field(diag(missing),'dmDelaySeconds').accepted).toBe(false);
+  });
+
+  it('R07-AUDIENCE accepts only the documented neutral/default Facebook projection and fails unknown/non-neutral shapes',()=>{
+    const missing=baseAutomation(); delete missing.audience;
+    expect(field(diag(missing),'audience')).toMatchObject({accepted:true,normalizationCategory:'MISSING',verificationSource:'READBACK'});
+    expect(field(diag({...baseAutomation(),audience:null}),'audience')).toMatchObject({accepted:true,normalizationCategory:'NULL',verificationSource:'READBACK'});
+    expect(field(diag({...baseAutomation(),audience:neutralAudience()}),'audience')).toMatchObject({accepted:true,normalizationCategory:'KNOWN_NEUTRAL_DEFAULT',verificationSource:'PROVIDER_DEFAULT_NORMALIZATION',knownKeyCount:3,unknownKeyCount:0});
+    for(const audience of [
+      {followerStatus:'follower',minFollowerCount:0,whenUnknown:'send'},
+      {followerStatus:'any',minFollowerCount:1,whenUnknown:'send'},
+      {followerStatus:'any',minFollowerCount:0,whenUnknown:'skip'},
+    ])expect(field(diag({...baseAutomation(),audience}),'audience')).toMatchObject({accepted:false,normalizationCategory:'KNOWN_NON_NEUTRAL'});
+    for(const audience of [
+      {...neutralAudience(),futureBehavior:true},
+      {followerStatus:'any',minFollowerCount:0},
+      {followerStatus:{value:'any'},minFollowerCount:0,whenUnknown:'send'},
+      {followerStatus:'any',minFollowerCount:[0],whenUnknown:'send'},
+      {followerStatus:'unknown',minFollowerCount:0,whenUnknown:'send'},
+    ])expect(field(diag({...baseAutomation(),audience}),'audience')).toMatchObject({accepted:false,normalizationCategory:'UNKNOWN_STRUCTURE',verificationSource:'UNVERIFIED'});
+    for(const audience of [[], 'value', 7, true, {followerStatus:'any',minFollowerCount:'0',whenUnknown:'send'}]){
+      expect(field(diag({...baseAutomation(),audience}),'audience')).toMatchObject({accepted:false,normalizationCategory:'WRONG_TYPE',verificationSource:'UNVERIFIED'});
+    }
+    const serialized=JSON.stringify(field(diag({...baseAutomation(),audience:{...neutralAudience(),privateNested:{secret:'DO_NOT_PERSIST'}}}),'audience'));
+    expect(serialized).not.toContain('DO_NOT_PERSIST');
+    expect(serialized).not.toContain('privateNested');
   });
 
   it('R03-05 optional identifier and platform predicates preserve current validator semantics',()=>{
@@ -267,12 +350,13 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
       const result=diag({...baseAutomation(),commentReply:value});
       expect(field(result,'commentReply')).toMatchObject({fieldState:'wrong_type',accepted:false,mismatchCategory:'WRONG_TYPE'});
     }
-    for(const path of ['template','audience','followGate']){
+    for(const path of ['template','followGate']){
       const missing=baseAutomation(); delete missing[path];
       expect(field(diag(missing),path).accepted).toBe(true);
       expect(field(diag({...baseAutomation(),[path]:null}),path).accepted).toBe(true);
       expect(field(diag({...baseAutomation(),[path]:false}),path)).toMatchObject({accepted:false,mismatchCategory:'UNEXPECTED_NON_NULL_VALUE'});
     }
+    expect(field(diag({...baseAutomation(),audience:false}),'audience')).toMatchObject({accepted:false,mismatchCategory:'WRONG_TYPE',normalizationCategory:'WRONG_TYPE'});
   });
 
   it('R03-07 reports multiple independent mismatches without values or recursive identifier search',()=>{
@@ -289,7 +373,7 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
   });
 
   it('R03-08 null/non-object automation envelope fails closed with one safe diagnostic',()=>{
-    expect(diagnoseP1T15ExactConfig(null,AUTO)).toEqual({accepted:false,mismatchCount:1,fields:[{path:'automation',requiredness:'required',fieldState:'missing',jsonType:'missing',evaluated:true,accepted:false,mismatchCategory:'AUTOMATION_ENVELOPE_MISSING'}]});
+    expect(diagnoseP1T15ExactConfig(null,AUTO)).toEqual({accepted:false,mismatchCount:1,fields:[{path:'automation',requiredness:'required',fieldState:'missing',jsonType:'missing',evaluated:true,accepted:false,mismatchCategory:'AUTOMATION_ENVELOPE_MISSING',verificationSource:'UNVERIFIED'}]});
   });
 
   it('R03-09a default mode stays offline and makes zero transport calls',async()=>{
@@ -527,8 +611,64 @@ describe('P1-T15-R03 exact automation read-back diagnostic',()=>{
     expect(provider.requests.some(r=>(r.url??'').includes('/logs'))).toBe(false);
   });
 
+  it('R07-E2E-A R06-shaped read-back passes only with same-run ownership, create delay evidence, and neutral audience',async()=>{
+    const provider=mockProvider({r06Readback:true});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,maxRequests:7});
+    const rows=await readEvidenceRows();
+    const projection=rows.find(row=>row.stage==='READBACK_DIAGNOSTIC_CAPTURED')?.diagnostic as ReturnType<typeof diag>;
+    expect(result.result).toBe('PASS');
+    expect(result.cleanup).toBe('CLEANUP_VERIFIED');
+    expect(field(projection,'profileId')).toMatchObject({accepted:true,verificationSource:'ACCOUNT_OWNERSHIP_PREFLIGHT'});
+    expect(field(projection,'dmDelaySeconds')).toMatchObject({accepted:true,verificationSource:'CREATE_RESPONSE'});
+    expect(field(projection,'audience')).toMatchObject({accepted:true,verificationSource:'PROVIDER_DEFAULT_NORMALIZATION',normalizationCategory:'KNOWN_NEUTRAL_DEFAULT'});
+    expect(provider.requests.some(request=>request.method==='PATCH')).toBe(false);
+    expect(provider.requests.at(-2)?.method).toBe('DELETE');
+    expect(provider.requests.at(-1)?.method).toBe('GET');
+  });
+
+  it('R07-E2E-B R06-shaped read-back without create delay evidence fails closed and still performs exact cleanup',async()=>{
+    const provider=mockProvider({r06Readback:true,createDelayResponse:'missing'});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,maxRequests:7});
+    const rows=await readEvidenceRows();
+    const projection=rows.find(row=>row.stage==='READBACK_DIAGNOSTIC_CAPTURED')?.diagnostic as ReturnType<typeof diag>;
+    expect(result.result).toBe('FAIL');
+    expect(result.errorCategory).toBe('SAFETY_DISABLED_READBACK_CONFIG_MISMATCH');
+    expect(field(projection,'dmDelaySeconds')).toMatchObject({accepted:false,verificationSource:'UNVERIFIED',mismatchCategory:'UNVERIFIED_PROVIDER_OMISSION'});
+    expect(result.cleanup).toBe('CLEANUP_VERIFIED');
+    expect(provider.requests.some(request=>request.method==='PATCH')).toBe(false);
+  });
+
+  it('R07-E2E-C R06-shaped read-back with unsafe audience fails closed and still performs exact cleanup',async()=>{
+    const provider=mockProvider({r06Readback:true,r06Audience:{followerStatus:'follower',minFollowerCount:0,whenUnknown:'send'}});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,maxRequests:7});
+    const rows=await readEvidenceRows();
+    const projection=rows.find(row=>row.stage==='READBACK_DIAGNOSTIC_CAPTURED')?.diagnostic as ReturnType<typeof diag>;
+    expect(result.result).toBe('FAIL');
+    expect(field(projection,'audience')).toMatchObject({accepted:false,normalizationCategory:'KNOWN_NON_NEUTRAL',verificationSource:'UNVERIFIED'});
+    expect(result.cleanup).toBe('CLEANUP_VERIFIED');
+    expect(provider.requests.some(request=>request.method==='PATCH')).toBe(false);
+  });
+
+  it('R07-E2E-D caller-supplied verificationContext property cannot bypass the live-capable runner trust boundary',async()=>{
+    const provider=mockProvider({r06Readback:true,createDelayResponse:'missing'});
+    const forgedOptions={live:true,env:env(),transport:provider.transport,journal:new FixedP1T15R03Journal(),maxRequests:7,verificationContext:verificationContext()} as any;
+    const result=await withR03Authorization(()=>runP1T15ReadbackDiagnostic(forgedOptions));
+    expect(result.result).toBe('FAIL');
+    expect(result.errorCategory).toBe('SAFETY_DISABLED_READBACK_CONFIG_MISMATCH');
+    expect(result.cleanup).toBe('CLEANUP_VERIFIED');
+    expect(provider.requests.some(request=>request.method==='PATCH')).toBe(false);
+  });
+
+  it('R07-E2E-E uncertain cleanup can never turn a reconciled R06-shaped configuration into PASS',async()=>{
+    const provider=mockProvider({r06Readback:true,finalGetStatus:503});
+    const result=await runAuthorizedR03({live:true,liveAuthorized:true,env:env(),transport:provider.transport,maxRequests:7});
+    expect(result.result).toBe('FAIL');
+    expect(result.cleanup).toBe('CLEANUP_UNSAFE_OR_UNKNOWN');
+    expect(result.errorCategory).toBe('R03_CLEANUP_FINAL_READBACK_UNRESOLVED');
+    expect(provider.requests.some(request=>request.method==='PATCH')).toBe(false);
+  });
+
   const invalidReadbackCases:Array<{label:string;field:string;value?:unknown;omit?:boolean;expectedCategory:string}>=[
-    {label:'missing required profileId',field:'profileId',omit:true,expectedCategory:'MISSING_REQUIRED_FIELD'},
     {label:'wrong-type profileId',field:'profileId',value:17,expectedCategory:'WRONG_TYPE'},
     {label:'null buttons',field:'buttons',value:null,expectedCategory:'UNEXPECTED_NULL'},
     {label:'string buttons',field:'buttons',value:'R03_PRIVATE_BUTTONS_SENTINEL',expectedCategory:'WRONG_TYPE'},
