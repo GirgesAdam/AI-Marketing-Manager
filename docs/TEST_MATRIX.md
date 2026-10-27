@@ -3797,3 +3797,31 @@ Status: `ACCEPTED WITH NON-BLOCKING NOTES — LIVE AUTHORIZATION CONSUMED / NO R
 | Final harness result | `FAIL / NATIVE_AUTOMATION_SAFETY_FAILURE` |
 
 Team Leader decision: `ACCEPTED WITH NON-BLOCKING NOTES` for this exact Provider Behavior diagnostic evidence only. It proves only the bounded disabled-create/read-back/delete observation described above. It does **not** prove enable/disable lifecycle, Comment-to-DM delivery, trigger behavior, delayed DM, delayed reply, or broader capability readiness. Parent `P1-T15` remains `UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
+
+
+## P1-T15-R07 — Offline Read-Back Reconciliation Verification
+
+**Status: `CODE/TEST GATES PASS — TASK BLOCKED ON R06 EVIDENCE INTEGRITY`.** Implementation/tests commit: `ac80a852dd6b5a3152dc43111c39e13773741d91`. All R07 Provider-like execution below used mock transport only; external Provider requests/mutations were `0`.
+
+### Added/expanded coverage
+- `profileId`: exact scalar; exact single-key `_id`/`id`/`accountId`; mismatch; null; empty; wrong type; unresolved/extra/nested/multiple-key objects; missing + valid ownership attestation; missing + absent/mismatched account/profile/platform/unverified attestation; forged caller context rejected.
+- `dmDelaySeconds`: read-back numeric `0`; non-zero/null/string/Boolean/object/array rejection; missing + exact same-automation create-response `0`; missing/wrong/non-zero/wrong-automation create evidence rejection; outbound create body alone cannot satisfy verification.
+- `audience`: missing; null; exact documented neutral/default object; known non-neutral values; unknown key; missing known key; unsupported nesting/array; top-level array/string/number/Boolean; wrong known-key type; no arbitrary nested raw value persisted.
+- R06-shaped E2E mock: missing `profileId`, missing `dmDelaySeconds`, non-null audience object with sufficient trusted evidence; missing delay evidence; unsafe audience; forged context; uncertain cleanup. Cleanup remains exact DELETE + final GET, no PATCH, bounded request count, no retry.
+- Test-only evidence-path isolation now prevents R03 unit/E2E tests from opening/removing the production historical R03 evidence path.
+
+### Intermediate finding during implementation
+First focused R03 run: exit `1`, `1` file, `46 / 47 PASS`. One pre-R07 expectation still classified `audience=false` as generic `UNEXPECTED_NON_NULL_VALUE`; it was corrected to assert the new R07 `WRONG_TYPE` audience classification. No production safety check was removed or weakened.
+
+A separate integrity issue was then discovered: pre-existing R03 tests used `artifacts/provider-spike/p1-t15-r03-evidence.jsonl`, the same path as accepted R06 live evidence, and test cleanup deleted the ignored historical artifact. Starting-gate history records its original SHA-256 as `e34f2d3f653a3109ba0c9c885bfd0a020f06d4a5e16f5e0c2f4c677a64d7a33c`; NTFS USN history confirmed deletion/test recreation activity. No byte-faithful backup was available, so no replacement artifact was fabricated. Tests were isolated to a test-only path to prevent recurrence. This remains a Task Acceptance blocker.
+
+### Final executed verification on the reconciled code
+- `npm test -- tests/provider-spike/p1-t15-r03.test.ts` — exit `0`; Test Files `1 passed / 1`; Tests `47 passed / 47`.
+- `npm test -- tests/provider-spike/p1-t15.test.ts` — exit `0`; Test Files `1 passed / 1`; Tests `37 passed / 37`.
+- `npm test` — exit `0`; Test Files `30 passed / 30`; Tests `728 passed / 728`.
+- `npm run typecheck` — exit `0`.
+- `npm run build` — exit `0`.
+- `git diff --check` — exit `0` after documentation/final diff review.
+
+### Acceptance interpretation
+Behavioral and regression verification passes offline, including authorization/request/cleanup/no-PATCH protections. However, successful tests cannot override the R07 requirement that historical R06 durable evidence remain immutable. R07 therefore remains `BLOCKED ON R06 EVIDENCE INTEGRITY / AWAITING TEAM LEADER REVIEW`; no capability promotion or successor task is authorized.

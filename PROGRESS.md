@@ -51,17 +51,17 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NOT_STARTED — NEXT PHASE-1 EXECUTING TASK REQUIRES EXPLICIT TEAM LEADER SELECTION`.
+Current Executing Task = `NONE — P1-T15-R07 STOPPED ON R06 EVIDENCE-INTEGRITY BLOCKER / AWAITING TEAM LEADER REVIEW`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
-P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R06 did not alter its branch, schedule, evidence, fixture, or request budget).
+P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R07 did not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `1 / 2` (P1-T14 remains independently waiting; P1-T15-R06 is closed and accepted).
+Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R07 remains open but stopped on an evidence-integrity blocker).
 
-Executing Senior Tasks = `0 / 1` (no Senior implementation task is executing; no Provider execution is active).
+Executing Senior Tasks = `0 / 1` (R07 implementation/testing is stopped for Team Leader review; no Provider execution is active).
 
-Current Task = `NOT_STARTED — NEXT PHASE-1 EXECUTING TASK REQUIRES EXPLICIT TEAM LEADER SELECTION`.
+Current Task = `P1-T15-R07 — SAFE READ-BACK CONTRACT RECONCILIATION — IMPLEMENTED OFFLINE / TESTED / BLOCKED ON R06 EVIDENCE INTEGRITY / AWAITING TEAM LEADER REVIEW`.
 
 P1-T15-R06 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -5210,3 +5210,38 @@ R06 establishes the exact disabled-create read-back mismatch fields and proves e
 - Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
 - `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`, unchanged.
 - No Senior implementation task is executing. No successor task is selected or started by this closeout.
+
+
+## P1-T15-R07 — Offline Reconciliation Implementation / Evidence-Integrity Blocker
+
+**Status: `IMPLEMENTED OFFLINE / TESTED / BLOCKED ON R06 EVIDENCE INTEGRITY / AWAITING TEAM LEADER REVIEW`.**
+
+- Branch: `p1-t15-r07-readback-contract-reconciliation`.
+- Base HEAD: `4315d180cbd91134ed1d72dd3ea88bc631d5b0f0`.
+- Implementation/tests commit: `ac80a852dd6b5a3152dc43111c39e13773741d91`.
+- Live Provider Authorization remained `NOT GRANTED`; R07 made `0` external Provider requests and `0` external mutations.
+- `profileId`: present read-back remains strict bounded exact-ID verification; missing read-back may pass only from trusted same-run exact account/profile/facebook ownership preflight plus exact read-back account, with provenance `ACCOUNT_OWNERSHIP_PREFLIGHT`.
+- `dmDelaySeconds`: present read-back must equal numeric `0`; missing read-back may pass only from the exact same automation create response explicitly attesting numeric `0`, with provenance `CREATE_RESPONSE`; outbound create intent is never proof.
+- `audience`: only the bounded documented neutral/default shape `{ followerStatus:any, minFollowerCount:0, whenUnknown:send }` may normalize, with provenance `PROVIDER_DEFAULT_NORMALIZATION`; unknown keys/nesting/types or known non-neutral values fail closed. Raw Provider audience objects are not persisted.
+- Safe diagnostic provenance is bounded to `READBACK | CREATE_RESPONSE | ACCOUNT_OWNERSHIP_PREFLIGHT | PROVIDER_DEFAULT_NORMALIZATION | UNVERIFIED`.
+- Current official Zernio Comment Automation create/read documentation and the 2026-08-07 changelog were reviewed as `DOC_CONFIRMED`; these docs are not reclassified as `LIVE_PROVIDER_OBSERVED`. Historical R06 live observations remain authoritative for what R06 actually returned.
+- Existing authorization guard, genuine fixed R03 journal identity, fixed target/create body, request ceiling, cleanup reservation, no-PATCH R03 path, exact DELETE/final GET, `isActive === false`, and cleanup-before-PASS behavior remain intact.
+
+### Offline verification
+- `npm test -- tests/provider-spike/p1-t15-r03.test.ts` — exit `0`; `1` file; `47 / 47 PASS`.
+- `npm test -- tests/provider-spike/p1-t15.test.ts` — exit `0`; `1` file; `37 / 37 PASS`.
+- `npm test` — exit `0`; `30` files; `728 / 728 PASS`.
+- `npm run typecheck` — exit `0`.
+- `npm run build` — exit `0`.
+- An earlier focused run produced `46 / 47 PASS` because an old R03 expectation still treated `audience=false` as generic `UNEXPECTED_NON_NULL_VALUE`; the fixture expectation was corrected to the R07-specific `WRONG_TYPE` classification without weakening production validation.
+
+### Blocking R06 evidence-integrity incident
+- At the accepted starting gate, historical `artifacts/provider-spike/p1-t15-r03-evidence.jsonl` existed with SHA-256 `e34f2d3f653a3109ba0c9c885bfd0a020f06d4a5e16f5e0c2f4c677a64d7a33c`.
+- The pre-existing R03 test suite used the same fixed filesystem path and its cleanup removed that ignored historical artifact during the first R07 focused test run. NTFS USN evidence confirmed deletion followed by repeated test create/delete activity at the same path.
+- The artifact is gitignored/untracked and no byte-faithful local backup was found. Tool history retains the original hash but omitted prior full-file reads because they exceeded its history-size cap. No approximate reconstruction has been written or represented as the original evidence.
+- The R03 tests are now isolated to `artifacts/provider-spike/p1-t15-r03-test-evidence.jsonl` via a test-only filesystem mock; production `FixedP1T15R03Journal` and its live evidence path are unchanged.
+- Because the R07 contract requires historical R06 durable evidence to remain immutable, R07 is **not ready for Acceptance** until Team Leader resolves this evidence-integrity blocker. The successful code/test gates do not override it.
+- `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
+- `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`; P1-T14 was untouched.
+
+**STOP FOR TEAM LEADER REVIEW.** No live diagnostic, lifecycle run, R08, or successor task is authorized by this handoff.

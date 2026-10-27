@@ -3884,3 +3884,34 @@ Preserved live facts: exactly one live invocation; final harness result `FAIL`; 
 No raw Provider values or semantic interpretation is inferred for those three fields. In particular, the evidence does not establish why the Provider omitted `profileId` or `dmDelaySeconds`, what the contents or business meaning of the `audience` object are, or whether these shapes apply outside this exact diagnostic.
 
 R06 live authorization is `CONSUMED / NO RERUN AUTHORIZED`. Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. The evidence does not verify enable/disable lifecycle, trigger behavior, Comment-to-DM delivery, delayed DM, or delayed reply. No successor task is selected or started by this closeout.
+
+
+## P1-T15-R07 — Safe Read-Back Contract Reconciliation (OFFLINE)
+
+**Result: `IMPLEMENTED OFFLINE / TESTED / BLOCKED ON R06 EVIDENCE INTEGRITY`.** Implementation/tests commit: `ac80a852dd6b5a3152dc43111c39e13773741d91`. R07 made no Zernio request and creates no new `LIVE_PROVIDER_OBSERVED` facts.
+
+### Historical live evidence retained as facts, not reinterpreted
+The accepted R06 record remains the historical Provider Behavior observation: one disabled-create diagnostic invocation returned read-back with `profileId` missing, `dmDelaySeconds` missing, and `audience` present as an object; total Provider requests were `7`, with PATCH/comments/DMs/retries all `0`, and cleanup was confirmed by DELETE `200` followed by exact GET `404`. R07 changes future verification reasoning only.
+
+### `DOC_CONFIRMED` findings reviewed for R07
+Current official Zernio Comment Automation documentation describes `dmDelaySeconds` with default/example value `0`, and documents an `audience` object with `followerStatus`, `minFollowerCount`, and `whenUnknown`; the current create/read examples show the neutral-looking values `any`, `0`, and `send`. The 2026-08-07 changelog documents delayed sends and audience targeting fields and states audience targeting is Instagram-only. These are documentation facts only; they do not prove what Facebook read-back returned in R06, and R06 did not persist the raw audience values.
+
+### Bounded reconciliation implemented
+- Present `profileId` is accepted only as the exact fixed ID in the supported scalar or single-key bounded identifier shapes. Mismatch, null, wrong type, unresolved/extra/nested/multiple-key object shape fails closed. Missing `profileId` requires trusted same-run exact account/profile/facebook ownership evidence plus exact read-back account; provenance is `ACCOUNT_OWNERSHIP_PREFLIGHT`.
+- Present `dmDelaySeconds` must be numeric `0`. If omitted from read-back, only the exact create response for the exact created automation may attest numeric `0`; provenance is `CREATE_RESPONSE`. Missing/wrong/non-zero/unbound create evidence remains unverified.
+- `audience` missing/null remains safe under the existing optional semantics. A non-null object may normalize only when it has exactly the bounded documented keys and exact neutral/default values `{ followerStatus:any, minFollowerCount:0, whenUnknown:send }`; provenance is `PROVIDER_DEFAULT_NORMALIZATION`. Any unknown key/nesting/type or known non-neutral value fails closed. No raw nested Provider object is durable evidence.
+- Direct GET-backed accepted fields use `READBACK`; failed fallback verification uses `UNVERIFIED`.
+
+### R06 durable-evidence integrity blocker discovered during R07 tests
+At the accepted R07 starting gate, `artifacts/provider-spike/p1-t15-r03-evidence.jsonl` existed and its recorded SHA-256 was `e34f2d3f653a3109ba0c9c885bfd0a020f06d4a5e16f5e0c2f4c677a64d7a33c`. The existing R03 test suite was discovered to use that same fixed path and to delete it during test cleanup. The first R07 focused test run therefore removed the ignored historical artifact. NTFS USN history confirmed the deletion/test-create sequence. No byte-faithful backup was found; the artifact has not been approximately recreated or misrepresented as recovered.
+
+The tests were corrected to remap only the R03 filesystem operations to `artifacts/provider-spike/p1-t15-r03-test-evidence.jsonl` under Vitest. Production journal code and the production/live evidence path remain unchanged. This prevents recurrence but does not repair the already-lost historical file. Consequently the contract requirement that R06 durable evidence remain immutable is currently unmet and blocks R07 Acceptance despite successful offline behavior tests.
+
+### Safety / capability state
+- External Provider requests in R07: `0`.
+- External mutations in R07: `0`.
+- Live Provider Authorization: `NOT GRANTED`.
+- No R03 live run, lifecycle run, PATCH, comment, DM, or R06 retry occurred.
+- `P1-T15 = UNRESOLVED / FIX REQUIRED`.
+- `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`.
+- P1-T14 remained untouched in `WAITING_TIME_GATE`.
