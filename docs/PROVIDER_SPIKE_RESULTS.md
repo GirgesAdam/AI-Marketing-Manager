@@ -3939,3 +3939,17 @@ Vitest's R03 filesystem mock retains the dedicated test path `artifacts/provider
 R01 executed no Provider transport. Provider requests = `0`; external mutations = `0`; Live Provider Authorization = `NOT GRANTED`; R06 live authorization remains `CONSUMED / NO RERUN AUTHORIZED`. No R03/R06 live rerun, lifecycle, PATCH, comment, DM, or successor task occurred. P1-T14 remains unchanged in `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`.
 
 R07 reconciliation semantics and runner source were not modified by R01. Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
+
+## P1-T15-R07-R01 / P1-T15-R07 — Team Leader Acceptance Disposition
+
+**Reviewed final HEAD:** `c0d43381d1c6a8a244eb37dd48bb4276c5b983b3`.
+
+Team Leader decision: `P1-T15-R07-R01 = DONE / ACCEPTED`; `P1-T15-R07 = DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
+
+The non-blocking evidence note remains permanent: the original accepted R06 raw durable artifact at `artifacts/provider-spike/p1-t15-r03-evidence.jsonl` is `LOST / BYTE-FAITHFUL CONTENT NOT RECOVERED`, recorded as `EVID-INC-001`. No restoration is claimed. Historical R06 Provider Behavior findings remain accepted under the documented evidence-governance disposition and D-044, while raw-artifact availability remains explicitly unavailable.
+
+Team Leader independently executed the required local verification on the reviewed final HEAD: focused R03 `48 / 48 PASS`; parent P1-T15 `37 / 37 PASS`; full suite `30 files / 729 tests PASS`; typecheck PASS; build PASS; `git diff --check` PASS. The working tree was clean before and after verification; the historical R06 path remained absent before and after tests; the test evidence path was absent after tests; no sentinel or reconstructed historical replacement was created.
+
+GitHub combined commit status contained no attached status checks; this is informational only because the required local verification was independently executed by the Team Leader.
+
+No Provider call or external mutation was performed by this documentation-only closeout. Live Provider Authorization remains `NOT GRANTED`; R06 authorization remains `CONSUMED / NO RERUN AUTHORIZED`. Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`; P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`. No successor task is selected.

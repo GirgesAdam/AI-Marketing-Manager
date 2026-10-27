@@ -51,25 +51,27 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NONE — P1-T15-R07-R01 IMPLEMENTED OFFLINE / TESTED / READY FOR TEAM LEADER REVIEW`.
+Current Executing Task = `NONE`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R07 did not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R07-R01 remains open only for Team Leader review).
+Open Senior Tasks = `1 / 2` (P1-T14 remains independently waiting; P1-T15-R07-R01 and P1-T15-R07 are closed by Team Leader acceptance).
 
-Executing Senior Tasks = `0 / 1` (R01 implementation/testing is complete; no Provider execution is authorized or active).
+Executing Senior Tasks = `0 / 1` (no Senior task is executing; no Provider execution is authorized or active).
 
-Current Task = `P1-T15-R07-R01 — R06 EVIDENCE INTEGRITY RECOVERY & TEST ISOLATION HARDENING — IMPLEMENTED OFFLINE / TESTED / READY FOR TEAM LEADER REVIEW`.
+Current Task = `NONE — NO SUCCESSOR TASK SELECTED`.
 
-P1-T15-R07 = **REJECTED — FIX REQUIRED** (Team Leader decision: R07 implementation/offline verification passed, but historical R06 durable-evidence immutability was violated).
+P1-T15-R07 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
 P1-T15-R06 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
 P1-T15-R06 live authorization = `CONSUMED / NO RERUN AUTHORIZED`.
 
-Live Provider Authorization = `NOT GRANTED` for P1-T15-R07-R01; Provider requests `0 REQUIRED`; external mutations `0 REQUIRED`.
+P1-T15-R07-R01 = **DONE / ACCEPTED**
+
+Live Provider Authorization = `NOT GRANTED`.
 
 P1-T15-R05 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -85,7 +87,7 @@ Delayed Native Reply = `SPIKE_PENDING`.
 
 P1-T15 safety stop = `ACCEPTED — fail-closed behavior correct`.
 
-P1-T15 unresolved reason = `R06 live read-back diagnostic confirmed SAFETY_DISABLED_READBACK_CONFIG_MISMATCH on profileId (missing), dmDelaySeconds (missing), and audience (present non-null object). Cleanup was verified, but enable/disable lifecycle and trigger/delivery behavior were not executed or verified.`
+P1-T15 unresolved reason = `R07 read-back reconciliation is accepted, but enable/disable lifecycle, Comment-to-DM trigger/delivery behavior, delayed native DM, and delayed native reply remain unexecuted or unverified.`
 
 P1-T15-R01 = **DONE / ACCEPTED**
 
@@ -5267,3 +5269,19 @@ R06 establishes the exact disabled-create read-back mismatch fields and proves e
 - P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and was not modified by R01.
 
 Stop condition: after final diff gate, commit, push, clean-tree/remote verification, stop for Team Leader review. No Provider traffic and no successor task.
+
+## P1-T15-R07-R01 / P1-T15-R07 — Team Leader Acceptance Closeout
+
+**Reviewed final HEAD:** `c0d43381d1c6a8a244eb37dd48bb4276c5b983b3`
+
+- `P1-T15-R07-R01 = DONE / ACCEPTED`.
+- `P1-T15-R07 = DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
+- Non-blocking evidence note: original accepted R06 raw durable artifact `artifacts/provider-spike/p1-t15-r03-evidence.jsonl` remains `LOST / BYTE-FAITHFUL CONTENT NOT RECOVERED`, permanently recorded as `EVID-INC-001`. Do not claim restoration.
+- Historical R06 Provider Behavior findings remain accepted under the documented evidence-governance disposition and D-044; raw-artifact availability remains explicitly unavailable.
+- Team Leader independently verified on the reviewed final HEAD: focused R03 `48 / 48 PASS`; parent P1-T15 `37 / 37 PASS`; full suite `30 files / 729 tests PASS`; typecheck PASS; build PASS; `git diff --check` PASS.
+- Team Leader independently verified working tree clean before and after verification; historical R06 evidence path absent before and after tests; test evidence path absent after tests; no historical-path sentinel or reconstructed replacement created.
+- GitHub combined commit status contained no attached status checks; informational only because the required local verification was independently executed by the Team Leader.
+- Closeout Provider requests `0`; external mutations `0`; Live Provider Authorization `NOT GRANTED`; R06 live authorization `CONSUMED / NO RERUN AUTHORIZED`.
+- `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`.
+- `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`.
+- Current Executing Senior Task = `NONE`; no successor task selected.

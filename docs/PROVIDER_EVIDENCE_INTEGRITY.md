@@ -64,3 +64,11 @@ The raw evidence file stays gitignored and must never be copied into this docume
 The integrity record is a post-capture metadata step only; it does not authorize Provider traffic and does not change the spike runner's Provider behavior. If a raw artifact is later unavailable, mark that state explicitly. Never reconstruct bytes and label them as original evidence.
 
 This is intentionally limited to Phase-1 Provider spike evidence governance; it is not a general-purpose evidence storage framework.
+
+## EVID-INC-001 — Final Team Leader disposition
+
+**Acceptance disposition:** `P1-T15-R07-R01 = DONE / ACCEPTED`; `P1-T15-R07 = DONE / ACCEPTED WITH NON-BLOCKING NOTES` on reviewed final HEAD `c0d43381d1c6a8a244eb37dd48bb4276c5b983b3`.
+
+The original accepted R06 raw durable artifact remains `LOST / BYTE-FAITHFUL CONTENT NOT RECOVERED`. It was not restored, recreated, inferred, or replaced. Historical R06 Provider Behavior findings remain accepted under this evidence-governance disposition and D-044, while raw-artifact availability remains explicitly unavailable.
+
+Team Leader independently verified that the historical path stayed absent before and after the acceptance test run, the test-only evidence path was absent after tests, and no historical-path sentinel or reconstructed replacement was created.

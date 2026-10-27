@@ -3852,3 +3852,24 @@ The regression does not create or write a sentinel at `artifacts/provider-spike/
 - `git diff --check` — exit `0` on the final documented diff.
 
 R01 changes no R07 reconciliation behavior and no production Provider runner behavior. P1-T14 is unchanged.
+
+## P1-T15-R07-R01 / P1-T15-R07 — Independent Team Leader Acceptance Verification
+
+**Reviewed final HEAD:** `c0d43381d1c6a8a244eb37dd48bb4276c5b983b3`.
+
+| Verification | Team Leader result |
+| --- | --- |
+| `npm test -- tests/provider-spike/p1-t15-r03.test.ts` | `48 / 48 PASS` |
+| `npm test -- tests/provider-spike/p1-t15.test.ts` | `37 / 37 PASS` |
+| `npm test` | `30 files / 729 tests PASS` |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
+| `git diff --check` | PASS |
+| Working tree | clean before and after verification |
+| Historical R06 evidence path | absent before and after tests |
+| Test evidence path | absent after tests |
+| Historical-path sentinel/reconstruction | none created |
+
+Team Leader acceptance: `P1-T15-R07-R01 = DONE / ACCEPTED`; `P1-T15-R07 = DONE / ACCEPTED WITH NON-BLOCKING NOTES`. The non-blocking note is evidence availability only: `EVID-INC-001` remains `LOST / BYTE-FAITHFUL CONTENT NOT RECOVERED`; no restored raw artifact is claimed.
+
+GitHub combined commit status had no attached status checks; informational only. Required local verification above was independently executed by the Team Leader.
