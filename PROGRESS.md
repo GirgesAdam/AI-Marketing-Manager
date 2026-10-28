@@ -51,21 +51,21 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NONE — P1-T15-R09-R01 IMPLEMENTED OFFLINE / VERIFIED / AWAITING TEAM LEADER REVIEW`.
+Current Executing Task = `NONE`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R09 did not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R09-R01 remains open only for Team Leader review).
+Open Senior Tasks = `1 / 2` (P1-T14 remains independently waiting; P1-T15-R09-R01 is closed as DONE / ACCEPTED).
 
-Executing Senior Tasks = `0 / 1` (R01 offline repair/verification is complete; no Provider execution is authorized).
+Executing Senior Tasks = `0 / 1` (no Senior task is executing; no Provider execution is authorized).
 
-Current Task = `P1-T15-R09-R01 — OFFLINE LAUNCHER FORENSICS & DETERMINISTIC INVOCATION PROOF — IMPLEMENTED / VERIFIED / AWAITING TEAM LEADER REVIEW`.
+Current Task = `NONE — NO SUCCESSOR TASK SELECTED`.
 
-P1-T15-R09-R01 = **IMPLEMENTED OFFLINE / VERIFIED / AWAITING TEAM LEADER REVIEW**
+P1-T15-R09-R01 = **DONE / ACCEPTED**
 
-P1-T15-R09 = **REJECTED — FIX REQUIRED**
+P1-T15-R09 = **CLOSED — REJECTED / AUTHORIZATION CONSUMED / LIVE DIAGNOSTIC NOT ESTABLISHED**
 
 P1-T15-R08 = **DONE / ACCEPTED**
 
@@ -77,7 +77,9 @@ P1-T15-R06 live authorization = `CONSUMED / NO RERUN AUTHORIZED`.
 
 P1-T15-R07-R01 = **DONE / ACCEPTED**
 
-Live Provider Authorization = `P1-T15-R09 CONSUMED / NO RERUN AUTHORIZED`.
+Live Provider Authorization = `NOT GRANTED`.
+
+P1-T15-R09 authorization = `CONSUMED / NO RERUN AUTHORIZED`.
 
 P1-T15-R05 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -5402,7 +5404,7 @@ STOP FOR TEAM LEADER REVIEW. A repair or any further live Provider execution req
 
 ## P1-T15-R09-R01 — Offline Launcher Forensics & Deterministic Invocation Proof
 
-**Status: `IMPLEMENTED OFFLINE / VERIFIED / AWAITING TEAM LEADER REVIEW`.**
+**Status: `DONE / ACCEPTED`.**
 
 - Starting HEAD: `be5faeca15ca1eb476bf1f200fa826591128c35c`.
 - Branch: `p1-t15-r09-r01-launcher-forensics`.
@@ -5424,3 +5426,20 @@ STOP FOR TEAM LEADER REVIEW. A repair or any further live Provider execution req
 - P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and untouched.
 
 STOP FOR TEAM LEADER REVIEW. No live diagnostic is authorized by R01.
+## P1-T15-R09-R01 — Team Leader Acceptance Closeout
+
+**Decision: `DONE / ACCEPTED`.** Reviewed HEAD: `690635c518ff5441f3b5ef3443f9913f09a01288`.
+
+- Parent R09 final disposition: `CLOSED — REJECTED / AUTHORIZATION CONSUMED / LIVE DIAGNOSTIC NOT ESTABLISHED`. Historical review verdict remains `REJECTED — FIX REQUIRED`.
+- R09 authorization is permanently `CONSUMED / NO RERUN AUTHORIZED`. R09 established no accepted `LIVE_PROVIDER_OBSERVED` evidence. Any future live diagnostic must be a new task with new explicit Team Leader authorization and must not be described as an R09 rerun.
+- Root-cause classification remains `ROOT_CAUSE_NOT_FULLY_PROVEN — LAUNCHER/NPM BOUNDARY FAILURE CONFIRMED`; bounded conclusion remains: npm/R08 startup is not proven and the failure appears to have occurred at or before the launcher-to-npm boundary.
+- The Windows PowerShell 5.1 `ArgumentList` compatibility finding remains R01 tooling evidence only and is not retroactively assigned as the historical R09 cause.
+- Team Leader independently reproduced the corrected launcher successfully with Provider credentials absent and R03/R08 auth absent.
+- Independent offline R08 probe: `npm run p1-t15-r08` → exit `2`, `BLOCKED`, `LIVE_OPT_IN_REQUIRED`, `providerRequests=0`.
+- Independent invalid-argument probe: `npm run p1-t15-r08 -- --r09-r01-invalid-probe` → exit `2`, `INVALID_P1_T15_R08_ARGUMENTS`, `providerRequests=0`.
+- Team Leader independently confirmed npm trace metadata for exact command/argv, exact repo cwd, and corresponding exit code.
+- Independent verification: R08 focused `17 / 17 PASS`; typecheck PASS; build PASS; `git diff --check` PASS; working tree clean before/after review.
+- Evidence paths after review: R06 historical absent under `EVID-INC-001`; R08 live absent; R08 test absent.
+- Closeout Provider requests `0`; external mutations `0`; Provider credentials loaded `NO`; R03/R08 live authorization absent.
+- Canonical state: `P1-T15-R09-R01 = DONE / ACCEPTED`; `P1-T15-R09 = CLOSED — REJECTED / AUTHORIZATION CONSUMED / LIVE DIAGNOSTIC NOT ESTABLISHED`; Current Executing Senior Task `NONE`; Current Task `NONE — NO SUCCESSOR TASK SELECTED`.
+- Parent/capability state remains `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`; Live Provider Authorization `NOT GRANTED`; P1-T15-R09 authorization `CONSUMED / NO RERUN AUTHORIZED`; P1-T15-R06 authorization `CONSUMED / NO RERUN AUTHORIZED`; P1-T14 `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`.

@@ -3972,7 +3972,7 @@ No test suite was rerun after the live attempt. The missing-evidence integrity r
 
 ## P1-T15-R09-R01 — Offline Launcher Forensics / Verification Matrix
 
-**Status: `ALL REQUIRED OFFLINE GATES PASS / AWAITING TEAM LEADER REVIEW`.** No source/test code changed, so only the contract's no-code-change verification set was required.
+**Status: `ALL REQUIRED OFFLINE GATES PASS / DONE / ACCEPTED`.** No source/test code changed, so only the contract's no-code-change verification set was required. Acceptance is limited to the offline launcher repair/proof and does not authorize any live diagnostic.
 
 ### Forensic evidence
 
@@ -4002,3 +4002,19 @@ No test suite was rerun after the live attempt. The missing-evidence integrity r
 - `git diff --check` → exit `0` before documentation closeout; rerun before final commit.
 
 No R03/parent/full-suite rerun was required because no source/tooling/test code was changed. P1-T14 remains untouched.
+
+### P1-T15-R09-R01 Team Leader Independent Verification / Acceptance
+
+Reviewed HEAD: `690635c518ff5441f3b5ef3443f9913f09a01288`.
+
+- Corrected launcher independently reproduced successfully with Provider credentials absent, R03 auth absent, and R08 auth absent.
+- Offline `npm run p1-t15-r08` → exit `2`; `BLOCKED`; `LIVE_OPT_IN_REQUIRED`; `providerRequests=0`.
+- Invalid-argument `npm run p1-t15-r08 -- --r09-r01-invalid-probe` → exit `2`; `INVALID_P1_T15_R08_ARGUMENTS`; `providerRequests=0`.
+- npm trace independently confirmed exact npm command/argv, exact repo cwd, and corresponding exit code.
+- R08 focused: `17 / 17 PASS`.
+- Typecheck: PASS.
+- Build: PASS.
+- `git diff --check`: PASS.
+- Evidence after review: R06 historical absent under `EVID-INC-001`; R08 live absent; R08 test absent.
+- Working tree remained clean during Team Leader review.
+- Decision: `P1-T15-R09-R01 = DONE / ACCEPTED`. Parent R09 remains rejected/closed and no live execution is authorized.

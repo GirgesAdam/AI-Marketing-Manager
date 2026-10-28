@@ -4046,7 +4046,7 @@ Capability state is unchanged: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to
 
 ## P1-T15-R09-R01 — Offline Launcher Forensics / Deterministic Invocation Proof
 
-**Result: `OFFLINE REPAIR VERIFIED / AWAITING TEAM LEADER REVIEW`.** No Provider credential was loaded, no R03/R08 live authorization was set, and no Provider request or external mutation occurred.
+**Result: `DONE / ACCEPTED` (offline repair only).** No Provider credential was loaded, no R03/R08 live authorization was set, and no Provider request or external mutation occurred. Parent R09 remains rejected and no future live diagnostic is authorized by this acceptance.
 
 ### Forensic classification
 
@@ -4087,3 +4087,15 @@ npm startup has two independent proof signals for both probes: captured npm/scri
 ### Safety state
 
 Provider credentials during R01: absent. R03/R08 live authorization during R01: absent. Provider requests: `0`. External mutations: `0`. R06 historical evidence path: absent under `EVID-INC-001`. R08 live evidence path: absent. R08 test evidence path: absent after verification. P1-T14 untouched. Parent/capability states remain unchanged.
+
+### P1-T15-R09-R01 Team Leader Acceptance Closeout
+
+Team Leader decision: `P1-T15-R09-R01 = DONE / ACCEPTED`, reviewed at HEAD `690635c518ff5441f3b5ef3443f9913f09a01288`.
+
+Parent R09 is not accepted. Final disposition: `P1-T15-R09 = CLOSED — REJECTED / AUTHORIZATION CONSUMED / LIVE DIAGNOSTIC NOT ESTABLISHED`; historical verdict remains `REJECTED — FIX REQUIRED`; authorization remains permanently `CONSUMED / NO RERUN AUTHORIZED`; no accepted `LIVE_PROVIDER_OBSERVED` evidence exists from R09.
+
+Root cause remains bounded as `ROOT_CAUSE_NOT_FULLY_PROVEN — LAUNCHER/NPM BOUNDARY FAILURE CONFIRMED`, with the accepted conclusion that npm/R08 startup is not proven and the failure appears to have occurred at or before the launcher-to-npm boundary. The PowerShell 5.1 `ArgumentList` finding remains R01 tooling evidence only, not a historical R09 root-cause claim.
+
+Team Leader independently reproduced the corrected launcher with Provider credentials absent and R03/R08 auth absent. Offline R08 returned exit `2`, `BLOCKED / LIVE_OPT_IN_REQUIRED`, `providerRequests=0`; invalid-argument probe returned exit `2`, `INVALID_P1_T15_R08_ARGUMENTS`, `providerRequests=0`. npm trace independently confirmed exact command/argv, exact repo cwd, and matching exit code.
+
+Independent verification: R08 focused `17 / 17 PASS`; typecheck PASS; build PASS; `git diff --check` PASS; working tree clean before/after review. R06 historical evidence remained absent under `EVID-INC-001`; R08 live and test evidence remained absent. Acceptance authorizes no Provider execution; any future live diagnostic requires a new task and new explicit Team Leader authorization and is not an R09 rerun.

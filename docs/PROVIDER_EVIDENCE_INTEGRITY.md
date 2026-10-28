@@ -148,3 +148,13 @@ R01 does not alter the historical R09 integrity disposition. R09 live evidence r
 - The corrected offline launcher proof generates only ordinary npm cache/debug logs and captured safe console metadata; these are not Provider evidence and do not change the immutable R09 evidence-integrity blocker.
 
 The deterministic future launcher procedure is now proven offline, but it confers no live authorization. Any future Provider attempt requires a new explicit Team Leader authorization after R01 acceptance.
+
+### P1-T15-R09-R01 Final Acceptance Integrity Disposition
+
+`P1-T15-R09-R01 = DONE / ACCEPTED` at reviewed HEAD `690635c518ff5441f3b5ef3443f9913f09a01288`.
+
+This acceptance does not alter R09 history: `P1-T15-R09 = CLOSED — REJECTED / AUTHORIZATION CONSUMED / LIVE DIAGNOSTIC NOT ESTABLISHED`; historical verdict remains `REJECTED — FIX REQUIRED`; authorization remains `CONSUMED / NO RERUN AUTHORIZED`; no accepted `LIVE_PROVIDER_OBSERVED` evidence exists from R09.
+
+The forensic classification remains `ROOT_CAUSE_NOT_FULLY_PROVEN — LAUNCHER/NPM BOUNDARY FAILURE CONFIRMED`; npm/R08 startup is not proven and the failure appears to have occurred at or before the launcher-to-npm boundary. The PowerShell 5.1 `ArgumentList` compatibility finding remains R01 tooling evidence only and is not assigned retroactively as the historical R09 cause.
+
+Team Leader review confirmed Provider credentials absent, R03/R08 auth absent, R06 historical evidence absent under `EVID-INC-001`, R08 live evidence absent, and R08 test evidence absent. R01 acceptance creates no Provider evidence artifact and authorizes no future Provider attempt. Any future live diagnostic requires a new task with new explicit authorization.
