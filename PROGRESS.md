@@ -51,17 +51,19 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NONE`.
+Current Executing Task = `P1-T15-R09 — SINGLE AUTHORIZED LIVE R08 DIAGNOSTIC — ACTIVATED / AUTHORIZED / PRE-LIVE GATES PENDING`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
-P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R08 did not alter its branch, schedule, evidence, fixture, or request budget).
+P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R09 does not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `1 / 2` (P1-T14 remains independently waiting; P1-T15-R08 is closed as DONE / ACCEPTED).
+Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R09 is the single executing Senior task).
 
-Executing Senior Tasks = `0 / 1` (no Senior task is executing; no Provider execution is authorized or active).
+Executing Senior Tasks = `1 / 1` (P1-T15-R09 is activated; exactly one future child-process R08 live invocation is authorized after pre-live gates).
 
-Current Task = `NONE — NO SUCCESSOR TASK SELECTED`.
+Current Task = `P1-T15-R09 — SINGLE AUTHORIZED LIVE R08 DIAGNOSTIC — ACTIVATED / AUTHORIZED / PRE-LIVE GATES PENDING`.
+
+P1-T15-R09 = **ACTIVATED — SINGLE LIVE R08 DIAGNOSTIC AUTHORIZED**
 
 P1-T15-R08 = **DONE / ACCEPTED**
 
@@ -73,7 +75,7 @@ P1-T15-R06 live authorization = `CONSUMED / NO RERUN AUTHORIZED`.
 
 P1-T15-R07-R01 = **DONE / ACCEPTED**
 
-Live Provider Authorization = `NOT GRANTED`.
+Live Provider Authorization = `GRANTED FOR P1-T15-R09 EXACTLY ONE CHILD-PROCESS INVOCATION / UNCONSUMED`.
 
 P1-T15-R05 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -5339,3 +5341,31 @@ Stop condition: after final diff gate, commit, push, clean-tree/remote verificat
 - `P1-T15-R06 live authorization = CONSUMED / NO RERUN AUTHORIZED`.
 - `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`; P1-T14 remains untouched.
 - Current Executing Senior Task = `NONE`; Current Task = `NONE — NO SUCCESSOR TASK SELECTED`.
+
+
+## P1-T15-R09 — Activation Record
+
+**Status: `ACTIVATED — SINGLE LIVE R08 DIAGNOSTIC AUTHORIZED`.**
+
+- Branch: `p1-t15-r09-single-live-r08-diagnostic`.
+- Starting HEAD: `3526f2810f31f2725ba0b07be2f0c87565d478b1`.
+- Exact authorized command: `npm run p1-t15-r08 -- --live`.
+- `P1_T15_R08_LIVE_AUTHORIZED=true` may exist only in the exact child process for that one invocation; `P1_T15_R03_LIVE_AUTHORIZED` remains forbidden.
+- Maximum command invocations: `1`; authorization is consumed immediately when the command is invoked, regardless of outcome.
+- Provider request ceiling: `9`.
+- Comment Automation creates: maximum `1`, using the accepted frozen R08 body with `isActive=false`.
+- Cleanup DELETE mutations: maximum `1`, against the exact created automation ID only.
+- PATCH: forbidden (`0`).
+- Comments/public replies: forbidden (`0`).
+- DMs: forbidden (`0`).
+- Trigger traffic: forbidden (`0`).
+- Automation log reads: forbidden (`0`).
+- Retry/rerun: forbidden (`0`).
+- Lifecycle enable/disable: not authorized.
+- Historical R06 path `artifacts/provider-spike/p1-t15-r03-evidence.jsonl` remains `ABSENT — EVID-INC-001`; it must not be recreated or touched.
+- R08 live path `artifacts/provider-spike/p1-t15-r08-evidence.jsonl` is absent at activation and must not be deleted or overwritten if created by the authorized invocation.
+- R08 test path `artifacts/provider-spike/p1-t15-r08-test-evidence.jsonl` is absent at activation.
+- P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and is untouched.
+- No production source, test, package, or `DECISIONS.md` changes are authorized by R09.
+
+Activation authorizes only the single bounded disabled-create/read-back/reconciled-verification/exact-DELETE/final-GET diagnostic after all required pre-live offline gates pass. It does not authorize lifecycle, Comment-to-DM delivery, delayed DM, delayed reply, or any successor task.
