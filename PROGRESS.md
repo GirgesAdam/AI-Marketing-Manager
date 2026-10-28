@@ -51,17 +51,19 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NONE`.
+Current Executing Task = `P1-T15-R08 — DEDICATED RECONCILED LIVE-DIAGNOSTIC LANE — ACTIVATED / OFFLINE PREPARATION ONLY`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R07 did not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `1 / 2` (P1-T14 remains independently waiting; P1-T15-R07-R01 and P1-T15-R07 are closed by Team Leader acceptance).
+Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R08 is executing offline preparation only).
 
-Executing Senior Tasks = `0 / 1` (no Senior task is executing; no Provider execution is authorized or active).
+Executing Senior Tasks = `1 / 1` (P1-T15-R08 is executing offline preparation only; no Provider execution is authorized or active).
 
-Current Task = `NONE — NO SUCCESSOR TASK SELECTED`.
+Current Task = `P1-T15-R08 — DEDICATED RECONCILED LIVE-DIAGNOSTIC LANE — ACTIVATED / OFFLINE PREPARATION ONLY`.
+
+P1-T15-R08 = **ACTIVATED / OFFLINE PREPARATION ONLY**
 
 P1-T15-R07 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -5285,3 +5287,17 @@ Stop condition: after final diff gate, commit, push, clean-tree/remote verificat
 - `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`.
 - `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`.
 - Current Executing Senior Task = `NONE`; no successor task selected.
+
+## P1-T15-R08 — Activation Record
+
+**Status: `ACTIVATED / OFFLINE PREPARATION ONLY`.**
+
+- Starting HEAD: `acbaf2a4a675520310abdaf919f263dd754c9bd4`.
+- Branch: `p1-t15-r08-dedicated-live-diagnostic-lane`.
+- Live Provider Authorization: `NOT GRANTED`.
+- Provider requests authorized: `0`.
+- External mutations authorized: `0`.
+- Future target: exactly one bounded R08 disabled-create/read-back/delete live diagnostic, only after separate explicit Team Leader authorization following code/diff/test review.
+- Historical R06 evidence path remains in documented `EVID-INC-001` lost state and is forbidden to R08.
+- P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and is untouched.
+- This activation record authorizes offline implementation/testing only; it does not authorize R08 live execution, R03/R06 reruns, lifecycle activation, PATCH, comment, DM, trigger traffic, or a successor task.
