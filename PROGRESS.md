@@ -51,17 +51,19 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NONE`.
+Current Executing Task = `P1-T15-R10 — FRESH SINGLE LIVE R08 DIAGNOSTIC VIA DETERMINISTIC LAUNCHER — ACTIVATED / PRE-LIVE GATES PENDING`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
-P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R09 did not alter its branch, schedule, evidence, fixture, or request budget).
+P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R10 does not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `1 / 2` (P1-T14 remains independently waiting; P1-T15-R09-R01 is closed as DONE / ACCEPTED).
+Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R10 is the single executing Senior task).
 
-Executing Senior Tasks = `0 / 1` (no Senior task is executing; no Provider execution is authorized).
+Executing Senior Tasks = `1 / 1` (P1-T15-R10 is activated; exactly one fresh live child-start attempt is authorized only after all pre-live gates pass).
 
-Current Task = `NONE — NO SUCCESSOR TASK SELECTED`.
+Current Task = `P1-T15-R10 — FRESH SINGLE LIVE R08 DIAGNOSTIC VIA DETERMINISTIC LAUNCHER — ACTIVATED / PRE-LIVE GATES PENDING`.
+
+P1-T15-R10 = **ACTIVATED — NEW SINGLE LIVE R08 DIAGNOSTIC AUTHORIZED**
 
 P1-T15-R09-R01 = **DONE / ACCEPTED**
 
@@ -77,7 +79,7 @@ P1-T15-R06 live authorization = `CONSUMED / NO RERUN AUTHORIZED`.
 
 P1-T15-R07-R01 = **DONE / ACCEPTED**
 
-Live Provider Authorization = `NOT GRANTED`.
+Live Provider Authorization = `GRANTED FOR P1-T15-R10 EXACTLY ONE NEW LIVE CHILD-START ATTEMPT / UNCONSUMED`.
 
 P1-T15-R09 authorization = `CONSUMED / NO RERUN AUTHORIZED`.
 
@@ -5443,3 +5445,21 @@ STOP FOR TEAM LEADER REVIEW. No live diagnostic is authorized by R01.
 - Closeout Provider requests `0`; external mutations `0`; Provider credentials loaded `NO`; R03/R08 live authorization absent.
 - Canonical state: `P1-T15-R09-R01 = DONE / ACCEPTED`; `P1-T15-R09 = CLOSED — REJECTED / AUTHORIZATION CONSUMED / LIVE DIAGNOSTIC NOT ESTABLISHED`; Current Executing Senior Task `NONE`; Current Task `NONE — NO SUCCESSOR TASK SELECTED`.
 - Parent/capability state remains `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`; Live Provider Authorization `NOT GRANTED`; P1-T15-R09 authorization `CONSUMED / NO RERUN AUTHORIZED`; P1-T15-R06 authorization `CONSUMED / NO RERUN AUTHORIZED`; P1-T14 `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`.
+
+## P1-T15-R10 — Activation Record
+
+**Status: `ACTIVATED — NEW SINGLE LIVE R08 DIAGNOSTIC AUTHORIZED`.**
+
+- Starting HEAD: `fa68ddc01968a6ddf734fd4f207e5065278d6504`.
+- Branch: `p1-t15-r10-fresh-live-r08-diagnostic`.
+- Deterministic launcher: Windows PowerShell 5.1 `System.Diagnostics.ProcessStartInfo`, `UseShellExecute=false`, stdout/stderr redirected, child PID captured after successful `Start()`, exact exit code captured, PowerShell-5.1-compatible `Arguments` property.
+- Absolute launcher: `C:\Windows\system32\cmd.exe`.
+- Absolute npm shim: `C:\Program Files\nodejs\npm.cmd`.
+- Exact repo working directory: `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean`.
+- Exact Provider command intent: `npm run p1-t15-r08 -- --live`.
+- Hard request ceiling: `9`; maximum live child-start attempts: `1`; automation creates: `<= 1`; exact cleanup DELETE: `<= 1`.
+- PATCH: `0`; comments: `0`; DMs: `0`; retries: `0`; automation log reads: `0`; lifecycle activation: `0`.
+- R10 is a fresh Provider attempt and is not an R09 retry/rerun. R09 remains `CLOSED — REJECTED / AUTHORIZATION CONSUMED / LIVE DIAGNOSTIC NOT ESTABLISHED` with historical verdict `REJECTED — FIX REQUIRED`.
+- R10 live authorization may be injected only into the exact future live child environment after all pre-live gates pass. Parent R03/R08 authorization remains absent.
+- P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and must remain untouched.
+- Activation authorizes no source/test/package changes. If live execution exposes a defect, document and stop.
