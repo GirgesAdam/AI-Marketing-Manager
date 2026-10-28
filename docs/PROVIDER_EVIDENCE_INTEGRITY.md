@@ -72,3 +72,18 @@ This is intentionally limited to Phase-1 Provider spike evidence governance; it 
 The original accepted R06 raw durable artifact remains `LOST / BYTE-FAITHFUL CONTENT NOT RECOVERED`. It was not restored, recreated, inferred, or replaced. Historical R06 Provider Behavior findings remain accepted under this evidence-governance disposition and D-044, while raw-artifact availability remains explicitly unavailable.
 
 Team Leader independently verified that the historical path stayed absent before and after the acceptance test run, the test-only evidence path was absent after tests, and no historical-path sentinel or reconstructed replacement was created.
+
+## P1-T15-R08 — Reserved Evidence Identity / Future Integrity Handoff
+
+**Current state:** `OFFLINE PREPARATION ONLY — NO R08 LIVE ARTIFACT CREATED`.
+
+- Reserved R08 live evidence path: `artifacts/provider-spike/p1-t15-r08-evidence.jsonl`.
+- Dedicated R08 test evidence path: `artifacts/provider-spike/p1-t15-r08-test-evidence.jsonl`.
+- Historical R06/R03 path `artifacts/provider-spike/p1-t15-r03-evidence.jsonl` remains unavailable under `EVID-INC-001` and is forbidden to R08.
+- Current R08 live-artifact availability: `NOT CREATED — LIVE INVOCATION NOT AUTHORIZED`.
+
+D-044 isolation applies: offline tests may physically operate only on the R08 test path. They must not create a sentinel at the R08 live path or touch the historical R06/R03 path.
+
+For a future **separately Team Leader-authorized single R08 live invocation**, immediately after the live evidence file is closed and **before any offline test is run**, the operator must add a tracked safe integrity-ledger row containing: task/run ID, exact evidence path identifier, SHA-256, byte length, safe checkpoint count, capture timestamp, classification, and availability state. The raw JSONL remains gitignored/outside Git and must never be copied into the ledger.
+
+The future integrity capture is mandatory post-run metadata bookkeeping only. It does not itself authorize Provider traffic and does not create a generalized evidence-management subsystem. Secrets, expected identity, PII, raw Provider bodies, raw audience objects, signed URLs, tokens, or credentials must not enter the tracked integrity ledger.

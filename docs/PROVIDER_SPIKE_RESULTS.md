@@ -3953,3 +3953,36 @@ Team Leader independently executed the required local verification on the review
 GitHub combined commit status contained no attached status checks; this is informational only because the required local verification was independently executed by the Team Leader.
 
 No Provider call or external mutation was performed by this documentation-only closeout. Live Provider Authorization remains `NOT GRANTED`; R06 authorization remains `CONSUMED / NO RERUN AUTHORIZED`. Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`; P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`. No successor task is selected.
+
+## P1-T15-R08 — Dedicated Reconciled Live-Diagnostic Lane (OFFLINE)
+
+**Result: `IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.** R08 prepares a dedicated future live diagnostic lane only; it performed no Provider traffic and establishes no new `LIVE_PROVIDER_OBSERVED` fact.
+
+- Starting HEAD: `acbaf2a4a675520310abdaf919f263dd754c9bd4`.
+- Branch: `p1-t15-r08-dedicated-live-diagnostic-lane`.
+- Activation commit: `66a4ecc64e1b160ec1e1b74cfdaca0ee43c429d9`.
+- Implementation/tests commit: `8a74b38f63abe51ad4e14724cd673390de1675b4`.
+- Dedicated live evidence path: `artifacts/provider-spike/p1-t15-r08-evidence.jsonl`.
+- Dedicated offline-test evidence path: `artifacts/provider-spike/p1-t15-r08-test-evidence.jsonl`.
+- Historical R06/R03 path `artifacts/provider-spike/p1-t15-r03-evidence.jsonl` remains absent under `EVID-INC-001`; R08 does not reuse, reconstruct, or stage through it.
+
+### Dedicated authorization / command surface
+Future R08 live execution is bound to the real process environment gate `P1_T15_R08_LIVE_AUTHORIZED=true` and the exact CLI command `npm run p1-t15-r08 -- --live`. A caller boolean or injected environment object cannot grant authorization. `P1_T15_R03_LIVE_AUTHORIZED=true` cannot authorize R08, and R08 authorization cannot authorize historical R03. Unknown CLI arguments fail closed; no caller-selectable target, endpoint, URL, automation ID, or evidence path was added.
+
+### Bounded future Provider sequence
+The R08 mock lane preserves the accepted diagnostic sequence: trusted identity read → exact Profile/account ownership read → exact frozen-post read → exactly one disabled Comment Automation create → exact created-automation read-back → accepted R07 reconciliation → exact DELETE → final exact-resource GET. The successful mock diagnostic consumes `7` requests under a fixed ceiling of `9`, leaving two-request cleanup capacity. No PATCH, lifecycle activation, comment, DM, trigger traffic, automation-log read, retry, alternate endpoint, or second create is permitted.
+
+R07 reconciliation semantics were reused rather than redesigned. In the R06-shaped accepted mock scenario, missing `profileId` is proven only by same-run ownership attestation, missing `dmDelaySeconds` only by the exact create response for the exact automation, and the non-null audience only by the exact bounded neutral/default projection. Safe provenance is recorded without persisting the raw audience object.
+
+### Offline behavior coverage
+- Scenario A: R06-shaped reconciled configuration accepted only after exact cleanup (`DELETE 2xx` + final exact GET `404`).
+- Scenario B: missing create-delay proof fails closed and still cleans exactly.
+- Scenario C: unsafe/non-neutral audience fails closed and still cleans exactly.
+- Scenario D: insufficient ownership/read-back binding fails closed and still cleans exactly.
+- Scenario E: Provider-reported active create is a safety failure followed by immediate exact DELETE/final GET; never PATCH.
+- Scenario F: cleanup uncertainty, including failed DELETE followed by final `404`, is never PASS.
+
+D-044 isolation regression proves R08 test filesystem operations physically delegate only to `artifacts/provider-spike/p1-t15-r08-test-evidence.jsonl`. No effective filesystem operation reaches the R08 live path, and no requested/effective operation touches the historical R06/R03 path. The trusted R08 journal also rejects configured secrets/forbidden identity material before persistence.
+
+### Final safety state
+Provider requests in R08 implementation/testing: `0`; external mutations: `0`; Live Provider Authorization: `NOT GRANTED`. The R08 live evidence file was not created. Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and untouched. No live R08 invocation or successor task is authorized by this handoff.

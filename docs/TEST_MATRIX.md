@@ -3873,3 +3873,40 @@ R01 changes no R07 reconciliation behavior and no production Provider runner beh
 Team Leader acceptance: `P1-T15-R07-R01 = DONE / ACCEPTED`; `P1-T15-R07 = DONE / ACCEPTED WITH NON-BLOCKING NOTES`. The non-blocking note is evidence availability only: `EVID-INC-001` remains `LOST / BYTE-FAITHFUL CONTENT NOT RECOVERED`; no restored raw artifact is claimed.
 
 GitHub combined commit status had no attached status checks; informational only. Required local verification above was independently executed by the Team Leader.
+
+## P1-T15-R08 — Dedicated Reconciled Diagnostic Lane Offline Verification
+
+**Status: `ALL REQUIRED OFFLINE GATES PASS / AWAITING TEAM LEADER REVIEW`.** All Provider-like behavior below used mock transport only; Provider requests/external mutations were `0 / 0`.
+
+### Authorization and identity coverage
+- default R08 execution stays offline with zero transport;
+- only `--live` is accepted as the live CLI switch; arbitrary target/path/URL arguments fail closed;
+- real process `P1_T15_R08_LIVE_AUTHORIZED=true` is required before R08 transport;
+- caller-provided booleans and injected env objects cannot authorize;
+- R03 authorization cannot authorize R08 and R08 authorization cannot authorize R03;
+- arbitrary branded/custom journals cannot impersonate the trusted R08 journal;
+- request budgets below the cleanup-safe minimum fail before transport.
+
+### D-044 filesystem isolation coverage
+- live path constant: `artifacts/provider-spike/p1-t15-r08-evidence.jsonl`;
+- test path constant: `artifacts/provider-spike/p1-t15-r08-test-evidence.jsonl`;
+- pre-existing logical R08 live evidence fails closed before Provider transport;
+- real delegated initialization `open('wx')`, append `open('a')`, `readFile`, and cleanup `rm` resolve only to the R08 test path;
+- no effective filesystem operation reaches the R08 live path;
+- no requested/effective operation reaches historical `artifacts/provider-spike/p1-t15-r03-evidence.jsonl`;
+- test evidence is absent after cleanup;
+- the trusted R08 journal rejects API-key/expected-identity material before persistence.
+
+### Provider-behavior mock coverage
+Scenarios A-F cover accepted R06-shaped reconciliation, missing create-delay proof, unsafe audience, insufficient ownership/read-back binding, active-create safety handling, and cleanup uncertainty. Successful diagnostic request order is exactly seven requests: identity GET, account GET, frozen-post GET, one create POST, exact automation GET, exact DELETE, final exact GET. No PATCH, logs, comments, DMs, retries, alternate endpoint, or second create occurs.
+
+### Exact required command results
+- `npm test -- tests/provider-spike/p1-t15-r03.test.ts` — exit `0`; Test Files `1 / 1 passed`; Tests `48 / 48 passed`.
+- `npm test -- tests/provider-spike/p1-t15.test.ts` — exit `0`; Test Files `1 / 1 passed`; Tests `37 / 37 passed`.
+- `npm test -- tests/provider-spike/p1-t15-r08.test.ts` — exit `0`; Test Files `1 / 1 passed`; Tests `17 / 17 passed`.
+- `npm test` — exit `0`; Test Files `31 / 31 passed`; Tests `746 / 746 passed`.
+- `npm run typecheck` — exit `0`.
+- `npm run build` — exit `0`.
+- `git diff --check` — exit `0` on the final code/test diff; final documented diff is checked again before closeout commit.
+
+Existing R03/R07 safety regressions remain intact. P1-T14 was not modified.

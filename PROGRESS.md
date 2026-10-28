@@ -51,19 +51,19 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `P1-T15-R08 — DEDICATED RECONCILED LIVE-DIAGNOSTIC LANE — ACTIVATED / OFFLINE PREPARATION ONLY`.
+Current Executing Task = `NONE — P1-T15-R08 IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
-P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R07 did not alter its branch, schedule, evidence, fixture, or request budget).
+P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R08 did not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R08 is executing offline preparation only).
+Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R08 remains open only for Team Leader review).
 
-Executing Senior Tasks = `1 / 1` (P1-T15-R08 is executing offline preparation only; no Provider execution is authorized or active).
+Executing Senior Tasks = `0 / 1` (R08 implementation/testing is complete; no Provider execution is authorized or active).
 
-Current Task = `P1-T15-R08 — DEDICATED RECONCILED LIVE-DIAGNOSTIC LANE — ACTIVATED / OFFLINE PREPARATION ONLY`.
+Current Task = `P1-T15-R08 — DEDICATED RECONCILED LIVE-DIAGNOSTIC LANE — IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.
 
-P1-T15-R08 = **ACTIVATED / OFFLINE PREPARATION ONLY**
+P1-T15-R08 = **IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW**
 
 P1-T15-R07 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -89,7 +89,7 @@ Delayed Native Reply = `SPIKE_PENDING`.
 
 P1-T15 safety stop = `ACCEPTED — fail-closed behavior correct`.
 
-P1-T15 unresolved reason = `R07 read-back reconciliation is accepted, but enable/disable lifecycle, Comment-to-DM trigger/delivery behavior, delayed native DM, and delayed native reply remain unexecuted or unverified.`
+P1-T15 unresolved reason = `R07 read-back reconciliation is accepted and R08 dedicated reconciled diagnostic lane is implemented/tested offline, but no new R08 live diagnostic has been authorized or executed; enable/disable lifecycle, Comment-to-DM trigger/delivery behavior, delayed native DM, and delayed native reply remain live-unverified.`
 
 P1-T15-R01 = **DONE / ACCEPTED**
 
@@ -5301,3 +5301,24 @@ Stop condition: after final diff gate, commit, push, clean-tree/remote verificat
 - Historical R06 evidence path remains in documented `EVID-INC-001` lost state and is forbidden to R08.
 - P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and is untouched.
 - This activation record authorizes offline implementation/testing only; it does not authorize R08 live execution, R03/R06 reruns, lifecycle activation, PATCH, comment, DM, trigger traffic, or a successor task.
+
+## P1-T15-R08 — Offline Implementation / Verification Handoff
+
+**Status: `IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.**
+
+- Starting HEAD: `acbaf2a4a675520310abdaf919f263dd754c9bd4`.
+- Branch: `p1-t15-r08-dedicated-live-diagnostic-lane`.
+- Activation commit: `66a4ecc64e1b160ec1e1b74cfdaca0ee43c429d9`.
+- Implementation/tests commit: `8a74b38f63abe51ad4e14724cd673390de1675b4`.
+- Dedicated live evidence path: `artifacts/provider-spike/p1-t15-r08-evidence.jsonl`.
+- Dedicated test evidence path: `artifacts/provider-spike/p1-t15-r08-test-evidence.jsonl`.
+- Historical R06/R03 path remains absent under `EVID-INC-001` and was not created, read, appended, removed, staged, or reconstructed by R08 tests.
+- R08 live authorization is process-bound to `P1_T15_R08_LIVE_AUTHORIZED=true`; caller boolean/injected env cannot grant it. R03 and R08 authorization boundaries are mutually non-transferable.
+- Future command surface: `npm run p1-t15-r08 -- --live`; it remains unauthorized until a separate explicit Team Leader approval.
+- Request ceiling: `9`; accepted successful mock diagnostic uses exactly `7` requests and preserves two-request cleanup capacity.
+- R07 reconciliation semantics are reused unchanged. No lifecycle activation, PATCH, comment, DM, trigger traffic, automation-log read, retry, alternate endpoint, or second create was added.
+- Required verification: R03 `48 / 48 PASS`; parent P1-T15 `37 / 37 PASS`; R08 `17 / 17 PASS`; full suite `31 / 31 files`, `746 / 746 tests PASS`; typecheck PASS; build PASS; `git diff --check` PASS.
+- Provider requests: `0`; external mutations: `0`; Live Provider Authorization: `NOT GRANTED`.
+- `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
+- P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and untouched.
+- Stop for Team Leader review. No live R08 invocation and no successor task is authorized.
