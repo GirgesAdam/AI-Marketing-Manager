@@ -51,19 +51,19 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NONE — P1-T15-R08 IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.
+Current Executing Task = `NONE`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R08 did not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R08 remains open only for Team Leader review).
+Open Senior Tasks = `1 / 2` (P1-T14 remains independently waiting; P1-T15-R08 is closed as DONE / ACCEPTED).
 
-Executing Senior Tasks = `0 / 1` (R08 implementation/testing is complete; no Provider execution is authorized or active).
+Executing Senior Tasks = `0 / 1` (no Senior task is executing; no Provider execution is authorized or active).
 
-Current Task = `P1-T15-R08 — DEDICATED RECONCILED LIVE-DIAGNOSTIC LANE — IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.
+Current Task = `NONE — NO SUCCESSOR TASK SELECTED`.
 
-P1-T15-R08 = **IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW**
+P1-T15-R08 = **DONE / ACCEPTED**
 
 P1-T15-R07 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -5304,7 +5304,7 @@ Stop condition: after final diff gate, commit, push, clean-tree/remote verificat
 
 ## P1-T15-R08 — Offline Implementation / Verification Handoff
 
-**Status: `IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.**
+**Status: `DONE / ACCEPTED`.**
 
 - Starting HEAD: `acbaf2a4a675520310abdaf919f263dd754c9bd4`.
 - Branch: `p1-t15-r08-dedicated-live-diagnostic-lane`.
@@ -5321,4 +5321,21 @@ Stop condition: after final diff gate, commit, push, clean-tree/remote verificat
 - Provider requests: `0`; external mutations: `0`; Live Provider Authorization: `NOT GRANTED`.
 - `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`.
 - P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and untouched.
-- Stop for Team Leader review. No live R08 invocation and no successor task is authorized.
+- Team Leader accepted the offline R08 lane at reviewed HEAD `cfce8ca6c7d8cbea14df3b686c9499530e0197bd`. Acceptance means only that the dedicated reconciled diagnostic lane is safe enough for a separately authorized future single live diagnostic; this closeout does not authorize that diagnostic.
+- Current Executing Senior Task = `NONE`; Current Task = `NONE — NO SUCCESSOR TASK SELECTED`. No live R08 invocation and no successor task is authorized.
+
+## P1-T15-R08 — Team Leader Acceptance Closeout
+
+**Decision: `DONE / ACCEPTED`.** Reviewed HEAD: `cfce8ca6c7d8cbea14df3b686c9499530e0197bd`.
+
+- Team Leader independent verification: R03 focused `48 / 48 PASS`; P1-T15 `37 / 37 PASS`; R08 focused `17 / 17 PASS`; full suite `31 files / 746 tests PASS`; typecheck PASS; build PASS; `git diff --check` PASS.
+- Working tree was clean before and after Team Leader review.
+- `P1_T15_R03_LIVE_AUTHORIZED` absent; `P1_T15_R08_LIVE_AUTHORIZED` absent.
+- Historical R06 evidence path was absent before and after review and remains `LOST / BYTE-FAITHFUL CONTENT NOT RECOVERED` under `EVID-INC-001`.
+- R08 live evidence path was absent before and after review; R08 test evidence was absent after cleanup.
+- Acceptance scope is the offline lane only. It does not authorize `P1_T15_R08_LIVE_AUTHORIZED` and does not authorize `npm run p1-t15-r08 -- --live`.
+- Closeout Provider requests: `0`; external mutations: `0`; Live Provider Authorization: `NOT GRANTED`.
+- `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`.
+- `P1-T15-R06 live authorization = CONSUMED / NO RERUN AUTHORIZED`.
+- `P1-T14 = WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`; P1-T14 remains untouched.
+- Current Executing Senior Task = `NONE`; Current Task = `NONE — NO SUCCESSOR TASK SELECTED`.

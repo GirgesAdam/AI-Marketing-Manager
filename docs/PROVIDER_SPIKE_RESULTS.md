@@ -3956,7 +3956,7 @@ No Provider call or external mutation was performed by this documentation-only c
 
 ## P1-T15-R08 — Dedicated Reconciled Live-Diagnostic Lane (OFFLINE)
 
-**Result: `IMPLEMENTED OFFLINE / TESTED / AWAITING TEAM LEADER REVIEW`.** R08 prepares a dedicated future live diagnostic lane only; it performed no Provider traffic and establishes no new `LIVE_PROVIDER_OBSERVED` fact.
+**Result: `DONE / ACCEPTED` (offline lane only).** R08 prepares a dedicated future live diagnostic lane only; it performed no Provider traffic and establishes no new `LIVE_PROVIDER_OBSERVED` fact. Acceptance does not authorize the future live diagnostic.
 
 - Starting HEAD: `acbaf2a4a675520310abdaf919f263dd754c9bd4`.
 - Branch: `p1-t15-r08-dedicated-live-diagnostic-lane`.
@@ -3986,3 +3986,13 @@ D-044 isolation regression proves R08 test filesystem operations physically dele
 
 ### Final safety state
 Provider requests in R08 implementation/testing: `0`; external mutations: `0`; Live Provider Authorization: `NOT GRANTED`. The R08 live evidence file was not created. Parent `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`. P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and untouched. No live R08 invocation or successor task is authorized by this handoff.
+
+### P1-T15-R08 Team Leader Acceptance Closeout
+
+Team Leader decision: `P1-T15-R08 = DONE / ACCEPTED`, reviewed at HEAD `cfce8ca6c7d8cbea14df3b686c9499530e0197bd`.
+
+Independent review evidence: R03 focused `48 / 48 PASS`; P1-T15 `37 / 37 PASS`; R08 focused `17 / 17 PASS`; full suite `31 files / 746 tests PASS`; typecheck PASS; build PASS; `git diff --check` PASS. Working tree was clean before and after review. R03 authorization and R08 authorization were absent. Historical R06 evidence was absent before and after review; R08 live evidence was absent before and after review; R08 test evidence was absent after cleanup.
+
+Acceptance is limited to the dedicated reconciled diagnostic lane being safe enough for a **separately authorized future single live diagnostic**. It does not set or authorize `P1_T15_R08_LIVE_AUTHORIZED`, does not authorize `npm run p1-t15-r08 -- --live`, and authorizes no Provider traffic. Closeout Provider requests/external mutations: `0 / 0`.
+
+Canonical parent state remains: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`; Live Provider Authorization `NOT GRANTED`; R06 live authorization `CONSUMED / NO RERUN AUTHORIZED`; P1-T14 `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`; no successor task selected. Historical R06 artifact remains `LOST / BYTE-FAITHFUL CONTENT NOT RECOVERED` under `EVID-INC-001`.

@@ -3876,7 +3876,7 @@ GitHub combined commit status had no attached status checks; informational only.
 
 ## P1-T15-R08 — Dedicated Reconciled Diagnostic Lane Offline Verification
 
-**Status: `ALL REQUIRED OFFLINE GATES PASS / AWAITING TEAM LEADER REVIEW`.** All Provider-like behavior below used mock transport only; Provider requests/external mutations were `0 / 0`.
+**Status: `ALL REQUIRED OFFLINE GATES PASS / DONE / ACCEPTED`.** All Provider-like behavior below used mock transport only; Provider requests/external mutations were `0 / 0`. Acceptance is for the offline lane only and does not authorize live execution.
 
 ### Authorization and identity coverage
 - default R08 execution stays offline with zero transport;
@@ -3910,3 +3910,25 @@ Scenarios A-F cover accepted R06-shaped reconciliation, missing create-delay pro
 - `git diff --check` — exit `0` on the final code/test diff; final documented diff is checked again before closeout commit.
 
 Existing R03/R07 safety regressions remain intact. P1-T14 was not modified.
+
+### P1-T15-R08 Team Leader Independent Verification / Acceptance
+
+Reviewed HEAD: `cfce8ca6c7d8cbea14df3b686c9499530e0197bd`.
+
+- R03 focused: `48 / 48 PASS`.
+- P1-T15: `37 / 37 PASS`.
+- R08 focused: `17 / 17 PASS`.
+- Full suite: `31 files / 746 tests PASS`.
+- Typecheck: PASS.
+- Build: PASS.
+- `git diff --check`: PASS.
+- Working tree: clean before and after Team Leader review.
+- R03 authorization: absent.
+- R08 authorization: absent.
+- Historical R06 evidence: absent before and after review.
+- R08 live evidence: absent before and after review.
+- R08 test evidence: absent after cleanup.
+- Provider requests / external mutations during acceptance closeout: `0 / 0`.
+- P1-T14 unchanged; no successor task selected.
+
+Decision: `P1-T15-R08 = DONE / ACCEPTED`. This acceptance does not authorize a live R08 run.

@@ -75,7 +75,7 @@ Team Leader independently verified that the historical path stayed absent before
 
 ## P1-T15-R08 — Reserved Evidence Identity / Future Integrity Handoff
 
-**Current state:** `OFFLINE PREPARATION ONLY — NO R08 LIVE ARTIFACT CREATED`.
+**Current state:** `OFFLINE LANE DONE / ACCEPTED - NO R08 LIVE ARTIFACT CREATED`.
 
 - Reserved R08 live evidence path: `artifacts/provider-spike/p1-t15-r08-evidence.jsonl`.
 - Dedicated R08 test evidence path: `artifacts/provider-spike/p1-t15-r08-test-evidence.jsonl`.
@@ -87,3 +87,9 @@ D-044 isolation applies: offline tests may physically operate only on the R08 te
 For a future **separately Team Leader-authorized single R08 live invocation**, immediately after the live evidence file is closed and **before any offline test is run**, the operator must add a tracked safe integrity-ledger row containing: task/run ID, exact evidence path identifier, SHA-256, byte length, safe checkpoint count, capture timestamp, classification, and availability state. The raw JSONL remains gitignored/outside Git and must never be copied into the ledger.
 
 The future integrity capture is mandatory post-run metadata bookkeeping only. It does not itself authorize Provider traffic and does not create a generalized evidence-management subsystem. Secrets, expected identity, PII, raw Provider bodies, raw audience objects, signed URLs, tokens, or credentials must not enter the tracked integrity ledger.
+
+### P1-T15-R08 Offline Lane Acceptance Integrity Note
+
+Team Leader accepted the offline R08 lane at reviewed HEAD `cfce8ca6c7d8cbea14df3b686c9499530e0197bd`. During independent review, the historical R06 evidence path was absent before and after review, the R08 live evidence path was absent before and after review, and the R08 test evidence path was absent after cleanup. R03 and R08 live authorization variables were absent.
+
+No new live artifact exists and no integrity ledger row for a live R08 run is created by this acceptance. Historical R06 remains `LOST / BYTE-FAITHFUL CONTENT NOT RECOVERED` under `EVID-INC-001`. Acceptance does not authorize Provider traffic or the future R08 live invocation; the existing separately-authorized post-live integrity procedure remains unchanged.
