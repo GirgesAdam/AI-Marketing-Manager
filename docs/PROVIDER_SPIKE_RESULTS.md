@@ -3996,3 +3996,50 @@ Independent review evidence: R03 focused `48 / 48 PASS`; P1-T15 `37 / 37 PASS`; 
 Acceptance is limited to the dedicated reconciled diagnostic lane being safe enough for a **separately authorized future single live diagnostic**. It does not set or authorize `P1_T15_R08_LIVE_AUTHORIZED`, does not authorize `npm run p1-t15-r08 -- --live`, and authorizes no Provider traffic. Closeout Provider requests/external mutations: `0 / 0`.
 
 Canonical parent state remains: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`; Live Provider Authorization `NOT GRANTED`; R06 live authorization `CONSUMED / NO RERUN AUTHORIZED`; P1-T14 `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE`; no successor task selected. Historical R06 artifact remains `LOST / BYTE-FAITHFUL CONTENT NOT RECOVERED` under `EVID-INC-001`.
+
+
+## P1-T15-R09 — Single Authorized Live R08 Diagnostic
+
+**Result: `EVIDENCE-INTEGRITY BLOCKER / AUTHORIZATION CONSUMED / AWAITING TEAM LEADER REVIEW`.**
+
+### Pre-live gates
+
+- Starting HEAD: `3526f2810f31f2725ba0b07be2f0c87565d478b1`.
+- Branch: `p1-t15-r09-single-live-r08-diagnostic`.
+- Activation commit/live-execution HEAD: `096ff634aba0e13e6fdc6e8fa65a90a6ee108845`.
+- R03 focused: `48 / 48 PASS`.
+- P1-T15 parent: `37 / 37 PASS`.
+- R08 focused: `17 / 17 PASS`.
+- Typecheck: PASS.
+- Build: PASS.
+- `git diff --check`: PASS.
+- Accepted R08 source/tests/package were unchanged before invocation.
+- Historical R06 evidence, R08 live evidence, and R08 test evidence were absent before the live attempt.
+- Boolean-only child credential delivery probe confirmed the approved API key and expected identity were populated in the child environment; values were not printed or copied. R08 authorization was absent from that probe and from the parent environment.
+
+### Authorized live attempt
+
+- Authorized command surface: `npm run p1-t15-r08 -- --live`.
+- Launch-attempt count: `1`; authorization consumed immediately and no rerun is authorized.
+- Process exit code: `1`.
+- Safe console result payload from npm/R08 runner: not emitted/captured.
+- Required evidence file `artifacts/provider-spike/p1-t15-r08-evidence.jsonl`: `MISSING AFTER AUTHORIZED INVOCATION`.
+- No post-live tests were run before or after integrity disposition; only the contract-permitted non-mutating Git/state checks are used for closeout.
+
+### LIVE_PROVIDER_OBSERVED
+
+**None established.** Because the required durable R08 live evidence file is missing, this task does not assert a Provider request count, ordered Provider request sequence, create/delete occurrence, automation ID, cleanup result, reconciliation provenance, or any Provider response behavior from the attempted invocation.
+
+Provider traffic status = `UNVERIFIED / NOT CAPTURED`.
+
+### DOC_CONFIRMED
+
+No new Provider documentation claim was established by R09. Existing accepted R07/R08 documented contract and safety boundaries remain unchanged; this section adds no new Provider capability fact.
+
+### SYSTEM_INTERPRETATION
+
+The single authorized launch attempt returning exit code `1` without the required durable evidence artifact is an `EVIDENCE_INTEGRITY_BLOCKER`. Absence of evidence must not be converted into zero request/mutation counts or a Provider PASS/BLOCKED/FAIL classification. The R09 authorization is `CONSUMED / NO RERUN AUTHORIZED`; any launcher repair or further Provider attempt requires a new Team Leader task.
+
+Post-attempt safe state: no P1-T15 live runner process remained active; parent R03/R08 authorization variables were absent; R08 test evidence remained absent; historical R06 evidence remained absent under `EVID-INC-001`. P1-T14 remained untouched.
+
+Capability state is unchanged: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`.

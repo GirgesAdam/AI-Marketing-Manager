@@ -3932,3 +3932,40 @@ Reviewed HEAD: `cfce8ca6c7d8cbea14df3b686c9499530e0197bd`.
 - P1-T14 unchanged; no successor task selected.
 
 Decision: `P1-T15-R08 = DONE / ACCEPTED`. This acceptance does not authorize a live R08 run.
+
+
+## P1-T15-R09 — Single Authorized Live R08 Diagnostic Verification
+
+**Status: `PRE-LIVE GATES PASS / SINGLE AUTHORIZED ATTEMPT CONSUMED / LIVE EVIDENCE MISSING`.**
+
+### Pre-live required verification
+
+- `npm test -- tests/provider-spike/p1-t15-r03.test.ts` — exit `0`; `48 / 48 PASS`.
+- `npm test -- tests/provider-spike/p1-t15.test.ts` — exit `0`; `37 / 37 PASS`.
+- `npm test -- tests/provider-spike/p1-t15-r08.test.ts` — exit `0`; `17 / 17 PASS`.
+- `npm run typecheck` — PASS / exit `0`.
+- `npm run build` — PASS / exit `0`.
+- `git diff --check` — PASS / exit `0`.
+- Source/tests/package diff against starting HEAD `3526f2810f31f2725ba0b07be2f0c87565d478b1` — empty.
+- R06 historical evidence — absent.
+- R08 live evidence — absent.
+- R08 test evidence — absent after focused tests cleanup.
+- Working tree — clean after activation commit.
+- R03/R08 authorization in parent process — absent.
+- Boolean-only approved credential child probe — PASS; required credential variables present, values not printed; R08 auth absent in the probe.
+
+### Authorized invocation evidence
+
+- Authorized launch-attempt count: `1`.
+- Process exit code: `1`.
+- Required R08 live evidence file after attempt: `MISSING`.
+- Post-attempt runner process count: `0`.
+- Parent R03 authorization: absent.
+- Parent R08 authorization: absent.
+- Historical R06 evidence: absent.
+- R08 test evidence: absent.
+- Durable Provider request/mutation evidence: unavailable; Provider traffic remains `UNVERIFIED / NOT CAPTURED`.
+
+### Post-live verification policy
+
+No test suite was rerun after the live attempt. The missing-evidence integrity record was captured and committed first, as required. Post-live closeout uses only `git diff --check`, `git status --short`, evidence-path/auth/process checks, and source/test/package/P1-T14 diff checks. No second live invocation is permitted.

@@ -51,19 +51,19 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `P1-T15-R09 — SINGLE AUTHORIZED LIVE R08 DIAGNOSTIC — ACTIVATED / AUTHORIZED / PRE-LIVE GATES PENDING`.
+Current Executing Task = `NONE`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
-P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R09 does not alter its branch, schedule, evidence, fixture, or request budget).
+P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R09 did not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R09 is the single executing Senior task).
+Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R09 remains open only for Team Leader review of the evidence-integrity blocker).
 
-Executing Senior Tasks = `1 / 1` (P1-T15-R09 is activated; exactly one future child-process R08 live invocation is authorized after pre-live gates).
+Executing Senior Tasks = `0 / 1` (the single R09 authorization was consumed; no Senior task is executing and no further Provider execution is authorized).
 
-Current Task = `P1-T15-R09 — SINGLE AUTHORIZED LIVE R08 DIAGNOSTIC — ACTIVATED / AUTHORIZED / PRE-LIVE GATES PENDING`.
+Current Task = `P1-T15-R09 — AUTHORIZED INVOCATION CONSUMED / EVIDENCE-INTEGRITY BLOCKER / AWAITING TEAM LEADER REVIEW`.
 
-P1-T15-R09 = **ACTIVATED — SINGLE LIVE R08 DIAGNOSTIC AUTHORIZED**
+P1-T15-R09 = **AUTHORIZED INVOCATION CONSUMED / EVIDENCE-INTEGRITY BLOCKER / AWAITING TEAM LEADER REVIEW**
 
 P1-T15-R08 = **DONE / ACCEPTED**
 
@@ -75,7 +75,7 @@ P1-T15-R06 live authorization = `CONSUMED / NO RERUN AUTHORIZED`.
 
 P1-T15-R07-R01 = **DONE / ACCEPTED**
 
-Live Provider Authorization = `GRANTED FOR P1-T15-R09 EXACTLY ONE CHILD-PROCESS INVOCATION / UNCONSUMED`.
+Live Provider Authorization = `P1-T15-R09 CONSUMED / NO RERUN AUTHORIZED`.
 
 P1-T15-R05 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES**
 
@@ -5369,3 +5369,31 @@ Stop condition: after final diff gate, commit, push, clean-tree/remote verificat
 - No production source, test, package, or `DECISIONS.md` changes are authorized by R09.
 
 Activation authorizes only the single bounded disabled-create/read-back/reconciled-verification/exact-DELETE/final-GET diagnostic after all required pre-live offline gates pass. It does not authorize lifecycle, Comment-to-DM delivery, delayed DM, delayed reply, or any successor task.
+
+
+## P1-T15-R09 — Single Authorized Live R08 Diagnostic Handoff
+
+**Status: `AUTHORIZED INVOCATION CONSUMED / EVIDENCE-INTEGRITY BLOCKER / AWAITING TEAM LEADER REVIEW`.**
+
+- Starting HEAD: `3526f2810f31f2725ba0b07be2f0c87565d478b1`.
+- Branch: `p1-t15-r09-single-live-r08-diagnostic`.
+- Activation commit: `096ff634aba0e13e6fdc6e8fa65a90a6ee108845`.
+- Live-execution HEAD: `096ff634aba0e13e6fdc6e8fa65a90a6ee108845`.
+- Exact authorized command surface: `npm run p1-t15-r08 -- --live`.
+- Authorized launch-attempt count: `1`; authorization is consumed and no retry/rerun is authorized.
+- Pre-live verification PASS: R03 focused `48 / 48`; P1-T15 `37 / 37`; R08 focused `17 / 17`; typecheck PASS; build PASS; `git diff --check` PASS.
+- Accepted R08 source/tests/package were unchanged from starting HEAD before the launch attempt.
+- Approved historical credential source remained local/Git-ignored; a Boolean-only child probe confirmed `ZERNIO_API_KEY` and `ZERNIO_EXPECTED_USER_EMAIL` present without printing values. Parent R03/R08 authorization variables remained absent.
+- Launch-attempt process exit code: `1`.
+- Required live evidence path `artifacts/provider-spike/p1-t15-r08-evidence.jsonl`: `MISSING AFTER AUTHORIZED INVOCATION`.
+- Safe runner result payload: not emitted/captured.
+- `LIVE_PROVIDER_OBSERVED`: none established. Provider request count, ordered request evidence, create occurrence, DELETE occurrence, automation ID, cleanup outcome, and Provider response semantics are `UNVERIFIED / NOT CAPTURED` because the required durable live evidence artifact is missing.
+- `SYSTEM_INTERPRETATION`: evidence-integrity blocker. Do not infer Provider success/failure and do not manufacture request/mutation counts from absence of evidence.
+- Post-attempt: no P1-T15 live runner process remained active; parent R03/R08 authorization variables were absent; R08 test evidence remained absent; historical R06 path remained absent under `EVID-INC-001`.
+- Integrity blocker was recorded before any post-live tests in `docs/PROVIDER_EVIDENCE_INTEGRITY.md`; no post-live test suite was run.
+- P1-T15 remains `UNRESOLVED / FIX REQUIRED`.
+- `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`.
+- P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and untouched.
+- Current Executing Senior Task = `NONE`. No successor task is selected or authorized.
+
+STOP FOR TEAM LEADER REVIEW. A repair or any further live Provider execution requires a new Team Leader Task Contract.
