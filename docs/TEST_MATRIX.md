@@ -3969,3 +3969,36 @@ Decision: `P1-T15-R08 = DONE / ACCEPTED`. This acceptance does not authorize a l
 ### Post-live verification policy
 
 No test suite was rerun after the live attempt. The missing-evidence integrity record was captured and committed first, as required. Post-live closeout uses only `git diff --check`, `git status --short`, evidence-path/auth/process checks, and source/test/package/P1-T14 diff checks. No second live invocation is permitted.
+
+## P1-T15-R09-R01 — Offline Launcher Forensics / Verification Matrix
+
+**Status: `ALL REQUIRED OFFLINE GATES PASS / AWAITING TEAM LEADER REVIEW`.** No source/test code changed, so only the contract's no-code-change verification set was required.
+
+### Forensic evidence
+
+- Pre-live npm debug logs present for R03 focused, P1-T15 focused, R08 focused, typecheck, and build between `14:14:54Z` and `14:15:10Z`.
+- No npm debug log exists for the R09 attempt around `14:17Z`.
+- Desktop Commander audit records `start_process` in the R09 launch window at `14:16:17Z`, but does not retain command payload/argv.
+- PSReadLine contains no R09 launch command.
+- Security 4688 process evidence was unavailable; surviving PowerShell Operational evidence does not prove npm/R08 startup.
+- No matching temp/Desktop launcher artifact survived.
+- Classification: `ROOT_CAUSE_NOT_FULLY_PROVEN — LAUNCHER/NPM BOUNDARY FAILURE CONFIRMED`.
+
+### Launcher proof
+
+- Harmless child-env probe: PASS; PID `18900`; exit `0`; safe probe visible only to child; Provider credentials and R03/R08 auth absent; stdout captured; stderr empty; parent unchanged.
+- Offline R08 command: PASS for expected offline behavior; PID `22508`; exit `2`; `BLOCKED / LIVE_OPT_IN_REQUIRED`; `providerRequests=0`.
+- Invalid argument forwarding: PASS; PID `25324`; exit `2`; `INVALID_P1_T15_R08_ARGUMENTS`; `providerRequests=0`.
+- npm trace signal 1: captured console/script output proves npm and R08 runner/CLI execution.
+- npm trace signal 2: `2026-10-28T14_38_24_818Z-debug-0.log` and `2026-10-28T14_38_27_484Z-debug-0.log` contain expected title/argv/cwd/exit metadata.
+- Evidence paths after probes: R06 historical absent; R08 live absent; R08 test absent.
+- Provider credentials loaded: `NO`; R03/R08 auth set: `NO`; Provider requests: `0`; external mutations: `0`.
+
+### Required verification
+
+- `npm test -- tests/provider-spike/p1-t15-r08.test.ts` → exit `0`; `17 / 17 PASS`.
+- `npm run typecheck` → exit `0`.
+- `npm run build` → exit `0`.
+- `git diff --check` → exit `0` before documentation closeout; rerun before final commit.
+
+No R03/parent/full-suite rerun was required because no source/tooling/test code was changed. P1-T14 remains untouched.

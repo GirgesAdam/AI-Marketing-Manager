@@ -4043,3 +4043,47 @@ The single authorized launch attempt returning exit code `1` without the require
 Post-attempt safe state: no P1-T15 live runner process remained active; parent R03/R08 authorization variables were absent; R08 test evidence remained absent; historical R06 evidence remained absent under `EVID-INC-001`. P1-T14 remained untouched.
 
 Capability state is unchanged: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`.
+
+## P1-T15-R09-R01 — Offline Launcher Forensics / Deterministic Invocation Proof
+
+**Result: `OFFLINE REPAIR VERIFIED / AWAITING TEAM LEADER REVIEW`.** No Provider credential was loaded, no R03/R08 live authorization was set, and no Provider request or external mutation occurred.
+
+### Forensic classification
+
+`ROOT_CAUSE_NOT_FULLY_PROVEN — LAUNCHER/NPM BOUNDARY FAILURE CONFIRMED`.
+
+`LIVE_PROVIDER_OBSERVED`: no new fact. Parent R09 remains `REJECTED — FIX REQUIRED`; its authorization remains `CONSUMED / NO RERUN AUTHORIZED`.
+
+Surviving evidence proves a Desktop Commander `start_process` call in the R09 launch window at `2026-10-28T14:16:17Z`, followed by post-attempt tooling at `14:17:13Z`. The Senior Engineer execution note reports the outer shell as PowerShell and wrapper exit `1`. However the remote audit does not retain the historical command payload/argv, PSReadLine has no matching record, Security process-creation evidence was unavailable, no surviving temp/Desktop launcher artifact exists, and no npm debug log exists for the R09 attempt. Therefore npm/R08 startup is not proven and the failure appears to have occurred at or before the launcher-to-npm boundary. The exact historical launcher-to-child mechanics and precise origin of exit `1` are not claimed.
+
+Pre-live npm traces remain independently present for R03 focused, parent P1-T15 focused, R08 focused, typecheck, and build between `2026-10-28T14:14:54Z` and `14:15:10Z`, confirming npm logging was functioning immediately before the incident.
+
+### Corrected operational launcher procedure
+
+No production/tooling source change was required. The proven procedure uses Windows PowerShell 5.1 `System.Diagnostics.ProcessStartInfo` with:
+
+- absolute `C:\Windows\system32\cmd.exe` as launcher;
+- absolute `C:\Program Files\nodejs\npm.cmd` as npm shim;
+- working directory `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean`;
+- `UseShellExecute=false`;
+- deterministic stdout/stderr redirection;
+- child PID captured after successful `Start()`;
+- exact child exit code captured;
+- Provider credentials and R03/R08 auth explicitly removed from inherited child environment by default;
+- future task-specific live auth/credentials, if separately authorized later, restricted to that child environment only with no shell-global export and no authorization persisted to `.env`.
+
+The first R01 implementation attempt used `ProcessStartInfo.ArgumentList`, which is not usable in the installed Windows PowerShell 5.1 runtime and failed before any child started. The compatible `Arguments` property was then used successfully. This compatibility finding is not retroactively asserted as the R09 root cause.
+
+### Offline proof
+
+Harmless environment probe: child PID `18900`, exit `0`; child reported launch-probe present and API key / expected identity / R03 auth / R08 auth all absent; stdout captured, stderr empty; parent environment remained unchanged.
+
+`npm run p1-t15-r08` offline: child PID `22508`, exit `2`; npm and build ran, R08 runner emitted `BLOCKED / LIVE_OPT_IN_REQUIRED`, counters reported `providerRequests=0`, and no R08 live evidence was created.
+
+Invalid-argument probe: `npm run p1-t15-r08 -- --r09-r01-invalid-probe`; child PID `25324`, exit `2`; R08 CLI emitted `INVALID_P1_T15_R08_ARGUMENTS` with `providerRequests=0`; no evidence file was created.
+
+npm startup has two independent proof signals for both probes: captured npm/script console output plus npm debug traces. `2026-10-28T14_38_24_818Z-debug-0.log` records title `npm run p1-t15-r08`, expected argv/cwd, exit `2`. `2026-10-28T14_38_27_484Z-debug-0.log` records the invalid argument in title/argv, same cwd, exit `2`.
+
+### Safety state
+
+Provider credentials during R01: absent. R03/R08 live authorization during R01: absent. Provider requests: `0`. External mutations: `0`. R06 historical evidence path: absent under `EVID-INC-001`. R08 live evidence path: absent. R08 test evidence path: absent after verification. P1-T14 untouched. Parent/capability states remain unchanged.

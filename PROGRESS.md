@@ -51,19 +51,21 @@ Current Phase = **PHASE 1 — Provider Feasibility & Basic Cost Safety**
 
 Execution Model = `D-043 — Controlled Parallel Wait Lanes`
 
-Current Executing Task = `NONE`.
+Current Executing Task = `NONE — P1-T15-R09-R01 IMPLEMENTED OFFLINE / VERIFIED / AWAITING TEAM LEADER REVIEW`.
 
 Waiting Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
 
 P1-T14 State = `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` (unchanged; R09 did not alter its branch, schedule, evidence, fixture, or request budget).
 
-Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R09 remains open only for Team Leader review of the evidence-integrity blocker).
+Open Senior Tasks = `2 / 2` (P1-T14 remains independently waiting; P1-T15-R09-R01 remains open only for Team Leader review).
 
-Executing Senior Tasks = `0 / 1` (the single R09 authorization was consumed; no Senior task is executing and no further Provider execution is authorized).
+Executing Senior Tasks = `0 / 1` (R01 offline repair/verification is complete; no Provider execution is authorized).
 
-Current Task = `P1-T15-R09 — AUTHORIZED INVOCATION CONSUMED / EVIDENCE-INTEGRITY BLOCKER / AWAITING TEAM LEADER REVIEW`.
+Current Task = `P1-T15-R09-R01 — OFFLINE LAUNCHER FORENSICS & DETERMINISTIC INVOCATION PROOF — IMPLEMENTED / VERIFIED / AWAITING TEAM LEADER REVIEW`.
 
-P1-T15-R09 = **AUTHORIZED INVOCATION CONSUMED / EVIDENCE-INTEGRITY BLOCKER / AWAITING TEAM LEADER REVIEW**
+P1-T15-R09-R01 = **IMPLEMENTED OFFLINE / VERIFIED / AWAITING TEAM LEADER REVIEW**
+
+P1-T15-R09 = **REJECTED — FIX REQUIRED**
 
 P1-T15-R08 = **DONE / ACCEPTED**
 
@@ -5397,3 +5399,28 @@ Activation authorizes only the single bounded disabled-create/read-back/reconcil
 - Current Executing Senior Task = `NONE`. No successor task is selected or authorized.
 
 STOP FOR TEAM LEADER REVIEW. A repair or any further live Provider execution requires a new Team Leader Task Contract.
+
+## P1-T15-R09-R01 — Offline Launcher Forensics & Deterministic Invocation Proof
+
+**Status: `IMPLEMENTED OFFLINE / VERIFIED / AWAITING TEAM LEADER REVIEW`.**
+
+- Starting HEAD: `be5faeca15ca1eb476bf1f200fa826591128c35c`.
+- Branch: `p1-t15-r09-r01-launcher-forensics`.
+- Parent R09 remains `REJECTED — FIX REQUIRED`; R09 authorization remains `CONSUMED / NO RERUN AUTHORIZED`.
+- Root-cause classification: `ROOT_CAUSE_NOT_FULLY_PROVEN — LAUNCHER/NPM BOUNDARY FAILURE CONFIRMED`.
+- Forensic reconstruction: Desktop Commander audit records a `start_process` call at `2026-10-28T14:16:17Z` in the R09 launch window; the Senior Engineer execution note records the outer process as PowerShell and the wrapper result as launch-attempt count `1` / exit `1`. The remote audit does not retain the command payload/arguments. PSReadLine contains no matching command, Security 4688 evidence was unavailable, no surviving temp/Desktop launcher artifact was found, and no PowerShell event proves npm/R08 process startup.
+- npm trace baseline: pre-live npm logs exist for R03 focused, parent P1-T15 focused, R08 focused, typecheck, and build from `2026-10-28T14:14:54Z` through `14:15:10Z`; no npm debug log exists for the R09 attempt around `14:17Z`.
+- Bounded conclusion: npm/R08 startup is not proven and the failure appears to have occurred at or before the launcher-to-npm boundary. Exact historical executable resolution, argument construction, child-env construction, stdout/stderr plumbing, npm process creation, and the precise origin of exit `1` are not recoverable from surviving evidence.
+- Corrected operational launcher: Windows PowerShell 5.1 `System.Diagnostics.ProcessStartInfo` with absolute `C:\Windows\system32\cmd.exe`, absolute `C:\Program Files\nodejs\npm.cmd`, exact repo working directory, `UseShellExecute=false`, redirected stdout/stderr, child PID captured after `Start()`, and exact exit code captured. Sensitive Provider/auth variables are removed from the inherited child environment and may only be added to the child-specific environment by a future separately authorized task; nothing is exported globally or persisted in `.env`.
+- Harmless child-env probe: PID `18900`, exit `0`; child saw only `P1_T15_R09_R01_LAUNCH_PROBE=true`; API key, expected identity, R03 auth, and R08 auth were all absent; stdout captured, stderr length `0`; parent probe variable remained absent afterward.
+- Offline `npm run p1-t15-r08`: child PID `22508`, exit `2`; npm started, build ran, R08 runner started offline, result `BLOCKED`, errorCategory `LIVE_OPT_IN_REQUIRED`, `providerRequests=0`; stdout captured, stderr empty; R08 live evidence remained absent.
+- Invalid-argument probe: child PID `25324`, exit `2`; argument reached R08 CLI, errorCategory `INVALID_P1_T15_R08_ARGUMENTS`, `providerRequests=0`; stdout captured, stderr empty; no evidence file created.
+- Independent npm trace proof: `2026-10-28T14_38_24_818Z-debug-0.log` records title `npm run p1-t15-r08`, argv `run p1-t15-r08`, correct cwd, exit `2`; `2026-10-28T14_38_27_484Z-debug-0.log` records title `npm run p1-t15-r08 --r09-r01-invalid-probe`, argv `run p1-t15-r08 -- --r09-r01-invalid-probe`, correct cwd, exit `2`.
+- Initial R01 compatibility probe using `ProcessStartInfo.ArgumentList` failed before child start because Windows PowerShell 5.1 exposes no usable `ArgumentList`; corrected proof uses the compatible `Arguments` property. This is R01 tooling evidence only and is not asserted as the historical R09 root cause.
+- Required verification with no source/test changes: R08 focused `17 / 17 PASS`; typecheck PASS; build PASS; `git diff --check` PASS.
+- Provider credentials loaded during R01: `NO`; R03/R08 live authorization set during R01: `NO`; Provider requests: `0`; external mutations: `0`.
+- R06 historical evidence, R08 live evidence, and R08 test evidence all remain absent; no sentinel or reconstruction was created.
+- `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM = SPIKE_PENDING`; `Delayed Native DM = SPIKE_PENDING`; `Delayed Native Reply = SPIKE_PENDING`.
+- P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and untouched.
+
+STOP FOR TEAM LEADER REVIEW. No live diagnostic is authorized by R01.

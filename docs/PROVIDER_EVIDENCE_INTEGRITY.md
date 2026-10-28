@@ -130,3 +130,21 @@ No new live artifact exists and no integrity ledger row for a live R08 run is cr
 `LIVE_PROVIDER_OBSERVED`: **none can be established from this invocation because the required durable R08 evidence artifact is missing.**
 
 `SYSTEM_INTERPRETATION`: the authorized single launch attempt is an evidence-integrity blocker. The authorization is consumed. No second live invocation, retry, or rerun is authorized. Team Leader review is required before any further Provider execution or repair task.
+
+## P1-T15-R09-R01 — Offline Forensic / Evidence-Path Protection Record
+
+R01 does not alter the historical R09 integrity disposition. R09 live evidence remains missing; R09 authorization remains consumed; no reconstruction or substitute evidence was created.
+
+- Parent R09 status: `REJECTED — FIX REQUIRED`.
+- R09 authorization: `CONSUMED / NO RERUN AUTHORIZED`.
+- New `LIVE_PROVIDER_OBSERVED` facts from R01: none.
+- Root-cause classification: `ROOT_CAUSE_NOT_FULLY_PROVEN — LAUNCHER/NPM BOUNDARY FAILURE CONFIRMED`.
+- Historical R06 evidence path `artifacts/provider-spike/p1-t15-r03-evidence.jsonl`: absent under `EVID-INC-001` throughout R01.
+- R08 live evidence path `artifacts/provider-spike/p1-t15-r08-evidence.jsonl`: absent throughout R01.
+- R08 test evidence path `artifacts/provider-spike/p1-t15-r08-test-evidence.jsonl`: absent after R01 probes and verification.
+- No sentinel was created at a live evidence path; no R06/R09 evidence was reconstructed.
+- Provider credentials were not loaded during R01. R03/R08 live authorization variables were not set.
+- Provider requests during R01: `0`; external mutations: `0`.
+- The corrected offline launcher proof generates only ordinary npm cache/debug logs and captured safe console metadata; these are not Provider evidence and do not change the immutable R09 evidence-integrity blocker.
+
+The deterministic future launcher procedure is now proven offline, but it confers no live authorization. Any future Provider attempt requires a new explicit Team Leader authorization after R01 acceptance.
