@@ -4099,3 +4099,31 @@ Root cause remains bounded as `ROOT_CAUSE_NOT_FULLY_PROVEN — LAUNCHER/NPM BOUN
 Team Leader independently reproduced the corrected launcher with Provider credentials absent and R03/R08 auth absent. Offline R08 returned exit `2`, `BLOCKED / LIVE_OPT_IN_REQUIRED`, `providerRequests=0`; invalid-argument probe returned exit `2`, `INVALID_P1_T15_R08_ARGUMENTS`, `providerRequests=0`. npm trace independently confirmed exact command/argv, exact repo cwd, and matching exit code.
 
 Independent verification: R08 focused `17 / 17 PASS`; typecheck PASS; build PASS; `git diff --check` PASS; working tree clean before/after review. R06 historical evidence remained absent under `EVID-INC-001`; R08 live and test evidence remained absent. Acceptance authorizes no Provider execution; any future live diagnostic requires a new task and new explicit Team Leader authorization and is not an R09 rerun.
+
+## P1-T15-R10 — Fresh R08 Diagnostic Pre-Provider Stop
+
+**Result: `BLOCKED PRE_PROVIDER / LIVE CHILD NOT STARTED / AUTHORIZATION UNCONSUMED`.** R10 is a new task and is not an R09 rerun.
+
+### Pre-live evidence
+
+Activation commit `2faf26a0e8951e422778e39cb4d97a8f49914482` was pushed before any live child start. R03 focused `48 / 48`, parent P1-T15 `37 / 37`, R08 focused `17 / 17`, typecheck, build, and `git diff --check` all passed. Accepted source/tests/package remained unchanged.
+
+The accepted deterministic launcher passed its required offline sanity check: Windows PowerShell 5.1 `ProcessStartInfo`, absolute `C:\Windows\system32\cmd.exe`, absolute `C:\Program Files\nodejs\npm.cmd`, exact repo cwd, redirected stdout/stderr, PID `10592`, exit `2`, result `BLOCKED`, errorCategory `LIVE_OPT_IN_REQUIRED`, `providerRequests=0`. npm debug trace independently recorded the expected title/argv/cwd/exit. The R08 live evidence path remained absent.
+
+Credential preflight was Boolean-only and passed using the approved historical ignored local source. Credential values were not printed. Parent R03/R08 authorization remained absent, and the preflight child had no R08 live authorization.
+
+### LIVE_PROVIDER_OBSERVED
+
+None. The live R10 child was never started. Provider requests = `0`; external mutations = `0`; create = `0`; DELETE = `0`; PATCH = `0`; comments = `0`; DMs = `0`; retries = `0`; automation log reads = `0`; lifecycle activation = `0`.
+
+### SYSTEM_INTERPRETATION
+
+The available execution safety layer rejected the credential-bearing deterministic-live dispatch before remote execution. Both rejected constructions occurred before any device-side `Process.Start()`. Consequently no live PID, live npm trace, R08 durable artifact, Provider response, or reconciliation result exists. R10 authorization remains `GRANTED / UNCONSUMED / NO CHILD START` and no automatic retry/fallback launcher was used.
+
+This is a local/tool-execution boundary blocker, not Provider behavior and not an R08 implementation result. The exact accepted R09-R01 launcher procedure remains proven offline; no production/tooling repair was attempted inside R10.
+
+### DOC_CONFIRMED
+
+Existing R07/R08 contract facts and historical R09 disposition are unchanged. R09 remains `CLOSED — REJECTED / AUTHORIZATION CONSUMED / LIVE DIAGNOSTIC NOT ESTABLISHED`; R10 is a new task, not an R09 retry/rerun.
+
+Safety/capability state remains unchanged: `P1-T15 = UNRESOLVED / FIX REQUIRED`; `Comment-to-DM`, `Delayed Native DM`, and `Delayed Native Reply` remain `SPIKE_PENDING`; P1-T14 remains `WAITING_TIME_GATE — OBSERVATION A NOT YET ELIGIBLE` and untouched.

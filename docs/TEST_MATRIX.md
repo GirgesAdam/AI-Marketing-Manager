@@ -4018,3 +4018,41 @@ Reviewed HEAD: `690635c518ff5441f3b5ef3443f9913f09a01288`.
 - Evidence after review: R06 historical absent under `EVID-INC-001`; R08 live absent; R08 test absent.
 - Working tree remained clean during Team Leader review.
 - Decision: `P1-T15-R09-R01 = DONE / ACCEPTED`. Parent R09 remains rejected/closed and no live execution is authorized.
+
+## P1-T15-R10 — Pre-Live Verification / Deterministic Launcher Matrix
+
+**Status: `PRE-LIVE GATES PASS / LIVE CHILD NOT STARTED / TOOL-EXECUTION BLOCKER`.**
+
+### Required pre-live gates
+
+- `npm test -- tests/provider-spike/p1-t15-r03.test.ts` → `48 / 48 PASS`.
+- `npm test -- tests/provider-spike/p1-t15.test.ts` → `37 / 37 PASS`.
+- `npm test -- tests/provider-spike/p1-t15-r08.test.ts` → `17 / 17 PASS`.
+- `npm run typecheck` → PASS.
+- `npm run build` → PASS.
+- `git diff --check` → PASS.
+- Accepted source/tests/package diff from starting HEAD → none.
+- R06 historical / R08 live / R08 test evidence paths → absent.
+- Parent R03/R08 auth → absent; runner process count → `0`.
+
+### Deterministic offline launcher sanity
+
+- `ProcessStartInfo` launcher start → PASS.
+- Child PID → `10592`.
+- `npm run p1-t15-r08` exit → `2`.
+- R08 result → `BLOCKED`.
+- errorCategory → `LIVE_OPT_IN_REQUIRED`.
+- `providerRequests=0`.
+- stdout captured; stderr captured/empty.
+- npm trace `2026-10-28T15_03_58_562Z-debug-0.log` records title `npm run p1-t15-r08`, argv `run p1-t15-r08`, exact repo cwd, exit `2`; build trace exit `0`.
+- R08 live evidence remained absent.
+
+### Credential preflight
+
+Approved ignored historical source exists and Boolean-only child check confirmed required API key/expected identity present. Values were not emitted. R03/R08 auth remained absent in parent and preflight child.
+
+### Live dispatch boundary
+
+Two credential-bearing live-dispatch constructions were rejected before remote execution by the available execution safety layer. Neither reached the authorized device; neither invoked device-side `Process.Start()`; live child PID count = `0`; live npm invocation count = `0`; R10 authorization remains unconsumed. No alternate/fallback launcher and no retry was used.
+
+Provider requests / external mutations during R10: `0 / 0`. P1-T14 untouched. Post-live tests are not applicable because no live child or live artifact existed.
