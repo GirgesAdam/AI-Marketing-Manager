@@ -93,3 +93,40 @@ The future integrity capture is mandatory post-run metadata bookkeeping only. It
 Team Leader accepted the offline R08 lane at reviewed HEAD `cfce8ca6c7d8cbea14df3b686c9499530e0197bd`. During independent review, the historical R06 evidence path was absent before and after review, the R08 live evidence path was absent before and after review, and the R08 test evidence path was absent after cleanup. R03 and R08 live authorization variables were absent.
 
 No new live artifact exists and no integrity ledger row for a live R08 run is created by this acceptance. Historical R06 remains `LOST / BYTE-FAITHFUL CONTENT NOT RECOVERED` under `EVID-INC-001`. Acceptance does not authorize Provider traffic or the future R08 live invocation; the existing separately-authorized post-live integrity procedure remains unchanged.
+
+
+## P1-T15-R09 — Authorized Live Attempt Integrity Record
+
+**Integrity state: `R08 LIVE EVIDENCE FILE MISSING AFTER AUTHORIZED INVOCATION`.**
+
+- Task: `P1-T15-R09`.
+- Run identity: `P1-T15-R09-20261028T1417Z`.
+- Live-execution HEAD: `096ff634aba0e13e6fdc6e8fa65a90a6ee108845`.
+- Evidence path: `artifacts/provider-spike/p1-t15-r08-evidence.jsonl`.
+- Command launch-attempt count: `1`.
+- Authorized command: `npm run p1-t15-r08 -- --live`.
+- Process exit code: `1`.
+- Availability: `MISSING AFTER AUTHORIZED INVOCATION`.
+- SHA-256: `NOT AVAILABLE — FILE MISSING`.
+- Byte length: `NOT AVAILABLE — FILE MISSING`.
+- Safe checkpoint count: `NOT AVAILABLE — FILE MISSING`.
+- Integrity capture timestamp: `2026-10-28T14:17:13.3050590Z`.
+- Result: `UNKNOWN / NOT CAPTURED`.
+- Classification: `EVIDENCE_INTEGRITY_BLOCKER` (`SYSTEM_INTERPRETATION`, not Provider behavior).
+- Provider traffic: `UNVERIFIED`; the missing R08 artifact means no Provider request sequence may be asserted as `LIVE_PROVIDER_OBSERVED` from this run.
+- Create occurrence: `UNKNOWN`.
+- Cleanup status: `UNKNOWN`.
+- Automation ID: `NOT AVAILABLE`.
+- Safe console evidence: the bounded launcher reported one launch attempt and exit code `1`; no npm/R08 runner result payload was emitted before control returned.
+- Post-attempt process state: no P1-T15 R08/R03 runner process remained active.
+- `P1_T15_R08_LIVE_AUTHORIZED`: absent from the parent process after the attempt; authorization is treated as `CONSUMED / NO RERUN AUTHORIZED`.
+- `P1_T15_R03_LIVE_AUTHORIZED`: absent.
+- Historical R06 evidence path remains absent under `EVID-INC-001`.
+- R08 test evidence path remains absent.
+- Raw R08 JSONL was not created and therefore was not modified, normalized, reconstructed, copied, or committed.
+
+### Evidence disposition
+
+`LIVE_PROVIDER_OBSERVED`: **none can be established from this invocation because the required durable R08 evidence artifact is missing.**
+
+`SYSTEM_INTERPRETATION`: the authorized single launch attempt is an evidence-integrity blocker. The authorization is consumed. No second live invocation, retry, or rerun is authorized. Team Leader review is required before any further Provider execution or repair task.
