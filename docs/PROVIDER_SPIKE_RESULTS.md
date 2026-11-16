@@ -3142,3 +3142,19 @@ Provider requests `0`; public GETs `0`; authenticated API calls `0`; credentials
 `P1-T14-R01 = BLOCKED — ORIGINAL_BASELINE_NOT_RECOVERED`.
 `P1-T14 = BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`.
 Observation A and Observation B remain unexecuted. R01 grants no Provider authorization. Any future Observation A requires Team Leader review and separate explicit authorization. Stop for Team Leader review; no successor task selected.
+
+
+## P1-T14-R01-CLOSEOUT-01 — Team Leader Disposition
+
+Team Leader disposition: `P1-T14-R01 = ACCEPTED WITH NON-BLOCKING NOTES`.
+
+Acceptance scope is limited to the bounded historical recovery investigation, source/provenance checks, evidence-integrity handling, and accurate documentation of the unavailable original. It does not mean the original P1-T13 raw JSONL was recovered, does not accept any replacement evidence, and does not establish P1-T14 retention behavior.
+
+Preserved state:
+- Original `artifacts/provider-spike/p1-t13-evidence.jsonl`: `NOT RECOVERED`.
+- Historical accepted P1-T13 classification: `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`, unchanged.
+- P1-T14: `BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`.
+- Observation A / Observation B: `NOT EXECUTED`.
+- No reconstructed, fixture-derived, stdout-derived, or replacement evidence is accepted.
+
+This closeout grants no Provider authorization. Any future Observation A/B requires a separate explicit authorization and review. No successor task was started.

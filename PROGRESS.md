@@ -55,11 +55,13 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Executing Task = `NONE — P1-T14-R01 bounded historical recovery attempt completed; awaiting Team Leader review`.
+Current Executing Task = `NONE — P1-T14-R01-CLOSEOUT-01 documentation/governance completed; STOP FOR TEAM LEADER REVIEW`.
 
-Current Task = `P1-T14-R01 — Recover & Verify Original P1-T13 Baseline Evidence — BLOCKED / AWAITING TEAM LEADER REVIEW`.
+Current Task = `NONE — P1-T14 remains blocked; P1-T14-R01 and its closeout are accepted; no successor selected`.
 
-P1-T14-R01 = **BLOCKED — ORIGINAL_BASELINE_NOT_RECOVERED**.
+P1-T14-R01 = **ACCEPTED WITH NON-BLOCKING NOTES — bounded historical recovery investigation and evidence-integrity handling only; original raw JSONL NOT RECOVERED**.
+
+P1-T14-R01-CLOSEOUT-01 = **ACCEPTED WITH NON-BLOCKING NOTES — documentation-only acceptance and F-only workspace governance**.
 
 P1-T13 = **DONE / ACCEPTED — historical accepted Provider Behavior record remains unchanged; original raw JSONL is unavailable in the bounded current sources searched**.
 
@@ -4671,3 +4673,26 @@ Original source path: `NOT RECOVERED`. Original byte length / SHA-256: `NOT AVAI
 Provider requests `0`; public GETs `0`; authenticated calls `0`; credentials `0`; presigns `0`; PUTs/uploads `0`; retries `0`; Provider mutations `0`; non-Git external-system mutations `0`. Git version-control synchronization is separate from Provider execution. Observation A and Observation B were not executed. P1-T14 evidence remains absent. R01 grants no Provider authorization.
 
 Only `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, and `docs/TEST_MATRIX.md` are in scope for documentation reconciliation. No source, tests, package files, `DECISIONS.md`, P1-T15 files, or historical C: files are changed. Phase 1 remains IN PROGRESS. Stop for Team Leader review; no successor task selected.
+
+
+## P1-T14-R01-CLOSEOUT-01 — Team Leader Acceptance & F-Only Workspace Governance
+
+Team Leader disposition: `P1-T14-R01 = ACCEPTED WITH NON-BLOCKING NOTES`. Acceptance is limited to the bounded historical recovery investigation and its evidence-integrity handling/documentation. It is not acceptance of recovered evidence, P1-T14 readiness, or Provider behavior beyond the unchanged historical P1-T13 classification.
+
+Preserved findings and boundaries:
+- Original `artifacts/provider-spike/p1-t13-evidence.jsonl`: `NOT RECOVERED`; no source path, original hash, byte length, or raw journal available.
+- Historical accepted P1-T13 classification: `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`, unchanged.
+- P1-T14: `BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`.
+- Observation A / Observation B: `NOT EXECUTED`.
+- No replacement, reconstructed, fixture-derived, or stdout-derived evidence was created or accepted.
+- This acceptance does not authorize Observation A/B or any Provider request.
+
+Workspace governance verification (2026-11-16):
+- Canonical workspace: `F:\AI-Marketing-Manager`; canonical repository: `F:\AI-Marketing-Manager\repository`; both exist.
+- Retired C: checkout `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean`: verified absent; it was not recreated or used.
+- Archived historical checkout: `F:\AI-Marketing-Manager\08_Archive\Legacy-C-Project-Workspaces\2026-11-16\AI-Marketing-Manager-R04-Clean`: exists and remains unchanged/read-only. Its historical Git branch is `p1-t14-zernio-media-retention`, HEAD `611a443291a05776d574f27249b11d85d89372a8`, worktree clean; 344 files / 9,379,455 bytes observed.
+- `AGENTS.md` now requires F:-only project work and outputs, prohibits recreating/using the retired C: checkout, identifies the archived copy as read-only historical material requiring separate Team Leader approval before modification/deletion/move/cleanup, preserves the existing F: folder map and security/evidence rules, and retains GitHub as version-control source of truth.
+
+Safety: Provider requests `0`; credentials loaded `0`; external Provider/system mutations `0`; Observation A/B `0`; no WindowsImageBackup mount/restore; no filesystem permission changes; no evidence reconstruction; no P1-T15 activity; no successor task execution. The only intended external synchronization for this documentation-only task is the GitHub push of the approved documentation commit. No npm tests, build, or typecheck were run because no executable code changed.
+
+Stop condition: `P1-T14-R01-CLOSEOUT-01` completed; stop for Team Leader review. P1-T14 remains blocked. No P1-T14-R02, Observation A/B, or successor task is selected or authorized.

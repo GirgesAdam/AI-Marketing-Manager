@@ -3317,3 +3317,21 @@ This task performs evidence discovery and integrity verification only; no Provid
 | Observation A / Observation B | NOT EXECUTED |
 
 No replacement evidence or test fixture was promoted to live evidence. P1-T14 remains blocked until the original P1-T13 raw journal is recovered and independently reviewed. This result does not authorize Observation A or any successor task.
+
+
+## P1-T14-R01-CLOSEOUT-01 — Team Leader Acceptance
+
+Team Leader disposition: `P1-T14-R01 = ACCEPTED WITH NON-BLOCKING NOTES`.
+
+Acceptance is restricted to the bounded historical recovery investigation and evidence-integrity handling. The accepted disposition does not waive the original-evidence requirement and does not change the technical recovery result:
+
+| Preserved condition | Accepted state |
+|---|---|
+| Original P1-T13 raw JSONL | NOT RECOVERED |
+| Historical accepted P1-T13 classification | UNCHANGED — `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED` |
+| P1-T14 | BLOCKED — `RETENTION_BASELINE_EVIDENCE_UNAVAILABLE` |
+| Observation A / Observation B | NOT EXECUTED |
+| Replacement / reconstructed evidence | NONE CREATED OR ACCEPTED |
+| Provider authorization from this closeout | NONE |
+
+This is a governance/documentation acceptance only. It does not certify the missing raw journal, does not permit retention observations, and does not select or authorize P1-T14-R02 or any successor task.

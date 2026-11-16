@@ -2,10 +2,12 @@
 
 ## Canonical workspace (mandatory)
 - The canonical local project workspace is `F:\AI-Marketing-Manager`.
-- The Git repository/working tree is `F:\AI-Marketing-Manager\repository`.
+- The only canonical Git repository/working tree is `F:\AI-Marketing-Manager\repository`.
 - Before starting any task, verify the F: drive is available and read this file plus the repository's current `PROGRESS.md` and `DECISIONS.md`.
-- All newly generated project files must be saved under `F:\AI-Marketing-Manager`, not Desktop, Downloads, the repository root, or arbitrary temporary locations.
-- Use the folder map below. Create a task-specific subfolder when needed; do not scatter files in the workspace root.
+- All project work, generated files, reports, evidence, backups, and deliverables must use the canonical F: workspace and the established folder map below. Do not create project files or generated outputs on C:, Desktop, Downloads, the repository root, or arbitrary temporary locations.
+- The former checkout `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean` is retired and was verified absent on 2026-11-16. Never recreate or use this retired C: checkout.
+- Its archived historical copy is `F:\AI-Marketing-Manager\08_Archive\Legacy-C-Project-Workspaces\2026-11-16\AI-Marketing-Manager-R04-Clean`. This is read-only historical reference material, not an active working tree. Do not modify, delete, move, or clean it without separate explicit Team Leader approval.
+- Use the established folder map below. Create a task-specific subfolder when needed; do not scatter files in the workspace root.
 
 ## Folder map
 - `00_Inbox` — incoming files awaiting classification.
@@ -22,7 +24,8 @@
 ## Git and source-of-truth rules
 - GitHub and the current accepted Git branch/commit remain the version-control source of truth for code and versioned documentation. The F: workspace is the canonical local storage location, not a replacement for Git.
 - Do not create a second Git working tree or silently switch to another clone. All task commands must run from `F:\AI-Marketing-Manager\repository` unless a Team Leader-approved recovery task explicitly says otherwise.
-- Do not move, rename, delete, overwrite, or clean the previous checkout at `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean` as part of this workspace setup. It is retained as a rollback/reference copy until a separately reviewed retirement decision.
+- The former checkout `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean` is retired and was verified absent on 2026-11-16. Never recreate or use it. Its archived copy at `F:\AI-Marketing-Manager\08_Archive\Legacy-C-Project-Workspaces\2026-11-16\AI-Marketing-Manager-R04-Clean` is read-only historical reference material, not an active working tree; do not modify, delete, move, or clean it without separate explicit Team Leader approval.
+- Do not create project files, generated outputs, or a second checkout on C:; the F: repository is the only canonical local working tree.
 - Do not store credentials, API keys, tokens, passwords, private keys, or secret-bearing `.env` files in generated folders, reports, deliverables, or Git. Use approved local secret storage and never print secret values.
 - Provider evidence must follow the task's exact path, immutability, hashing, and integrity-ledger contract. Do not relocate, reconstruct, overwrite, or clean evidence merely to fit this folder map. If a task specifies a fixed path under `repository\artifacts`, that exact path takes precedence and remains unchanged.
 - Generated outputs should be written outside the Git repository by default. Only task-required, reviewed source/tests/docs/evidence metadata belong in Git. Never add raw live evidence or secrets to Git unless an explicit accepted policy requires it.
