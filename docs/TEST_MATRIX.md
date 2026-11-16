@@ -3514,3 +3514,42 @@ This was a preparation/documentation task, not a backup-content investigation or
 | P1-T15 activity | 0 |
 
 Acceptance is limited to the preparation deliverables. It does not establish backup versions, backup validity, volume/project inclusion, or recovery of the original P1-T13 JSONL. P1-T14 remains `BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`; `EVID-INC-001` remains preserved; Observation A/B remain NOT AUTHORIZED.
+
+
+## P1-T14-R05 - Senior-Executed Windows Backup Metadata Query
+
+This was a one-shot current-token authorization preflight. The preflight failed closed; no backup metadata query was executed.
+
+| Verification | Result |
+|---|---|
+| Canonical F: repository | PASS |
+| Required source documents read | PASS - AGENTS, PROGRESS, DECISIONS, active R05 contract, R05 assignment, accepted R04 method |
+| Branch | `p1-t14-r05-senior-executed-backup-metadata-query` |
+| Activation HEAD | `187470ba8962c3de8d0d4d70b576663af652b2d0` |
+| Local HEAD / remote HEAD | PASS - exact match |
+| Starting working tree | PASS - CLEAN |
+| `wbadmin.exe` path | AVAILABLE - `C:\Windows\System32\wbadmin.exe` |
+| Other Backup/P1-T14/P1-T15 runners | 0 |
+| Token inspection | `whoami /groups /fo csv`, native exit code 0 |
+| Backup Operators SID `S-1-5-32-551` | ABSENT |
+| Administrators SID `S-1-5-32-544` | PRESENT - DENY ONLY / NOT EFFECTIVE |
+| Token integrity | MEDIUM - `S-1-16-8192` |
+| Authoritative delegated permission | NOT VERIFIED |
+| Current-token authorization | BLOCKED |
+| `wbadmin get versions -backupTarget:F:` | NOT INVOKED - 0 |
+| `wbadmin get items` | 0 |
+| Other backup commands | 0 |
+| Retries / reruns | 0 |
+| Query output / query exit code / query hash | NOT APPLICABLE - no query executed |
+| Post-preflight wbadmin process | 0 |
+| Execution report | CREATED outside Git |
+| Provider requests / mutations | 0 / 0 |
+| Credentials used / collected | 0 |
+| Elevation / alternate account / token manipulation | 0 |
+| ACL / ownership / group / policy changes | 0 |
+| Backup mounts / attachments / restores / extractions / copies / modifications | 0 |
+| Evidence reconstruction | 0 |
+| Observation A/B | 0 |
+| P1-T15 activity | 0 |
+
+Classification: `BLOCKED_PRE_EXECUTION - CURRENT_TOKEN_NOT_AUTHORIZED`. No backup versions, backup validity, volume/project inclusion, or original P1-T13 evidence presence were established. Original P1-T13 raw JSONL remains NOT RECOVERED; EVID-INC-001 and historical classification remain unchanged. P1-T14 remains BLOCKED - `RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`.

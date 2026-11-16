@@ -3292,3 +3292,34 @@ Evidence boundary remains explicit: a listed backup version does not prove proje
 No owner query, credential collection, privilege escalation, alternate-account execution, Provider activity, backup mount/restore/extraction/copy/modification, ACL/ownership change, evidence reconstruction, Observation A/B, or P1-T15 activity occurred.
 
 This acceptance does not itself authorize execution of the owner command or any follow-up query, backup-content access, mounting, restoration, extraction, copying, Observation A/B, or successor task.
+
+
+## P1-T14-R05 - Senior-Executed Windows Backup Metadata Query
+
+Result: `BLOCKED_PRE_EXECUTION - CURRENT_TOKEN_NOT_AUTHORIZED`. The Senior Engineer's current process token was inspected read-only; the permitted `wbadmin get versions -backupTarget:F:` query was not invoked.
+
+Starting gate:
+- Canonical F: repository: `F:\AI-Marketing-Manager\repository`.
+- Branch: `p1-t14-r05-senior-executed-backup-metadata-query`.
+- HEAD / activation commit: `187470ba8962c3de8d0d4d70b576663af652b2d0`.
+- Remote HEAD matched; starting worktree was clean.
+- `wbadmin.exe` was present at `C:\Windows\System32\wbadmin.exe`.
+- Final other Backup/P1-T14/P1-T15 runner count: `0`.
+
+Current-token preflight at `2026-11-16T17:37:55.2085993Z`:
+- `whoami /groups /fo csv` returned native exit code `0`.
+- Backup Operators `S-1-5-32-551`: ABSENT.
+- Administrators `S-1-5-32-544`: PRESENT, `Group used for deny only`; not effective.
+- Integrity label `S-1-16-8192`: MEDIUM.
+- No authoritative delegated read-only Windows Backup permission record was identified in the required task/project materials reviewed.
+- Final decision: NOT AUTHORIZED.
+
+Consequently, `wbadmin` invocation count = `0`; `GET ITEMS` = `0`; retries = `0`; no query output or query exit code exists. Post-preflight process check found no `wbadmin.exe` process and no other Backup/P1-T14/P1-T15 runner.
+
+This result establishes only that the current execution token could not be proven authorized. It does not establish whether backup versions exist or whether the backup is valid. No backup metadata or contents were queried.
+
+Original P1-T13 raw JSONL remains `NOT RECOVERED`; historical P1-T13 classification and `EVID-INC-001` remain unchanged. P1-T14 remains `BLOCKED - RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`; Observation A/B remain `NOT EXECUTED / NOT AUTHORIZED`; P1-T15 remains `UNRESOLVED / FIX REQUIRED`.
+
+Execution report: `F:\AI-Marketing-Manager\04_Reports\P1-T14-R05\P1-T14-R05-execution-report.md`. Raw backup metadata was not created and no raw output was added to Git.
+
+Safety counters: Provider requests/mutations `0/0`; credentials used/collected `0`; elevation `0`; alternate identity `0`; token manipulation `0`; ACL/ownership/policy changes `0`; all `wbadmin` queries `0`; retries `0`; mounts/attachments/restores/extractions/copies/modifications `0`; evidence reconstruction `0`; Observation A/B `0`; P1-T15 activity `0`.
