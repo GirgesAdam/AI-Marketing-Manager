@@ -55,9 +55,9 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Executing Task = `NONE — P1-T14-R04 accepted; no Senior task executing`.
+Current Executing Task = `NONE — P1-T14-R05 is activated; Senior execution has not started yet`.
 
-Current Task = `NONE — P1-T14-R04 = DONE / ACCEPTED WITH NON-BLOCKING NOTES; owner metadata query NOT EXECUTED; no successor selected`.
+Current Task = `P1-T14-R05 — ACTIVE / AUTHORIZED FOR CURRENT-TOKEN PREFLIGHT; GET VERSIONS NOT YET EXECUTED`.
 
 P1-T14-R01 = **ACCEPTED WITH NON-BLOCKING NOTES — bounded historical recovery investigation and evidence-integrity handling only; original raw JSONL NOT RECOVERED**.
 
@@ -4999,3 +4999,32 @@ No source code, tests, package files, Provider runners, `DECISIONS.md`, or `AGEN
 `Current Task = NONE — NO SUCCESSOR TASK SELECTED`.
 
 This acceptance does not authorize the owner to run the documented command; that remains a separate owner decision. It does not authorize a second metadata query, backup mounting, restoration, extraction, copying, Observation A/B, or any successor task.
+
+
+## P1-T14-R05 — Team Leader Activation
+
+Team Leader disposition: `APPROVED — ACTIVE` on `2026-11-16`.
+
+Activation scope is strictly limited to the Senior Engineer's existing Windows process token preflight and, only if the preflight proves effective pre-existing authorization, exactly one read-only query:
+
+```powershell
+wbadmin get versions -backupTarget:F:
+```
+
+Activation facts:
+- Dedicated task branch: `p1-t14-r05-senior-executed-backup-metadata-query`.
+- Accepted starting branch: `p1-t14-r04-owner-assisted-windows-backup-metadata-collection`.
+- Accepted starting HEAD: `bb01356bba5b69c83424996d6703cfee6eac4949`.
+- Contract path: `F:\AI-Marketing-Manager\04_Reports\P1-T14-R05\P1-T14-R05-task-contract.md`.
+- Owner interaction required: `NO`.
+- Windows OS privilege grant: `NONE`; only the already-running current token may be used.
+- If current-token authorization is absent or uncertain: `BLOCKED_PRE_EXECUTION — CURRENT_TOKEN_NOT_AUTHORIZED`; do not invoke `wbadmin`.
+- If authorized: `GET VERSIONS` exactly once; `GET ITEMS` `0`; retries `0`.
+- Backup mounts/restores/extractions/copies: `0`.
+- Provider requests/mutations: `0 / 0`.
+- Observation A/B: `NOT AUTHORIZED / NOT EXECUTED`.
+- P1-T15: untouched.
+
+The activation commit must be pushed before Senior execution. No token preflight or backup query was run as part of this Team Leader activation edit.
+
+Active R05 Task Contract SHA-256: `5863826FA7E1BC6309F0915C430C05132D2F91BAEB86876CEC2AAF5110B4CC72`.
