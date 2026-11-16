@@ -3158,3 +3158,25 @@ Preserved state:
 - No reconstructed, fixture-derived, stdout-derived, or replacement evidence is accepted.
 
 This closeout grants no Provider authorization. Any future Observation A/B requires a separate explicit authorization and review. No successor task was started.
+
+
+## P1-T14-R02 — Windows Image Backup Read-Only Investigation
+
+Task result: `COMPLETED / INVESTIGATION RESULT / AWAITING TEAM LEADER REVIEW`.
+Classification: `BACKUP_METADATA_ACCESS_BLOCKED — ORIGINAL_BASELINE_NOT_RECOVERED`.
+
+The target `F:\WindowsImageBackup` exists. Root metadata is readable: attributes `Hidden, Directory, NotContentIndexed`; last-write `2021-11-23T00:00:35.1689961+02:00`. Direct directory enumeration failed with `System.UnauthorizedAccessException`: `Access to the path 'F:\WindowsImageBackup' is denied.`
+
+The non-elevated read-only command `wbadmin get versions -backupTarget:F:` returned Access denied and exit code `-2`. Its message states that Administrators or Backup Operators membership and an elevated command prompt are required. The `WindowsServerBackup` PowerShell module is not installed or not visible. No elevation was attempted.
+
+Therefore, valid backup versions, dates, machine/volume metadata, catalog files, VHD/VHDX inventory, historical project inclusion, and backup contents are all `UNKNOWN / NOT VERIFIED`. The existence and timestamp of the root directory do not establish a valid backup set.
+
+Bounded filename searches succeeded in the directly accessible canonical repository artifacts and read-only archived checkout artifacts. Both returned the same four filenames: `p1-t13-launch-status.json` (130 bytes), `p1-t13-launch.ps1` (2,585 bytes), `p1-t13-live-output.json` (1,828 bytes), and `p1-t15-r01-evidence.jsonl` (2,062 bytes). The first three are launcher/status/stdout artifacts, not the original P1-T13 raw six-checkpoint journal; the fourth belongs to P1-T15. The exact `artifacts/provider-spike/p1-t13-evidence.jsonl` candidate is absent from both accessible artifact trees. No substitute was accepted.
+
+The exact filename and naming variations could not be searched inside `F:\WindowsImageBackup` because root enumeration was denied. No backup descendants or contents were inspected. No backup mount, restore, extraction, copy, modification, ACL/ownership change, or privilege bypass occurred.
+
+Investigation report: `F:\AI-Marketing-Manager\04_Reports\P1-T14-R02\P1-T14-R02-investigation.md`.
+
+Recovery assessment: original P1-T13 raw JSONL remains `NOT RECOVERED`; the Windows backup is an unverified possible lead only. Any content-level inspection requires a separate explicit Team Leader-approved read-only task. If VHD/VHDX mounting is necessary, that operation requires its own separate authorization.
+
+Safety: Provider requests `0`; credentials `0`; presigns `0`; PUTs/uploads `0`; public GETs `0`; Provider mutations `0`; Observation A/B `0`; backup mounts/restores/modifications `0`; ACL/ownership changes `0`; evidence reconstruction `0`. P1-T14 remains `BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`; historical P1-T13 acceptance and EVID-INC-001 remain unchanged. Stop for Team Leader review; no successor task selected.

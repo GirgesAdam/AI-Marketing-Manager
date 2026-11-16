@@ -55,13 +55,15 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Executing Task = `NONE — P1-T14-R01-CLOSEOUT-01 documentation/governance completed; STOP FOR TEAM LEADER REVIEW`.
+Current Executing Task = `NONE — P1-T14-R02 read-only Windows Image Backup investigation completed; STOP FOR TEAM LEADER REVIEW`.
 
-Current Task = `NONE — P1-T14 remains blocked; P1-T14-R01 and its closeout are accepted; no successor selected`.
+Current Task = `P1-T14-R02 — Windows Image Backup Read-Only Investigation — COMPLETED / INVESTIGATION RESULT / AWAITING TEAM LEADER REVIEW; no successor selected`.
 
 P1-T14-R01 = **ACCEPTED WITH NON-BLOCKING NOTES — bounded historical recovery investigation and evidence-integrity handling only; original raw JSONL NOT RECOVERED**.
 
 P1-T14-R01-CLOSEOUT-01 = **ACCEPTED WITH NON-BLOCKING NOTES — documentation-only acceptance and F-only workspace governance**.
+
+P1-T14-R02 = **COMPLETED / INVESTIGATION RESULT / AWAITING TEAM LEADER REVIEW — BACKUP_METADATA_ACCESS_BLOCKED; original P1-T13 raw JSONL NOT RECOVERED**.
 
 P1-T13 = **DONE / ACCEPTED — historical accepted Provider Behavior record remains unchanged; original raw JSONL is unavailable in the bounded current sources searched**.
 
@@ -4696,3 +4698,41 @@ Workspace governance verification (2026-11-16):
 Safety: Provider requests `0`; credentials loaded `0`; external Provider/system mutations `0`; Observation A/B `0`; no WindowsImageBackup mount/restore; no filesystem permission changes; no evidence reconstruction; no P1-T15 activity; no successor task execution. The only intended external synchronization for this documentation-only task is the GitHub push of the approved documentation commit. No npm tests, build, or typecheck were run because no executable code changed.
 
 Stop condition: `P1-T14-R01-CLOSEOUT-01` completed; stop for Team Leader review. P1-T14 remains blocked. No P1-T14-R02, Observation A/B, or successor task is selected or authorized.
+
+
+## P1-T14-R02 — Windows Image Backup Read-Only Investigation
+
+Task result: `COMPLETED / INVESTIGATION RESULT / AWAITING TEAM LEADER REVIEW`.
+Investigation classification: `BACKUP_METADATA_ACCESS_BLOCKED — ORIGINAL_BASELINE_NOT_RECOVERED`.
+Investigation timestamp: `2026-11-16T17:02:13.5360703+02:00`.
+
+Starting gate:
+- Canonical F: workspace and repository existed.
+- Starting branch = `p1-t14-zernio-media-retention`; starting HEAD = `d2dd12f04b3a5d44bf46c39a0fc834448d6779d8`; working tree clean.
+- `AGENTS.md`, `PROGRESS.md`, `DECISIONS.md`, current P1-T14 runner/test, and Provider/evidence documentation were read.
+- Active P1-T14/P1-T15 runner process matches = `NONE`.
+- Dedicated branch created from the verified starting HEAD: `p1-t14-r02-windows-image-backup-readonly-investigation`.
+
+Backup target:
+- `F:\WindowsImageBackup` exists. `Get-Item` returned attributes `Hidden, Directory, NotContentIndexed` and last-write timestamp `2021-11-23T00:00:35.1689961+02:00`.
+- Direct `Get-ChildItem -LiteralPath F:\WindowsImageBackup -Force -ErrorAction Stop` failed with `System.UnauthorizedAccessException`: `Access to the path 'F:\WindowsImageBackup' is denied.`
+- Non-elevated `wbadmin get versions -backupTarget:F:` returned `Access denied`; the tool stated Administrators or Backup Operators membership and an elevated command prompt are required. Exit code = `-2`.
+- `WindowsServerBackup` PowerShell module = `NOT INSTALLED OR NOT VISIBLE`.
+- No backup versions, catalog, machine metadata, backed-up volumes, volume IDs, VHD/VHDX names/sizes/timestamps, or backup contents could be inspected. No access restriction was bypassed.
+
+Bounded accessible artifact search:
+- Recursive filename search in canonical `F:\AI-Marketing-Manager\repository\artifacts`: success, 4 matches.
+- Same search in archived read-only checkout `F:\AI-Marketing-Manager\08_Archive\Legacy-C-Project-Workspaces\2026-11-16\AI-Marketing-Manager-R04-Clean\artifacts`: success, same 4 matches.
+- Matches were `p1-t13-launch-status.json` (130 bytes), `p1-t13-launch.ps1` (2,585 bytes), `p1-t13-live-output.json` (1,828 bytes), and `p1-t15-r01-evidence.jsonl` (2,062 bytes). The first three are launcher/status/stdout files, not the original raw six-checkpoint P1-T13 JSONL; the fourth belongs to P1-T15.
+- Exact candidate `artifacts/provider-spike/p1-t13-evidence.jsonl` is absent from both directly accessible artifact trees. No candidate was copied, hashed, or accepted.
+- Exact filename and naming-variation searches inside `F:\WindowsImageBackup` were NOT POSSIBLE because root enumeration was denied. No claim is made about backup contents.
+
+Backup assessment:
+- Backup root directory existence is verified, but a valid backup version, backup date/version, machine, volume inclusion, historical project inclusion, and P1-T13 evidence presence are all `UNKNOWN / NOT VERIFIED`.
+- Backup remains an unverified lead only. Content-level inspection requires a new explicit Team Leader-approved read-only task and an appropriately authorized operator. If VHD/VHDX mounting is needed, it requires a separate explicit task authorization. R02 performed no elevation, mount, restore, extraction, copy, ACL/ownership change, or backup modification.
+
+Report: `F:\AI-Marketing-Manager\04_Reports\P1-T14-R02\P1-T14-R02-investigation.md`.
+
+Safety counters: Provider requests `0`; credentials `0`; presigns `0`; uploads/PUTs `0`; public GETs `0`; Provider mutations `0`; Observation A/B `0`; backup mounts/restores/modifications `0`; ACL/ownership changes `0`; evidence reconstruction `0`.
+
+P1-T14 remains `BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`. Original P1-T13 raw JSONL remains `NOT RECOVERED`; historical P1-T13 classification remains `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`. EVID-INC-001 and all prior evidence-integrity dispositions remain unchanged. Observation A/B were not executed and are not authorized by R02. Stop for Team Leader review; no P1-T14-R03 or successor task selected.

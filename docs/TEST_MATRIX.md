@@ -3335,3 +3335,33 @@ Acceptance is restricted to the bounded historical recovery investigation and ev
 | Provider authorization from this closeout | NONE |
 
 This is a governance/documentation acceptance only. It does not certify the missing raw journal, does not permit retention observations, and does not select or authorize P1-T14-R02 or any successor task.
+
+
+## P1-T14-R02 — Windows Image Backup Read-Only Investigation
+
+This is an environment/evidence-access investigation, not a Provider behavior test or backup recovery. No executable code or tests were changed or run.
+
+| Verification | Result |
+|---|---|
+| Starting F: workspace/repository | PASS — accessible |
+| Starting branch / HEAD | PASS — `p1-t14-zernio-media-retention` / `d2dd12f04b3a5d44bf46c39a0fc834448d6779d8` |
+| Starting working tree | PASS — clean |
+| Active P1-T14/P1-T15 runners | NONE |
+| `F:\WindowsImageBackup` root exists | PASS |
+| Backup root metadata | READABLE — hidden directory; last-write `2021-11-23T00:00:35.1689961+02:00` |
+| Backup root enumeration | BLOCKED — `System.UnauthorizedAccessException` |
+| `wbadmin get versions -backupTarget:F:` | BLOCKED — Access denied; exit `-2` |
+| WindowsServerBackup PowerShell module | NOT INSTALLED OR NOT VISIBLE |
+| Backup versions / machine / volumes / catalog / VHDX inventory | NOT VERIFIABLE |
+| Search inside backup descendants | NOT RUN — root access denied |
+| Canonical repository artifact filename search | PASS — 4 matches; no original P1-T13 JSONL |
+| Archived checkout artifact filename search | PASS — same 4 matches; no original P1-T13 JSONL |
+| P1-T13 launcher/status/stdout files | FOUND — not accepted as raw evidence |
+| Exact original P1-T13 JSONL candidate | NOT FOUND in accessible artifact trees |
+| Backup mount / restore / extraction | 0 |
+| Backup modifications / ACL / ownership changes | 0 |
+| Provider requests / credentials / presigns / PUTs / public GETs | 0 / 0 / 0 / 0 / 0 |
+| Provider mutations / Observation A / Observation B | 0 / 0 / 0 |
+| Evidence reconstruction | 0 |
+
+The backup remains an unverified lead. R02 does not establish backup validity, historical project inclusion, or presence of the original evidence. Further content inspection requires a separate explicit Team Leader authorization; mounting requires a separate task contract. P1-T14 remains blocked and no Observation A/B or successor task is authorized.
