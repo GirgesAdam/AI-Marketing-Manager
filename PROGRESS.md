@@ -55,9 +55,9 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Executing Task = `NONE — P1-T14-R04 preparation completed; awaiting Team Leader review; no Senior task executing`.
+Current Executing Task = `NONE — P1-T14-R04 accepted; no Senior task executing`.
 
-Current Task = `P1-T14-R04 — Owner-Assisted Windows Backup Metadata Collection — PREPARATION COMPLETED / AWAITING TEAM LEADER REVIEW; owner metadata query NOT EXECUTED; no successor selected`.
+Current Task = `NONE — P1-T14-R04 = DONE / ACCEPTED WITH NON-BLOCKING NOTES; owner metadata query NOT EXECUTED; no successor selected`.
 
 P1-T14-R01 = **ACCEPTED WITH NON-BLOCKING NOTES — bounded historical recovery investigation and evidence-integrity handling only; original raw JSONL NOT RECOVERED**.
 
@@ -69,7 +69,7 @@ P1-T14-R02-CLOSEOUT-01 = **DONE / ACCEPTED — Team Leader verified the document
 
 P1-T14-R03 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES — READ_ONLY_ACCESS_BLOCKED; accepted scope is limited to the read-only access-feasibility investigation and accurate documentation; no backup metadata/content was inspected**.
 
-P1-T14-R04 = **PREPARATION COMPLETED / AWAITING TEAM LEADER REVIEW — owner-friendly read-only `wbadmin get versions -backupTarget:F:` collection instructions and method prepared; no owner metadata query executed; no backup contents inspected**.
+P1-T14-R04 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES — preparation-only acceptance; owner-friendly read-only `wbadmin get versions -backupTarget:F:` instructions and method reviewed; owner metadata query NOT EXECUTED; no backup metadata/content inspected**.
 
 P1-T13 = **DONE / ACCEPTED — historical accepted Provider Behavior record remains unchanged; original raw JSONL is unavailable in the bounded current sources searched**.
 
@@ -4947,3 +4947,55 @@ Versioned documentation updated: `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`
 Safety: owner metadata queries executed by Senior Engineer `0`; credentials collected `0`; Senior elevation/alternate-account execution `0`; Provider requests/mutations `0`; backup mounts/attachments/restores/extractions/copies/modifications `0`; ACL/ownership changes `0`; evidence reconstruction `0`; Observation A/B `0`; P1-T15 activity `0`.
 
 P1-T14 remains `BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`. No backup validity, volume/project inclusion, or original evidence recovery has been established. Stop for Team Leader review; do not execute owner commands automatically or start a successor task.
+
+
+## P1-T14-R04 — Team Leader Acceptance Closeout
+
+Team Leader disposition: `ACCEPTED WITH NON-BLOCKING NOTES`.
+
+Acceptance scope is limited to preparation of the owner-assisted, read-only metadata collection method and the accompanying owner instructions. This acceptance does not authorize or record execution of any owner metadata query.
+
+Independent review:
+- Dedicated branch: `p1-t14-r04-owner-assisted-windows-backup-metadata-collection`.
+- Preparation commit: `cc9bd241fe92ebe1b85cee18c94a7bdddc082785`.
+- Parent / accepted R03 HEAD: `5d40e9ed9e948d82667b027ac3cec68ff9b51c88`.
+- Remote branch HEAD exactly matches preparation commit.
+- Exactly three expected versioned files changed: `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, `docs/TEST_MATRIX.md`.
+- Committed diff check: PASS; worktree: CLEAN.
+- Owner instructions: `F:\AI-Marketing-Manager\04_Reports\P1-T14-R04\P1-T14-R04-owner-instructions.md`, 8,901 bytes, SHA-256 `BE079B3D2AC3A980E3149B8E2FAC362E54382BBE0A1F9AE3C74F1F97AF73AE06`.
+- Collection method: `F:\AI-Marketing-Manager\04_Reports\P1-T14-R04\P1-T14-R04-collection-method.md`, 11,241 bytes, SHA-256 `EDF9D87AF8E4138802B7B4F9844FD8EA42676F9A8B88C7C8CB55267472F2FBF3`.
+- Team Leader independently parsed the documented PowerShell capture block using the PowerShell language parser: 0 parse errors. The block was not executed.
+
+Technical review:
+- Local `wbadmin.exe` and syntax help were inspected without supplying a backup target/version/machine.
+- Primary owner-only command is `wbadmin get versions -backupTarget:F:`.
+- The optional `wbadmin get items -version:<VERSION_IDENTIFIER> -backupTarget:F:` remains deferred until separate review of the first result.
+- Microsoft Learn confirms that `get versions` lists backup time, storage location, version identifier and recovery types; it requires Backup Operators/Administrators membership or delegated permissions and an elevated command prompt. `get items` lists items in a specific backup and has the corresponding elevated/permission requirement.
+- A listed version does not prove project inclusion; a listed volume does not prove a specific directory/file is present. The documents correctly preserve these evidence distinctions.
+
+Preparation-only boundary:
+- Owner metadata queries executed by Senior Engineer: 0.
+- Owner commands executed by Team Leader during review: 0.
+- Credentials collected: 0.
+- Senior Engineer elevation / alternate-account execution: 0.
+- Provider requests / credentials / mutations: 0.
+- Backup mounts / VHD attachments / restores / extractions / copies / modifications: 0.
+- ACL / ownership changes: 0.
+- Evidence reconstruction: 0.
+- Observation A/B: 0.
+- P1-T15 activity: 0.
+
+Preserved state:
+- Original P1-T13 raw JSONL remains `NOT RECOVERED`.
+- `EVID-INC-001` and historical P1-T13 classification remain unchanged.
+- `P1-T14 = BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`.
+- Observation A/B remain `NOT EXECUTED / NOT AUTHORIZED`.
+- `P1-T15 = UNRESOLVED / FIX REQUIRED`.
+
+No source code, tests, package files, Provider runners, `DECISIONS.md`, or `AGENTS.md` were changed. No npm tests/build/typecheck were required; this was a preparation/documentation-only task. No owner metadata query was executed.
+
+`P1-T14-R04 = DONE / ACCEPTED WITH NON-BLOCKING NOTES`.
+`Current Executing Senior Task = NONE`.
+`Current Task = NONE — NO SUCCESSOR TASK SELECTED`.
+
+This acceptance does not authorize the owner to run the documented command; that remains a separate owner decision. It does not authorize a second metadata query, backup mounting, restoration, extraction, copying, Observation A/B, or any successor task.

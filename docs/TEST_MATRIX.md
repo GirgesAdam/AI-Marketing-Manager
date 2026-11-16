@@ -3484,3 +3484,33 @@ This task prepared owner-facing instructions and a collection method. It was not
 | P1-T15 activity | 0 |
 
 Final disposition: `PREPARATION COMPLETED / AWAITING TEAM LEADER REVIEW`. No backup versions, backup validity, volume/project inclusion, or original P1-T13 evidence presence was established. P1-T14 remains BLOCKED — `RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`.
+
+
+## P1-T14-R04 — Team Leader Acceptance
+
+Team Leader disposition: `ACCEPTED WITH NON-BLOCKING NOTES`.
+
+This was a preparation/documentation task, not a backup-content investigation or Provider behavior test. No owner metadata query was executed.
+
+| Acceptance verification | Result |
+|---|---|
+| R04 preparation commit / parent | PASS — `cc9bd241fe92ebe1b85cee18c94a7bdddc082785` / `5d40e9ed9e948d82667b027ac3cec68ff9b51c88` |
+| Remote branch HEAD | PASS — exact match |
+| Versioned changed files | PASS — exactly 3 expected documentation files |
+| Committed diff check | PASS |
+| Working tree | PASS — CLEAN |
+| Owner instructions report | PASS — 8,901 bytes; SHA-256 independently verified |
+| Collection method report | PASS — 11,241 bytes; SHA-256 independently verified |
+| PowerShell capture block | PASS — independent parser check, 0 errors; not executed |
+| Microsoft command/permission documentation | VERIFIED against current Microsoft Learn pages |
+| Owner metadata queries | 0 |
+| Credentials collected | 0 |
+| Senior elevation / alternate-account execution | 0 |
+| Provider requests / credentials / mutations | 0 |
+| Backup mounts / VHD attachments / restores / extractions / copies / modifications | 0 |
+| ACL / ownership changes | 0 |
+| Evidence reconstruction | 0 |
+| Observation A/B | 0 |
+| P1-T15 activity | 0 |
+
+Acceptance is limited to the preparation deliverables. It does not establish backup versions, backup validity, volume/project inclusion, or recovery of the original P1-T13 JSONL. P1-T14 remains `BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`; `EVID-INC-001` remains preserved; Observation A/B remain NOT AUTHORIZED.

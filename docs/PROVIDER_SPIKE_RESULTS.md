@@ -3275,3 +3275,20 @@ Deliverables:
 - `F:\AI-Marketing-Manager\04_Reports\P1-T14-R04\P1-T14-R04-collection-method.md`
 
 No optional helper was created. Owner queries by Senior Engineer = `0`; credentials collected = `0`; elevation/alternate-account execution = `0`; Provider requests/mutations = `0`; backup mount/attach/restore/extract/copy/modify = `0`; ACL/ownership changes = `0`; evidence reconstruction = `0`; Observation A/B = `0`; P1-T15 activity = `0`.
+
+
+## P1-T14-R04 — Team Leader Acceptance
+
+Team Leader disposition: `ACCEPTED WITH NON-BLOCKING NOTES`.
+
+Acceptance is limited to preparation of the owner-assisted read-only metadata collection method and owner instructions. No owner metadata query was executed by the Senior Engineer or by the Team Leader during review.
+
+The Team Leader independently verified the dedicated branch, preparation commit `cc9bd241fe92ebe1b85cee18c94a7bdddc082785`, parent `5d40e9ed9e948d82667b027ac3cec68ff9b51c88`, remote HEAD equality, exact three-file versioned diff, committed diff check, clean worktree, both report files and their SHA-256 hashes. The documented PowerShell capture block was independently parsed with zero syntax errors and was not executed.
+
+The primary owner command is `wbadmin get versions -backupTarget:F:`. Microsoft Learn confirms it enumerates backup version details (including backup time, storage location, version identifier and recovery types) and requires Backup Operators/Administrators membership or delegated permissions plus an elevated command prompt. The optional `wbadmin get items -version:<VERSION_IDENTIFIER> -backupTarget:F:` is deferred until separate Team Leader review of the first output. References: [Microsoft Learn — wbadmin get versions](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wbadmin-get-versions), [Microsoft Learn — wbadmin get items](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wbadmin-get-items), [Microsoft Learn — wbadmin command reference](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wbadmin).
+
+Evidence boundary remains explicit: a listed backup version does not prove project inclusion; a listed volume does not prove a particular directory/file is present. Original P1-T13 raw JSONL remains `NOT RECOVERED`; historical classification and `EVID-INC-001` remain unchanged. P1-T14 remains `BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`.
+
+No owner query, credential collection, privilege escalation, alternate-account execution, Provider activity, backup mount/restore/extraction/copy/modification, ACL/ownership change, evidence reconstruction, Observation A/B, or P1-T15 activity occurred.
+
+This acceptance does not itself authorize execution of the owner command or any follow-up query, backup-content access, mounting, restoration, extraction, copying, Observation A/B, or successor task.
