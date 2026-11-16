@@ -3391,3 +3391,35 @@ This is a documentation/governance acceptance of the bounded read-only backup me
 Git review of R02 investigation commit `7000b03047c234f3cbad62ba7ef1a808f16d50a1`: Team Leader verified the expected parent `d2dd12f04b3a5d44bf46c39a0fc834448d6779d8`, remote/local HEAD equality, exactly three expected documentation files, `git diff --check` PASS, no source/test/package changes, and clean working tree.
 
 The R02 acceptance does not grant access to the backup or authorize R03, R04, Observation A/B, or any successor task. No executable tests were run for this documentation-only closeout.
+
+
+## P1-T14-R03 — Authorized Read-only Windows Backup Access Feasibility
+
+This was an environment/access-feasibility investigation, not a Provider behavior test or production implementation. No executable source, tests, package files, or Provider runners were changed; no test suite, build, or typecheck was run.
+
+| Verification | Result |
+|---|---|
+| Canonical F: workspace/repository | PASS — accessible |
+| Required AGENTS/PROGRESS/DECISIONS read | PASS |
+| Starting branch / HEAD | `p1-t14-r02-windows-image-backup-readonly-investigation` / `e873b07b56255e12e46fbb2d628300ac1a37aa1e` |
+| Starting working tree | PASS — clean |
+| Active P1-T14/P1-T15 runners | 0 |
+| Effective Backup Operators group | ABSENT |
+| Effective Administrators group | ABSENT; displayed as deny-only |
+| Mandatory integrity level | Medium |
+| wbadmin.exe | AVAILABLE |
+| WindowsServerBackup PowerShell module | NOT INSTALLED OR NOT VISIBLE |
+| Authorized backup-owner metadata handoff | NOT AVAILABLE |
+| Direct read-only backup-root enumeration | BLOCKED — `System.UnauthorizedAccessException`, HRESULT `-2147024891` |
+| R03 wbadmin versions query | NOT RUN — stop condition after direct Access Denied |
+| Backup versions/dates/machine/volumes/catalog/VHDX | UNKNOWN / NOT VERIFIED |
+| Historical project inclusion | UNKNOWN / NOT VERIFIED |
+| Original P1-T13 JSONL | NOT RECOVERED |
+| Backup mounts/restores/extractions/copies/modifications | 0 |
+| ACL/ownership changes / privilege escalation | 0 |
+| Provider requests / credentials / presigns / PUTs / public GETs / Provider mutations | 0 |
+| Evidence reconstruction | 0 |
+| Observation A/B | 0 |
+| P1-T15 activity | 0 |
+
+Final investigation classification: `READ_ONLY_ACCESS_BLOCKED`. R03 stops at the existing permission boundary. A separately approved, sanitized metadata handoff or authorized read-only operator under a new task contract is required for further metadata inspection. This does not authorize mounting, restoration, extraction, copying, Observation A/B, or any successor task.
