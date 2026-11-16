@@ -3365,3 +3365,29 @@ This is an environment/evidence-access investigation, not a Provider behavior te
 | Evidence reconstruction | 0 |
 
 The backup remains an unverified lead. R02 does not establish backup validity, historical project inclusion, or presence of the original evidence. Further content inspection requires a separate explicit Team Leader authorization; mounting requires a separate task contract. P1-T14 remains blocked and no Observation A/B or successor task is authorized.
+
+
+## P1-T14-R02-CLOSEOUT-01 — Team Leader Acceptance
+
+Team Leader disposition: `P1-T14-R02 = ACCEPTED WITH NON-BLOCKING NOTES`.
+
+This is a documentation/governance acceptance of the bounded read-only backup metadata investigation, not a finding that the backup is valid or contains the historical project or original P1-T13 JSONL.
+
+| Accepted condition | Recorded result |
+|---|---|
+| Backup root | Exists; root metadata readable |
+| Direct backup enumeration | Access denied — `System.UnauthorizedAccessException` |
+| Non-elevated wbadmin versions query | Access denied; exit `-2` |
+| Backup version/catalog/machine/volume/VHDX inventory | Not inspected / not established |
+| Original P1-T13 raw JSONL | NOT RECOVERED |
+| Historical P1-T13 accepted classification | UNCHANGED — `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED` |
+| EVID-INC-001 | PRESERVED / UNCHANGED |
+| P1-T14 | BLOCKED — `RETENTION_BASELINE_EVIDENCE_UNAVAILABLE` |
+| Observation A / B | NOT EXECUTED / NOT AUTHORIZED |
+| P1-T15 | UNRESOLVED / FIX REQUIRED |
+| Replacement/reconstructed evidence | NONE CREATED OR ACCEPTED |
+| Privilege escalation / mount / restore / extraction | 0 |
+
+Git review of R02 investigation commit `7000b03047c234f3cbad62ba7ef1a808f16d50a1`: Team Leader verified the expected parent `d2dd12f04b3a5d44bf46c39a0fc834448d6779d8`, remote/local HEAD equality, exactly three expected documentation files, `git diff --check` PASS, no source/test/package changes, and clean working tree.
+
+The R02 acceptance does not grant access to the backup or authorize R03, R04, Observation A/B, or any successor task. No executable tests were run for this documentation-only closeout.
