@@ -3553,3 +3553,19 @@ This was a one-shot current-token authorization preflight. The preflight failed 
 | P1-T15 activity | 0 |
 
 Classification: `BLOCKED_PRE_EXECUTION - CURRENT_TOKEN_NOT_AUTHORIZED`. No backup versions, backup validity, volume/project inclusion, or original P1-T13 evidence presence were established. Original P1-T13 raw JSONL remains NOT RECOVERED; EVID-INC-001 and historical classification remain unchanged. P1-T14 remains BLOCKED - `RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`.
+
+### Team Leader Review — P1-T14-R05
+
+Disposition: `ACCEPTED WITH NON-BLOCKING NOTES` on `2026-11-16`, limited to the successful Starting Gate, Senior-reported read-only current-token preflight, correct fail-closed stop, execution report, and sanitized documentation. The metadata query was not executed; this acceptance does not establish that any backup version exists or is valid.
+
+| Independent Team Leader verification | Result |
+|---|---|
+| Branch and final HEAD | PASS — `p1-t14-r05-senior-executed-backup-metadata-query` / `fb3c1760b0230228b496b04fc14318eac31d20d4` |
+| Remote HEAD | PASS — exact match |
+| Exact committed file scope | PASS — 3 expected documentation files only |
+| Committed diff check | PASS — exit 0 |
+| Working tree | PASS — CLEAN |
+| Execution report integrity | PASS — 7,681 bytes; SHA-256 independently verified |
+| Token inspection / `wbadmin` rerun by Team Leader | 0 / 0 |
+
+P1-T14 remains BLOCKED - `RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`; original P1-T13 raw JSONL remains NOT RECOVERED; EVID-INC-001 and historical classification remain unchanged; Observation A/B remain NOT EXECUTED / NOT AUTHORIZED. No successor task is selected.
