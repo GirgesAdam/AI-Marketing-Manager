@@ -3249,14 +3249,14 @@ P1-T13-CLOSEOUT-01 safety boundary: Provider calls `0`; credentials `0`; presign
 
 ## P1-T14 — Temporary Media Retention / Auto-Deletion
 
-Task state: `ACTIVATED — WAITING FOR OBSERVATION A ELIGIBILITY`.
+Task state: `BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE` (P1-T14-R01 did not recover the original raw P1-T13 baseline journal).
 
 Automated focused suite: `tests/provider-spike/p1-t14.test.ts`.
 
 | Gate / evidence | Result |
 |---|---|
-| Accepted P1-T13 six-checkpoint baseline | PASS |
-| `fixtureUploadedAt` source | PASS — `REUPLOAD_COMPLETED` = `2026-10-23T15:01:20.743Z` |
+| Accepted P1-T13 six-checkpoint baseline | Historical accepted record; original raw journal not recovered by R01 — live preflight BLOCKED |
+| `fixtureUploadedAt` source | Documented historical value — raw journal unavailable and not independently revalidated by R01 |
 | Frozen public target only | PASS |
 | Arbitrary URL/file input | NOT CALLABLE |
 | Credential / Authorization path | NOT AVAILABLE |
@@ -3288,3 +3288,32 @@ Automated focused suite: `tests/provider-spike/p1-t14.test.ts`.
 | Pre-observation unrelated mutations | `0` |
 
 Observation A earliest UTC: `2026-10-30T16:01:20.743Z`. Observation B earliest UTC: `2026-10-31T21:01:20.743Z`, only after exact-present A. Current retention Provider Behavior remains unobserved; the 7-day auto-deletion statement is `DOC_CONFIRMED`, not live evidence.
+
+
+## P1-T14-R01 — Historical P1-T13 Baseline Recovery
+
+Task result: `BLOCKED — ORIGINAL_BASELINE_NOT_RECOVERED`.
+
+This task performs evidence discovery and integrity verification only; no Provider or runner tests were executed. The existing P1-T14 focused suite (`24 / 24` PASS) and prior offline gates remain historical implementation/test results. They do not establish that the original live P1-T13 JSONL is currently available.
+
+| Verification | Result |
+|---|---|
+| Canonical F: workspace / repository | PASS — accessible |
+| Starting branch / HEAD | PASS — `p1-t14-zernio-media-retention` / `22e475c0ee3edbb7f063b9161bfc969e5a9d2d76` |
+| Starting working tree | PASS — clean |
+| C: historical checkout | PASS — read-only; branch `p1-t14-zernio-media-retention`; HEAD `611a443291a05776d574f27249b11d85d89372a8`; clean |
+| F: repository artifacts / evidence / backups / archive | BLOCKED — no original file candidate |
+| C: previous checkout artifacts | BLOCKED — no original file candidate |
+| Git accepted P1-T13 tree / path history | BLOCKED — raw JSONL path absent from accepted tree and all-ref path history |
+| Launch status / stdout files | FOUND BUT NOT ACCEPTED — wrapper/status/stdout only, not raw JSONL |
+| Six-checkpoint structure / sequence | NOT VERIFIABLE — original raw file unavailable |
+| Timestamp / HTTP / binary size / SHA-256 | NOT REVALIDATED — historical documented values only |
+| Byte-for-byte canonical restoration | NOT PERFORMED — no original source |
+| Secret/signed-URL scan of original | NOT APPLICABLE — no candidate file |
+| Provider requests / public GETs / authenticated calls | `0 / 0 / 0` |
+| Credentials / presigns / PUTs / uploads / retries | `0 / 0 / 0 / 0 / 0` |
+| Provider mutations / non-Git external-system mutations | `0 / 0` |
+| Source / tests / package / DECISIONS changes | `0` |
+| Observation A / Observation B | NOT EXECUTED |
+
+No replacement evidence or test fixture was promoted to live evidence. P1-T14 remains blocked until the original P1-T13 raw journal is recovered and independently reviewed. This result does not authorize Observation A or any successor task.

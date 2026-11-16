@@ -3091,3 +3091,54 @@ The bounded runner exposes only explicit `--observe-a` / `--observe-b` modes and
 Offline gates: focused P1-T14 `24 / 24` PASS; full `npm test` `613 / 613` PASS across `26` files; `npm run typecheck` PASS; `npm run build` PASS; `git diff --check` PASS.
 
 Current Provider/network evidence for P1-T14: authenticated API calls `0`; credentials `0`; presigns `0`; PUTs `0`; public GETs `0 / 2`; uploads `0`; Provider mutations `0`; retries `0`. No retention observation has executed yet.
+
+
+## P1-T14-R01 — Recover & Verify Original P1-T13 Baseline Evidence
+
+Status: `BLOCKED — ORIGINAL_BASELINE_NOT_RECOVERED`.
+
+This was a historical evidence-recovery task only. It made no Provider requests and did not execute P1-T14 Observation A or B. The historical accepted P1-T13 classification remains `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`; its accepted evidence HEAD remains `f31eb4a0dd171d4524862152ffe64cab2a813b49`. R01 does not revise that historical Provider Behavior verdict.
+
+### Bounded historical source search
+
+The exact `p1-t13-evidence.jsonl` filename and P1-T13 evidence-name variants were searched in:
+- `F:\AI-Marketing-Manager\repository\artifacts`;
+- `F:\AI-Marketing-Manager\05_Evidence`;
+- `F:\AI-Marketing-Manager\06_Backups` (including `Repository-Snapshots` and `Documentation`);
+- `F:\AI-Marketing-Manager\08_Archive` (including `Superseded`);
+- `F:\AI-Marketing-Manager\01_Working` and `02_Generated`;
+- `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean\artifacts`.
+
+No original JSONL candidate or archive package containing it was found. The C: checkout remained read-only and unchanged: branch `p1-t14-zernio-media-retention`, HEAD `611a443291a05776d574f27249b11d85d89372a8`, clean working tree.
+
+The only P1-T13-related C:/F: artifact-side files found were `p1-t13-launch.ps1`, `p1-t13-launch-status.json`, and `p1-t13-live-output.json`. The launcher writes runner stdout to `p1-t13-live-output.json`; that stdout summary is not the original six-checkpoint JSONL journal and was not used to reconstruct or replace it.
+
+### Git provenance checks
+
+The accepted P1-T13 HEAD object exists and is reachable from repository refs. However, the raw evidence path is absent from the accepted commit tree (`git ls-tree -r --name-only f31eb4a0dd171d4524862152ffe64cab2a813b49 -- artifacts/provider-spike/p1-t13-evidence.jsonl` returned no path), and all-ref path history is empty (`git log --all --full-history -- artifacts/provider-spike/p1-t13-evidence.jsonl`). The path is gitignored. No raw artifact was recovered from Git.
+
+### Required evidence verification outcome
+
+| Requirement | R01 result |
+|---|---|
+| Original source file | NOT RECOVERED |
+| Original source path / provenance | NOT AVAILABLE |
+| Original byte length / SHA-256 | NOT AVAILABLE — no original candidate |
+| Exactly six original checkpoints | NOT VERIFIABLE without raw journal |
+| Checkpoint order and sequence/timestamps | NOT VERIFIABLE without raw journal |
+| `REUPLOAD_COMPLETED` timestamp / HTTP 200 | Historical documented value only; not revalidated from raw journal |
+| Original 68-byte binary / SHA-256 | Historical accepted record only; no binary or raw journal recovered |
+| `PUBLIC_READ_VERIFIED` HTTP 200 / 68-byte hash / `exactMatch=true` | Historical accepted record only; not revalidated from raw journal |
+| Canonical restoration | NOT PERFORMED — no original source |
+| Source/destination hash equality | NOT APPLICABLE |
+| Secret/signed-URL scan of original | NOT APPLICABLE — no candidate file |
+
+No file was created, reconstructed, overwritten, or restored. The canonical `artifacts/provider-spike/p1-t13-evidence.jsonl` path remains absent. No substitute evidence is accepted.
+
+### Safety and disposition
+
+Provider requests `0`; public GETs `0`; authenticated API calls `0`; credentials loaded `0`; presigns `0`; PUTs/uploads `0`; retries `0`; Provider mutations `0`; non-Git external-system mutations `0`. Git version-control synchronization is documentation-only. No live runner, npm P1-T14 command, or Provider operation was executed.
+
+`P1-T14-R01 = BLOCKED — ORIGINAL_BASELINE_NOT_RECOVERED`.
+`P1-T14 = BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`.
+Observation A and Observation B remain unexecuted. R01 grants no Provider authorization. Any future Observation A requires Team Leader review and separate explicit authorization. Stop for Team Leader review; no successor task selected.

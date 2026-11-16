@@ -55,15 +55,23 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Task = `P1-T14 — Verify Temporary Media Retention and Auto-Deletion`
+Current Executing Task = `NONE — P1-T14-R01 bounded historical recovery attempt completed; awaiting Team Leader review`.
 
-P1-T13 = **DONE / ACCEPTED**
+Current Task = `P1-T14-R01 — Recover & Verify Original P1-T13 Baseline Evidence — BLOCKED / AWAITING TEAM LEADER REVIEW`.
 
-P1-T14 = **ACTIVATED**
+P1-T14-R01 = **BLOCKED — ORIGINAL_BASELINE_NOT_RECOVERED**.
+
+P1-T13 = **DONE / ACCEPTED — historical accepted Provider Behavior record remains unchanged; original raw JSONL is unavailable in the bounded current sources searched**.
+
+P1-T14 = **BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE**.
 
 P1-T14 goal = `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED` using the accepted P1-T13 temporary object only.
 
-P1-T14 fixtureUploadedAt = `2026-10-23T15:01:20.743Z` from accepted local `REUPLOAD_COMPLETED` durable evidence.
+P1-T14 fixtureUploadedAt = `2026-10-23T15:01:20.743Z` as recorded in the accepted historical P1-T13 record; the original raw journal was not recovered by R01, so its checkpoint is not independently revalidated here.
+
+P1-T14 original baseline raw evidence = `artifacts/provider-spike/p1-t13-evidence.jsonl` — `ABSENT` in the canonical F: repository and previous C: checkout; no original source path, byte length, or SHA-256 recovered.
+
+P1-T14-R01 bounded recovery search = `F:\AI-Marketing-Manager\repository\artifacts`, F: `05_Evidence`, `06_Backups`, `08_Archive`, `01_Working`, `02_Generated`, and `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean\artifacts`; no original journal candidate found. Git tree/path history also contains no raw journal.
 
 Observation A earliest UTC = `2026-10-30T16:01:20.743Z`. Observation B earliest UTC = `2026-10-31T21:01:20.743Z` and is permitted only if A still returns the exact original binary.
 
@@ -75,11 +83,11 @@ P1-T14 offline gates before any retention observation: focused `24 / 24` PASS; f
 
 P1-T14 documentation contract = `DOC_CONFIRMED — current Zernio documentation states temporary media is automatically deleted after 7 days`; this is not live Provider evidence.
 
-P1-T14 durable evidence path = `artifacts/provider-spike/p1-t14-evidence.jsonl`, fixed and gitignored; it does not exist before Observation A.
+P1-T14 durable evidence path = `artifacts/provider-spike/p1-t14-evidence.jsonl`, fixed and gitignored; ABSENT after R01 because Observation A was not executed.
 
 P1-T14 current network totals remain: authenticated API `0`; presigns `0`; PUTs `0`; public GETs `0 / 2`; retries `0`; credentials used `0`; unrelated mutations `0`.
 
-P1-T14 state = `WAITING FOR OBSERVATION A ELIGIBILITY`; no request before `2026-10-30T16:01:20.743Z`.
+P1-T14 state = `BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`; Observation A remains NOT EXECUTED, public GETs `0 / 2`, and R01 grants no Provider authorization. Any future Observation A requires Team Leader review and separate explicit authorization.
 
 
 P1-T13 accepted classification = `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`.
@@ -4636,3 +4644,30 @@ Interpretation: P1-T13 proves that the independently retained approved original 
 Canonical `Media Upload` remains `PARTIALLY_VERIFIED`; it is not `SPIKE_PASS`. `APPROVED_ORIGINAL_REUPLOAD = VERIFIED`. `TEMPORARY_MEDIA_RETENTION_DELETION_UNVERIFIED` is the only remaining Media Phase-1 gap and remains `DOC_CONFIRMED / LIVE RETENTION BEHAVIOR UNVERIFIED`. Current Task = `NOT_STARTED — NEXT PHASE-1 TASK REQUIRES TEAM LEADER SELECTION`. PHASE 1 remains **IN PROGRESS**. No retention/deletion experiment, publishing, Ads work, successor Phase-1 task, or Phase 2 work was started.
 
 P1-T13-CLOSEOUT-01 safety boundary: Provider calls `0`; credentials `0`; presigns `0`; media PUTs `0`; public GETs `0`; source/test/runtime changes `0`; external mutations `0`. Documentation only.
+
+
+## P1-T14-R01 — Recover & Verify Original P1-T13 Baseline Evidence
+
+Disposition: `BLOCKED — ORIGINAL_BASELINE_NOT_RECOVERED`.
+
+Starting branch / HEAD: `p1-t14-zernio-media-retention` / `22e475c0ee3edbb7f063b9161bfc969e5a9d2d76`; working tree was clean. Canonical F: workspace and repository were available. `AGENTS.md`, `PROGRESS.md`, and `DECISIONS.md` were read before task work. The previous C: checkout was preserved read-only.
+
+Historical accepted P1-T13 classification remains `APPROVED_ORIGINAL_FRESH_PRESIGN_REUPLOAD_VERIFIED`; accepted evidence HEAD remains `f31eb4a0dd171d4524862152ffe64cab2a813b49`. This R01 does not revise the historical Provider Behavior verdict. The original raw file `artifacts/provider-spike/p1-t13-evidence.jsonl` was not found and was not restored.
+
+Bounded locations searched for the exact filename and P1-T13 evidence-name variants:
+- `F:\AI-Marketing-Manager\repository\artifacts`;
+- `F:\AI-Marketing-Manager\05_Evidence` (including `Provider-Spikes`);
+- `F:\AI-Marketing-Manager\06_Backups` (including `Repository-Snapshots` and `Documentation`);
+- `F:\AI-Marketing-Manager\08_Archive` (including `Superseded`);
+- `F:\AI-Marketing-Manager\01_Working` and `02_Generated`;
+- `C:\Users\USER\Desktop\AI-Marketing-Manager-R04-Clean\artifacts` and its P1-T13-related artifact filenames.
+
+The C: checkout remained unchanged: branch `p1-t14-zernio-media-retention`, HEAD `611a443291a05776d574f27249b11d85d89372a8`, clean working tree. Its P1-T13-related files were limited to `p1-t13-launch.ps1`, `p1-t13-launch-status.json`, and `p1-t13-live-output.json`; the launcher writes runner stdout to the live-output JSON. These are not the original six-record JSONL journal and were not used to reconstruct it.
+
+Git provenance checks: accepted P1-T13 HEAD object exists and is reachable from repository refs, but `git ls-tree -r --name-only f31eb4a0dd171d4524862152ffe64cab2a813b49 -- artifacts/provider-spike/p1-t13-evidence.jsonl` returned no path, and `git log --all --full-history -- artifacts/provider-spike/p1-t13-evidence.jsonl` returned no path history. The path is gitignored. F: evidence, backup, and archive folders contained no matching candidate or archive package.
+
+Original source path: `NOT RECOVERED`. Original byte length / SHA-256: `NOT AVAILABLE — no original candidate`. Six-checkpoint structure, sequence/timestamp metadata, upload/public-read status, and binary hash could not be revalidated without the original raw file. No canonical restoration was performed. No substitute or reconstructed JSONL was created. Secret/signed-URL scan of the missing original: `NOT APPLICABLE — no candidate file`; no credentials were loaded.
+
+Provider requests `0`; public GETs `0`; authenticated calls `0`; credentials `0`; presigns `0`; PUTs/uploads `0`; retries `0`; Provider mutations `0`; non-Git external-system mutations `0`. Git version-control synchronization is separate from Provider execution. Observation A and Observation B were not executed. P1-T14 evidence remains absent. R01 grants no Provider authorization.
+
+Only `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, and `docs/TEST_MATRIX.md` are in scope for documentation reconciliation. No source, tests, package files, `DECISIONS.md`, P1-T15 files, or historical C: files are changed. Phase 1 remains IN PROGRESS. Stop for Team Leader review; no successor task selected.
