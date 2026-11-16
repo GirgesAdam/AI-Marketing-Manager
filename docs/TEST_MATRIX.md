@@ -3449,3 +3449,38 @@ This is an environment/access-feasibility investigation, not a Provider behavior
 | Provider requests / credentials / mutations | 0 |
 
 Acceptance is limited to the investigation and evidence-boundary documentation. It does not establish backup validity or authorize further backup-content access, alternate-account access, privilege escalation, permission changes, mounting, restoration, extraction, copying, Observation A/B, or any successor task.
+
+
+## P1-T14-R04 — Owner-Assisted Windows Backup Metadata Collection
+
+This task prepared owner-facing instructions and a collection method. It was not a backup-content investigation or Provider test. No owner-only metadata command was executed by the Senior Engineer.
+
+| Verification | Result |
+|---|---|
+| Canonical F: workspace/repository | PASS — accessible |
+| Required AGENTS/PROGRESS/DECISIONS read | PASS |
+| R04 starting branch / HEAD | `p1-t14-r03-authorized-readonly-backup-access-feasibility` / `5d40e9ed9e948d82667b027ac3cec68ff9b51c88` |
+| Starting worktree / R03 local-remote match | PASS — clean / exact match |
+| Dedicated R04 branch | Created from accepted R03 HEAD |
+| PowerShell version | `5.1.26100.9711` |
+| wbadmin.exe | AVAILABLE — `10.0.26100.8972` |
+| WindowsServerBackup module / cmdlets | UNAVAILABLE |
+| Checked wbadmin.msc path | NOT FOUND |
+| Local wbadmin help/syntax commands | PASS — help text displayed; each invocation exit `-1`; no backup target supplied |
+| Owner output-capture block parser check | PASS — `0` parse errors; block not executed |
+| Primary owner command documented | `wbadmin get versions -backupTarget:F:` |
+| Optional follow-up documented | `wbadmin get items -version:<VERSION_IDENTIFIER> -backupTarget:F:`; only after Team Leader review |
+| Owner permission requirements documented | Backup Operators / Administrators or delegated permissions; elevated command prompt |
+| Owner instructions / method reports | CREATED outside repository |
+| Optional helper script | NOT CREATED — unnecessary |
+| Owner metadata queries by Senior Engineer | 0 |
+| Credentials collected | 0 |
+| Senior elevation / alternate account | 0 |
+| Provider requests / credentials / mutations | 0 |
+| Backup mounts / VHD attachments / restores / extractions / copies / modifications | 0 |
+| ACL / ownership changes | 0 |
+| Evidence reconstruction | 0 |
+| Observation A/B | 0 |
+| P1-T15 activity | 0 |
+
+Final disposition: `PREPARATION COMPLETED / AWAITING TEAM LEADER REVIEW`. No backup versions, backup validity, volume/project inclusion, or original P1-T13 evidence presence was established. P1-T14 remains BLOCKED — `RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`.

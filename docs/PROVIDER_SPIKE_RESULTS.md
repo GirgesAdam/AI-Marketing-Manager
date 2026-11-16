@@ -3240,3 +3240,38 @@ Accepted result remains `READ_ONLY_ACCESS_BLOCKED`: current execution token lack
 Original P1-T13 raw JSONL remains `NOT RECOVERED`; historical P1-T13 classification and `EVID-INC-001` remain unchanged. P1-T14 remains `BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`; Observation A/B remain `NOT EXECUTED / NOT AUTHORIZED`; P1-T15 remains `UNRESOLVED / FIX REQUIRED`.
 
 This acceptance does not authorize alternate-account access, elevation, ACL/ownership changes, backup mounting/restoration/extraction/copying, Observation A/B, R04, or any successor task.
+
+
+## P1-T14-R04 — Owner-Assisted Windows Backup Metadata Collection
+
+Disposition: `PREPARATION COMPLETED / AWAITING TEAM LEADER REVIEW`. R04 is preparation only; the Senior Engineer did not execute owner-only backup metadata queries.
+
+Local tooling inspection:
+- PowerShell `5.1.26100.9711`.
+- `C:\Windows\system32\wbadmin.exe` available, version `10.0.26100.8972`.
+- `WindowsServerBackup` PowerShell module unavailable (module count `0`); `Get-WBBackupSet`, `Get-WBBackupTarget`, and `Get-WBPolicy` unavailable.
+- `wbadmin.msc` not found in checked System32 paths.
+- Local help commands `wbadmin /?`, `wbadmin get versions /?`, and `wbadmin get items /?` displayed general/specific syntax help; each returned `-1` on this build. These commands supplied no backup target/version/machine and did not inspect backup metadata.
+- The owner output-capture PowerShell block was syntax parsed with `0` errors and was not run.
+
+Recommended owner-led method:
+1. Owner/authorized IT operator opens an elevated Command Prompt or PowerShell only if they personally authorize it.
+2. Run `wbadmin get versions -backupTarget:F:`.
+3. Save stdout/stderr and the command exit code in `F:\AI-Marketing-Manager\04_Reports\P1-T14-R04\` using the provided PowerShell capture block.
+4. Stop and share sanitized output for Team Leader review. Do not retry under another account or change permissions after Access Denied.
+5. Only after separate Team Leader review may an owner be asked to run `wbadmin get items -version:<VERSION_IDENTIFIER> -backupTarget:F:` for a selected version.
+
+Microsoft's current documentation says the command requires Backup Operators or Administrators membership, or delegated appropriate permissions, and an elevated command prompt. References: [wbadmin get versions](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wbadmin-get-versions), [wbadmin get items](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wbadmin-get-items), and [wbadmin command reference](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wbadmin).
+
+Evidence boundaries:
+- A listed version establishes only that the tool enumerated a backup version.
+- A listed volume supports inclusion of that volume, not the presence of a particular directory or file.
+- Project inclusion remains UNKNOWN unless authoritative metadata explicitly lists the project path.
+- Original P1-T13 raw JSONL remains NOT RECOVERED; historical classification and EVID-INC-001 remain unchanged.
+- P1-T14 remains BLOCKED — `RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`.
+
+Deliverables:
+- `F:\AI-Marketing-Manager\04_Reports\P1-T14-R04\P1-T14-R04-owner-instructions.md`
+- `F:\AI-Marketing-Manager\04_Reports\P1-T14-R04\P1-T14-R04-collection-method.md`
+
+No optional helper was created. Owner queries by Senior Engineer = `0`; credentials collected = `0`; elevation/alternate-account execution = `0`; Provider requests/mutations = `0`; backup mount/attach/restore/extract/copy/modify = `0`; ACL/ownership changes = `0`; evidence reconstruction = `0`; Observation A/B = `0`; P1-T15 activity = `0`.

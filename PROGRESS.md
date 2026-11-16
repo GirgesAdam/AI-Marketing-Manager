@@ -55,9 +55,9 @@ Parent P1-T08 = **DONE / ACCEPTED WITH PROVIDER LIMITATION**
 
 Analytics Webhook = `PARTIALLY VERIFIED — SIGNAL OBSERVED / CORRELATION NOT ESTABLISHED`
 
-Current Executing Task = `NONE — P1-T14-R03 accepted; no Senior task executing`.
+Current Executing Task = `NONE — P1-T14-R04 preparation completed; awaiting Team Leader review; no Senior task executing`.
 
-Current Task = `NONE — P1-T14-R03 = DONE / ACCEPTED WITH NON-BLOCKING NOTES; no successor task selected`.
+Current Task = `P1-T14-R04 — Owner-Assisted Windows Backup Metadata Collection — PREPARATION COMPLETED / AWAITING TEAM LEADER REVIEW; owner metadata query NOT EXECUTED; no successor selected`.
 
 P1-T14-R01 = **ACCEPTED WITH NON-BLOCKING NOTES — bounded historical recovery investigation and evidence-integrity handling only; original raw JSONL NOT RECOVERED**.
 
@@ -68,6 +68,8 @@ P1-T14-R02 = **ACCEPTED WITH NON-BLOCKING NOTES - bounded read-only Windows Back
 P1-T14-R02-CLOSEOUT-01 = **DONE / ACCEPTED — Team Leader verified the documentation-only closeout commit, exact three-file scope, clean worktree, remote synchronization, and evidence-report integrity**.
 
 P1-T14-R03 = **DONE / ACCEPTED WITH NON-BLOCKING NOTES — READ_ONLY_ACCESS_BLOCKED; accepted scope is limited to the read-only access-feasibility investigation and accurate documentation; no backup metadata/content was inspected**.
+
+P1-T14-R04 = **PREPARATION COMPLETED / AWAITING TEAM LEADER REVIEW — owner-friendly read-only `wbadmin get versions -backupTarget:F:` collection instructions and method prepared; no owner metadata query executed; no backup contents inspected**.
 
 P1-T13 = **DONE / ACCEPTED — historical accepted Provider Behavior record remains unchanged; original raw JSONL is unavailable in the bounded current sources searched**.
 
@@ -4906,3 +4908,42 @@ No executable tests, build, or typecheck were run; R03 and this acceptance are e
 `Current Task = NONE — NO SUCCESSOR TASK SELECTED`.
 
 No R04, alternate-account access, privilege escalation, backup mount/restore/extraction, Observation A/B, or other successor task is selected or authorized by this acceptance.
+
+
+## P1-T14-R04 — Owner-Assisted Windows Backup Metadata Collection
+
+Task disposition: `PREPARATION COMPLETED / AWAITING TEAM LEADER REVIEW`.
+Authorization used: preparation only. No owner-only backup metadata query was executed.
+
+Starting point:
+- Canonical F: workspace and repository verified.
+- Read `AGENTS.md`, `PROGRESS.md`, and `DECISIONS.md`.
+- Accepted R03 branch/HEAD at start: `p1-t14-r03-authorized-readonly-backup-access-feasibility` / `5d40e9ed9e948d82667b027ac3cec68ff9b51c88`.
+- Starting worktree clean; local and remote R03 HEAD matched.
+- Dedicated R04 branch created from that HEAD: `p1-t14-r04-owner-assisted-windows-backup-metadata-collection`.
+
+Local tooling:
+- PowerShell = `5.1.26100.9711`.
+- `C:\Windows\system32\wbadmin.exe` available; file/product version `10.0.26100.8972`.
+- `WindowsServerBackup` module count `0`; `Get-WBBackupSet`, `Get-WBBackupTarget`, and `Get-WBPolicy` unavailable.
+- `wbadmin.msc` was not found in the checked System32 paths.
+- Local help-only invocations `wbadmin /?`, `wbadmin get versions /?`, and `wbadmin get items /?` displayed command/syntax help and each returned exit code `-1`. No backup target, version, or machine was supplied.
+- Owner output-capture PowerShell block was parser-checked: `0 parse errors`; it was not executed.
+
+Collection method:
+- Primary owner command: `wbadmin get versions -backupTarget:F:`.
+- It lists backup time, storage location, version identifier, and recoverable item types where returned.
+- Microsoft documents the need for Backup Operators/Administrators membership or delegated permissions and an elevated command prompt. The owner alone decides whether they are authorized to approve UAC/elevated execution; Senior Engineer does not elevate or request credentials.
+- A possible follow-up, only after Team Leader review, is `wbadmin get items -version:<VERSION_IDENTIFIER> -backupTarget:F:`; do not guess a version or machine identity.
+- A listed backup version does not prove project inclusion. A listed volume does not prove the specific project path or P1-T13 JSONL is present. Original P1-T13 JSONL remains `NOT RECOVERED`; historical classification and `EVID-INC-001` remain unchanged.
+- No optional helper script was created.
+
+Deliverables outside the Git repository:
+- `F:\AI-Marketing-Manager\04_Reports\P1-T14-R04\P1-T14-R04-owner-instructions.md`
+- `F:\AI-Marketing-Manager\04_Reports\P1-T14-R04\P1-T14-R04-collection-method.md`
+
+Versioned documentation updated: `PROGRESS.md`, `docs/PROVIDER_SPIKE_RESULTS.md`, and `docs/TEST_MATRIX.md` only.
+
+Safety: owner metadata queries executed by Senior Engineer `0`; credentials collected `0`; Senior elevation/alternate-account execution `0`; Provider requests/mutations `0`; backup mounts/attachments/restores/extractions/copies/modifications `0`; ACL/ownership changes `0`; evidence reconstruction `0`; Observation A/B `0`; P1-T15 activity `0`.
+
+P1-T14 remains `BLOCKED — RETENTION_BASELINE_EVIDENCE_UNAVAILABLE`. No backup validity, volume/project inclusion, or original evidence recovery has been established. Stop for Team Leader review; do not execute owner commands automatically or start a successor task.
